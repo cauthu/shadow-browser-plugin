@@ -16,8 +16,8 @@ include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLU
 
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-set(IOPROCESS_SOURCES
-  IOProcess.cpp
+set(IO_PROCESS_SOURCES
+  io_process.cpp
   ipc.cpp
   ${UTILITY_DIR}/myevent.cc
   ${UTILITY_DIR}/connection.cc
@@ -33,12 +33,12 @@ set(IOPROCESS_SOURCES
 set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})
 
 ## create and install a shared library that can plug into shadow
-add_shadow_plugin(shadow-plugin-ioprocess ${IOPROCESS_SOURCES})
-target_link_libraries(shadow-plugin-ioprocess ${LINK_LIBS})
-install(TARGETS shadow-plugin-ioprocess DESTINATION plugins)
+add_shadow_plugin(shadow-plugin-io_process ${IO_PROCESS_SOURCES})
+target_link_libraries(shadow-plugin-io_process ${LINK_LIBS})
+install(TARGETS shadow-plugin-io_process DESTINATION plugins)
 
 ## create and install an executable that can run outside of shadow
-add_executable(ioprocess ${IOPROCESS_SOURCES})
-target_link_libraries(ioprocess ${LINK_LIBS})
-install(TARGETS ioprocess DESTINATION bin)
+add_executable(io_process ${IO_PROCESS_SOURCES})
+target_link_libraries(io_process ${LINK_LIBS})
+install(TARGETS io_process DESTINATION bin)
 

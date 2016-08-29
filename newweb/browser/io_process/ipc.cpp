@@ -29,7 +29,7 @@ IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
     printf("    ipc server got new client stream %p\n", channel.get());
     JSONStreamChannel::UniquePtr ch(new JSONStreamChannel(std::move(channel), this));
-    ch->sendMsg(message_type::FETCH);
+    // ch->sendMsg(message_type::FETCH);
     const auto ret = channels_.insert(make_pair(ch->instNum(), std::move(ch)));
     myassert(ret.second); // insist it was newly inserted
 }

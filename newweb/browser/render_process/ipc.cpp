@@ -49,6 +49,7 @@ void
 IOServiceIPCClient::onRecvMsg(JSONStreamChannel*, uint16_t type,
                               const rapidjson::Document&) noexcept
 {
+    printf("client received msg type %d\n", type);
     switch (type) {
     case message_type::CHANGE_PRIORITY:
         printf("client received change_priority msg\n");
@@ -61,9 +62,13 @@ IOServiceIPCClient::onRecvMsg(JSONStreamChannel*, uint16_t type,
 
 void
 IOServiceIPCClient::onEOF(JSONStreamChannel*) noexcept
-{}
+{
+    myassert(false);
+}
 
 void
 IOServiceIPCClient::onError(JSONStreamChannel*, int errorcode) noexcept
-{}
+{
+    myassert(false);
+}
 
