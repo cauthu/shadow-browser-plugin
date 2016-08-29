@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <event2/event.h>
+#include <memory>
 
 #include "common.hpp"
 
@@ -88,5 +90,57 @@ getaddr(const char *hostname)
         }
 
         return addr;
+    }
+}
+
+struct event_base*
+init_evbase()
+{
+    std::unique_ptr<struct event_config, void(*)(struct event_config*)> evconfig(
+        event_config_new(), event_config_free);
+    myassert(evconfig);
+
+    // we mean to run single-threaded, so we don't need locks
+//    myassert(0 == event_config_set_flag(evconfig.get(), EVENT_BASE_FLAG_NOLOCK));
+
+    struct event_base* evbase = event_base_new_with_config(evconfig.get());
+    myassert(evbase);
+
+    /* double check a few things */
+    auto chosen_method = event_base_get_method(evbase);
+    if (strcmp("epoll", chosen_method)) {
+        printf("ERROR: libevent is using \"%s\"; we want \"epoll.\"\n", chosen_method);
+        exit(1);
+    }
+
+    auto features = event_base_get_features(evbase);
+    if (! (features & EVENT_BASE_FLAG_NOLOCK)) {
+        printf("ERROR: libevent is using locks; we do not want that.\n");
+        exit(1);
+    }
+
+    return evbase;
+}
+
+void
+dispatch_evbase(struct event_base* evbase)
+{
+    /******  run the loop until told to stop ******/
+    /* EVLOOP_NO_EXIT_ON_EMPTY not yet available, so we have to
+     * install a dummy persistent timer to always have some event
+     */
+    struct timeval tv = {0};
+    tv.tv_sec = 60;
+    tv.tv_usec = 0;
+    struct event *dummy_work_ev = event_new(
+        evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){puts("timedout");}, nullptr);
+    myassert(dummy_work_ev);
+    auto rv = event_add(dummy_work_ev, &tv);
+    myassert(!rv);
+
+    event_base_dispatch(evbase);
+
+    if (dummy_work_ev) {
+        event_free(dummy_work_ev);
     }
 }

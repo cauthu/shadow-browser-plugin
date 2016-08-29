@@ -9,4 +9,5 @@ message(STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}")
 ## recurse to build each plug-in
 
 add_subdirectory(ioprocess)
+add_subdirectory(render_process)
 # add_subdirectory(webserver)

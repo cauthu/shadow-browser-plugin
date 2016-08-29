@@ -19,6 +19,8 @@ public:
                        StreamServerObserver*);
 
     virtual bool start_accepting() override;
+    virtual bool pause_accepting() override;
+    virtual void set_observer(myio::StreamServerObserver*) override;
 
 protected:
 
@@ -43,6 +45,7 @@ protected:
     enum class ServerState {
         INIT,
         ACCEPTING,
+        PAUSED,
         CLOSED /* after either eof or error */
     } state_;
 

@@ -9,6 +9,7 @@
 #include <pwd.h>
 #include <string.h>
 #include <netinet/in.h>
+#include <event2/event.h>
 
 #include "myassert.h"
 
@@ -36,7 +37,11 @@ to_hex(const unsigned char *value,
 in_addr_t
 getaddr(const char *hostname);
 
+struct event_base*
+init_evbase();
 
+void
+dispatch_evbase(struct event_base*);
 
 #ifdef ENABLE_MY_LOG_MACROS
 #define logDEBUG(fmt, ...)                                              \

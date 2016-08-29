@@ -82,25 +82,27 @@ namespace myio {
 /*******************************************/
 
 TCPChannel::TCPChannel(
-    struct event_base *evbase, StreamChannelObserver* observer)
+    struct event_base *evbase, const in_addr_t& addr, const in_port_t& port,
+    StreamChannelObserver* observer)
     : evbase_(evbase), observer_(observer)
-    , bufev_(nullptr, bufferevent_free)
     , state_(ChannelState::INIT)
+    , bufev_(nullptr, bufferevent_free)
+    , addr_(addr), port_(port), is_client_(true)
 {
-    myassert(observer);
 }
 
 TCPChannel::TCPChannel(
     struct event_base *evbase, int fd)
     : evbase_(evbase), observer_(nullptr)
-    , bufev_(nullptr, bufferevent_free)
     , state_(ChannelState::ESTABLISHED)
+    , bufev_(nullptr, bufferevent_free)
+    , addr_(0), port_(0), is_client_(false)
 {
     _setup_bufev(fd);
 }
 
 void
-TCPChannel::set_channel_observer(StreamChannelObserver* observer)
+TCPChannel::set_observer(StreamChannelObserver* observer)
 {
     myassert(state_ == ChannelState::ESTABLISHED);
     myassert(!observer_);
@@ -108,11 +110,12 @@ TCPChannel::set_channel_observer(StreamChannelObserver* observer)
 }
 
 int
-TCPChannel::start_connecting(const in_addr_t& addr, const in_port_t& port,
-                             TCPChannelConnectObserver* observer)
+TCPChannel::start_connecting(StreamChannelConnectObserver* observer)
 {
     myassert(state_ == ChannelState::INIT);
-    // myassert(connect_state_ == ConnectState::INIT);
+    myassert(is_client_);
+
+    printf("start connecting...\n");
 
     connect_observer_ = observer;
     myassert(connect_observer_);
@@ -120,23 +123,16 @@ TCPChannel::start_connecting(const in_addr_t& addr, const in_port_t& port,
     struct sockaddr_in server;
     bzero(&server, sizeof(server));
     server.sin_family = AF_INET;
-    server.sin_addr.s_addr = addr;
-    server.sin_port = htons(port);
+    server.sin_addr.s_addr = addr_;
+    server.sin_port = htons(port_);
 
     _setup_bufev(-1);
 
-    auto rv = bufferevent_enable(bufev_.get(), EV_READ|EV_WRITE);
+    auto rv = bufferevent_socket_connect(
+        bufev_.get(), (struct sockaddr *)&server, sizeof(server));
     myassert(!rv);
 
-    rv = bufferevent_socket_connect(
-        bufev_.get(), (struct sockaddr *)&server, sizeof(server));
-
-    if (!rv) {
-        // connect_state_ = ConnectState::CONNECTING;
-        state_ = ChannelState::CONNECTING;
-    } else {
-        state_ = ChannelState::CLOSED;
-    }
+    state_ = ChannelState::CONNECTING;
 
     return rv;
 }
@@ -200,6 +196,7 @@ TCPChannel::write(const uint8_t *data, size_t size)
 {
     // myassert((state_ == ChannelState::ESTABLISHED) || (state_ == );
     myassert(bufev_);
+    printf("writing %zu bytes of data to socket %d\n", size, bufferevent_getfd(bufev_.get()));
     return bufferevent_write(bufev_.get(), data, size);
 }
 
@@ -218,6 +215,9 @@ TCPChannel::_setup_bufev(int fd)
                      evbase_, fd, (BEV_OPT_CLOSE_ON_FREE | BEV_OPT_DEFER_CALLBACKS)));
     myassert(bufev_);
 
+    auto rv = bufferevent_enable(bufev_.get(), EV_READ|EV_WRITE);
+    myassert(!rv);
+
     bufferevent_setcb(
         bufev_.get(), s_bufev_readcb, s_bufev_writecb, s_bufev_eventcb, this);
 }
@@ -233,21 +233,15 @@ TCPChannel::on_bufev_event(struct bufferevent *bev, short what)
 
     // we expect BEV_EVENT_CONNECTED, BEV_EVENT_ERROR, and
     // BEV_EVENT_EOF are mutually exclusive
+    printf("what= Ox%x\n", what);
     if (what & BEV_EVENT_CONNECTED) {
-        myassert(!handled);
         on_bufev_event_connected(bev);
-        handled = true;
     }
-    if (what & BEV_EVENT_ERROR) {
-        myassert(!handled);
+    else if (what & BEV_EVENT_ERROR) {
         on_bufev_event_error(bev, EVUTIL_SOCKET_ERROR());
-        handled = true;
     }
-    if (what & BEV_EVENT_EOF) {
-        myassert(!handled);
-        state_ = ChannelState::CLOSED;
+    else if (what & BEV_EVENT_EOF) {
         on_bufev_event_eof(bev);
-        handled = true;
     }
 }
 
@@ -275,6 +269,7 @@ TCPChannel::on_bufev_event_error(struct bufferevent *bev, int errorcode)
     auto prevstate = state_;
     state_ = ChannelState::CLOSED;
 
+    printf(" error string [%s]\n", evutil_socket_error_to_string(errorcode));
     if (prevstate == ChannelState::CONNECTING) {
         connect_observer_->onConnectError(this, errorcode);
         connect_observer_ = nullptr;

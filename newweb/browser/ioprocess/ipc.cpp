@@ -1,6 +1,7 @@
 
 #include "ipc.hpp"
 #include "../../utility/myassert.h"
+#include "../../utility/ipc/io_service_ipc.hpp"
 
 using myio::StreamServer;
 using myio::JSONStreamChannel;
@@ -13,13 +14,22 @@ s_next_client_id(void)
     return ++next;
 }
 
-IPCServer::IPCServer()
-{}
+using myipc::ioservice::message_type;
+
+IPCServer::IPCServer(StreamServer::UniquePtr streamserver)
+    : stream_server_(std::move(streamserver))
+{
+    stream_server_->set_observer(this);
+    puts("tell stream server to start accepting");
+    stream_server_->start_accepting();
+}
 
 void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
+    printf("    ipc server got new client stream %p\n", channel.get());
     JSONStreamChannel::UniquePtr ch(new JSONStreamChannel(std::move(channel), this));
+    ch->sendMsg(message_type::FETCH);
     const auto ret = channels_.insert(make_pair(ch->instNum(), std::move(ch)));
     myassert(ret.second); // insist it was newly inserted
 }
@@ -27,3 +37,32 @@ IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 void
 IPCServer::onAcceptError(StreamServer*, int errorcode) noexcept
 {}
+
+void
+IPCServer::onRecvMsg(myio::JSONStreamChannel* channel, uint16_t type,
+                     const rapidjson::Document&) noexcept
+{
+    switch (type) {
+    case message_type::HELLO:
+        puts("    servre got hello msg");
+        channel->sendMsg(message_type::CHANGE_PRIORITY);
+        break;
+    default:
+        myassert(false);
+        break;
+    }
+
+}
+
+void
+IPCServer::onEOF(myio::JSONStreamChannel* ch) noexcept
+{
+    printf("    ipc server client stream %p eof\n", ch);
+}
+
+void
+IPCServer::onError(myio::JSONStreamChannel* ch, int errorcode) noexcept
+{
+    printf("    ipc server client stream %p ERROR\n", ch);
+}
+

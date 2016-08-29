@@ -22,15 +22,6 @@ class TCPChannel;
  * use TCPChannel's classes.
  */
 
-class TCPChannelConnectObserver
-{
-public:
-    /* to notify user that its (client) channel is now connected */
-    virtual void onConnected(TCPChannel*) noexcept = 0;
-
-    virtual void onConnectError(TCPChannel*, int errorcode) noexcept = 0;
-};
-
 // class TCPChannelObserver
 // {
 // public:
@@ -71,21 +62,22 @@ public:
     typedef std::unique_ptr<TCPChannel, /*folly::*/Destructor> UniquePtr;
 
     /* meant to be used by a client */
-    explicit TCPChannel(struct event_base *, StreamChannelObserver*);
+    explicit TCPChannel(struct event_base *,
+                        const in_addr_t& addr,
+                        const in_port_t& port,
+                        StreamChannelObserver*);
 
     /* meant to be used by server: create a channel from an already
      * established, i.e., accepted, fd. WILL assume the channel is
      * established.
      */
     explicit TCPChannel(struct event_base *, const int fd);
-    virtual void set_channel_observer(StreamChannelObserver*) override;
-
-
-    /* return same value as bufferevent_socket_connect() */
-    int start_connecting(const in_addr_t& addr, const in_port_t& port,
-                         TCPChannelConnectObserver*);
+    virtual void set_observer(StreamChannelObserver*) override;
 
     /* --------- StreamChannel impl ------------- */
+    /* return same value as bufferevent_socket_connect() */
+    virtual int start_connecting(StreamChannelConnectObserver*) override;
+
     virtual size_t read(uint8_t *data, size_t size) override;
     virtual int read_buffer(struct evbuffer* buf) override;
     virtual int drain(size_t len) override;
@@ -136,7 +128,7 @@ protected:
     ////////////////
     struct event_base* evbase_; // don't free
     StreamChannelObserver* observer_; // don't free
-    TCPChannelConnectObserver* connect_observer_; // don't free
+    StreamChannelConnectObserver* connect_observer_; // don't free
 
     enum class ChannelState {
         INIT,
@@ -150,6 +142,10 @@ protected:
      * server will create new one on accepted
      */
     std::unique_ptr<struct bufferevent, void(*)(struct bufferevent*)> bufev_;
+
+    const in_addr_t addr_;
+    const in_port_t port_;
+    const bool is_client_;
 };
 
 

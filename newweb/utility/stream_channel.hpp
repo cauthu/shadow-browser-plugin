@@ -11,6 +11,15 @@ namespace myio
 
 class StreamChannel;
 
+class StreamChannelConnectObserver
+{
+public:
+    /* to notify user that its (client) channel is now connected */
+    virtual void onConnected(StreamChannel*) noexcept = 0;
+
+    virtual void onConnectError(StreamChannel*, int errorcode) noexcept = 0;
+};
+
 class StreamChannelObserver
 {
 public:
@@ -40,7 +49,9 @@ public:
     // AsyncTransport.h for example)
     typedef std::unique_ptr<StreamChannel, /*folly::*/Destructor> UniquePtr;
 
-    virtual void set_channel_observer(StreamChannelObserver*) = 0;
+    virtual int start_connecting(StreamChannelConnectObserver*) = 0;
+
+    virtual void set_observer(StreamChannelObserver*) = 0;
 
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel). return the number of bytes that

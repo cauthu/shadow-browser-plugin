@@ -13,37 +13,27 @@ using myio::StreamChannel;
 namespace myipc { namespace ioservice {
 
 /*
- * IPC related to IO process/service
+ * IPC related to IO process/service. is meant to be used with the
+ * json stream channel
  */
 
+static const uint16_t service_port = 12345;
 
-/* sits on top of and uses a stream server. when new streams arrive,
- * simply pass them off to the server protocol
- */
-class IPCServer : public folly::DelayedDestruction
-                , public myio::StreamServerObserver
-                , public myio::JSONStreamChannelObserver
+
+enum message_type : uint16_t
 {
-public:
-    typedef std::unique_ptr<IPCServer, /*folly::*/Destructor> UniquePtr;
+    /* client -> server msgs */
+    HELLO,
+    FETCH,
+    CHANGE_PRIORITY,
 
-    explicit IPCServer();
 
-protected:
+    /* server -> client msgs */
+    REQ_DATA,
+    REQ_FINISH,
 
-    /* StreamServerObserver interface */
-    virtual void onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept override;
-    virtual void onAcceptError(StreamServer*, int errorcode) noexcept override;
 };
 
-
-// class IPCServer : public folly::DelayedDestruction
-//                 , public myio::JSONStreamChannelObserver
-// {
-// public:
-//     typedef std::unique_ptr<IPCServerProtocol, /*folly::*/Destructor> UniquePtr;
-
-// };
 
 } // end namespace ioservice
 } // end namespace myipc

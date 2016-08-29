@@ -25,6 +25,8 @@ public:
     typedef std::unique_ptr<StreamServer, /*folly::*/Destructor> UniquePtr;
 
     virtual bool start_accepting() = 0;
+    virtual bool pause_accepting() = 0;
+    virtual void set_observer(StreamServerObserver*) = 0;
 };
 
 }

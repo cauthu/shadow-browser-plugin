@@ -115,9 +115,12 @@ s_next_instNum(void)
 JSONStreamChannel::JSONStreamChannel(
     StreamChannel::UniquePtr channel, JSONStreamChannelObserver* observer)
     : channel_(std::move(channel)), observer_(observer)
-    , state_(StreamState::READ_LENGTH)
+    , state_(StreamState::READ_TYPE_AND_LENGTH)
+    , msg_type_(0), msg_len_(0)
     , instNum_(s_next_instNum())
 {
+    // set myself as observer of the underlying channel
+    channel_->set_observer(this);
 }
 
 void
@@ -136,16 +139,21 @@ JSONStreamChannel::_consume_input()
     do {
         // loop to process all complete msgs
         switch (state_) {
-        case StreamState::READ_LENGTH:
+        case StreamState::READ_TYPE_AND_LENGTH:
             myassert(!msg_len_);
-            if (num_avail_bytes >= MSG_LEN_SIZE) {
-                // read the bytes into our short
-                static const auto num_to_read = MSG_LEN_SIZE;
-                const auto rv = channel_->read((uint8_t*)&msg_len_, num_to_read);
-                myassert(rv == num_to_read);
+            if (num_avail_bytes >= (MSG_TYPE_SIZE + MSG_LEN_SIZE)) {
+                auto rv = channel_->read((uint8_t*)&msg_type_, MSG_TYPE_SIZE);
+                myassert(rv == MSG_TYPE_SIZE);
+                num_avail_bytes -= rv;
+                // convert to host byte order
+                msg_type_ = ntohs(msg_type_);
+
+                rv = channel_->read((uint8_t*)&msg_len_, MSG_LEN_SIZE);
+                myassert(rv == MSG_LEN_SIZE);
                 num_avail_bytes -= rv;
                 // convert to host byte order
                 msg_len_ = ntohs(msg_len_);
+
                 // update state
                 state_ = StreamState::READ_MSG;
             } else {
@@ -153,19 +161,22 @@ JSONStreamChannel::_consume_input()
             }
             break;
         case StreamState::READ_MSG:
-            myassert(msg_len_);
             if (num_avail_bytes >= msg_len_) {
                 DestructorGuard db(this);
-                uint8_t* buf = channel_->peek(msg_len_);
-                myassert(buf);
-
                 rapidjson::Document msg;
-                msg.Parse((const char*)buf, msg_len_);
+
+                if (msg_len_) {
+                    uint8_t* buf = channel_->peek(msg_len_);
+                    myassert(buf);
+                    msg.Parse((const char*)buf, msg_len_);
+                    channel_->drain(msg_len_);
+                }
+
+                // update state
+                state_ = StreamState::READ_TYPE_AND_LENGTH;
 
                 // notify
-                observer_->onRecvMsg(this, msg);
-
-                channel_->drain(msg_len_);
+                observer_->onRecvMsg(this, msg_type_, msg);
             } else {
                 done = true; // to break out of loop
             }
@@ -180,29 +191,49 @@ JSONStreamChannel::_consume_input()
 }
 
 void
-JSONStreamChannel::sendMsg(const rapidjson::Document& msg)
+JSONStreamChannel::sendMsg(uint16_t type, const rapidjson::Document& msg)
 {
     rapidjson::StringBuffer sb;
     rapidjson::Writer<rapidjson::StringBuffer> writer(sb);
     msg.Accept(writer);
 
-    myassert(sb.GetSize() < 0xffff);
+    myassert(sb.GetSize() < 0x3fff); // we realy shouldn't need
+                                     // 16k-byte json msgs
     uint16_t len = sb.GetSize();
-    len = htons(len);
 
-    auto rv = channel_->write((const uint8_t*)&len, sizeof(len));
+    _send_type_and_len(type, len);
+
+    // make sure to write the right amount, i.e., "len" has already
+    // been converted to network-byte order
+    const auto rv = channel_->write((const uint8_t*)sb.GetString(), sb.GetSize());
+    myassert(!rv);
+}
+
+void
+JSONStreamChannel::sendMsg(uint16_t type)
+{
+    _send_type_and_len(type, 0);
+}
+
+/* type and len values should be HOST byte order */
+void
+JSONStreamChannel::_send_type_and_len(uint16_t type, uint16_t len)
+{
+    type = htons(type);
+    auto rv = channel_->write((const uint8_t*)&type, sizeof(type));
     myassert(!rv);
 
-    rv = channel_->write((const uint8_t*)sb.GetString(), sb.GetSize());
+    len = htons(len);
+    rv = channel_->write((const uint8_t*)&len, sizeof(len));
     myassert(!rv);
 }
 
 void
 JSONStreamChannel::_update_read_watermark()
 {
-    if (state_ == StreamState::READ_LENGTH) {
+    if (state_ == StreamState::READ_TYPE_AND_LENGTH) {
         myassert(!msg_len_);
-        channel_->set_read_watermark(MSG_LEN_SIZE, 0);
+        channel_->set_read_watermark(MSG_TYPE_SIZE + MSG_LEN_SIZE, 0);
     } else {
         myassert(msg_len_);
         channel_->set_read_watermark(msg_len_, 0);
@@ -215,6 +246,7 @@ JSONStreamChannel::onEOF(StreamChannel* channel) noexcept
     myassert(channel_.get() == channel);
     state_ = StreamState::CLOSED;
     DestructorGuard db(this);
+    puts("json stream notified of transport close");
     observer_->onEOF(this);
 }
 
@@ -223,6 +255,7 @@ JSONStreamChannel::onError(StreamChannel* channel, int errorcode) noexcept
 {
     myassert(channel_.get() == channel);
     state_ = StreamState::CLOSED;
+    puts("json stream notified of transport error");
     DestructorGuard db(this);
     observer_->onError(this, errorcode);
 }
