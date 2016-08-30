@@ -21,12 +21,14 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(RENDER_PROCESS_SOURCES
   render_process.cpp
   ipc.cpp
+  ${UTILITY_DIR}/logging.cpp
   ${UTILITY_DIR}/common.cc
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/json_stream_channel.cpp
 )
 
-set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})
+set(LINK_LIBS ${EVENT2_LIBRARIES}
+    "-L${SHADOW_ROOT}/lib -lboost_log-myboostbuild")
 
 ## create and install a shared library that can plug into shadow
 add_shadow_plugin(shadow-plugin-render_process ${RENDER_PROCESS_SOURCES})

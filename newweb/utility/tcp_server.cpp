@@ -1,5 +1,6 @@
 
 #include "myassert.h"
+#include "logging.hpp"
 #include "tcp_channel.hpp"
 #include "tcp_server.hpp"
 
@@ -62,7 +63,7 @@ TCPServer::start_accepting()
 
     state_ = ServerState::ACCEPTING;
 
-    puts("tcpserver have started accepting");
+    MYLOG(INFO) << ("tcpserver have started accepting");
     return !!evlistener_;
 }
 

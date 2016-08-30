@@ -3,6 +3,7 @@
 #include <event2/event.h>
 
 #include "tcp_channel.hpp"
+#include "logging.hpp"
 #include "myassert.h"
 
 namespace myio {
@@ -115,7 +116,7 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer)
     myassert(state_ == ChannelState::INIT);
     myassert(is_client_);
 
-    printf("start connecting...\n");
+    MYLOG(INFO) << "start connecting...";
 
     connect_observer_ = observer;
     myassert(connect_observer_);
@@ -196,7 +197,7 @@ TCPChannel::write(const uint8_t *data, size_t size)
 {
     // myassert((state_ == ChannelState::ESTABLISHED) || (state_ == );
     myassert(bufev_);
-    printf("writing %zu bytes of data to socket %d\n", size, bufferevent_getfd(bufev_.get()));
+    MYLOG(INFO) << "writing " << size << " bytes of data to socket " << bufferevent_getfd(bufev_.get());
     return bufferevent_write(bufev_.get(), data, size);
 }
 
@@ -233,7 +234,7 @@ TCPChannel::on_bufev_event(struct bufferevent *bev, short what)
 
     // we expect BEV_EVENT_CONNECTED, BEV_EVENT_ERROR, and
     // BEV_EVENT_EOF are mutually exclusive
-    printf("what= Ox%x\n", what);
+    // printf("what= Ox%x\n", what);
     if (what & BEV_EVENT_CONNECTED) {
         on_bufev_event_connected(bev);
     }
@@ -269,7 +270,7 @@ TCPChannel::on_bufev_event_error(struct bufferevent *bev, int errorcode)
     auto prevstate = state_;
     state_ = ChannelState::CLOSED;
 
-    printf(" error string [%s]\n", evutil_socket_error_to_string(errorcode));
+    // printf(" error string [%s]\n", evutil_socket_error_to_string(errorcode));
     if (prevstate == ChannelState::CONNECTING) {
         connect_observer_->onConnectError(this, errorcode);
         connect_observer_ = nullptr;

@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 
 #include "../../utility/common.hpp"
+#include "../../utility/logging.hpp"
 #include "../../utility/myassert.h"
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/json_stream_channel.hpp"
@@ -15,6 +16,7 @@ using std::unique_ptr;
 
 int main(int argc, char **argv)
 {
+    mylogging::setup_boost_logging(argv[1]);
 
     unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(init_evbase(), event_base_free);
 

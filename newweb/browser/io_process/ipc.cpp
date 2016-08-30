@@ -1,6 +1,7 @@
 
 #include "ipc.hpp"
 #include "../../utility/myassert.h"
+#include "../../utility/logging.hpp"
 #include "../../utility/ipc/io_service_ipc.hpp"
 
 using myio::StreamServer;
@@ -20,14 +21,14 @@ IPCServer::IPCServer(StreamServer::UniquePtr streamserver)
     : stream_server_(std::move(streamserver))
 {
     stream_server_->set_observer(this);
-    puts("tell stream server to start accepting");
+    MYLOG(INFO) << ("tell stream server to start accepting");
     stream_server_->start_accepting();
 }
 
 void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
-    printf("    ipc server got new client stream %p\n", channel.get());
+    MYLOG(INFO) << "ipc server got new client stream " << channel.get() << " ppp";
     JSONStreamChannel::UniquePtr ch(new JSONStreamChannel(std::move(channel), this));
     // ch->sendMsg(message_type::FETCH);
     const auto ret = channels_.insert(make_pair(ch->instNum(), std::move(ch)));
@@ -44,7 +45,7 @@ IPCServer::onRecvMsg(myio::JSONStreamChannel* channel, uint16_t type,
 {
     switch (type) {
     case message_type::HELLO:
-        puts("    servre got hello msg");
+        MYLOG(INFO) << ("    servre got hello msg");
         channel->sendMsg(message_type::CHANGE_PRIORITY);
         break;
     default:
@@ -57,12 +58,12 @@ IPCServer::onRecvMsg(myio::JSONStreamChannel* channel, uint16_t type,
 void
 IPCServer::onEOF(myio::JSONStreamChannel* ch) noexcept
 {
-    printf("    ipc server client stream %p eof\n", ch);
+    MYLOG(WARNING) << "    ipc server client stream " << ch << " eof";
 }
 
 void
 IPCServer::onError(myio::JSONStreamChannel* ch, int errorcode) noexcept
 {
-    printf("    ipc server client stream %p ERROR\n", ch);
+    MYLOG(WARNING) << "    ipc server client stream " << ch << " ERROR";
 }
 

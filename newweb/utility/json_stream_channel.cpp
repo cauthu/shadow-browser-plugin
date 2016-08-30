@@ -3,6 +3,7 @@
 #include <rapidjson/writer.h>
 
 #include "myassert.h"
+#include "logging.hpp"
 #include "json_stream_channel.hpp"
 
 
@@ -246,7 +247,7 @@ JSONStreamChannel::onEOF(StreamChannel* channel) noexcept
     myassert(channel_.get() == channel);
     state_ = StreamState::CLOSED;
     DestructorGuard db(this);
-    puts("json stream notified of transport close");
+    MYLOG(INFO) << ("json stream notified of transport close");
     observer_->onEOF(this);
 }
 
@@ -255,7 +256,7 @@ JSONStreamChannel::onError(StreamChannel* channel, int errorcode) noexcept
 {
     myassert(channel_.get() == channel);
     state_ = StreamState::CLOSED;
-    puts("json stream notified of transport error");
+    MYLOG(INFO) << ("json stream notified of transport error");
     DestructorGuard db(this);
     observer_->onError(this, errorcode);
 }

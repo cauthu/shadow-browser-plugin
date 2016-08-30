@@ -13,6 +13,34 @@ The following are required in addition to those Shadow requires:
 * `boost`
 * `spdylay` (https://github.com/tatsuhiro-t/spdylay)
 
+# boost logging
+
+we use boost logging library because other libraries like google's
+glog and easyloggingpp don't quite work under shadow (see
+https://github.com/shadow/shadow/issues/315). however, due to shadow's
+incomplete threading support, we want to use the single-threaded
+version of the boost logging library. typically ubuntu provides
+multi-threaded version, so we have to build our own:
+
+```bash
+# download boost 1.59 source, extract, then...:
+
+# set up to install into shadow's install dir
+
+./bootstrap.sh --prefix=$HOME/.shadow
+
+# build only the logging library. the "myboostbuild" will be part of
+# the .so file, so we will use -lboost_log-myboostbuild when building
+# our plugins
+
+./b2 --build-dir=builddir --layout=tagged --with-log \
+     --buildid=myboostbuild \
+     threading=single link=shared runtime-link=shared variant=release \
+     define=BOOST_ALL_DYN_LINK define=BOOST_LOG_NO_THREADS \
+     define=BOOST_LOG_WITHOUT_WCHAR_T define=BOOST_LOG_WITHOUT_SYSLOG \
+     define=BOOST_LOG_NO_SHORTHAND_NAMES
+```
+
 # quick setup
 
 ```bash

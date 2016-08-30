@@ -2,6 +2,7 @@
 #include <rapidjson/document.h>
 
 #include "../../utility/myassert.h"
+#include "../../utility/logging.hpp"
 #include "../../utility/ipc/io_service_ipc.hpp"
 #include "ipc.hpp"
 
@@ -33,7 +34,7 @@ void
 IOServiceIPCClient::onConnected(StreamChannel* ch) noexcept
 {
     myassert(transport_channel_.get() == ch);
-    puts("transport connected");
+    MYLOG(INFO) << ("transport connected");
     json_channel_.reset(new myio::JSONStreamChannel(std::move(transport_channel_), this));
     json_channel_->sendMsg(message_type::HELLO);
 }
@@ -49,10 +50,10 @@ void
 IOServiceIPCClient::onRecvMsg(JSONStreamChannel*, uint16_t type,
                               const rapidjson::Document&) noexcept
 {
-    printf("client received msg type %d\n", type);
+    MYLOG(INFO) << "client received msg type " << type;
     switch (type) {
     case message_type::CHANGE_PRIORITY:
-        printf("client received change_priority msg\n");
+        MYLOG(INFO) << "client received change_priority msg";
         break;
     default:
         myassert(false);
