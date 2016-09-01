@@ -23,7 +23,6 @@
 #include <utility>
 #include <boost/noncopyable.hpp>
 #include <functional>
-#include <glog/logging.h>
 #include <inttypes.h>
 
 namespace folly {

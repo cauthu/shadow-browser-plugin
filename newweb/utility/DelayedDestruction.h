@@ -16,9 +16,7 @@
 
 #pragma once
 
-#include <folly/io/async/DelayedDestructionBase.h>
-
-#include <glog/logging.h>
+#include "DelayedDestructionBase.h"
 
 namespace folly {
 
