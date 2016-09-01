@@ -5,26 +5,40 @@
 #include <sys/time.h>
 
 #include "../../utility/tcp_server.hpp"
-#include "../../utility/myassert.h"
 #include "../../utility/common.hpp"
-#include "../../utility/logging.hpp"
+#include "../../utility/easylogging++.h"
 #include "../../utility/ipc/io_service_ipc.hpp"
 #include "ipc.hpp"
 
 
 using std::unique_ptr;
 
+INITIALIZE_EASYLOGGINGPP
+
 int main(int argc, char **argv)
 {
-    mylogging::setup_boost_logging(argv[1]);
+
+#ifdef IN_SHADOW
+    init_easylogging();
+#endif
+
+    LOG(INFO) << "io_process starting...";
+
+    START_EASYLOGGINGPP(argc, argv);
 
     unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
         init_evbase(), event_base_free);
+
+    /* ***************************************** */
 
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), getaddr("localhost"),
                             myipc::ioservice::service_port, nullptr));
     IPCServer::UniquePtr ipcserver(new IPCServer(std::move(tcpServerForIPC)));
+
+    /* ***************************************** */
+
+    LOG(INFO) << "done setup. run event loop";
 
     dispatch_evbase(evbase.get());
 

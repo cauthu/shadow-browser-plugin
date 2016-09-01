@@ -28,19 +28,19 @@ set(IO_PROCESS_SOURCES
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/tcp_server.cpp
   ${UTILITY_DIR}/json_stream_channel.cpp
-  ${UTILITY_DIR}/logging.cpp
+  ${UTILITY_DIR}/object.cpp
 )
 
-set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES}
-    "-L${SHADOW_ROOT}/lib -lboost_log-myboostbuild")
+set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})
 
 ## create and install a shared library that can plug into shadow
+add_definitions(-DIN_SHADOW)
 add_shadow_plugin(shadow-plugin-io_process ${IO_PROCESS_SOURCES})
 target_link_libraries(shadow-plugin-io_process ${LINK_LIBS})
 install(TARGETS shadow-plugin-io_process DESTINATION plugins)
 
 ## create and install an executable that can run outside of shadow
+remove_definitions(-DIN_SHADOW)
 add_executable(io_process ${IO_PROCESS_SOURCES})
 target_link_libraries(io_process ${LINK_LIBS})
 install(TARGETS io_process DESTINATION bin)
-

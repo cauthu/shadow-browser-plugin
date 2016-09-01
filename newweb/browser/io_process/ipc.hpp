@@ -5,6 +5,7 @@
 
 #include "../../utility/stream_server.hpp"
 #include "../../utility/json_stream_channel.hpp"
+#include "../../utility/object.hpp"
 
 
 /* sits on top of and uses a stream server. this should be given to a
@@ -12,7 +13,7 @@ stream server, and it will take the new stream channels the stream
 server creates, and create json stream channels out of them, and
 process the json messages that those channels receives
  */
-class IPCServer : public folly::DelayedDestruction
+class IPCServer : public Object
                 , public myio::StreamServerObserver
                 , public myio::JSONStreamChannelObserver
 {
@@ -35,6 +36,8 @@ protected:
     //////
 
     myio::StreamServer::UniquePtr stream_server_;
+
+    /* map key is channel objId */
     std::map<uint32_t, myio::JSONStreamChannel::UniquePtr> channels_;
 };
 

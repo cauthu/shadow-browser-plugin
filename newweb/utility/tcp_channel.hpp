@@ -3,48 +3,18 @@
 
 
 #include <event2/bufferevent.h>
-#include <boost/core/noncopyable.hpp>
 #include <memory>
 #include <functional>
 
-#include <folly/io/async/DelayedDestruction.h>
+#include "DelayedDestruction.h"
 
+#include "object.hpp"
 #include "stream_channel.hpp"
 
 namespace myio
 {
 
 class TCPChannel;
-
-
-/* interface to group various callbacks related to channel for the
- * channel to notify its user. implement this interface in order to
- * use TCPChannel's classes.
- */
-
-// class TCPChannelObserver
-// {
-// public:
-//     // virtual ~TCPChannelObserver() = default;
-
-//     // /* to notify user that its (client) channel is now connected */
-//     // virtual void onConnected(TCPChannel*) noexcept = 0;
-
-//     /* tell user that there is new data that can be read, without
-//      * saying how much. there might still be existing buffered data
-//      * that user has not read. */
-//     virtual void onNewReadDataAvailable(TCPChannel*) noexcept = 0;
-
-//     virtual void onWrittenData(TCPChannel*) noexcept {};
-
-//     /* on error or eof, any buffered input data can still be read if
-//      * the user wants to.
-//      */
-
-//     virtual void onEOF(TCPChannel*) noexcept = 0;
-//     /* will be called on any kind of error, whether read or write */
-//     virtual void onError(TCPChannel*, int errorcode) noexcept = 0;
-// };
 
 
 /*
@@ -59,7 +29,7 @@ class TCPChannel : public StreamChannel
 public:
     // for convenience. DelayedDestruction (see folly's
     // AsyncTransport.h for example)
-    typedef std::unique_ptr<TCPChannel, /*folly::*/Destructor> UniquePtr;
+    typedef std::unique_ptr<TCPChannel, folly::DelayedDestruction::Destructor> UniquePtr;
 
     /* meant to be used by a client */
     explicit TCPChannel(struct event_base *,
@@ -98,8 +68,6 @@ public:
     /* close/disconnect the channel, dropping pending/buffered data if
      * any */
     virtual void close() override;
-
-    // virtual void destroy();
 
 protected:
 
@@ -150,43 +118,6 @@ protected:
 
 
 /**************************************************/
-
-// class TCPClientChannel : public TCPChannel
-// {
-// public:
-//     typedef std::unique_ptr<TCPClientChannel, /*folly::*/Destructor> UniquePtr;
-
-//     /* "port" should be in host byte order */
-//     explicit TCPClientChannel(struct event_base*,
-//                               const in_addr_t& addr, const in_port_t& port,
-//                               TCPChannelObserver*);
-
-//     /* return true if successfully initiated a connect attempt. won't
-//      * be connected until onConnected() is called. */
-//     bool start_connecting(TCPChannelConnectObserver*);
-
-// protected:
-
-//     virtual ~TCPClientChannel();
-
-//     virtual void on_bufev_event_connected(struct bufferevent *) override;
-//     virtual void on_bufev_event_error(struct bufferevent *, int errorcode) override;
-
-//     ////////////////
-
-//     const in_addr_t addr_;
-//     const in_port_t port_;
-
-//     enum class ConnectState {
-//         INIT, CONNECTING, CONNECTED, ERROR
-//     } connect_state_;
-
-//     TCPChannelConnectObserver* connect_observer_;
-// };
-
-
-/**************************************************/
-
 
 } // end myio namespace
 

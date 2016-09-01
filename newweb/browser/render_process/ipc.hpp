@@ -17,8 +17,6 @@ public:
 
     explicit IOServiceIPCClient(myio::StreamChannel::UniquePtr);
 
-    const uint32_t& instNum() const { return instNum_; }
-
 protected:
 
     /******* implement StreamChannelConnectObserver interface *********/
@@ -34,8 +32,6 @@ protected:
 
     myio::StreamChannel::UniquePtr transport_channel_;
     myio::JSONStreamChannel::UniquePtr json_channel_;
-
-    const uint32_t instNum_;
 };
 
 #endif /* ipc_hpp */

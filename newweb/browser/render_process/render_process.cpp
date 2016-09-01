@@ -4,8 +4,7 @@
 #include <arpa/inet.h>
 
 #include "../../utility/common.hpp"
-#include "../../utility/logging.hpp"
-#include "../../utility/myassert.h"
+#include "../../utility/easylogging++.h"
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/json_stream_channel.hpp"
 #include "../../utility/ipc/io_service_ipc.hpp"
@@ -14,11 +13,21 @@
 
 using std::unique_ptr;
 
+INITIALIZE_EASYLOGGINGPP
+
 int main(int argc, char **argv)
 {
-    mylogging::setup_boost_logging(argv[1]);
 
-    unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(init_evbase(), event_base_free);
+#ifdef IN_SHADOW
+    init_easylogging();
+#endif
+
+    LOG(INFO) << "render_process starting...";
+
+    START_EASYLOGGINGPP(argc, argv);
+
+    unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
+        init_evbase(), event_base_free);
 
     /* ***************************************** */
 
@@ -29,6 +38,8 @@ int main(int argc, char **argv)
         new IOServiceIPCClient(std::move(tcpChanForIPC)));
 
     /* ***************************************** */
+
+    LOG(INFO) << "done setup. run event loop";
 
     dispatch_evbase(evbase.get());
 

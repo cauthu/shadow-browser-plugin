@@ -1,6 +1,7 @@
 #ifndef stream_server_hpp
 #define stream_server_hpp
 
+#include "object.hpp"
 #include "stream_channel.hpp"
 
 namespace myio
@@ -19,7 +20,7 @@ public:
     virtual void onAcceptError(StreamServer*, int errorcode) noexcept = 0;
 };
 
-class StreamServer : public folly::DelayedDestruction
+class StreamServer : public Object
 {
 public:
     typedef std::unique_ptr<StreamServer, /*folly::*/Destructor> UniquePtr;

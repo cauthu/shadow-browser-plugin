@@ -10,7 +10,7 @@
 #include <memory>
 
 #include "common.hpp"
-
+#include "easylogging++.h"
 
 char*
 expandPath(const char* path) {
@@ -18,7 +18,7 @@ expandPath(const char* path) {
     if (path[0] == '~') {
         struct passwd *pw = getpwuid(getuid());
         const char *homedir = pw->pw_dir;
-        myassert(0 < asprintf(&s, "%s%s", homedir, path+1));
+        CHECK_GT(asprintf(&s, "%s%s", homedir, path+1), 0);
     } else {
         s = strdup(path);
     }
@@ -30,7 +30,7 @@ gettimeofdayMs(struct timeval* t)
 {
     struct timeval now;
     if (NULL == t) {
-        myassert(0 == gettimeofday(&now, NULL));
+        CHECK_EQ(gettimeofday(&now, NULL), 0);
         t = &now;
     }
     return (((uint64_t)t->tv_sec) * 1000) + (uint64_t)floor(((double)t->tv_usec) / 1000);
@@ -82,7 +82,7 @@ getaddr(const char *hostname)
             struct addrinfo* info;
             int result = getaddrinfo(hostname, NULL, NULL, &info);
             if(result != 0) {
-                myassert(0);
+                CHECK(0); // not reached
             }
 
             addr = ((struct sockaddr_in*)(info->ai_addr))->sin_addr.s_addr;
@@ -98,13 +98,13 @@ init_evbase()
 {
     std::unique_ptr<struct event_config, void(*)(struct event_config*)> evconfig(
         event_config_new(), event_config_free);
-    myassert(evconfig);
+    CHECK_NOTNULL(evconfig);
 
     // we mean to run single-threaded, so we don't need locks
-//    myassert(0 == event_config_set_flag(evconfig.get(), EVENT_BASE_FLAG_NOLOCK));
+    CHECK_EQ(event_config_set_flag(evconfig.get(), EVENT_BASE_FLAG_NOLOCK), 0);
 
     struct event_base* evbase = event_base_new_with_config(evconfig.get());
-    myassert(evbase);
+    CHECK_NOTNULL(evbase);
 
     /* double check a few things */
     auto chosen_method = event_base_get_method(evbase);
@@ -133,14 +133,37 @@ dispatch_evbase(struct event_base* evbase)
     tv.tv_sec = 60;
     tv.tv_usec = 0;
     struct event *dummy_work_ev = event_new(
-        evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){puts("timedout");}, nullptr);
-    myassert(dummy_work_ev);
+        evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){}, nullptr);
+    CHECK_NOTNULL(dummy_work_ev);
     auto rv = event_add(dummy_work_ev, &tv);
-    myassert(!rv);
+    CHECK_EQ(rv, 0);
 
     event_base_dispatch(evbase);
 
     if (dummy_work_ev) {
         event_free(dummy_work_ev);
     }
+}
+
+void
+init_easylogging()
+{
+#ifdef IN_SHADOW
+    CHECK_EQ(el::base::elStorage.get(), nullptr);
+    // theses lines are supposed to be done by
+    // INITIALIZE_EASYLOGGINGPP macro, but somehow in shadow they
+    // don't get to run, so we manually set them here
+    el::base::elStorage.reset(
+        new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder())));
+    el::base::utils::s_currentUser = el::base::utils::OS::currentUser();
+    el::base::utils::s_currentHost = el::base::utils::OS::currentHost();
+    el::base::utils::s_termSupportsColor = el::base::utils::OS::termSupportsColor();
+#else
+    CHECK(0); // not supposed to call this function if you're not
+                 // in shadow
+#endif
+
+    el::Loggers::reconfigureAllLoggers(
+        el::ConfigurationType::Format,
+        "%datetime{%h:%m:%s} [%level] -- %fbase:%line: %msg");
 }

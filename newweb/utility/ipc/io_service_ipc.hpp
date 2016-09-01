@@ -1,7 +1,7 @@
 #ifndef io_service_ipc_hpp
 #define io_service_ipc_hpp
 
-#include <folly/io/async/DelayedDestruction.h>
+#include "../DelayedDestruction.h"
 #include <memory>
 
 #include "../stream_server.hpp"

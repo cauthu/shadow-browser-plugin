@@ -4,67 +4,17 @@
 
 #include <event2/event.h>
 #include <event2/bufferevent.h>
-#include <boost/core/noncopyable.hpp>
 #include <memory>
 #include <functional>
 #include <rapidjson/document.h>
 
+#include "object.hpp"
 #include "stream_channel.hpp"
 
 using myio::StreamChannel;
 
 namespace myio
 {
-
-// class IPCChannel : public folly::DelayedDestruction
-// {
-
-// };
-
-// class IPCClientChannel : public folly::DelayedDestruction
-//                        , public myio::TCPChannelConnectObserver
-//                        , public myio::TCPChannelObserver
-// {
-// public:
-
-//     typedef std::unique_ptr<IPCClientChannel, /*folly::*/Destructor> UniquePtr;
-
-//     explicit IPCClientChannel(struct event_base*,
-//                               const in_addr_t& addr, const in_port_t& port,
-//                               IPCChannelObserver*);
-
-//     /* return true if successfully initiated a connect attempt. won't
-//      * be connected until onConnected() is called. */
-//     bool start_connecting();
-
-// private:
-
-//     virtual ~IPCClientChannel();
-
-//     /********* TCPChannelConnectObserver interface *************/
-//     virtual void onConnected(myio::TCPChannel*) noexcept override;
-//     virtual void onConnectError(myio::TCPChannel*, int errorcode) noexcept override;
-
-//     /********* TCPChannelObserver interface *************/
-//     virtual void onNewReadDataAvailable(myio::TCPChannel*) noexcept override;
-//     virtual void onEOF(myio::TCPChannel*) noexcept override {};
-//     /* will be called on any kind of error, whether read or write */
-//     virtual void onError(myio::TCPChannel*, int errorcode) noexcept override {};
-
-//     void _consume_input(myio::TCPChannel*);
-//     void _update_read_watermark();
-
-
-//     ///////////
-//     myio::TCPClientChannel::UniquePtr tcp_channel_;
-
-//     enum class MSGProtoState {
-//         READ_LENGTH, READ_MSG
-//     } msg_proto_state_;
-
-//     uint16_t msg_len_; // parsed from input
-// };
-
 
 /*
  * represents a stream channel that deals with messages that are in
@@ -97,16 +47,16 @@ public:
     virtual void onError(JSONStreamChannel*, int errorcode) noexcept = 0;
 };
 
-/* layered on top of an underlying stream channel, read its data and
- * extract json msgs out of the underlying stream and send those msgs
- * to the observer.
+/* layered on top of an underlying stream channel -- i.e., it HAS, not
+ * IS, a stream channel, read its data and extract json msgs out of
+ * the underlying stream and send those msgs to the observer.
  *
  * we're like a filter in a pipeline; maybe can use something like
  * facebook's wangle framework?
  *
  */
-class JSONStreamChannel : public folly::DelayedDestruction
-                        , public myio::StreamChannelObserver
+class JSONStreamChannel : public myio::StreamChannelObserver
+                        , public Object
 {
 public:
     typedef std::unique_ptr<JSONStreamChannel, /*folly::*/Destructor> UniquePtr;
@@ -116,8 +66,6 @@ public:
 
     void sendMsg(uint16_t type, const rapidjson::Document&);
     void sendMsg(uint16_t type); // send empty msg
-
-    const uint32_t& instNum() const { return instNum_; }
 
 protected:
 
@@ -150,8 +98,6 @@ protected:
     uint16_t msg_type_;
     uint16_t msg_len_; // length of the next msg we're waiting for in
                        // the input stream
-
-    const uint32_t instNum_;
 };
 
 

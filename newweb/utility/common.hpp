@@ -43,6 +43,9 @@ init_evbase();
 void
 dispatch_evbase(struct event_base*);
 
+void
+init_easylogging();
+
 #ifdef ENABLE_MY_LOG_MACROS
 #define logDEBUG(fmt, ...)                                              \
     do {                                                                \

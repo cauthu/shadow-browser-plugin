@@ -3,8 +3,11 @@
 
 
 #include <event2/buffer.h>
-#include <folly/io/async/DelayedDestruction.h>
+#include "DelayedDestruction.h"
 #include <memory>
+
+#include "object.hpp"
+
 
 namespace myio
 {
@@ -23,8 +26,6 @@ public:
 class StreamChannelObserver
 {
 public:
-    // /* to notify user that its (client) channel is now connected */
-    // virtual void onConnected(StreamChannel*) noexcept = 0;
 
     /* tell user that there is new data that can be read, without
      * saying how much. there might still be existing buffered data
@@ -42,12 +43,12 @@ public:
     virtual void onError(StreamChannel*, int errorcode) noexcept = 0;
 };
 
-class StreamChannel : public folly::DelayedDestruction
+class StreamChannel : public Object
 {
 public:
     // for convenience. DelayedDestruction (see folly's
     // AsyncTransport.h for example)
-    typedef std::unique_ptr<StreamChannel, /*folly::*/Destructor> UniquePtr;
+    typedef std::unique_ptr<StreamChannel, folly::DelayedDestruction::Destructor> UniquePtr;
 
     virtual int start_connecting(StreamChannelConnectObserver*) = 0;
 
@@ -93,14 +94,6 @@ public:
     /* close/disconnect the channel, dropping pending/buffered data if
      * any */
     virtual void close() = 0;
-
-    // virtual void destroy();
-
-protected:
-
-    // destructor should be private or protected to prevent direct
-    // deletion. we're using folly::DelayedDestruction
-    virtual ~StreamChannel() = default;
 };
 
 }

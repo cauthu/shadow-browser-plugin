@@ -1,6 +1,5 @@
 
-#include "myassert.h"
-#include "logging.hpp"
+#include "easylogging++.h"
 #include "tcp_channel.hpp"
 #include "tcp_server.hpp"
 
@@ -24,7 +23,7 @@ TCPServer::~TCPServer()
 bool
 TCPServer::start_accepting()
 {
-    myassert(state_ == ServerState::INIT);
+    CHECK_EQ(state_, ServerState::INIT);
 
     /* create socket and manually bind so that we don't specify
      * SO_KEEPALIVE. evconnlistener_new_bind() uses SO_KEEPALIVE,
@@ -32,11 +31,11 @@ TCPServer::start_accepting()
      */
 
 	const auto fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
-	myassert (fd > 0);
+	CHECK_GT(fd, 0);
 
     int rv = 0;
     rv = evutil_make_listen_socket_reuseable(fd);
-    myassert(!rv);
+    CHECK_EQ(rv, 0);
 
     struct sockaddr_in server;
     bzero(&server, sizeof(server));
@@ -45,34 +44,33 @@ TCPServer::start_accepting()
     server.sin_port = htons(port_);
 
 	rv = bind(fd, (struct sockaddr *) &server, sizeof(server));
-	myassert(!rv);
+	CHECK_EQ(rv, 0);
 
     static const auto backlog = 1000;
 
 	rv = listen(fd, backlog); // hardcode for now
-    myassert(!rv);
+    CHECK_EQ(rv, 0);
 
-    myassert(!evlistener_);
+    CHECK(!evlistener_);
     evlistener_.reset(
         evconnlistener_new(
             evbase_, s_listener_acceptcb, this,
             LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
             backlog, fd));
-            // -1, (struct sockaddr*)&server, sizeof(server)));
-    myassert(evlistener_);
+    CHECK_NOTNULL(evlistener_);
 
     state_ = ServerState::ACCEPTING;
 
-    MYLOG(INFO) << ("tcpserver have started accepting");
+    VLOG(2) << "tcpserver have started accepting";
     return !!evlistener_;
 }
 
 bool
 TCPServer::pause_accepting()
 {
-    myassert(state_ == ServerState::ACCEPTING);
+    CHECK_EQ(state_, ServerState::ACCEPTING);
     const auto rv = evconnlistener_disable(evlistener_.get());
-    myassert(!rv);
+    CHECK_EQ(rv, 0);
     state_ = ServerState::PAUSED;
     return true;
 }
@@ -90,11 +88,11 @@ TCPServer::on_conn_accepted(
 {
     DestructorGuard dg(this);
 
-    myassert(state_ == ServerState::ACCEPTING);
-    myassert(evlistener_.get() == listener);
+    CHECK_EQ(state_, ServerState::ACCEPTING);
+    CHECK_EQ(evlistener_.get(), listener);
 
     auto rv = evutil_make_socket_nonblocking(fd);
-    myassert(!rv);
+    CHECK_EQ(rv, 0);
 
     TCPChannel::UniquePtr channel(new TCPChannel(evbase_, fd));
     observer_->onAccepted(this, std::move(channel));
@@ -106,8 +104,8 @@ TCPServer::on_accept_error(
 {
     DestructorGuard dg(this);
 
-    myassert(state_ == ServerState::ACCEPTING);
-    myassert(evlistener_.get() == listener);
+    CHECK_EQ(state_, ServerState::ACCEPTING);
+    CHECK_EQ(evlistener_.get(), listener);
 
     observer_->onAcceptError(this, errorcode);
 }
