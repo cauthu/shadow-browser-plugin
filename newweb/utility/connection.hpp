@@ -15,11 +15,13 @@
 #include <event2/buffer.h>
 
 #include <boost/function.hpp>
-#include <boost/core/noncopyable.hpp>
 
-#include "myevent.hpp"
+#include "object.hpp"
 #include "common.hpp"
 #include "request.hpp"
+#include "socks5_connector.hpp"
+#include "stream_channel.hpp"
+#include "tcp_channel.hpp"
 
 #include <spdylay/spdylay.h>
 
@@ -57,8 +59,9 @@ typedef void (*PushedBodyDoneCb)(int id, Connection* cnx, void* cb_data);
  */
 
 
-class Connection : private boost::noncopyable,
-                   public std::enable_shared_from_this<Connection>
+class Connection : public Object
+                 , public myio::Socks5ConnectorObserver
+                 , public myio::StreamChannelObserver
 {
 public:
 
@@ -89,7 +92,6 @@ public:
                void *cb_data /* for error_cb and eof_cb */,
                const bool& use_spdy
         );
-    ~Connection();
 
     /* !!!! NOTE: this request will not be copied, so the caller must
      * not free this request until it's been completed (either
@@ -121,26 +123,42 @@ public:
 
     void set_request_done_cb(ConnectionRequestDoneCb cb);
 
-    /* schedule this cnx for later deletion */
-    // void deleteLater(ShadowCreateCallbackFunc scheduleCallback);
+    const bool use_spdy_;
 
-    void on_read();
-    void on_write();
-    void on_connect();
-    void on_error();
-    void on_eof();
+private:
 
-    void on_socks5_proxy_connected();
-    void on_socks5_proxy_readable();
-    void on_socks5_proxy_writable();
+    /***** implement Socks5ConnectorObserver interface */
+    virtual void onSocksTargetConnectResult(
+        myio::Socks5Connector*, myio::Socks5ConnectorObserver::ConnectResult) noexcept override;
 
+    /***** implement StreamChannel interface */
+    virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
+    virtual void onWrittenData(myio::StreamChannel*) noexcept override;
+    virtual void onEOF(myio::StreamChannel*) noexcept override;
+    virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+
+    static ssize_t s_spdylay_send_cb(spdylay_session *, const uint8_t *,
+                                     size_t, int, void*);
     ssize_t spdylay_send_cb(spdylay_session *session, const uint8_t *data,
                             size_t length, int flags);
+
+    static ssize_t s_spdylay_recv_cb(spdylay_session *, uint8_t *,
+                                     size_t, int, void*);
     ssize_t spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
                             size_t length, int flags);
+
+    static void s_spdylay_on_ctrl_recv_cb(spdylay_session *,
+                                          spdylay_frame_type,
+                                          spdylay_frame *,
+                                          void *);
     void spdylay_on_ctrl_recv_cb(spdylay_session *session,
                                  spdylay_frame_type type,
                                  spdylay_frame *frame);
+
+    static void s_spdylay_before_ctrl_send_cb(spdylay_session *,
+                                              spdylay_frame_type,
+                                              spdylay_frame *,
+                                              void *);
     void spdylay_before_ctrl_send_cb(spdylay_session *session,
                                      spdylay_frame_type type,
                                      spdylay_frame *frame);
@@ -151,65 +169,62 @@ public:
      * been completely received, should look at the flags inside the
      * spdylay_on_data_recv_cb()
      */
+    static void s_spdylay_on_data_chunk_recv_cb(spdylay_session *,
+                                                uint8_t, int32_t,
+                                                const uint8_t *, size_t, void *);
     void spdylay_on_data_chunk_recv_cb(spdylay_session *session,
                                        uint8_t flags, int32_t stream_id,
                                        const uint8_t *data, size_t len);
+
+    static void s_spdylay_on_data_recv_cb(spdylay_session *,
+                                          uint8_t, int32_t,
+                                          int32_t, void *);
     void spdylay_on_data_recv_cb(spdylay_session *session,
                                  uint8_t flags, int32_t stream_id,
                                  int32_t len);
 
-    const uint32_t instNum_; // monotonic id of this cnx obj
-    const bool use_spdy_;
-
-private:
-
-    enum {
-        // Disconnected
-        DISCONNECTED,
-        // Connecting proxy and making CONNECT request
-        // PROXY_CONNECTING,
-        // Tunnel is established with proxy
-        // PROXY_CONNECTED,
-        // Establishing tunnel is failed
-        PROXY_FAILED,
-        // Connecting to downstream and/or performing SSL/TLS handshake
-        CONNECTING,
-        // Connected to downstream
-        CONNECTED,
-        NO_LONGER_USABLE,
-        // was connected and now destroyed, so don't use
-        DESTROYED,
-    };
-    /* state of socks5 proxy */
-    enum {
-        SOCKS5_NONE,
-        SOCKS5_GREETING,
-        SOCKS5_WRITE_REQUEST_NEXT,
-        SOCKS5_READ_RESP_NEXT,
-    };
+    virtual ~Connection();
 
     int initiate_connection();
+
+    void _setup_spdylay_session();
 
     /* this only takes data from whatever output buffers appropriate
      * (spdy or http) and write to socket. this is not responsible for
      * putting data into those buffers.
      */
-    void send_(); /* need underscore, otherwise compile error because
-                     same as socket send(2) */
+    void _maybe_send();
+
     void disconnect();
-    void http_write_to_outbuf(); // write submitted requests to output
-                                 // buff
+
+    // return true if did write to transport, otherwise return false
+    void _maybe_http_write_to_transport();
+
     // read from socket and process the read data
-    bool http_receive();
+    void _maybe_http_consume_input();
+
     void handle_server_push_ctrl_recv(spdylay_frame *frame);
 
-    static uint32_t nextInstNum;
-    struct event_base *evbase_; // dont free
-    std::unique_ptr<myevent_socket_t, void(*)(myevent_socket_t*)> ev_;
-    int fd_;
 
-    int state_;
-    int socks5_state_;
+    struct event_base *evbase_; // dont free
+    myio::TCPChannel::UniquePtr transport_;
+    myio::Socks5Connector::UniquePtr socks_connector_;
+
+    enum class State {
+        // Disconnected
+        DISCONNECTED,
+        // Connecting to socks5 proxy
+        PROXY_CONNECTING,
+        PROXY_CONNECTED,
+        PROXY_FAILED,
+        // Connecting to target (either ssp or destination webserver)
+        // -- possibly through socks proxy
+        CONNECTING,
+        CONNECTED,
+        NO_LONGER_USABLE,
+        // was connected and now destroyed, so don't use
+        DESTROYED,
+    } state_;
 
     const in_addr_t addr_;
     const in_port_t port_;
@@ -237,25 +252,18 @@ private:
     std::set<int32_t> psids_;
     /* for http-to-server support */
 
-    // perhaps take a look at libevent's evhttp
-
     /* requests submitted by browser are enqueued in
      * submitted_req_queue_. when a request is written into the
      * outbuf_, it is moved to active_req_queue_.
      */
     std::deque<Request* > submitted_req_queue_; // dont free these ptrs
     std::queue<Request* > active_req_queue_; // dont free these ptrs
-    std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> inbuf_;
-    std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> outbuf_;
-    const bool do_pipeline_; /* have NOT tested pipeling feature */
-    uint32_t max_pipeline_size_; /* NOTE: currently we assume all
-                                  * servers support size 4 */
-    int http_rsp_state_;
-    enum {
+
+    enum class HTTPRespState {
         HTTP_RSP_STATE_STATUS_LINE, /* waiting for a full status line */
         HTTP_RSP_STATE_HEADERS,
         HTTP_RSP_STATE_BODY,
-    };
+    } http_rsp_state_;
     int http_rsp_status_;
     std::vector<char *> rsp_hdrs_; // DO free every _other_ one of
                                    // these ptrs (i.e., index 0, 2, 4,
@@ -272,13 +280,6 @@ private:
      * socks handshake, which is negligible) */
     size_t cumulative_num_sent_bytes_;
     size_t cumulative_num_recv_bytes_;
-
-    /* use a flag to avoid unnecessarily -- though not affecting
-     * correctness -- calling the event's methods()
-     */
-    bool write_to_server_enabled_;
-    void enable_write_to_server_();
-    void disable_write_to_server_();
 
 };
 

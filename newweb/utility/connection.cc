@@ -1,4 +1,3 @@
-#include "connection.hpp"
 
 #include <errno.h>
 #include <netinet/tcp.h>
@@ -7,10 +6,8 @@
 #include <algorithm>
 #include <vector>
 
-using std::vector;
-using std::string;
-using std::pair;
-
+#include "connection.hpp"
+#include "easylogging++.h"
 #include "common.hpp"
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
@@ -23,6 +20,13 @@ extern "C" {
 }
 #endif
 
+using std::vector;
+using std::string;
+using std::pair;
+using myio::Socks5Connector;
+using myio::Socks5ConnectorObserver;
+using myio::StreamChannel;
+using myio::TCPChannel;
 
 #ifdef ENABLE_MY_LOG_MACROS
 /* "inst" stands for instance, as in, instance of a class */
@@ -48,128 +52,127 @@ extern "C" {
 
 #endif
 
-uint32_t Connection::nextInstNum = 0;
 
-//namespace {
-static void
-mev_readcb(int fd, void *ptr)
+Connection::Connection(
+    struct event_base *evbase,
+    const in_addr_t& addr, const in_port_t& port,
+    const in_addr_t& socks5_addr, const in_port_t& socks5_port,
+    const in_addr_t& ssp_addr, const in_port_t& ssp_port,
+    ConnectionErrorCb error_cb, ConnectionEOFCb eof_cb,
+    PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
+    PushedBodyDoneCb pushed_body_done_cb,
+    void *cb_data, const bool& use_spdy
+    )
+    : use_spdy_(use_spdy), evbase_(evbase)
+    , state_(State::DISCONNECTED)
+    , addr_(addr), port_(port)
+    , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
+    , ssp_addr_(ssp_addr), ssp_port_(ssp_port)
+    , cnx_error_cb_(error_cb), cnx_eof_cb_(eof_cb)
+    , notify_pushed_meta_(pushed_meta_cb)
+    , notify_pushed_body_data_(pushed_body_data_cb)
+    , notify_pushed_body_done_(pushed_body_done_cb)
+    , spdysess_{nullptr, spdylay_session_del}
+    , http_rsp_state_(HTTPRespState::HTTP_RSP_STATE_STATUS_LINE)
+    , http_rsp_status_(-1), first_byte_pos_(0), body_len_(-1)
+    , cumulative_num_sent_bytes_(0), cumulative_num_recv_bytes_(0)
 {
-    int rv;
-    logDEBUG("begin");
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    conn->on_read();
-    logDEBUG("done");
-}
-//} // namespace
-
-//namespace {
-static void
-mev_writecb(int fd, void *ptr)
-{
-    int rv;
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    loginst(DEBUG, conn, "begin");
-    conn->on_write();
-    loginst(DEBUG, conn, "done");
-}
-//} // namespace
-
-//namespace {
-static void
-mev_eventcb(int fd, short events, void *ptr)
-{
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    if(events & MEV_EVENT_CONNECTED) {
-        loginst(DEBUG, conn, "Connection established");
-        conn->on_connect();
-        /* not calling setsockopt( tcp_nodelay) because shadow doesn't
-         * implement it */
-    } else if(events & MEV_EVENT_EOF) {
-        loginst(DEBUG, conn, "EOF");
-        conn->on_eof();
-    } else if(events & (MEV_EVENT_ERROR)) {
-        loginst(WARNING, conn, "Network error");
-        conn->on_error();
+    /* ssp acts as an http proxy, only it uses spdy to transport. so
+     * if ssp is used, then we don't need the actual address of the
+     * final site, as the ":host" header will take care of
+     * that. otherwise, i.e., no ssp host is specified, then we need
+     * to the final site's address.
+     */
+    if (ssp_addr_) {
+        CHECK(!addr_);
+    } else {
+        CHECK(addr_);
     }
-}
-//} // namespace
 
-static ssize_t
-spdylay_send_cb(spdylay_session *session, const uint8_t *data,
-                size_t length, int flags, void *user_data)
+    if (use_spdy_) {
+        /* it's ok to set up the session now even though socket is not
+         * connected */
+        CHECK(!spdysess_);
+        _setup_spdylay_session();
+        CHECK(spdysess_);
+    }
+
+    initiate_connection();
+}
+
+ssize_t
+Connection::s_spdylay_send_cb(spdylay_session *session, const uint8_t *data,
+                              size_t length, int flags, void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     return conn->spdylay_send_cb(session, data, length, flags);;
 }
 
-static ssize_t
-spdylay_recv_cb(spdylay_session *session, uint8_t *buf, size_t length,
-                int flags, void *user_data)
+ssize_t
+Connection::s_spdylay_recv_cb(spdylay_session *session, uint8_t *buf, size_t length,
+                            int flags, void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     return conn->spdylay_recv_cb(session, buf, length, flags);
 }
 
-static void
-spdylay_on_data_recv_cb(spdylay_session *session,
-                        uint8_t flags, int32_t stream_id,
-                        int32_t len, void *user_data)
+void
+Connection::s_spdylay_on_data_recv_cb(spdylay_session *session,
+                                    uint8_t flags, int32_t stream_id,
+                                    int32_t len, void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     conn->spdylay_on_data_recv_cb(session, flags, stream_id, len);
 }
 
-static void
-spdylay_on_data_chunk_recv_cb(spdylay_session *session,
-                              uint8_t flags, int32_t stream_id,
-                              const uint8_t *data, size_t len,
-                              void *user_data)
+void
+Connection::s_spdylay_on_data_chunk_recv_cb(spdylay_session *session,
+                                            uint8_t flags, int32_t stream_id,
+                                            const uint8_t *data, size_t len,
+                                            void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     conn->spdylay_on_data_chunk_recv_cb(session, flags, stream_id,
                                         data, len);
 }
 
-static void
-spdylay_on_ctrl_recv_cb(spdylay_session *session, spdylay_frame_type type,
-                        spdylay_frame *frame, void *user_data)
+void
+Connection::s_spdylay_on_ctrl_recv_cb(spdylay_session *session, spdylay_frame_type type,
+                                    spdylay_frame *frame, void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     conn->spdylay_on_ctrl_recv_cb(session, type, frame);
 }
 
-//namespace {
 void
-spdylay_before_ctrl_send_cb(spdylay_session *session,
-                            spdylay_frame_type type,
-                            spdylay_frame *frame,
-                            void *user_data)
+Connection::s_spdylay_before_ctrl_send_cb(spdylay_session *session,
+                                          spdylay_frame_type type,
+                                          spdylay_frame *frame,
+                                          void *user_data)
 {
-    Connection *conn = reinterpret_cast<Connection*>(user_data);
+    Connection *conn = (Connection*)(user_data);
     conn->spdylay_before_ctrl_send_cb(session, type, frame);
 }
-//} // namespace
 
-static spdylay_session*
-set_up_spdylay_session(void* user_data)
+void
+Connection::_setup_spdylay_session()
 {
-    int r;
     spdylay_session_callbacks callbacks;
     bzero(&callbacks, sizeof callbacks);
-    callbacks.send_callback = spdylay_send_cb;
-    callbacks.recv_callback = spdylay_recv_cb;
-    callbacks.on_ctrl_recv_callback = spdylay_on_ctrl_recv_cb;
-    callbacks.on_data_chunk_recv_callback = spdylay_on_data_chunk_recv_cb;
-    callbacks.on_data_recv_callback = spdylay_on_data_recv_cb;
+    callbacks.send_callback = s_spdylay_send_cb;
+    callbacks.recv_callback = s_spdylay_recv_cb;
+    callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
+    callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
+    callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
     /* callbacks.on_stream_close_callback = spdylay_on_stream_close_cb; */
-    callbacks.before_ctrl_send_callback = spdylay_before_ctrl_send_cb;
+    callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
     /* callbacks.on_ctrl_not_send_callback = spdylay_on_ctrl_not_send_cb; */
 
-    spdylay_session *session_ = nullptr;
+    spdylay_session *session = nullptr;
 
     // version 3 just adds flow control, compared to version 2
-    r = spdylay_session_client_new(&session_, 2, &callbacks, user_data);
-    myassert(0 == r);
+    auto r = spdylay_session_client_new(&session, 2, &callbacks, this);
+    CHECK_EQ(r, 0);
 
 #if 0
     spdylay_settings_entry entry[2];
@@ -187,68 +190,72 @@ set_up_spdylay_session(void* user_data)
     myassert (0 == r);
 #endif
 
-    return session_;
+    spdysess_.reset(session);
+    session = nullptr;
+
+    return;
 }
 
 void
-Connection::http_write_to_outbuf()
+Connection::_maybe_http_write_to_transport()
 {
-    logself(DEBUG, "begin");
-    if (submitted_req_queue_.size() == 0) {
-        logself(DEBUG, "submit queue is empty");
+    VLOG(2) << "begin";
+    CHECK_EQ(state_, State::CONNECTED);
+
+    if (submitted_req_queue_.empty()) {
+        VLOG(2) << "submit queue is empty -> nothing to do";
         return;
     }
-    Request *req = nullptr;
+
     auto const qsize = active_req_queue_.size();
-    logself(DEBUG, "active req qsize %u", qsize);
-    if (!do_pipeline_) {
-        if (qsize > 0) {
-            logself(DEBUG, "no pipeline, and there's an active req -> wait");
-            return;
-        }
-        // else fall through to send req
-    } else {
-        // doing pipeline, but limit num of concurrent reqs
-        if (qsize >= max_pipeline_size_) {
-            logself(DEBUG,
-                    "already %u reqs in active pipeline -> wait", qsize);
-            return;
-        }
-        // else fall through to send req
+    VLOG(2) << "active req qsize " << qsize;
+    CHECK_LE(qsize, 1);
+
+    if (qsize > 0) {
+        VLOG(2) << "there's an active req -> can't write to output";
+        return;
     }
-    logself(DEBUG, "writing a req to outbuf");
-    req = submitted_req_queue_.front();
-    myassert(req);
+
+    VLOG(2) << "writing a req to transport";
+
+    auto req = submitted_req_queue_.front();
+    CHECK_NOTNULL(req);
     submitted_req_queue_.pop_front();
 
-    myassert(0 < evbuffer_add_printf(
-               outbuf_.get(), "GET %s HTTP/1.1\r\n", req->path_.c_str()));
+    std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> buf(
+        evbuffer_new(), evbuffer_free);
+    CHECK_NOTNULL(buf.get());
+
+    // add first line
+    auto rv = evbuffer_add_printf(
+        buf.get(), "GET %s HTTP/1.1\r\n", req->path_.c_str());
+    CHECK_GT(rv, 0);
+
+    // add headers
     const auto& hdrs = req->get_headers();
     for (auto const & it : hdrs) {
-        myassert(0 < evbuffer_add_printf(
-                   outbuf_.get(), "%s: %s\r\n", it.first.c_str(),
-                   it.second.c_str()));
+        rv = evbuffer_add_printf(
+            buf.get(), "%s: %s\r\n", it.first.c_str(), it.second.c_str());
+        CHECK_GT(rv, 0);
     }
 
     first_byte_pos_ = req->get_first_byte_pos();
     if (first_byte_pos_ > 0) {
-        logself(DEBUG, "adding first_byte_pos_ %zu", first_byte_pos_);
-        myassert(0 < evbuffer_add_printf(
-                     outbuf_.get(), "Range: bytes=%zu-\r\n", first_byte_pos_));
+        VLOG(2) << "adding first_byte_pos_ " << first_byte_pos_;
+        rv = evbuffer_add_printf(
+            buf.get(), "Range: bytes=%zu-\r\n", first_byte_pos_);
+        CHECK_GT(rv, 0);
     }
 
-    myassert(2 == evbuffer_add_printf(outbuf_.get(), "\r\n"));
+    rv = evbuffer_add_printf(buf.get(), "\r\n");
+    CHECK_EQ(rv, 2);
+
+    rv = transport_->write_buffer(buf.get());
+    CHECK_EQ(rv, 0);
+
     active_req_queue_.push(req);
 
-    if (state_ == CONNECTED) {
-        /* we might not be fully connected yet, e.g., still
-         * negotiating with the socks proxy, in which case we don't
-         * want to interfere.
-         */
-        enable_write_to_server_();
-    }
-    
-    logself(DEBUG, "done");
+    VLOG(2) << ("done");
     return;
 }
 
@@ -258,10 +265,11 @@ Connection::submit_request(Request* req)
     /* it's ok to submit requests if not yet connected, etc, but proly
      * a bug if submitting a request after we have closed
      */
-    myassert((state_ != NO_LONGER_USABLE) && (state_ != DESTROYED));
+    myassert((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
 
-    logself(DEBUG, "begin");
-    logself(DEBUG, "path [%s]", req->get_path().c_str());
+    VLOG(2) << ("begin");
+    VLOG(2) << "path [" << req->get_path().c_str() << "]";
+
     if (use_spdy_) {
         const auto& hdrs = req->get_headers();
         const char **nv = (const char**)calloc(5*2 + hdrs.size()*2 + 1, sizeof(char*));
@@ -280,150 +288,33 @@ Connection::submit_request(Request* req)
         for (auto const& it : hdrs) {
             const char *name = it.first.c_str();
             const char *value = it.second.c_str();
-            logself(DEBUG, "hdr name [%s] value [%s]", name, value);
+            VLOG(2) << "hdr name [" << name << "] value [" << value << "]";
             nv[hdidx++] = name;
             nv[hdidx++] = value;
         };
-        nv[hdidx++] = NULL;
+        nv[hdidx++] = nullptr;
 
         /* spdylay_submit_request() will make copies of nv */
-        int rv = spdylay_submit_request(spdysess_.get(), 0, nv, NULL, req);
-        myassert(rv == 0);
+        int rv = spdylay_submit_request(spdysess_.get(), 0, nv, nullptr, req);
+        CHECK_EQ(rv, 0);
         free(nv);
-        enable_write_to_server_();
     } else {
         submitted_req_queue_.push_back(req);
-        /* http_write_to_outbuf() takes care of enabling the write
-         * event. */
-        http_write_to_outbuf();
     }
+
+    _maybe_send();
 
     req->conn = this;
 
-    logself(DEBUG, "done");
+    VLOG(2) << ("done");
     return 0;
-}
-
-void
-Connection::enable_write_to_server_()
-{
-    if (!write_to_server_enabled_) {
-        ev_->set_writecb(mev_writecb);
-        write_to_server_enabled_ = true;
-    } else {
-        logself(DEBUG, "no-op because was already enabled");
-    }
-}
-
-void
-Connection::disable_write_to_server_()
-{
-    if (write_to_server_enabled_) {
-        ev_->set_writecb(NULL);
-        write_to_server_enabled_ = false;
-    } else {
-        logself(DEBUG, "no-op because was already disabled");
-    }
-}
-
-//namespace {
-void
-mev_socks5_proxy_readcb(int fd, void *ptr)
-{
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    conn->on_socks5_proxy_readable();
-}
-
-void
-mev_socks5_proxy_writecb(int fd, void *ptr)
-{
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    conn->on_socks5_proxy_writable();
-}
-//} // namespace
-
-//namespace {
-static void
-mev_socks5_proxy_eventcb(int fd, short events, void *ptr)
-{
-    Connection *conn = reinterpret_cast<Connection*>(ptr);
-    loginst(DEBUG, conn, "begin");
-    if(events & MEV_EVENT_CONNECTED) {
-        loginst(DEBUG, conn, "Connected to the socks5 proxy");
-        conn->on_socks5_proxy_connected();
-    } else if(events & MEV_EVENT_EOF) {
-        myassert(0);
-    } else if(events & (MEV_EVENT_ERROR)) {
-        myassert(0);
-    }
-    loginst(DEBUG, conn, "done");
-}
-//} // namespace
-
-Connection::Connection(
-    struct event_base *evbase,
-    const in_addr_t& addr, const in_port_t& port,
-    const in_addr_t& socks5_addr, const in_port_t& socks5_port,
-    const in_addr_t& ssp_addr, const in_port_t& ssp_port,
-    ConnectionErrorCb error_cb, ConnectionEOFCb eof_cb,
-    PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
-    PushedBodyDoneCb pushed_body_done_cb,
-    void *cb_data, const bool& use_spdy
-    )
-    : instNum_(nextInstNum), use_spdy_(use_spdy),evbase_(evbase)
-    , ev_(nullptr, [](myevent_socket_t* ev){ev->set_close_fd(false); delete ev;})
-    , fd_(-1)
-    , state_(DISCONNECTED), socks5_state_(SOCKS5_NONE)
-    , addr_(addr), port_(port)
-    , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
-    , ssp_addr_(ssp_addr), ssp_port_(ssp_port)
-    , cnx_error_cb_(error_cb), cnx_eof_cb_(eof_cb)
-    , notify_pushed_meta_(pushed_meta_cb)
-    , notify_pushed_body_data_(pushed_body_data_cb)
-    , notify_pushed_body_done_(pushed_body_done_cb)
-    , spdysess_{nullptr, spdylay_session_del}, inbuf_{nullptr, evbuffer_free}
-    , outbuf_{nullptr, evbuffer_free}, do_pipeline_(false)
-    , max_pipeline_size_(1)
-    , http_rsp_state_(HTTP_RSP_STATE_STATUS_LINE)
-    , http_rsp_status_(-1), first_byte_pos_(0), body_len_(-1)
-    , cumulative_num_sent_bytes_(0), cumulative_num_recv_bytes_(0)
-    , write_to_server_enabled_(false)
-{
-    ++nextInstNum;
-
-    /* ssp acts as an http proxy, only it uses spdy to transport. so
-     * if ssp is used, then we don't need the actual address of the
-     * final site, as the ":host" header will take care of
-     * that. otherwise, i.e., no ssp host is specified, then we need
-     * to the final site's address.
-     */
-    if (ssp_addr_) {
-        myassert(!addr_);
-    } else {
-        myassert(addr_);
-    }
-
-    if (use_spdy_) {
-        /* it's ok to set up the session now even though socket is not
-         * connected */
-        myassert(!spdysess_);
-        spdysess_.reset(set_up_spdylay_session(this));
-        myassert(spdysess_);
-    } else {
-        myassert(!inbuf_ && !outbuf_);
-        inbuf_.reset(evbuffer_new());
-        outbuf_.reset(evbuffer_new());
-        myassert(inbuf_ && outbuf_);
-    }
-
-    initiate_connection();
 }
 
 Connection::~Connection()
 {
     logself(DEBUG, "begin destructor");
     disconnect();
-    evbase_ = NULL; // no freeing
+    evbase_ = nullptr; // no freeing
     logself(DEBUG, "done destructor");
 }
 
@@ -445,30 +336,17 @@ Connection::set_request_done_cb(ConnectionRequestDoneCb cb)
     notify_request_done_cb_ = cb;
 }
 
-static void
-delete_cnx(void *ptr)
-{
-    delete ((Connection*)ptr);
-}
-
-// void
-// Connection::deleteLater(ShadowCreateCallbackFunc scheduleCallback)
-// {
-//     scheduleCallback(delete_cnx, this, 0);
-// }
-
 bool
 Connection::is_idle() const {
-    if (state_ == CONNECTED) {
+    if (state_ == State::CONNECTED) {
         if (use_spdy_) {
             return (!spdylay_session_want_read(spdysess_.get())
                     && !spdylay_session_want_write(spdysess_.get()));
         } else {
             const int subqsize = submitted_req_queue_.size();
             const int activeqsize = active_req_queue_.size();
-            logself(DEBUG, "%d, %d", subqsize, activeqsize);
-            return (submitted_req_queue_.size() == 0
-                    && active_req_queue_.size() == 0);
+            VLOG(2) << subqsize << ", " << activeqsize;
+            return (!subqsize && !activeqsize);
         }
     }
     return false;
@@ -487,374 +365,350 @@ Connection::disconnect()
      * on_read(). UPDATE: doesn't help, so i'll just disable the
      * assert, and simply do nothing if the check fails.
      */
-    ev_.reset(); // reset() here instead of waiting for Connection's
-                 // destructor
-    if(fd_ != -1) {
-        logself(DEBUG, "closing fd %d", fd_);
-        //shutdown(fd_, SHUT_WR); // shadow doesn't support shutdown()
-        close(fd_);
-        fd_ = -1;
-    }
+    transport_.reset(); // reset() here instead of waiting for
+                        // Connection's destructor
 
-    state_ = NO_LONGER_USABLE;
+    state_ = State::NO_LONGER_USABLE;
     logself(DEBUG, "done");
 }
 
 void
-Connection::on_socks5_proxy_connected()
+Connection::_maybe_http_consume_input()
 {
-    Connection *conn = this;
-    loginst(DEBUG, conn, "begin");
-    // write the client greeting
-    static const char req[] = "\x05\x01\x00";
-    // don't use "sizeof req", which gives you 4
-    myassert(write(fd_, req, 3) == 3);
-    conn->socks5_state_ = SOCKS5_GREETING;
-    // when the proxy replies, we will handle in socks5_proxy_readcb()
-    ev_->set_readcb(mev_socks5_proxy_readcb);
-    ev_->set_writecb(NULL);
-    loginst(DEBUG, conn, "done");
-}
-    
-void
-Connection::on_connect()
-{
-    myassert(state_ == CONNECTING);
-    logself(DEBUG, "now connected");
-    state_ = CONNECTED;
-    send_();
-    logself(DEBUG, "done");
-}
+    VLOG(2) << ("begin");
 
-void
-Connection::on_write()
-{
-    send_();
-}
-
-bool
-Connection::http_receive()
-{
-    logself(DEBUG, "begin");
-    bool reached_eof = false;
-
-    if (active_req_queue_.size() == 0) {
+    if (active_req_queue_.empty()) {
         logself(DEBUG, "no active req waiting to be received");
-        //disable read monitoring
-        ev_->set_readcb(NULL);
-        return reached_eof;
+        return;
     }
-    /* read into buffer */
 
-    /* for some reason, evbuffer_read() fails on "bad file
-     * descriptor". so we have to read(fd_) ourselves.
-     *
-     * use iov to reduce copying.
-     */
-    //int numread = evbuffer_read(inbuf_, fd_, -1);
-
-    struct evbuffer_iovec v[2];
-    int n = 0, i = 0, num_to_commit = 0;
-    static const size_t n_to_add = 4096 * ARRAY_LEN(v);
-    char *line = NULL;
+    char *line = nullptr;
     bool content_range_found = false;
+    bool keep_consuming = true;
 
-read_more:
-    n = 0;
-    i = 0;
-    num_to_commit = 0;
+    // don't free this inbuf
+    struct evbuffer *inbuf = transport_->get_input_evbuf();
+    CHECK_NOTNULL(inbuf);
 
-    n = evbuffer_reserve_space(inbuf_.get(), n_to_add, v, ARRAY_LEN(v));
-    myassert(n>0);
+    VLOG(2) << "num bytes available in inbuf: " << evbuffer_get_length(inbuf);
 
-    for (i=0; i<n && n_to_add > 0; ++i) {
-        size_t len = v[i].iov_len;
-        if (len > n_to_add) {/* Don't write more than n_to_add bytes. */
-            len = n_to_add;
-        }
-        const int numread = recv(fd_, v[i].iov_base, len, 0);
-        if (numread == 0) {
-            logself(DEBUG, "cnx is closed");
-            reached_eof = true;
-            break;
-        } else if (numread == -1) {
-            myassert(errno == EWOULDBLOCK);
-        } else {
-            myassert(numread > 0);
-            if (0 == cumulative_num_recv_bytes_
-                && cnx_first_recv_byte_cb_)
-            {
-                cnx_first_recv_byte_cb_(this);
-            }
-            cumulative_num_recv_bytes_ += numread;
-            logself(DEBUG, "able to read %zd bytes", numread);
-            ++num_to_commit;
-            /* Set iov_len to the number of bytes we actually wrote,
-               so we don't commit too much. */
-            v[i].iov_len = numread;
-            if (numread < len) {
-                // did not read as much as we wanted --> assume no
-                // more available now --> stop reading
-                break;
-            } else {
-                myassert(len == numread);
-            }
-        }
+    if (evbuffer_get_length(inbuf) == 0) {
+        VLOG(2) << "no input available";
+        return;
     }
 
-    if (0 == num_to_commit) {
-        logself(DEBUG, "not able to read anything/more -> return");
-        goto done;
-    }
-
-    /* We commit the space here.  Note that we give it 'i' (the number
-       of vectors we actually used) rather than 'n' (the number of
-       vectors we had available. */
-    if (evbuffer_commit_space(inbuf_.get(), v, num_to_commit) < 0) {
-        myassert(0);
-    }
-
-    logself(DEBUG, "num bytes available in inbuf: %d",
-            evbuffer_get_length(inbuf_.get()));
-
-    /* process it */
-handle_response:
-    line = NULL;
-    switch (http_rsp_state_) {
-    case HTTP_RSP_STATE_STATUS_LINE: {
-        /* readln() does drain the buffer */
-        line = evbuffer_readln(
-            inbuf_.get(), NULL, EVBUFFER_EOL_CRLF_STRICT);
-        if (line) {
-            logself(DEBUG, "got status line: [%s]", line);
-            const char *tmp = strchr(line, ' ');
-            myassert(tmp);
-            http_rsp_status_ = strtol(tmp + 1, NULL, 10);
-            if (http_rsp_status_ != 200 && http_rsp_status_ != 206) {
-                Request *req = active_req_queue_.front();
-#ifdef _update_code
-                logfn(SHADOW_LOG_LEVEL_WARNING,
-                      "req [%s] got status [%d]", req->url_.c_str(), 
-                      http_rsp_status_);
-#endif
-                myassert(0);
-            }
-            logself(DEBUG, "status: [%d]", http_rsp_status_);
-            http_rsp_state_ = HTTP_RSP_STATE_HEADERS;
-            content_range_found = false;
-            free(line);
-            line = NULL;
-            goto handle_response;
-        }
-        /* we read only n_to_add bytes from socket. more might be
-         * available, so go try more.
-         */
-        goto read_more;
-        break;
-    }
-    case HTTP_RSP_STATE_HEADERS: {
-        logself(DEBUG, "try to get response headers");
-        while (NULL != (line = evbuffer_readln(
-                            inbuf_.get(), NULL, EVBUFFER_EOL_CRLF_STRICT)))
-        {
-            /* a header line is assumped to be:
-
-               <name>: <value>
-
-               the "line" returned by evbuffer_readln() needs to be
-               freed, but we avoid allocating more memory by having
-               our name and value pointers point to the same
-               "line". so when we free, only free the name pointers.
-             */
-            if (line[0] == '\0') {
-                // no more hdrs
-                myassert(body_len_ >= 0);
-                myassert(0 == (rsp_hdrs_.size() % 2));
-
-                if (!content_range_found && first_byte_pos_ > 0) {
-#ifdef _update_code
-                    logfn(SHADOW_LOG_LEVEL_ERROR, __func__,
-                          "content-range header is missing in response.");
-#endif
-                    myassert(0);
+    do {
+        line = nullptr;
+        switch (http_rsp_state_) {
+        case HTTPRespState::HTTP_RSP_STATE_STATUS_LINE: {
+            /* readln() DOES drain the buffer if it returns a line */
+            line = evbuffer_readln(
+                inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT);
+            if (line) {
+                logself(DEBUG, "got status line: [%s]", line);
+                const char *tmp = strchr(line, ' ');
+                CHECK_NOTNULL(tmp);
+                http_rsp_status_ = strtol(tmp + 1, nullptr, 10);
+                if (http_rsp_status_ != 200 && http_rsp_status_ != 206) {
+                    Request *req = active_req_queue_.front();
+                    LOG(FATAL) << "req [" << req->url_ << "] got status ["
+                               << http_rsp_status_ << " ]";
+                    CHECK(0) << "not reached";
                 }
-
-                char **nv = (char**)malloc((rsp_hdrs_.size() + 1) * sizeof (char*));
-                int j = 0;
-                for (; j < rsp_hdrs_.size(); ++j) {
-                    nv[j] = rsp_hdrs_[j];
-                    logself(DEBUG, "nv[%d] = [%s]", j, nv[j]);
-                }
-                nv[j] = NULL; /* null sentinel */
-                Request *req = active_req_queue_.front();
-                req->notify_rsp_meta(http_rsp_status_, nv);
-                free(nv);
-                for (int i = 0; i < rsp_hdrs_.size(); i += 2) {
-                    free(rsp_hdrs_[i]);
-                }
-                rsp_hdrs_.clear();
-                http_rsp_state_ = HTTP_RSP_STATE_BODY;
+                logself(DEBUG, "status: [%d]", http_rsp_status_);
+                http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_HEADERS;
+                content_range_found = false;
                 free(line);
-                line = NULL;
-                goto handle_response;
+                line = nullptr;
             } else {
-                logself(DEBUG, "whole rsp hdr line: [%s]", line);
-                // XXX/TODO: expect all lower case
-                char *tmp = strchr(line, ':');
-                myassert(tmp);
-                rsp_hdrs_.push_back(line);
-                *tmp = '\0'; /* colon becomes NULL */
-                ++tmp;
-                *tmp = '\0'; /* blank space becomes NULL */
-                ++tmp;
-                rsp_hdrs_.push_back(tmp);
-                if (!strcasecmp(line, "content-length")) {
-                    body_len_ = strtol(tmp, NULL, 10);
-                    logself(DEBUG, "body content length: [%d]", body_len_);
-                } else if (!strcasecmp(line, "max-pipeline")) {
-#if 0
-                    max_pipeline_size_ = strtol(tmp, NULL, 10);
-                    logself(DEBUG, "max pipeline size supported: [%u]", max_pipeline_size_);
-#endif
-                } else if (!strcasecmp(line, "content-range")) {
-                    int first_byte_pos = 0;
-                    int last_byte_pos = 0;
-                    int full_len = 0;
-                    myassert(-1 != parseContentRange(tmp, 0, &first_byte_pos, &last_byte_pos, &full_len));
-                    if (first_byte_pos != first_byte_pos_) {
-#ifdef _update_code
-                        logfn(SHADOW_LOG_LEVEL_ERROR, __func__,
-                              "response first-byte-pos is %d, but we expect %d", 
-                              first_byte_pos, first_byte_pos_);
-#endif
-                        myassert(0);
+                // not enough input data to find whole status line
+                keep_consuming = false;
+            }
+
+            break; // out of switch
+        }
+
+        case HTTPRespState::HTTP_RSP_STATE_HEADERS: {
+            logself(DEBUG, "try to get response headers");
+            while (nullptr != (line = evbuffer_readln(
+                                   inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT)))
+            {
+                /* a header line is assumped to be:
+
+                   <name>: <value>
+
+                   the "line" returned by evbuffer_readln() needs to be
+                   freed, but we avoid allocating more memory by having
+                   our name and value pointers point to the same
+                   "line". so when we free, only free the name pointers.
+                */
+                if (line[0] == '\0') {
+                    // the end of headers, so we notify user of
+                    // response meta info and then move to next state
+                    // to read body
+
+                    myassert(body_len_ >= 0);
+                    myassert(0 == (rsp_hdrs_.size() % 2));
+
+                    if (!content_range_found && first_byte_pos_ > 0) {
+                        LOG(FATAL) << "content-range header is missing in response.";
+                        CHECK(0) << "not reached";
                     }
-                    logself(DEBUG, "parsed first_byte_pos %d, last_byte_pos %d, full_len %d",
-                            first_byte_pos, last_byte_pos, full_len);
-                    myassert((full_len - 1) == last_byte_pos);
-                    content_range_found = true;
+
+                    // notify user of response meta info
+
+                    char **nv = (char**)malloc((rsp_hdrs_.size() + 1) * sizeof (char*));
+                    int j = 0;
+                    for (; j < rsp_hdrs_.size(); ++j) {
+                        nv[j] = rsp_hdrs_[j];
+                        logself(DEBUG, "nv[%d] = [%s]", j, nv[j]);
+                    }
+                    nv[j] = nullptr; /* null sentinel */
+                    Request *req = active_req_queue_.front();
+                    req->notify_rsp_meta(http_rsp_status_, nv);
+                    free(nv);
+                    for (int i = 0; i < rsp_hdrs_.size(); i += 2) {
+                        free(rsp_hdrs_[i]);
+                    }
+                    rsp_hdrs_.clear();
+                    http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_BODY;
+                    free(line);
+                    line = nullptr;
+                    break; // out of while loop trying to read header lines
+                } else {
+                    logself(DEBUG, "whole rsp hdr line: [%s]", line);
+                    // XXX/TODO: expect all lower case
+                    char *tmp = strchr(line, ':');
+                    myassert(tmp);
+                    rsp_hdrs_.push_back(line);
+                    *tmp = '\0'; /* colon becomes NULL */
+                    ++tmp;
+                    *tmp = '\0'; /* blank space becomes NULL */
+                    ++tmp;
+                    rsp_hdrs_.push_back(tmp);
+                    if (!strcasecmp(line, "content-length")) {
+                        body_len_ = strtol(tmp, nullptr, 10);
+                        logself(DEBUG, "body content length: [%d]", body_len_);
+                    } else if (!strcasecmp(line, "content-range")) {
+                        int first_byte_pos = 0;
+                        int last_byte_pos = 0;
+                        int full_len = 0;
+                        myassert(-1 != parseContentRange(tmp, 0, &first_byte_pos, &last_byte_pos, &full_len));
+                        if (first_byte_pos != first_byte_pos_) {
+                            LOG(FATAL) << "response first-byte-pos is " << first_byte_pos
+                                       << ", but we expect " << first_byte_pos_;
+                            CHECK(0) << "not reached";
+                        }
+                        logself(DEBUG, "parsed first_byte_pos %d, last_byte_pos %d, full_len %d",
+                                first_byte_pos, last_byte_pos, full_len);
+                        myassert((full_len - 1) == last_byte_pos);
+                        content_range_found = true;
+                    }
+                    // DO NOT free line. because it's in the rsp_hdrs_;
+                    line = nullptr;
+                    // done processing one header line
                 }
-                // DO NOT free line. because it's in the rsp_hdrs_;
-            }
-        }
-        /* we read only n_to_add bytes from socket. more might be
-         * available, so go try more.
-         */
-        goto read_more;
-        break;
-    }
+            } // end while loop
 
-    case HTTP_RSP_STATE_BODY: {
-        myassert(body_len_ > 0);
-        logself(DEBUG, "get rsp body, current body_len_ %d", body_len_);
-        Request *req = active_req_queue_.front();
-        while (evbuffer_get_length(inbuf_.get()) > 0 && body_len_ > 0) {
-            int numconsumed = 0;
-            struct evbuffer_iovec v[2];
-            const int n = evbuffer_peek(
-                inbuf_.get(), body_len_, NULL, v, ARRAY_LEN(v));
-            for (int i = 0; i < n; ++i) {
-                /* this iov might be more than what we asked for */
-                /* at time point, body_len_ is guaranteed to be
-                 * non-negative, so ok to cast to size_t
+            CHECK(!line);
+            if (http_rsp_state_ == HTTPRespState::HTTP_RSP_STATE_HEADERS) {
+                // if we're still trying to get more headers, that
+                // means there was not enough input
+                keep_consuming = false;
+            }
+            break; // out of switch
+        }
+
+        case HTTPRespState::HTTP_RSP_STATE_BODY: {
+            myassert(body_len_ > 0);
+            logself(DEBUG, "get rsp body, current body_len_ %d", body_len_);
+            Request *req = active_req_queue_.front();
+            while (evbuffer_get_length(inbuf) > 0 && body_len_ > 0) {
+                int numconsumed = 0;
+                struct evbuffer_iovec v[2];
+                // using evbuffer_peek() to avoid copying
+                const int n = evbuffer_peek(
+                    inbuf, body_len_, nullptr, v, ARRAY_LEN(v));
+                for (int i = 0; i < n; ++i) {
+                    /* this iov might be more than what we asked for */
+                    /* at time point, body_len_ is guaranteed to be
+                     * non-negative, so ok to cast to size_t
+                     */
+                    const int consumed_of_this_one = std::min((size_t)body_len_, v[i].iov_len);
+                    numconsumed += consumed_of_this_one;
+                    body_len_ -= consumed_of_this_one;
+                    myassert(body_len_ >= 0);
+                    req->notify_rsp_body_data(
+                        (const uint8_t *)v[i].iov_base, consumed_of_this_one);
+                }
+                logself(DEBUG, "consumed %d bytes -> new body_len_ %d",
+                        numconsumed, body_len_);
+                myassert(0 == evbuffer_drain(inbuf, numconsumed));
+            }
+            if (body_len_ == 0) {
+                /* remove req from active queue */
+                active_req_queue_.pop();
+                req->notify_rsp_body_done();
+                body_len_ = -1;
+                http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_STATUS_LINE;
+                if (!notify_request_done_cb_.empty()) {
+                    notify_request_done_cb_(this, req);
+                }
+                /* if there's more in the submitted queue, we should be
+                 * able move some into the active queue, now that we just
+                 * cleared some space in the active queue
                  */
-                const int consumed_of_this_one = std::min((size_t)body_len_, v[i].iov_len);
-                numconsumed += consumed_of_this_one;
-                body_len_ -= consumed_of_this_one;
-                myassert(body_len_ >= 0);
-                req->notify_rsp_body_data(
-                    (const uint8_t *)v[i].iov_base, consumed_of_this_one);
+                /* http_write_to_transport() takes care of enabling the
+                 * write event */
+                _maybe_http_write_to_transport();
+                // goto handle_response;
             }
-            logself(DEBUG, "consumed %d bytes -> new body_len_ %d",
-                    numconsumed, body_len_);
-            myassert(0 == evbuffer_drain(inbuf_.get(), numconsumed));
-        }
-        if (body_len_ == 0) {
-            /* remove req from active queue */
-            active_req_queue_.pop();
-            req->notify_rsp_body_done();
-            body_len_ = -1;
-            http_rsp_state_ = HTTP_RSP_STATE_STATUS_LINE;
-            if (!notify_request_done_cb_.empty()) {
-                notify_request_done_cb_(this, req);
-            }
-            /* if there's more in the submitted queue, we should be
-             * able move some into the active queue, now that we just
-             * cleared some space in the active queue
-             */
-            /* http_write_to_outbuf() takes care of enabling the
-             * write event */
-            http_write_to_outbuf();
-            goto handle_response;
-        }
 
-        /* we read only n_to_add bytes from socket. more might be
-         * available, so go try more.
-         */
-        goto read_more;
-        break;
-    }
-    default:
-        break;
-    }
+            break;
+        }
+        default:
+            CHECK(0) << "invalid http_rsp_state_: " << http_rsp_state_; 
+            break;
+        }
+    } while (keep_consuming);
 
-done:
-    logself(DEBUG, "done");
-    return !reached_eof;
+    return;
 }
 
 void
-Connection::on_read()
+Connection::onWrittenData(StreamChannel* ch) noexcept
 {
+    CHECK_EQ(transport_.get(), ch);
+
+    /* we expect this callback only when output buffer has emptied,
+     * i.e., write low-water mark is zero */
+    CHECK_EQ(transport_->get_output_length(), 0);
+
+    // XXX/should we call _maybe_send() here?
+    _maybe_send();
+}
+
+void
+Connection::onNewReadDataAvailable(StreamChannel* ch) noexcept
+{
+    CHECK_EQ(transport_.get(), ch);
+
     int rv = 0;
-    logself(DEBUG, "begin");
+    VLOG(2) << ("begin");
+
     if (use_spdy_) {
-        spdylay_session* session_ = spdysess_.get();
-        if((rv = spdylay_session_recv(session_)) != 0) {
+        spdylay_session* session = spdysess_.get();
+        if((rv = spdylay_session_recv(session)) != 0) {
             disconnect();
             if (SPDYLAY_ERR_EOF == rv) {
                 logself(DEBUG, "remote peer closed");
                 on_eof();
             } else {
-#ifdef _update_code
-                logfn(SHADOW_LOG_LEVEL_WARNING, __func__,
-                      "spdylay_session_recv() returned \"%s\"",
-                      spdylay_strerror(rv));
-#endif
+                LOG(WARNING) << "spdylay_session_recv() returned \""
+                             << spdylay_strerror(rv) << "\"";
                 on_error();
             }
             return;
-        } else if((rv = spdylay_session_send(session_)) < 0) {
-            myassert(0);
+        } else if((rv = spdylay_session_send(session)) < 0) {
+            CHECK(0) << "not reached";
         }
         if(rv == 0) {
-            if(spdylay_session_want_read(session_) == 0 &&
-               spdylay_session_want_write(session_) == 0) {
-                myassert(0);
+            if(spdylay_session_want_read(session) == 0 &&
+               spdylay_session_want_write(session) == 0) {
+                CHECK(0) << "not reached";
                 rv = -1;
             }
         }
     } else {
-        if (!http_receive()) {
-            on_eof();
-            return;
-        }
+        _maybe_http_consume_input();
     }
-    logself(DEBUG, "done");
+    VLOG(2) << ("done");
 }
 
 void
 Connection::on_eof()
 {
-//    disconnect(); // let the user delete us
+    DestructorGuard dg(this);
     cnx_eof_cb_(this);
 }
 
 void
 Connection::on_error()
 {
-//    disconnect(); // let the user delete us
+    DestructorGuard dg(this);
     cnx_error_cb_(this);
+}
+
+void
+Connection::onSocksTargetConnectResult(
+    Socks5Connector* connector,
+    Socks5ConnectorObserver::ConnectResult result) noexcept
+{
+    switch (result) {
+    case Socks5ConnectorObserver::ConnectResult::OK: {
+        CHECK_EQ(state_, State::CONNECTING);
+        CHECK_EQ(socks_connector_.get(), connector);
+
+        // get back our transport
+        CHECK(!transport_);
+        StreamChannel::UniquePtr tmp = socks_connector_->release_transport();
+        transport_.reset((TCPChannel*)tmp.release());
+        CHECK_NOTNULL(transport_);
+        socks_connector_.reset();
+
+        VLOG(2) << "connected to target (thru socks proxy)";
+        state_ = State::CONNECTED;
+        _maybe_send();
+
+        break;
+    }
+
+    case Socks5ConnectorObserver::ConnectResult::ERR_FAIL:
+        CHECK(0) << "to implement";
+        break;
+
+    default:
+        CHECK(0) << "invalid result: " << result;
+        break;
+    }
+}
+
+void
+Connection::onConnected(StreamChannel* ch) noexcept
+{
+    if (state_ == State::PROXY_CONNECTING) {
+        VLOG(2) << "now connected to the PROXY";
+
+        CHECK_EQ(transport_.get(), ch);
+        state_ = State::PROXY_CONNECTED;
+
+        const in_addr_t& addr = (ssp_addr_) ? ssp_addr_ : addr_;
+        const uint16_t port = (ssp_addr_) ? ssp_port_ : port_;
+        CHECK_NE(addr, 0);
+        CHECK_NE(port, 0);
+
+        VLOG(2) << "now tell proxy to connect to target";
+        CHECK(!socks_connector_);
+        socks_connector_.reset(
+            new Socks5Connector(std::move(transport_), addr, port));
+        auto rv = socks_connector_->start_connecting(this);
+        CHECK(!rv);
+        state_ = State::CONNECTING;
+    }
+    else if (state_ == State::CONNECTING) {
+        VLOG(2) << "connected to target";
+        state_ = State::CONNECTED;
+        _maybe_send();
+    }
+    else {
+        CHECK(0) << "invalide state: " << state_;
+    }
+}
+
+void
+Connection::onConnectError(StreamChannel* ch, int errorcode) noexcept
+{
+
 }
 
 int
@@ -864,274 +718,98 @@ Connection::initiate_connection()
 
     int rv = 0;
 
-    logself(DEBUG, "socks5 %d:%d", socks5_addr_, socks5_port_);
-    
-    if (state_ == DISCONNECTED && socks5_addr_ && socks5_port_) {
-        logself(DEBUG, "currently disconnected, and socks5 is specified "
-                 "-> connect to socks5 proxy");
-        /* connect to socks5 proxy */
-        myassert(fd_ == -1);
-        fd_ = socket(AF_INET, (SOCK_STREAM | SOCK_NONBLOCK), 0);
-        myassert(fd_ != -1);
+    VLOG(2) << "socks5 " << socks5_addr_ << ":" << socks5_port_;
 
-        struct sockaddr_in server;
-        bzero(&server, sizeof(server));
-        server.sin_family = AF_INET;
-        server.sin_addr.s_addr = socks5_addr_;
-        server.sin_port = htons(socks5_port_);
-        logself(DEBUG, " --> connecting sock proxy in_addr_t %u:%u",
-                server.sin_addr.s_addr, server.sin_port);
+    if (state_ == State::DISCONNECTED && socks5_addr_ && socks5_port_) {
+        VLOG(2) << "first, connect to socks proxy";
 
-        myassert(!ev_);
-        // No need to set writecb because we write the request when
-        // connected at once.
-        ev_.reset(new myevent_socket_t(
-            evbase_, fd_, NULL, mev_socks5_proxy_writecb,
-            mev_socks5_proxy_eventcb, this));
-        myassert(ev_);
+        CHECK(!transport_);
+        transport_.reset(new TCPChannel(evbase_, socks5_addr_, socks5_port_, this));
+        CHECK_NOTNULL(transport_);
 
-        rv = ev_->socket_connect((struct sockaddr*)(&server), sizeof(server));
-        myassert (!rv || errno == EINPROGRESS);
+        rv = transport_->start_connecting(this);
+        CHECK_EQ(rv, 0);
 
-        logself(DEBUG, "transition to state CONNECTING");
-        state_ = CONNECTING;
+        VLOG(2) <<  "transition to state PROXY_CONNECTING";
+        state_ = State::PROXY_CONNECTING;
     }
-    else if(state_ == DISCONNECTED) {
-        logself(DEBUG, "cur state DISCONNECTED");
-        // go ahead and connect
-        myassert(fd_ == -1);
-        fd_ = socket(AF_INET, (SOCK_STREAM | SOCK_NONBLOCK), 0);
-        myassert(fd_ != -1);
+    else if (state_ == State::DISCONNECTED) {
+        const in_addr_t addr = (addr_) ? addr_ : ssp_addr_;
+        const uint16_t port = (port_) ? port_ : ssp_port_;
 
-        struct sockaddr_in server;
-        bzero(&server, sizeof(server));
-        server.sin_family = AF_INET;
-        if (addr_) {
-            server.sin_addr.s_addr = addr_;
-            server.sin_port = htons(port_);
-        } else {
-            server.sin_addr.s_addr = ssp_addr_;
-            server.sin_port = htons(ssp_port_);
-        }
+        CHECK_NE(addr);
+        CHECK_NE(port);
 
-        logself(DEBUG, " --> connecting to server in_addr_t %u:%u",
-                 server.sin_addr.s_addr, server.sin_port);
+        CHECK(!transport_);
+        transport_.reset(new TCPChannel(evbase_, addr, port, this));
+        CHECK_NOTNULL(transport_);
 
-        myassert(!ev_);
-        ev_.reset(new myevent_socket_t(
-                      evbase_, fd_, mev_readcb, NULL, mev_eventcb, this));
-        myassert(ev_);
+        rv = transport_->start_connecting(this);
+        CHECK_EQ(rv, 0);
 
-        rv = ev_->socket_connect((struct sockaddr*)(&server), sizeof(server));
-        myassert (!rv || errno == EINPROGRESS);
-
-        myassert(!write_to_server_enabled_);
-        enable_write_to_server_();
-
-        // struct timeval timeout = {10, 0}; // timeout connect attempt
-        // myassert(0 == event_add(ev_, &timeout));
-
-        logself(DEBUG, " transition to state CONNECTING");
-        state_ = CONNECTING;
+        VLOG(2) << "transition to state CONNECTING";
+        state_ = State::CONNECTING;
+    }
+    else {
+        CHECK(0) << "invalid state: " << state_;
     }
 
-done:
-    logself(DEBUG, "fd_ = %d", fd_);
-    logself(DEBUG, "done");
     return rv;
 }
 
 void
-Connection::send_()
+Connection::_maybe_send()
 {
-    int rv = 0;
     if (use_spdy_) {
-        spdylay_session* session_ = spdysess_.get();
-        if (spdylay_session_want_write(session_)) {
-            if ((rv = spdylay_session_send(session_)) != 0) {
-                disconnect();
-                if (SPDYLAY_ERR_EOF == rv) {
-                    logself(DEBUG, "remote peer closed");
-                    on_eof();
-                } else {
-#ifdef _update_code
-                    logfn(SHADOW_LOG_LEVEL_WARNING, __func__,
-                          "spdylay_session_send() returned \"%s\"",
-                          spdylay_strerror(rv));
-#endif
-                    on_error();
-                }
-                return;
+        spdylay_session* session = spdysess_.get();
+        auto rv = spdylay_session_send(session);
+        if (rv) {
+            disconnect();
+            if (SPDYLAY_ERR_EOF == rv) {
+                VLOG(1) << "remote peer closed";
+                on_eof();
+            } else {
+                LOG(WARNING) << "spdylay_session_send() returned \""
+                             << spdylay_strerror(rv) << "\"";
+                on_error();
             }
+            return;
+        }
 
-            /* after writing, there's likely need to receive */
-            ev_->set_readcb(mev_readcb);
-        }
-        else {
-            // shadow's epoll doesn't seem to support edge-triggering,
-            // so we do it ourselves: spdylay doesn't want to write,
-            // so disable monitoring of write event
-            disable_write_to_server_();
-        }
-        if(rv == 0) {
-            if(spdylay_session_want_read(session_) == 0 &&
-               spdylay_session_want_write(session_) == 0) {
-                myassert(0);
-                rv = -1;
-            }
+        if(spdylay_session_want_read(session) == 0 &&
+           spdylay_session_want_write(session) == 0)
+        {
+            CHECK(0);
         }
     } else {
-        http_write_to_outbuf();
-        if (evbuffer_get_length(outbuf_.get()) > 0) {
-            // for some reason evbuffer_write() fails with "bad file
-            // descriptor". so we have to read(fd_) ourselves. use iov
-            // to avoid additional copying.
-
-            // const int numwritten = evbuffer_write(outbuf_.get(), fd_);
-
-            struct evbuffer_iovec v[1];
-            int numdrained = 0;
-            const int n = evbuffer_peek(
-                outbuf_.get(), -1, NULL, v, ARRAY_LEN(v));
-            for (int i = 0; i < n; ++i) {
-                const int numwritten = write(
-                    fd_, (const uint8_t *)v[i].iov_base, v[i].iov_len);
-                if (numwritten == -1) {
-                    myassert(errno == EWOULDBLOCK);
-                    break;
-                } else {
-                    logself(DEBUG, "able to write %d bytes", numwritten);
-                    cumulative_num_sent_bytes_ += numwritten;
-                    numdrained += numwritten;
-                    if (numwritten != v[i].iov_len) {
-                        // couldn't write the whole iov -> move on
-                        break;
-                    }
-                }
-            }
-            logself(DEBUG, "drained total of %d bytes", numdrained);
-            myassert(0 == evbuffer_drain(outbuf_.get(), numdrained));
-            /* after writing, there's likely need to receive */
-            ev_->set_readcb(mev_readcb);
-        } else {
-            /* since there's no data waiting to go out from the output
-             * buffer, we disable monitoring of write event to reduce
-             * unneeded triggering -- shadow doesn't support
-             * edge-triggering yet it seems.
-             */
-            disable_write_to_server_();
-        }
+        _maybe_http_write_to_transport();
     }
     return;
-}
-
-void
-Connection::on_socks5_proxy_readable()
-{
-    logself(DEBUG, "begin");
-    if (socks5_state_ == SOCKS5_GREETING) {
-        // this should be the first accept response from socks5 proxy
-        logself(DEBUG, "process greeting response");
-        char mem[2];
-        myassert(2 == read(fd_, mem, 2));
-        myassert(0 == memcmp(mem, "\x05\x00", 2));
-
-        logself(DEBUG, "transition to SOCKS5_WRITE_REQUEST_NEXT");
-        socks5_state_ = SOCKS5_WRITE_REQUEST_NEXT;
-        ev_->set_writecb(mev_socks5_proxy_writecb);
-        ev_->set_readcb(NULL);
-    }
-    else if (socks5_state_ == SOCKS5_READ_RESP_NEXT) {
-        // this should be the succeeded response
-
-        // even though we request to connect with a \x03 domain name,
-        // the response will still be \x01 (this might or might not be
-        // specific to Tor?)
-        unsigned char mem[10]; /* read 10 bytes */
-        myassert(10 == read(fd_, mem, 10));
-#if 0
-        printhex("socks proxy greeting response", mem, 4);
-#endif
-        if (0 != memcmp(mem, "\x05\x00\x00\x01", 4)) {
-            /* we don't handle this yet, so just fail the cnx */
-            on_error();
-        } else {
-            /* XXX/TODO: proxy might tell us to connect to another
-             * ip/port. need to handle that
-             */
-
-            logself(DEBUG, "now tunnel is established through socks5 proxy");
-            state_ = CONNECTED;
-            socks5_state_ = SOCKS5_NONE;
-
-            logself(DEBUG, "update the callbacks");
-            ev_->setcb(mev_readcb, NULL, mev_eventcb, this);
-            myassert(!write_to_server_enabled_);
-            enable_write_to_server_();
-        }
-    }
-
-    logself(DEBUG, "done");
-    return;
-}
-
-void
-Connection::on_socks5_proxy_writable()
-{
-    logself(DEBUG, "begin");
-    if (socks5_state_ == SOCKS5_WRITE_REQUEST_NEXT) {
-        const in_addr_t& addr = (ssp_addr_) ? ssp_addr_ : addr_;
-        in_port_t port = (ssp_addr_) ? ssp_port_ : port_;
-        myassert(addr != 0);
-        myassert(port != 0);
-            
-        logself(DEBUG, "write the socks5 request to connect to %u:%u",
-                addr, port);
-        std::string req("\x05\x01\x00\x01", 4);
-        req.append((const char*)&addr, 4);
-        port = htons(port);
-        req.append((const char*)&port, 2);
-        myassert(write(fd_, req.c_str(), req.size()) == req.size());
-#if 0
-        printhex("i write request: ",
-                 (const unsigned char*)req.c_str(), req.size());
-#endif
-        logself(DEBUG, "transition to SOCKS5_READ_RESP_NEXT");
-        socks5_state_ = SOCKS5_READ_RESP_NEXT;
-        //need to disable writing, otherwise it keeps reporting writable
-        ev_->set_readcb(mev_socks5_proxy_readcb);
-        ev_->set_writecb(NULL);
-    }
-    logself(DEBUG, "done");
 }
 
 ssize_t
 Connection::spdylay_send_cb(spdylay_session *session, const uint8_t *data,
                             size_t length, int flags)
 {
-    logself(DEBUG, "begin, length=%d", length);
-    myassert(session == spdysess_.get());
+    VLOG(2) << "begin, length= " << length;
+    CHECK_EQ(session, spdysess_.get());
 
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-    ssize_t numsent = send(fd_, data, length, 0);
-    if (numsent < 0) {
-        if (errno == EWOULDBLOCK) {
-            retval = SPDYLAY_ERR_WOULDBLOCK;
-            logself(DEBUG, " can't send but not error; only EWOULDBLOCK", numsent);
-        } else {
-            logWARN("error with errno %d", errno);
-            retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-        }
-    } else if (numsent == 0) {
-        retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-        logWARN("sent %d bytes --> error", numsent);
-    } else {
-        retval = numsent;
-        cumulative_num_sent_bytes_ += numsent;
-        logself(DEBUG, "able to send %d bytes", numsent);
-    }
 
-    logself(DEBUG, "returning %d", retval);
+    const auto rv = transport_->write(data, length);
+    if (rv == 0) {
+        cumulative_num_sent_bytes_ += length;
+        VLOG(2) << "able to send " << length << " bytes";
+        retval = length;
+    }
+    else if (rv == -1) {
+        LOG(WARNING) << ("transport didn't accept our write");
+        retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+    } else {
+        CHECK(0) << "invalid rv= " << rv;
+    }
+ 
+    VLOG(2) << ("returning " << retval);
     return retval;
 }
 
@@ -1140,30 +818,21 @@ ssize_t
 Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
                             size_t length, int flags)
 {
-    logself(DEBUG, "begin, length=%d", length);
-    if (session != spdysess_.get()) {
-        /* XXX/TODO: temporary bandage. need to handle better */
-        return 0;
-    }
-    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-    ssize_t numread = recv(fd_, buf, length, 0);
+    VLOG(2) << ("begin, length="<< length);
+    CHECK_EQ(session, spdysess_.get());
 
-    if (0 == numread) {
-        logself(DEBUG, "no more data is available for reading");
-        retval = SPDYLAY_ERR_EOF;
+    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+
+    const auto numread = transport_->read(buf, length);
+
+    if (numread == 0) {
+        VLOG(2) << ("no data is currently available for reading");
+        retval = transport_->is_closed()
+                 ? SPDYLAY_ERR_EOF
+                 : SPDYLAY_ERR_WOULDBLOCK;
     }
-    else if (-1 == numread) {
-        logself(DEBUG, "numread is -1");
-        if(errno == EWOULDBLOCK) {
-            logself(DEBUG, "it's ok, just EWOULDBLOCK");
-            retval = SPDYLAY_ERR_WOULDBLOCK;
-        } else {
-            logWARN("error with errno %d", errno);
-            retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-        }
-    }
-    else {
-        logself(DEBUG, "able to read %zd bytes", numread);
+    else if (numread > 0) {
+        VLOG(2) << ("able to read " << numread << " bytes");
         retval = numread;
         if (0 == cumulative_num_recv_bytes_
             && cnx_first_recv_byte_cb_)
@@ -1172,8 +841,11 @@ Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
         }
         cumulative_num_recv_bytes_ += numread;
     }
+    else {
+        LOG(WARNING) << "transport::read() returns: " << numread;
+    }
 
-    logself(DEBUG, "returning %d", retval);
+    VLOG(2) << ("returning " << retval);
     return retval;
 }
 
@@ -1237,7 +909,7 @@ Connection::handle_server_push_ctrl_recv(spdylay_frame *frame)
 
     char **nv = frame->syn_stream.nv;
     const char *content_length = 0;
-    const char *pushedurl = NULL;
+    const char *pushedurl = nullptr;
     unsigned int code = 0;
     //const char *content_length = 0;
     ssize_t contentlen = -1;
