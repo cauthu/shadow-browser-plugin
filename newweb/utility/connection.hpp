@@ -61,10 +61,12 @@ typedef void (*PushedBodyDoneCb)(int id, Connection* cnx, void* cb_data);
 
 class Connection : public Object
                  , public myio::Socks5ConnectorObserver
+                 , public myio::StreamChannelConnectObserver
                  , public myio::StreamChannelObserver
 {
 public:
 
+    typedef std::unique_ptr<Connection, folly::DelayedDestruction::Destructor> UniquePtr;
 
     /*
      * !!!! the ports should be in host byte order, e.g., 80 for web.
@@ -131,11 +133,17 @@ private:
     virtual void onSocksTargetConnectResult(
         myio::Socks5Connector*, myio::Socks5ConnectorObserver::ConnectResult) noexcept override;
 
+    /***** implement StreamChannelConnectObserver interface */
+    virtual void onConnected(myio::StreamChannel*) noexcept override;
+    virtual void onConnectError(myio::StreamChannel*, int) noexcept override;
+    virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
+
     /***** implement StreamChannel interface */
     virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
     virtual void onWrittenData(myio::StreamChannel*) noexcept override;
     virtual void onEOF(myio::StreamChannel*) noexcept override;
     virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+
 
     static ssize_t s_spdylay_send_cb(spdylay_session *, const uint8_t *,
                                      size_t, int, void*);
@@ -205,6 +213,8 @@ private:
 
     void handle_server_push_ctrl_recv(spdylay_frame *frame);
 
+    // void _on_eof();
+    // void _on_error();
 
     struct event_base *evbase_; // dont free
     myio::TCPChannel::UniquePtr transport_;

@@ -70,7 +70,7 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
 void
 TCPChannel::set_observer(StreamChannelObserver* observer)
 {
-    CHECK_EQ(state_, ChannelState::ESTABLISHED);
+    CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
     CHECK(!observer_);
     observer_ = observer;
 }
@@ -141,12 +141,13 @@ void
 TCPChannel::close()
 {
     state_ = ChannelState::CLOSED;
-    socket_ev_.reset();
+    socket_read_ev_.reset();
+    socket_write_ev_.reset();
     input_evb_.reset(); // XXX/maybe we can keep the input buf for
                         // client to read
     output_evb_.reset();
     if (fd_) {
-        close(fd_);
+        ::close(fd_);
     }
     tamaraw_timer_ev_.reset();
 }
@@ -200,16 +201,12 @@ TCPChannel::_on_socket_readcb(int fd, short what)
     DestructorGuard dg(this);
 
     if (what & EV_READ) {
-        // if (in_buffered_mode_) {
-            const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
-            VLOG(2) << "evbuffer_read() returns: " << rv;
-            if (rv == 0) {
-                observer_->onEOF(this);
-            } else if ((rv == -1) && (errno != EAGAIN)) {
-                observer_->onError(this, errno);
-            // }
-        } else {
-            observer_->onReadable(this);
+        const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
+        VLOG(2) << "evbuffer_read() returns: " << rv;
+        if (rv == 0) {
+            observer_->onEOF(this);
+        } else if ((rv == -1) && (errno != EAGAIN)) {
+            observer_->onError(this, errno);
         }
     } else {
         DCHECK(0) << "invalid events: " << what;
@@ -228,15 +225,11 @@ TCPChannel::_on_socket_writecb(int fd, short what)
     DestructorGuard dg(this);
 
     if (what & EV_WRITE) {
-        // if (in_buffered_mode_) {
-            const auto rv = evbuffer_write(output_evb_.get(), fd_);
-            if (rv == 0) {
-                observer_->onEOF(this);
-            } else if ((rv == -1) && (errno != EAGAIN)) {
-                observer_->onError(this, errno);
-            }
-        } else {
-            observer_->onWritable(this);
+        const auto rv = evbuffer_write(output_evb_.get(), fd_);
+        if (rv == 0) {
+            observer_->onEOF(this);
+        } else if ((rv == -1) && (errno != EAGAIN)) {
+            observer_->onError(this, errno);
         }
     } else {
         DCHECK(0) << "invalid events: " << what;
@@ -291,7 +284,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
                        const in_addr_t& addr, const in_port_t& port,
                        StreamChannelObserver* observer,
                        ChannelState starting_state, bool is_client)
-    : evbase_(evbase), observer_(nullptr), connect_observer_(nullptr),
+    : evbase_(evbase), observer_(nullptr), connect_observer_(nullptr)
     , state_(starting_state), fd_(fd)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)

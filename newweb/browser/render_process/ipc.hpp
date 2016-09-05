@@ -22,6 +22,7 @@ protected:
     /******* implement StreamChannelConnectObserver interface *********/
     virtual void onConnected(myio::StreamChannel*) noexcept override;
     virtual void onConnectError(myio::StreamChannel*, int errorcode) noexcept override;
+    virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
 
     /******* implement JSONStreamChannelObserver interface *********/
     virtual void onRecvMsg(myio::JSONStreamChannel*, uint16_t, const rapidjson::Document&) noexcept override;

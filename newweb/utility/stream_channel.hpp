@@ -73,7 +73,6 @@ public:
                                  struct timeval *connect_timeout=nullptr) = 0;
 
     virtual void set_observer(StreamChannelObserver*) = 0;
-    // virtual int set_non_buffer_mode(bool) = 0;
 
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel).

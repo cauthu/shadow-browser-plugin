@@ -62,6 +62,7 @@ public:
     virtual struct evbuffer* get_input_evbuf() override { return input_evb_.get(); }
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const override;
+    virtual size_t get_output_length() const override;
 
     /* same as bufferevent_setwatermark() for read */
     virtual void set_read_watermark(size_t lowmark, size_t highmark) override;
@@ -96,7 +97,7 @@ protected:
     TCPChannel(struct event_base *evbase, int fd,
                const in_addr_t& addr, const in_port_t& port,
                StreamChannelObserver* observer,
-               ChannelState starting_state);
+               ChannelState starting_state, bool is_client);
 
     // destructor should be private or protected to prevent direct
     // deletion. we're using folly::DelayedDestruction

@@ -10,8 +10,7 @@
 #include <string.h>
 #include <netinet/in.h>
 #include <event2/event.h>
-
-#include "myassert.h"
+#include <type_traits>
 
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
@@ -45,6 +44,18 @@ dispatch_evbase(struct event_base*);
 
 void
 init_easylogging();
+
+namespace common
+{
+
+template <typename Enumeration>
+auto as_integer(Enumeration const value)
+    -> typename std::underlying_type<Enumeration>::type
+{
+    return static_cast<typename std::underlying_type<Enumeration>::type>(value);
+}
+
+}
 
 #ifdef ENABLE_MY_LOG_MACROS
 #define logDEBUG(fmt, ...)                                              \

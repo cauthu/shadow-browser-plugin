@@ -12,9 +12,10 @@
 #include "myevent.hpp"
 #include "request.hpp"
 #include "connection.hpp"
+#include "object.hpp"
 
 
-class ConnectionManager : private boost::noncopyable
+class ConnectionManager : public Object
 {
 public:
 
@@ -41,12 +42,9 @@ public:
     /* schedule this for later deletion */
     // void deleteLater(ShadowCreateCallbackFunc scheduleCallback);
 
-    const uint32_t instNum_; // monotonic id of this conn manager obj
-
     typedef std::pair<std::string, uint16_t> NetLoc;
 
 private:
-    static uint32_t nextInstNum;
 
     /* to receive notification from Connection object. */
     void cnx_first_recv_byte_cb(Connection*);

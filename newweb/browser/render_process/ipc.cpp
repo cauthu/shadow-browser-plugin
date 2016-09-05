@@ -38,6 +38,13 @@ IOServiceIPCClient::onConnectError(StreamChannel* ch, int) noexcept
 }
 
 void
+IOServiceIPCClient::onConnectTimeout(StreamChannel* ch) noexcept
+{
+    CHECK_EQ(transport_channel_.get(), ch);
+    CHECK(false); // not reached
+}
+
+void
 IOServiceIPCClient::onRecvMsg(JSONStreamChannel*, uint16_t type,
                               const rapidjson::Document&) noexcept
 {

@@ -255,7 +255,7 @@ Connection::_maybe_http_write_to_transport()
 
     active_req_queue_.push(req);
 
-    VLOG(2) << ("done");
+    VLOG(2) << "done";
     return;
 }
 
@@ -267,8 +267,8 @@ Connection::submit_request(Request* req)
      */
     myassert((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
 
-    VLOG(2) << ("begin");
-    VLOG(2) << "path [" << req->get_path().c_str() << "]";
+    VLOG(2) << "begin";
+    VLOG(2) << "path [" << req->get_path() << "]";
 
     if (use_spdy_) {
         const auto& hdrs = req->get_headers();
@@ -306,7 +306,7 @@ Connection::submit_request(Request* req)
 
     req->conn = this;
 
-    VLOG(2) << ("done");
+    VLOG(2) << "done";
     return 0;
 }
 
@@ -375,7 +375,7 @@ Connection::disconnect()
 void
 Connection::_maybe_http_consume_input()
 {
-    VLOG(2) << ("begin");
+    VLOG(2) << "begin";
 
     if (active_req_queue_.empty()) {
         logself(DEBUG, "no active req waiting to be received");
@@ -413,7 +413,6 @@ Connection::_maybe_http_consume_input()
                     Request *req = active_req_queue_.front();
                     LOG(FATAL) << "req [" << req->url_ << "] got status ["
                                << http_rsp_status_ << " ]";
-                    CHECK(0) << "not reached";
                 }
                 logself(DEBUG, "status: [%d]", http_rsp_status_);
                 http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_HEADERS;
@@ -452,7 +451,6 @@ Connection::_maybe_http_consume_input()
 
                     if (!content_range_found && first_byte_pos_ > 0) {
                         LOG(FATAL) << "content-range header is missing in response.";
-                        CHECK(0) << "not reached";
                     }
 
                     // notify user of response meta info
@@ -497,7 +495,6 @@ Connection::_maybe_http_consume_input()
                         if (first_byte_pos != first_byte_pos_) {
                             LOG(FATAL) << "response first-byte-pos is " << first_byte_pos
                                        << ", but we expect " << first_byte_pos_;
-                            CHECK(0) << "not reached";
                         }
                         logself(DEBUG, "parsed first_byte_pos %d, last_byte_pos %d, full_len %d",
                                 first_byte_pos, last_byte_pos, full_len);
@@ -567,7 +564,8 @@ Connection::_maybe_http_consume_input()
             break;
         }
         default:
-            CHECK(0) << "invalid http_rsp_state_: " << http_rsp_state_; 
+            LOG(FATAL) << "invalid http_rsp_state_: "
+                       << common::as_integer(http_rsp_state_);
             break;
         }
     } while (keep_consuming);
@@ -594,7 +592,7 @@ Connection::onNewReadDataAvailable(StreamChannel* ch) noexcept
     CHECK_EQ(transport_.get(), ch);
 
     int rv = 0;
-    VLOG(2) << ("begin");
+    VLOG(2) << "begin";
 
     if (use_spdy_) {
         spdylay_session* session = spdysess_.get();
@@ -602,38 +600,36 @@ Connection::onNewReadDataAvailable(StreamChannel* ch) noexcept
             disconnect();
             if (SPDYLAY_ERR_EOF == rv) {
                 logself(DEBUG, "remote peer closed");
-                on_eof();
             } else {
                 LOG(WARNING) << "spdylay_session_recv() returned \""
                              << spdylay_strerror(rv) << "\"";
-                on_error();
             }
             return;
         } else if((rv = spdylay_session_send(session)) < 0) {
-            CHECK(0) << "not reached";
+            LOG(FATAL) << "not reached";
         }
         if(rv == 0) {
             if(spdylay_session_want_read(session) == 0 &&
                spdylay_session_want_write(session) == 0) {
-                CHECK(0) << "not reached";
+                LOG(FATAL) << "not reached";
                 rv = -1;
             }
         }
     } else {
         _maybe_http_consume_input();
     }
-    VLOG(2) << ("done");
+    VLOG(2) << "done";
 }
 
 void
-Connection::on_eof()
+Connection::onEOF(StreamChannel*) noexcept
 {
     DestructorGuard dg(this);
     cnx_eof_cb_(this);
 }
 
 void
-Connection::on_error()
+Connection::onError(StreamChannel*, int) noexcept
 {
     DestructorGuard dg(this);
     cnx_error_cb_(this);
@@ -664,11 +660,11 @@ Connection::onSocksTargetConnectResult(
     }
 
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL:
-        CHECK(0) << "to implement";
+        LOG(FATAL) << "to implement";
         break;
 
     default:
-        CHECK(0) << "invalid result: " << result;
+        LOG(FATAL) << "invalid result";
         break;
     }
 }
@@ -701,7 +697,7 @@ Connection::onConnected(StreamChannel* ch) noexcept
         _maybe_send();
     }
     else {
-        CHECK(0) << "invalide state: " << state_;
+        LOG(FATAL) << "invalid state";
     }
 }
 
@@ -709,6 +705,11 @@ void
 Connection::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
 
+}
+
+void
+Connection::onConnectTimeout(myio::StreamChannel*) noexcept
+{
 }
 
 int
@@ -737,8 +738,8 @@ Connection::initiate_connection()
         const in_addr_t addr = (addr_) ? addr_ : ssp_addr_;
         const uint16_t port = (port_) ? port_ : ssp_port_;
 
-        CHECK_NE(addr);
-        CHECK_NE(port);
+        CHECK_NE(addr, 0);
+        CHECK_NE(port, 0);
 
         CHECK(!transport_);
         transport_.reset(new TCPChannel(evbase_, addr, port, this));
@@ -751,7 +752,7 @@ Connection::initiate_connection()
         state_ = State::CONNECTING;
     }
     else {
-        CHECK(0) << "invalid state: " << state_;
+        LOG(FATAL) << "invalid state: " << common::as_integer(state_);
     }
 
     return rv;
@@ -767,11 +768,9 @@ Connection::_maybe_send()
             disconnect();
             if (SPDYLAY_ERR_EOF == rv) {
                 VLOG(1) << "remote peer closed";
-                on_eof();
             } else {
                 LOG(WARNING) << "spdylay_session_send() returned \""
                              << spdylay_strerror(rv) << "\"";
-                on_error();
             }
             return;
         }
@@ -803,13 +802,13 @@ Connection::spdylay_send_cb(spdylay_session *session, const uint8_t *data,
         retval = length;
     }
     else if (rv == -1) {
-        LOG(WARNING) << ("transport didn't accept our write");
+        LOG(WARNING) << "transport didn't accept our write";
         retval = SPDYLAY_ERR_CALLBACK_FAILURE;
     } else {
-        CHECK(0) << "invalid rv= " << rv;
+        LOG(FATAL) << "invalid rv= " << rv;
     }
  
-    VLOG(2) << ("returning " << retval);
+    VLOG(2) << "returning " << retval;
     return retval;
 }
 
@@ -818,7 +817,7 @@ ssize_t
 Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
                             size_t length, int flags)
 {
-    VLOG(2) << ("begin, length="<< length);
+    VLOG(2) << "begin, length="<< length;
     CHECK_EQ(session, spdysess_.get());
 
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
@@ -826,13 +825,13 @@ Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
     const auto numread = transport_->read(buf, length);
 
     if (numread == 0) {
-        VLOG(2) << ("no data is currently available for reading");
+        VLOG(2) << "no data is currently available for reading";
         retval = transport_->is_closed()
                  ? SPDYLAY_ERR_EOF
                  : SPDYLAY_ERR_WOULDBLOCK;
     }
     else if (numread > 0) {
-        VLOG(2) << ("able to read " << numread << " bytes");
+        VLOG(2) << "able to read " << numread << " bytes";
         retval = numread;
         if (0 == cumulative_num_recv_bytes_
             && cnx_first_recv_byte_cb_)
@@ -845,7 +844,7 @@ Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
         LOG(WARNING) << "transport::read() returns: " << numread;
     }
 
-    VLOG(2) << ("returning " << retval);
+    VLOG(2) << "returning " << retval;
     return retval;
 }
 
@@ -854,12 +853,14 @@ Connection::spdylay_on_data_recv_cb(spdylay_session *session,
                                     uint8_t flags, int32_t stream_id,
                                     int32_t len)
 {
-    myassert(session == spdysess_.get());
+    CHECK_EQ(session, spdysess_.get());
     const int32_t sid = stream_id;
-    logself(DEBUG, "begin, sid %d, len %d, cnx %u",
-            sid, len, instNum_);
+    VLOG(2) << "begin, sid " << sid << ", len " << len << ", cnx " << objId();
     if ((flags & SPDYLAY_DATA_FLAG_FIN) != 0) {
-        logself(DEBUG, "last data frame of resource");
+
+        DestructorGuard dg(this);
+
+        VLOG(2) << "last data frame of resource";
 
         if (inSet(psids_, sid)) {
             notify_pushed_body_done_(sid, this, cb_data_);
@@ -870,7 +871,7 @@ Connection::spdylay_on_data_recv_cb(spdylay_session *session,
         Request* req = sid2req_[sid];
         req->notify_rsp_body_done();
     }
-    logself(DEBUG, "done");
+    VLOG(2) << "done";
 }
 
 void
@@ -882,6 +883,8 @@ Connection::spdylay_on_data_chunk_recv_cb(spdylay_session *session,
     const int32_t sid = stream_id;
     logself(DEBUG, "begin, sid %d, len %d, cnx %u",
             sid, len, instNum_);
+
+    DestructorGuard dg(this);
 
     if (inSet(psids_, sid)) {
         notify_pushed_body_data_(sid, data, len, this, cb_data_);
@@ -986,6 +989,7 @@ Connection::spdylay_on_ctrl_recv_cb(spdylay_session *session,
             myassert(0);
             return;
         }
+        DestructorGuard dg(this);
         logself(DEBUG, "notifying of response meta");
         req->notify_rsp_meta(code, nv);
     }
@@ -1011,6 +1015,7 @@ Connection::spdylay_before_ctrl_send_cb(spdylay_session *session,
                 sid, instNum_, req->instNum_);
         sid2req_[frame->syn_stream.stream_id] = req;
         req->dump_debug();
+        DestructorGuard dg(this);
         req->notify_req_about_to_send();
     }
     logself(DEBUG, "done");

@@ -24,6 +24,8 @@ public:
         OK,
         
         ERR_FAIL,
+        ERR_FAIL_TRANSPORT_EOF,
+        ERR_FAIL_TRANSPORT_ERROR,
     };
 
     /* successfully connected to target */
@@ -58,6 +60,8 @@ private:
     virtual void onEOF(StreamChannel*) noexcept override;
     virtual void onError(StreamChannel*, int errorcode) noexcept override;
 
+    void _consume_input();
+    void _set_done_and_notify(Socks5ConnectorObserver::ConnectResult);
 
     enum class State {
         SOCKS5_NONE,

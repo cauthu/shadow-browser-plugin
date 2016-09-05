@@ -22,14 +22,14 @@ using std::make_shared;
 #define loginst(level, inst, fmt, ...)                                  \
     do {                                                                \
         logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnxman= %d): " fmt, \
-              __LINE__, (inst)->instNum_, ##__VA_ARGS__);               \
+              __LINE__, (inst)->objId(), ##__VA_ARGS__);               \
     } while (0)
 
 /* like loginst, but shortcut "this" as instance */
 #define logself(level, fmt, ...)                                        \
     do {                                                                \
         logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnxman= %d): " fmt, \
-              __LINE__, (this)->instNum_, ##__VA_ARGS__);               \
+              __LINE__, (this)->objId(), ##__VA_ARGS__);               \
     } while (0)
 #else
 
@@ -41,8 +41,6 @@ using std::make_shared;
 
 #endif
 
-uint32_t ConnectionManager::nextInstNum = 0;
-
 /***************************************************/
 
 ConnectionManager::ConnectionManager(struct event_base *evbase,
@@ -51,8 +49,7 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
                                      RequestErrorCb request_error_cb,
                                      const uint8_t max_persist_cnx_per_srv,
                                      const uint8_t max_retries_per_resource)
-    : instNum_(nextInstNum)
-    , evbase_(evbase)
+    : evbase_(evbase)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , max_persist_cnx_per_srv_(max_persist_cnx_per_srv)
     , max_retries_per_resource_(max_retries_per_resource)
@@ -62,8 +59,6 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
 
     , notify_req_error_(request_error_cb)
 {
-    ++nextInstNum;
-
     myassert(evbase_);
     myassert(request_error_cb);
     myassert(max_persist_cnx_per_srv > 0);
@@ -95,7 +90,7 @@ ConnectionManager::submit_request(Request *req)
     for (auto& c : conns) {
         if (c->get_queue_size() == 0) {
             conn = c;
-            logself(DEBUG, "conn %d has empty queue -> use it", c->instNum_);
+            logself(DEBUG, "conn %d has empty queue -> use it", c->objId());
             goto done;
         }
     }
@@ -108,7 +103,7 @@ ConnectionManager::submit_request(Request *req)
     if (conns.size() < max_persist_cnx_per_srv_) {
         logself(DEBUG, " --> create a new connection");
         myassert(!conn);
-        conn = make_shared<Connection>(
+        conn.reset(new Connection(
                        evbase_,
                        getaddr(netloc.first.c_str()), netloc.second,
                        socks5_addr_, socks5_port_,
@@ -118,9 +113,10 @@ ConnectionManager::submit_request(Request *req)
                        nullptr, nullptr, nullptr,
                        this,
                        false
-            );
+                       ),
+                   [=](Connection* c) { c->destroy(); });
         myassert(conn);
-        logself(DEBUG, " ... with instNum_ %u", conn->instNum_);
+        logself(DEBUG, " ... with objId() %u", conn->objId());
         conn->set_request_done_cb(
             boost::bind(&ConnectionManager::cnx_request_done_cb, this, _1, _2, netloc));
         conn->set_first_recv_byte_cb(
@@ -137,8 +133,8 @@ done:
         myassert(server->requests_.size() > 0);
 
         auto reqtosubmit = server->requests_.front();
-        logself(DEBUG, "submit request [%s] on conn instNum_ %u",
-            reqtosubmit->url_.c_str(), conn->instNum_);
+        logself(DEBUG, "submit request [%s] on conn objId() %u",
+            reqtosubmit->url_.c_str(), conn->objId());
         conn->submit_request(reqtosubmit);
         server->requests_.pop_front();
     }
@@ -190,8 +186,8 @@ ConnectionManager::cnx_request_done_cb(Connection* conn,
     }
 
     reqtosubmit = requests.front();
-    logself(DEBUG, "submit request [%s] on conn instNum_ %u",
-            reqtosubmit->url_.c_str(), conn->instNum_);
+    logself(DEBUG, "submit request [%s] on conn objId() %u",
+            reqtosubmit->url_.c_str(), conn->objId());
     conn->submit_request(reqtosubmit);
     requests.pop_front();
 
@@ -230,7 +226,7 @@ void
 ConnectionManager::handle_unusable_conn(Connection *conn,
                                         const NetLoc& netloc)
 {
-    logself(DEBUG, "begin, cnx: %d", conn->instNum_);
+    logself(DEBUG, "begin, cnx: %d", conn->objId());
 
     // we should mark any requests being handled by this connection as
     // error. for now, we don't attempt to request elsewhere.
@@ -343,19 +339,11 @@ delete_connman(void *ptr)
 
 /***************************************************/
 
-// void
-// ConnectionManager::deleteLater(ShadowCreateCallbackFunc scheduleCallback)
-// {
-//     scheduleCallback(delete_connman, this, 0);
-// }
-
-/***************************************************/
-
 void
 ConnectionManager::release_conn(Connection *conn,
                                 const NetLoc& netloc)
 {
-    logself(DEBUG, "begin, releasing cnx %d", conn->instNum_);
+    logself(DEBUG, "begin, releasing cnx %d", conn->objId());
 
     // mark the cnx for deletion later. we don't want to do it here on
     // the call stack of the cnx itself
