@@ -2,7 +2,7 @@
 #include <rapidjson/document.h>
 
 #include "../../utility/easylogging++.h"
-#include "../../utility/ipc/io_service_ipc.hpp"
+#include "utility/ipc/gen/io_service_messages_flatbuffers_generated.h"
 #include "ipc.hpp"
 
 
@@ -10,7 +10,7 @@ using myio::StreamChannel;
 using myio::JSONStreamChannel;
 
 
-using myipc::ioservice::message_type;
+using myipc::ioservice::messages::type;
 
 
 IOServiceIPCClient::IOServiceIPCClient(StreamChannel::UniquePtr stream_channel)
@@ -27,7 +27,7 @@ IOServiceIPCClient::onConnected(StreamChannel* ch) noexcept
     CHECK_EQ(transport_channel_.get(), ch);
     VLOG(2) << "transport connected";
     json_channel_.reset(new myio::JSONStreamChannel(std::move(transport_channel_), this));
-    json_channel_->sendMsg(message_type::HELLO);
+    json_channel_->sendMsg(type::type_HELLO);
 }
 
 void
@@ -50,7 +50,7 @@ IOServiceIPCClient::onRecvMsg(JSONStreamChannel*, uint16_t type,
 {
     VLOG(2) << "client received msg type " << type;
     switch (type) {
-    case message_type::CHANGE_PRIORITY:
+    case type::type_FETCH:
         VLOG(2) << "client received change_priority msg";
         break;
     default:

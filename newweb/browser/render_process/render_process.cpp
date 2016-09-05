@@ -7,7 +7,6 @@
 #include "../../utility/easylogging++.h"
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/json_stream_channel.hpp"
-#include "../../utility/ipc/io_service_ipc.hpp"
 #include "ipc.hpp"
 
 
@@ -31,9 +30,11 @@ int main(int argc, char **argv)
 
     /* ***************************************** */
 
+    const uint16_t ioservice_port = 12345;
+
     myio::TCPChannel::UniquePtr tcpChanForIPC(
         new myio::TCPChannel(evbase.get(), getaddr("localhost"),
-                             myipc::ioservice::service_port, nullptr));
+                             ioservice_port, nullptr));
     IOServiceIPCClient::UniquePtr ipcclient(
         new IOServiceIPCClient(std::move(tcpChanForIPC)));
 

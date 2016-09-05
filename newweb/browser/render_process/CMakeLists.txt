@@ -35,9 +35,14 @@ add_shadow_plugin(shadow-plugin-render_process ${RENDER_PROCESS_SOURCES})
 target_link_libraries(shadow-plugin-render_process ${LINK_LIBS})
 install(TARGETS shadow-plugin-render_process DESTINATION plugins)
 
+add_dependencies(shadow-plugin-render_process-bitcode io_service_ipc_messages_flatbuffers)
+
+
 ## create and install an executable that can run outside of shadow
 remove_definitions(-DIN_SHADOW)
 add_executable(render_process ${RENDER_PROCESS_SOURCES})
 target_link_libraries(render_process ${LINK_LIBS})
 install(TARGETS render_process DESTINATION bin)
+
+add_dependencies(render_process io_service_ipc_messages_flatbuffers)
 

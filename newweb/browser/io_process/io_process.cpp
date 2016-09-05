@@ -7,7 +7,6 @@
 #include "../../utility/tcp_server.hpp"
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
-#include "../../utility/ipc/io_service_ipc.hpp"
 #include "ipc.hpp"
 
 
@@ -31,9 +30,11 @@ int main(int argc, char **argv)
 
     /* ***************************************** */
 
+    const uint16_t service_port = 12345;
+
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), getaddr("localhost"),
-                            myipc::ioservice::service_port, nullptr));
+                            service_port, nullptr));
     IPCServer::UniquePtr ipcserver(new IPCServer(std::move(tcpServerForIPC)));
 
     /* ***************************************** */

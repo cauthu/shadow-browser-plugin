@@ -2,13 +2,13 @@
 #include "ipc.hpp"
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
-#include "../../utility/ipc/io_service_ipc.hpp"
+#include "utility/ipc/gen/io_service_messages_flatbuffers_generated.h"
 
 using myio::StreamServer;
 using myio::JSONStreamChannel;
 
 
-using myipc::ioservice::message_type;
+using myipc::ioservice::messages::type;
 
 IPCServer::IPCServer(StreamServer::UniquePtr streamserver)
     : stream_server_(std::move(streamserver))
@@ -26,6 +26,9 @@ IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
     JSONStreamChannel::UniquePtr ch(new JSONStreamChannel(std::move(channel), this));
     const auto ret = channels_.insert(make_pair(id, std::move(ch)));
     CHECK(ret.second); // insist it was newly inserted
+
+    myipc::ioservice::messages::HelloMsg hm;
+    CHECK(hm.xyz() == 0);
 }
 
 void
@@ -39,7 +42,7 @@ IPCServer::onRecvMsg(myio::JSONStreamChannel* channel, uint16_t type,
                      const rapidjson::Document&) noexcept
 {
     switch (type) {
-    case message_type::HELLO:
+    case type::type_HELLO:
         break;
     default:
         CHECK(false) << "invalid IPC message type " << type;

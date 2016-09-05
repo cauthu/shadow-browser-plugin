@@ -1,0 +1,22 @@
+
+namespace myipc.ioservice.messages;
+
+
+enum type:ushort
+{
+    HELLO,
+    FETCH
+}
+
+struct HelloMsg
+{
+    resId: uint;
+    xyz: short;
+    flags: ubyte;
+}
+
+table FetchMsg
+{
+    host: string;
+    port: ushort;
+}
