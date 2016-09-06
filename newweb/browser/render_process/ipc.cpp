@@ -1,8 +1,6 @@
 
 #include "../../utility/easylogging++.h"
-#include "utility/ipc/io_service/gen/message_types_generated.h"
-#include "utility/ipc/io_service/gen/hello_msg_generated.h"
-#include "utility/ipc/io_service/gen/fetch_msg_generated.h"
+#include "utility/ipc/io_service/gen/combined_headers"
 #include "ipc.hpp"
 
 

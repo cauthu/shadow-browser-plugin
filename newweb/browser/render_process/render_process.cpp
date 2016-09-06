@@ -6,7 +6,6 @@
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
 #include "../../utility/tcp_channel.hpp"
-#include "../../utility/json_stream_channel.hpp"
 #include "ipc.hpp"
 
 
