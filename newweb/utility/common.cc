@@ -158,12 +158,17 @@ init_easylogging()
     el::base::utils::s_currentUser = el::base::utils::OS::currentUser();
     el::base::utils::s_currentHost = el::base::utils::OS::currentHost();
     el::base::utils::s_termSupportsColor = el::base::utils::OS::termSupportsColor();
-#else
-    CHECK(0); // not supposed to call this function if you're not
-                 // in shadow
 #endif
 
-    el::Loggers::reconfigureAllLoggers(
-        el::ConfigurationType::Format,
-        "%datetime{%h:%m:%s} [%level] -- %fbase:%line: %msg");
+   el::Configurations defaultConf;
+   defaultConf.setToDefault();
+   defaultConf.setGlobally(
+       el::ConfigurationType::Format,
+       "%datetime{%h:%m:%s} %level - [%fbase :%line]: %msg");
+   defaultConf.set(
+       el::Level::Verbose, el::ConfigurationType::Format,
+       "%datetime{%h:%m:%s} %level-%vlevel - [%fbase :%line]: %msg");
+
+    el::Loggers::reconfigureLogger("default", defaultConf);
+
 }

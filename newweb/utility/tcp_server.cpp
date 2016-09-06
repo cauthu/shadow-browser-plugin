@@ -17,9 +17,6 @@ TCPServer::TCPServer(
 {
 }
 
-TCPServer::~TCPServer()
-{}
-
 bool
 TCPServer::start_accepting()
 {
@@ -46,7 +43,7 @@ TCPServer::start_accepting()
 	rv = bind(fd, (struct sockaddr *) &server, sizeof(server));
 	CHECK_EQ(rv, 0);
 
-    static const auto backlog = 1000;
+    static const auto backlog = 20;
 
 	rv = listen(fd, backlog); // hardcode for now
     CHECK_EQ(rv, 0);
@@ -86,6 +83,8 @@ TCPServer::on_conn_accepted(
     struct evconnlistener *listener,
     int fd, struct sockaddr *addr, int len)
 {
+    VLOG(2) << "got a client conn, fd= " << fd;
+
     DestructorGuard dg(this);
 
     CHECK_EQ(state_, ServerState::ACCEPTING);

@@ -1,0 +1,10 @@
+
+namespace myipc.ioservice.messages;
+
+table FetchMsg
+{
+    host: string;
+    port: ushort;
+}
+
+root_type FetchMsg;

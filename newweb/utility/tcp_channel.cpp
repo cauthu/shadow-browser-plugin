@@ -13,13 +13,19 @@ TCPChannel::TCPChannel(struct event_base *evbase,
                        const in_addr_t& addr, const in_port_t& port,
                        StreamChannelObserver* observer)
     : TCPChannel(evbase, -1, addr, port, observer, ChannelState::INIT, true)
-{}
+{
+    CHECK(is_client_);
+}
 
 TCPChannel::TCPChannel(struct event_base *evbase, int fd)
     : TCPChannel(evbase, fd, 0, 0, nullptr, ChannelState::SOCKET_CONNECTED, false)
 {
     CHECK_GE(fd_, 0);
+    CHECK(!is_client_);
+    VLOG(2) << "contructing a (server) tcp chan, fd= " << fd;
     _initialize_read_write_events();
+    _set_read_monitoring(true);
+    _maybe_toggle_write_monitoring();
 }
 
 int
@@ -52,14 +58,6 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
         this, connect_timeout);
     CHECK_EQ(rv, 0);
 
-    // socket_ev_.reset(
-    //     event_new(evbase_, fd_, EV_READ | EV_WRITE | EV_PERSIST,
-    //               s_socket_eventcb, this));
-    // CHECK(socket_ev_);
-
-    // rv = event_add(socket_ev_.get(), connect_timeout);
-    // CHECK_EQ(rv, 0);
-
     state_ = ChannelState::CONNECTING_SOCKET;
 
     _initialize_read_write_events();
@@ -78,63 +76,73 @@ TCPChannel::set_observer(StreamChannelObserver* observer)
 int
 TCPChannel::read(uint8_t *data, size_t len)
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(input_evb_);
     return evbuffer_remove(input_evb_.get(), data, len);
 }
 
 int
 TCPChannel::read_buffer(struct evbuffer* buf, size_t len)
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(input_evb_);
     return evbuffer_remove_buffer(input_evb_.get(), buf, len);
 }
 
 int
 TCPChannel::drain(size_t len)
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(input_evb_);
     return evbuffer_drain(input_evb_.get(), len);
 }
 
 uint8_t*
 TCPChannel::peek(ssize_t len)
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(input_evb_);
     return evbuffer_pullup(input_evb_.get(), len);
 }
 
 size_t
 TCPChannel::get_avail_input_length() const
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(input_evb_);
     return evbuffer_get_length(input_evb_.get());
 }
 
 size_t
 TCPChannel::get_output_length() const
 {
-    // CHECK(in_buffered_mode_);
+    DCHECK(output_evb_);
     return evbuffer_get_length(output_evb_.get());
 }
 
 void
 TCPChannel::set_read_watermark(size_t lowmark, size_t highmark)
 {
-    CHECK(0);
+    CHECK_LE(lowmark, 0xffff);
+    read_lw_mark_ = lowmark;
+    CHECK_EQ(highmark, 0);
 }
 
 int
 TCPChannel::write(const uint8_t *data, size_t size)
 {
-    // CHECK(in_buffered_mode_);
-    return evbuffer_add(output_evb_.get(), data, size);
+    DCHECK(output_evb_);
+    const auto rv = evbuffer_add(output_evb_.get(), data, size);
+    if (!rv) {
+        _maybe_toggle_write_monitoring(true);
+    }
+    return rv;
 }
 
 int
 TCPChannel::write_buffer(struct evbuffer* buf)
 {
-    // CHECK(in_buffered_mode_);
-    return evbuffer_add_buffer(output_evb_.get(), buf);
+    DCHECK(output_evb_);
+    const auto rv = evbuffer_add_buffer(output_evb_.get(), buf);
+    if (!rv) {
+        _maybe_toggle_write_monitoring(true);
+    }
+    return rv;
 }
 
 void
@@ -164,6 +172,7 @@ void
 TCPChannel::_initialize_read_write_events()
 {
     CHECK_GE(fd_, 0);
+    VLOG(2) << "initialize (but not enable) read and write events, fd= " << fd_;
     socket_read_ev_.reset(
         event_new(evbase_, fd_, EV_READ | EV_PERSIST, s_socket_readcb, this));
     socket_write_ev_.reset(
@@ -180,6 +189,8 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
 
     if (what & EV_WRITE) {
         state_ = ChannelState::SOCKET_CONNECTED;
+        _set_read_monitoring(true);
+        _maybe_toggle_write_monitoring();
         connect_observer_->onConnected(this);
     }
     else if (what & EV_TIMEOUT) {
@@ -188,6 +199,37 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
     }
     else {
         CHECK(0) << "unexpected events: " << what;
+    }
+}
+
+void
+TCPChannel::_set_read_monitoring(bool enabled)
+{
+    CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
+    if (enabled) {
+        VLOG(2) << "start monitoring read event for fd= " << fd_;
+        auto rv = event_add(socket_read_ev_.get(), nullptr);
+        CHECK_EQ(rv, 0);
+    } else {
+        VLOG(2) << "STOP monitoring read event for fd= " << fd_;
+        auto rv = event_del(socket_read_ev_.get());
+        CHECK_EQ(rv, 0);
+    }
+}
+
+void
+TCPChannel::_maybe_toggle_write_monitoring(bool force_enable)
+{
+    CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
+    if (force_enable || evbuffer_get_length(output_evb_.get())) {
+        // there is some output data to write, or we are being forced,
+        // then start monitoring
+        auto rv = event_add(socket_write_ev_.get(), nullptr);
+        CHECK_EQ(rv, 0);
+    } else {
+        // stop monitoring
+        auto rv = event_del(socket_write_ev_.get());
+        CHECK_EQ(rv, 0);
     }
 }
 
@@ -203,13 +245,16 @@ TCPChannel::_on_socket_readcb(int fd, short what)
     if (what & EV_READ) {
         const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
         VLOG(2) << "evbuffer_read() returns: " << rv;
+        if (evbuffer_get_length(input_evb_.get()) >= read_lw_mark_) {
+            observer_->onNewReadDataAvailable(this);
+        }
         if (rv == 0) {
             observer_->onEOF(this);
         } else if ((rv == -1) && (errno != EAGAIN)) {
             observer_->onError(this, errno);
         }
     } else {
-        DCHECK(0) << "invalid events: " << what;
+        CHECK(0) << "invalid events: " << what;
     }
 
     VLOG(2) << "done";
@@ -226,59 +271,40 @@ TCPChannel::_on_socket_writecb(int fd, short what)
 
     if (what & EV_WRITE) {
         const auto rv = evbuffer_write(output_evb_.get(), fd_);
+        VLOG(2) << "evbuffer_write() return: " << rv;
+        _maybe_toggle_write_monitoring();
         if (rv == 0) {
-            observer_->onEOF(this);
-        } else if ((rv == -1) && (errno != EAGAIN)) {
-            observer_->onError(this, errno);
+            _on_eof();
+        } else if (rv == -1) {
+            if (errno == EINPROGRESS) {
+                LOG(FATAL) << "getting EINPROGRESS after a write()";
+            } else if (errno != EAGAIN) {
+                LOG(WARNING) << "errno= " << errno << " (" << strerror(errno) << ")";
+                _on_error();
+            }
         }
     } else {
-        DCHECK(0) << "invalid events: " << what;
+        CHECK(0) << "invalid events: " << what;
     }
 
     VLOG(2) << "done";
 }
 
-// int
-// TCPChannel::set_non_buffer_mode(bool enable)
-// {
-//     if (in_buffered_mode_ && enable) {
-//         // currently in buffered mode and wanna switch to non-buffered
-//         // mode, so make sure the buffers are empty
-//         CHECK_EQ(evbuffer_get_length(input_evb_.get(), 0));
-//         CHECK_EQ(evbuffer_get_length(output_evb_.get(), 0));
-//     }
-//     in_buffered_mode_ = !enable;
-// }
+void
+TCPChannel::_on_eof()
+{
+    // assuming desctructorguard already set up
+    close();
+    observer_->onEOF(this);
+}
 
-// int
-// TCPChannel::nb_read(uint8_t *data, size_t len)
-// {
-//     CHECK(!in_buffered_mode_);
-//     CHECK_LT(len, SSIZE_MAX);
-//     return ::read(fd_, data, len);
-// }
-
-// int
-// TCPChannel::nb_read_buffer(struct evbuffer* buf, int len)
-// {
-//     CHECK(!in_buffered_mode_);
-//     return evbuffer_read(buf, fd_, len);
-// }
-
-// ssize_t
-// TCPChannel::nb_write(const uint8_t *data, size_t size)
-// {
-//     CHECK(!in_buffered_mode_);
-//     CHECK_GT(size, 0);
-//     return ::write(fd_, data, size);
-// }
-
-// int
-// TCPChannel::nb_write_buffer(struct evbuffer* buf)
-// {
-//     CHECK(!in_buffered_mode_);
-//     return evbuffer_write(fd_, buf);
-// }
+void
+TCPChannel::_on_error()
+{
+    // assuming desctructorguard already set up
+    close();
+    observer_->onError(this, errno);
+}
 
 TCPChannel::TCPChannel(struct event_base *evbase, int fd,
                        const in_addr_t& addr, const in_port_t& port,
@@ -288,10 +314,10 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , state_(starting_state), fd_(fd)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
-    // , in_buffered_mode_(true)
     , addr_(addr), port_(port), is_client_(is_client)
-    , input_evb_(nullptr, evbuffer_free)
-    , output_evb_(nullptr, evbuffer_free)
+    , input_evb_(evbuffer_new(), evbuffer_free)
+    , output_evb_(evbuffer_new(), evbuffer_free)
+    , read_lw_mark_(0)
     , tamaraw_timer_ev_(nullptr, event_free)
 {}
 

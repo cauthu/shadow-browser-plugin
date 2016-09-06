@@ -2,7 +2,6 @@
 #define tcp_channel_hpp
 
 
-#include <event2/bufferevent.h>
 #include <memory>
 #include <functional>
 
@@ -104,7 +103,14 @@ protected:
     virtual ~TCPChannel() = default;
 
     void _initialize_read_write_events();
-
+    void _set_read_monitoring(bool);
+    /* shadow doesn't support edge-triggered (epoll) monitoring, so we
+     * have to disable write monitoring if we don't have data to
+     * write, otherwise will keep getting notified of the write event
+     */
+    void _maybe_toggle_write_monitoring(bool force_enable=false);
+    void _on_eof();
+    void _on_error();
     void _on_socket_connect_eventcb(int fd, short what);
     void _on_socket_readcb(int fd, short what);
     void _on_socket_writecb(int fd, short what);
@@ -127,7 +133,6 @@ protected:
      */
     std::unique_ptr<struct event, void(*)(struct event*)> socket_read_ev_;
     std::unique_ptr<struct event, void(*)(struct event*)> socket_write_ev_;
-    bool in_buffered_mode_;
 
     const in_addr_t addr_;
     const in_port_t port_;
@@ -135,6 +140,11 @@ protected:
 
     std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> input_evb_;
     std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> output_evb_;
+
+    // read low-water mark: if a socket read makes input buffer
+    // contain at least this many bytes, then we notify user's
+    // onNewReadDataAvailable()
+    size_t read_lw_mark_;
 
     /* timer to send at constant rate */
     std::unique_ptr<struct event, void(*)(struct event*)> tamaraw_timer_ev_;

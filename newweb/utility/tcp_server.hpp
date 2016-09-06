@@ -24,7 +24,7 @@ public:
 
 protected:
 
-    virtual ~TCPServer();
+    virtual ~TCPServer() = default;
 
     void on_conn_accepted(struct evconnlistener *listener,
                           int fd, struct sockaddr *addr, int len);

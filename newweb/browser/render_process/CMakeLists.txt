@@ -10,7 +10,7 @@ set(RENDER_PROCESS_SOURCES
   ${UTILITY_DIR}/object.cpp
   ${UTILITY_DIR}/common.cc
   ${UTILITY_DIR}/tcp_channel.cpp
-  ${UTILITY_DIR}/json_stream_channel.cpp
+  ${UTILITY_DIR}/generic_message_channel.cpp
 )
 
 set(LINK_LIBS ${EVENT2_LIBRARIES})

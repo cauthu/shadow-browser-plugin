@@ -1,0 +1,10 @@
+
+namespace myipc.ioservice.messages;
+
+
+enum type:ushort
+{
+    HELLO,
+    FETCH,
+    FOOO
+}

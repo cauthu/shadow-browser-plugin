@@ -16,14 +16,11 @@ INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
-
-#ifdef IN_SHADOW
     init_easylogging();
-#endif
-
-    LOG(INFO) << "render_process starting...";
 
     START_EASYLOGGINGPP(argc, argv);
+
+    LOG(INFO) << "render_process starting...";
 
     unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
         init_evbase(), event_base_free);
@@ -43,6 +40,8 @@ int main(int argc, char **argv)
     LOG(INFO) << "done setup. run event loop";
 
     dispatch_evbase(evbase.get());
+
+    LOG(FATAL) << "not reached";
 
     return 0;
 }
