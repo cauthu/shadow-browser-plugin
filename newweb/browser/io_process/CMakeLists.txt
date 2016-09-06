@@ -1,14 +1,4 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-
-# project(browser CXX)
-
 ## Browser-Simulator
-
-## Find libtidy which is needed to parse HTML
-find_package(Boost REQUIRED)
-find_package(EVENT2 REQUIRED)
-find_package(SPDYLAY REQUIRED)
-find_package(OPENSSL REQUIRED)
 
 include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLUDES})
 
@@ -30,11 +20,6 @@ set(IO_PROCESS_SOURCES
 )
 
 set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})
-
-# need this so we can do #include the generated flatbuffer headers;
-# setting CMAKE_INCLUDE_CURRENT_DIR to ON doens't seem to work
-# include_directories(AFTER ${CMAKE_CURRENT_BINARY_DIR})
-include_directories(AFTER ${MY_ROOT_BUILD_DIR})
 
 
 ## create and install a shared library that can plug into shadow

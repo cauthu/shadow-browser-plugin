@@ -1,18 +1,4 @@
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-
-project(browser CXX)
-
 set(CMAKE_VERBOSE_MAKEFILE on)
-
-## Browser-Simulator
-
-## Find libtidy which is needed to parse HTML
-find_package(Boost REQUIRED)
-find_package(EVENT2 REQUIRED)
-find_package(SPDYLAY REQUIRED)
-find_package(OPENSSL REQUIRED)
-
-set(UTILITY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../utility")
 
 include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLUDES})
 
