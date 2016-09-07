@@ -19,6 +19,14 @@ namespace common
 
 extern const std::string static_bytes;
 
+namespace http
+{
+extern const char request_path[];
+extern const char resp_headers_size_name[];
+extern const char resp_body_size_name[];
+extern const char content_length_name[];
+} // namespace http
+
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
  *

@@ -43,7 +43,6 @@ public:
     explicit TCPChannel(struct event_base *, const int fd);
 
     virtual void set_observer(StreamChannelObserver*) override;
-    // virtual int set_non_buffer_mode(bool) override;
 
     /* --------- StreamChannel impl ------------- */
     /* return same value as bufferevent_socket_connect() */
@@ -55,10 +54,10 @@ public:
     virtual int drain(size_t len) override;
     virtual uint8_t* peek(ssize_t len) override;
 
-    // virtual int nb_read(uint8_t *data, size_t len) override;
-    // virtual int nb_read_buffer(struct evbuffer* buf) override;
-
     virtual struct evbuffer* get_input_evbuf() override { return input_evb_.get(); }
+
+    virtual void drop_future_input(StreamChannelInputDropObserver*, size_t) override;
+
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const override;
     virtual size_t get_output_length() const override;
@@ -72,10 +71,8 @@ public:
     virtual int write(const uint8_t *data, size_t len) override;
     virtual int write_buffer(struct evbuffer *buf) override;
 
-    // virtual int nb_write(uint8_t *data, size_t len) override;
-    // virtual int nb_write_buffer(struct evbuffer* buf) override;
-
-    // virtual struct evbuffer* get_output_evbuf() override { return bufferevent_get_output(bufev_.get()); }
+    /* write "len" bytes of dummy data */
+    virtual int write_dummy(size_t len) override;
 
     /* close/disconnect the channel, dropping pending/buffered data if
      * any */
@@ -115,6 +112,15 @@ protected:
     void _on_socket_readcb(int fd, short what);
     void _on_socket_writecb(int fd, short what);
 
+    /* (maybe) read and drop bytes from socket, so they dont get copied into
+     * input buffer.
+     *
+     * returns false if NO more can be read from socket, e.g., due to
+     * eof, error, etc. thus if true is returned, the socket might
+     * have more data that can be read.
+     */
+    bool _maybe_dropread();
+
     static void s_socket_connect_eventcb(int fd, short what, void* arg);
     static void s_socket_readcb(int fd, short what, void* arg);
     static void s_socket_writecb(int fd, short what, void* arg);
@@ -145,6 +151,14 @@ protected:
     // contain at least this many bytes, then we notify user's
     // onNewReadDataAvailable()
     size_t read_lw_mark_;
+
+    /* drop this many bytes from the input socket */
+    struct InputDropRequest
+    {
+        StreamChannelInputDropObserver* observer;
+        size_t num_requested;
+        size_t num_remaining;
+    } input_drop_req_;
 
     /* timer to send at constant rate */
     std::unique_ptr<struct event, void(*)(struct event*)> tamaraw_timer_ev_;

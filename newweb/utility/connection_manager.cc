@@ -1,9 +1,10 @@
 
-#include "connection_manager.hpp"
-
 #include <string>
 #include <utility>
 #include <boost/bind.hpp>
+
+#include "connection_manager.hpp"
+#include "easylogging++.h"
 
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
@@ -17,29 +18,15 @@ using std::make_pair;
 using std::shared_ptr;
 using std::make_shared;
 
-#ifdef ENABLE_MY_LOG_MACROS
+
 /* "inst" stands for instance, as in, instance of a class */
-#define loginst(level, inst, fmt, ...)                                  \
-    do {                                                                \
-        logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnxman= %d): " fmt, \
-              __LINE__, (inst)->objId(), ##__VA_ARGS__);               \
-    } while (0)
+#define vloginst(level, inst) VLOG(level) << "cnxman= " << (inst)->objId() << " "
+#define vlogself(level) vloginst(level, this)
 
-/* like loginst, but shortcut "this" as instance */
-#define logself(level, fmt, ...)                                        \
-    do {                                                                \
-        logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnxman= %d): " fmt, \
-              __LINE__, (this)->objId(), ##__VA_ARGS__);               \
-    } while (0)
-#else
+#define loginst(level, inst) LOG(level) << "cnxman= " << (inst)->objId() << " "
+#define logself(level) loginst(level, this)
 
-/* no op */
-#define loginst(level, inst, fmt, ...)
 
-/* no op */
-#define logself(level, fmt, ...)
-
-#endif
 
 /***************************************************/
 
@@ -59,9 +46,9 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
 
     , notify_req_error_(request_error_cb)
 {
-    myassert(evbase_);
-    myassert(request_error_cb);
-    myassert(max_persist_cnx_per_srv > 0);
+    CHECK(evbase_);
+    CHECK(request_error_cb);
+    CHECK(max_persist_cnx_per_srv > 0);
 }
 
 /***************************************************/
@@ -69,11 +56,11 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
 void
 ConnectionManager::submit_request(Request *req)
 {
-    logself(DEBUG, "begin, req url [%s]", req->url_.c_str());
+    vlogself(2) << "begin, req= " << req->objId();
 
     const NetLoc netloc(req->host_, req->port_);
 
-    logself(DEBUG, "netloc: %s:%u", netloc.first.c_str(), netloc.second);
+    vlogself(2) << "netloc: " << netloc.first << ":" << netloc.second;
 
     if (!inMap(servers_, netloc)) {
         servers_[netloc] = make_shared<Server>();
@@ -81,7 +68,7 @@ ConnectionManager::submit_request(Request *req)
     auto server = servers_[netloc];
     server->requests_.push_back(req);
 
-    logself(DEBUG, "server queue size %u", server->requests_.size());
+    vlogself(2) << "server queue size " << server->requests_.size();
 
     shared_ptr<Connection> conn;
     auto& conns = server->connections_;
@@ -90,19 +77,19 @@ ConnectionManager::submit_request(Request *req)
     for (auto& c : conns) {
         if (c->get_queue_size() == 0) {
             conn = c;
-            logself(DEBUG, "conn %d has empty queue -> use it", c->objId());
+            vlogself(2) << "conn " << c->objId() << " has empty queue -> use it";
             goto done;
         }
     }
 
-    logself(DEBUG, "reaching here means no idle connection");
-    myassert(!conn); // make sure conn IS NULL
+    vlogself(2) << "reaching here means no idle connection";
+    CHECK(!conn); // make sure conn IS NULL
 
-    logself(DEBUG, "there are %u connections to this netloc", conns.size());
+    vlogself(2) << "there are " << conns.size()<< " connections to this netloc";
 
     if (conns.size() < max_persist_cnx_per_srv_) {
-        logself(DEBUG, " --> create a new connection");
-        myassert(!conn);
+        vlogself(2) << " --> create a new connection";
+        CHECK(!conn);
         conn.reset(new Connection(
                        evbase_,
                        common::getaddr(netloc.first.c_str()), netloc.second,
@@ -115,8 +102,8 @@ ConnectionManager::submit_request(Request *req)
                        false
                        ),
                    [=](Connection* c) { c->destroy(); });
-        myassert(conn);
-        logself(DEBUG, " ... with objId() %u", conn->objId());
+        CHECK(conn);
+        vlogself(2) << " ... with objId() "<< conn->objId();
         conn->set_request_done_cb(
             boost::bind(&ConnectionManager::cnx_request_done_cb, this, _1, _2, netloc));
         conn->set_first_recv_byte_cb(
@@ -124,21 +111,20 @@ ConnectionManager::submit_request(Request *req)
         conns.push_back(conn);
         goto done;
     } else {
-        logself(DEBUG,
-                "reached max persist cnx per srv -> do nothing now");
+        vlogself(2)<< "reached max persist cnx per srv -> do nothing now";
     }
 
 done:
     if (conn) {
-        myassert(server->requests_.size() > 0);
+        CHECK(server->requests_.size() > 0);
 
         auto reqtosubmit = server->requests_.front();
-        logself(DEBUG, "submit request [%s] on conn objId() %u",
-            reqtosubmit->url_.c_str(), conn->objId());
+        vlogself(2) << "submit request [" << reqtosubmit->objId() << "] on conn objId() "
+                    << conn->objId();
         conn->submit_request(reqtosubmit);
         server->requests_.pop_front();
     }
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
     return;
 }
 
@@ -147,16 +133,16 @@ done:
 void
 ConnectionManager::cnx_first_recv_byte_cb(Connection* conn)
 {
-    logself(DEBUG, "begin");
+    vlogself(2) << "begin";
     if (timestamp_recv_first_byte_ != 0) {
-        logself(DEBUG, "timestamp_recv_first_byte_ already set: %" PRIu64 " --> do nothing",
-                timestamp_recv_first_byte_);
+        vlogself(2) << "timestamp_recv_first_byte_ already set: "
+                    << timestamp_recv_first_byte_ << " --> do nothing";
         return;
     }
     timestamp_recv_first_byte_ = common::gettimeofdayMs(nullptr);
-    myassert(timestamp_recv_first_byte_ > 0);
-    logself(DEBUG, "timestamp_recv_first_byte_: %" PRIu64, timestamp_recv_first_byte_);
-    logself(DEBUG, "done");
+    CHECK(timestamp_recv_first_byte_ > 0);
+    vlogself(2) << "timestamp_recv_first_byte_: " << timestamp_recv_first_byte_;
+    vlogself(2) << "done";
 }
 
 /***************************************************/
@@ -166,7 +152,7 @@ ConnectionManager::cnx_request_done_cb(Connection* conn,
                                        const Request* req,
                                        const NetLoc& netloc)
 {
-    logself(DEBUG, "begin, req url [%s]", req->url_.c_str());
+    vlogself(2) << "begin, req " <<  req->objId();
 
     // we don't free anything in here
 
@@ -175,24 +161,24 @@ ConnectionManager::cnx_request_done_cb(Connection* conn,
     Request* reqtosubmit = nullptr;
 
     auto server = servers_[netloc];
-    myassert(server);
+    CHECK(server);
 
     auto& requests = server->requests_;
-    logself(DEBUG, "%u waiting requests", requests.size());
+    vlogself(2) << requests.size() << " waiting requests";
 
     if (requests.empty()) {
-        logself(DEBUG, "  --> do nothing");
+        vlogself(2) << "  --> do nothing";
         goto done;
     }
 
     reqtosubmit = requests.front();
-    logself(DEBUG, "submit request [%s] on conn objId() %u",
-            reqtosubmit->url_.c_str(), conn->objId());
+    vlogself(2) << "submit request [" << reqtosubmit->objId()
+                << "] on conn objId() " << conn->objId();
     conn->submit_request(reqtosubmit);
     requests.pop_front();
 
 done:
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
     return;
 }
 
@@ -202,9 +188,7 @@ void
 ConnectionManager::cnx_error_cb(Connection* conn,
                                 const NetLoc& netloc)
 {
-#ifdef _update_code
-    logfn(SHADOW_LOG_LEVEL_WARNING, __func__, "connection error");
-#endif
+    logself(WARNING) << "connection error";
     handle_unusable_conn(conn, netloc);
 }
 
@@ -214,9 +198,7 @@ void
 ConnectionManager::cnx_eof_cb(Connection* conn,
                               const NetLoc& netloc)
 {
-#ifdef _update_code
-    logfn(SHADOW_LOG_LEVEL_WARNING, __func__, "connection eof");
-#endif
+    logself(WARNING) << "connection eof";
     handle_unusable_conn(conn, netloc);
 }
 
@@ -226,7 +208,7 @@ void
 ConnectionManager::handle_unusable_conn(Connection *conn,
                                         const NetLoc& netloc)
 {
-    logself(DEBUG, "begin, cnx: %d", conn->objId());
+    vlogself(2) << "begin, cnx: "<< conn->objId();
 
     // we should mark any requests being handled by this connection as
     // error. for now, we don't attempt to request elsewhere.
@@ -237,10 +219,10 @@ ConnectionManager::handle_unusable_conn(Connection *conn,
      * yet delete the conn object. so we can still get its request
      * queues.
      */
-    myassert(conn->get_pending_request_queue().empty());
+    CHECK(conn->get_pending_request_queue().empty());
     retry_requests(conn->get_active_request_queue());
 
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
 }
 
 /***************************************************/
@@ -248,41 +230,35 @@ ConnectionManager::handle_unusable_conn(Connection *conn,
 bool
 ConnectionManager::retry_requests(queue<Request*> requests)
 {
-    logself(DEBUG, "begin");
+    vlogself(2) << "begin";
 
     while (!requests.empty()) {
         auto req = requests.front();
-        myassert(req);
+        CHECK(req);
         requests.pop();
         if (req->get_num_retries() == max_retries_per_resource_) {
-#ifdef _update_code
-            logfn(SHADOW_LOG_LEVEL_WARNING, __func__,
-                  "resource [%s] has exhausted %u retries",
-                  req->url_.c_str(), max_retries_per_resource_);
-#endif
+            logself(WARNING) << "resource [" << req->objId() << "] has exhausted "
+                             <<  max_retries_per_resource_ << " retries";
             notify_req_error_(req);
             continue;
         }
         req->increment_num_retries();
-#ifdef _update_code
-        logfn(SHADOW_LOG_LEVEL_INFO, __func__,
-              "re-requesting resource [%s] for the %dth time",
-              req->url_.c_str(), req->get_num_retries());
-#endif
+        logself(INFO) <<
+            "re-requesting resource ["<<req->objId()<<"] for the "<<req->get_num_retries()<<" time";
         if (req->get_body_size() > 0) {
             /* the request "body_size()" represents number of
              * contiguous bytes from 0 that we have received. so, we
              * can use that as the next first_byte_pos.
              */
             // req->set_first_byte_pos(req->get_body_size());
-            // logself(DEBUG, "set first_byte_pos to %d",
+            // vlogself(2) << "set first_byte_pos to %d",
             //         req->get_first_byte_pos());
         }
 
         this->submit_request(req);
     }
 
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
     return true;
 }
 
@@ -291,15 +267,14 @@ ConnectionManager::retry_requests(queue<Request*> requests)
 void
 ConnectionManager::get_total_bytes(size_t& tx, size_t& rx)
 {
-    logself(DEBUG, "begin");
+    vlogself(2) << "begin";
 
     tx = totaltxbytes_;
     rx = totalrxbytes_;
 
     // pair<NetLoc, Server*> kv_pair;
     for (const auto& kv_pair : servers_) {
-        logself(DEBUG, "server %s:%u", 
-                kv_pair.first.first.c_str(), kv_pair.first.second);
+        vlogself(2) << "server [" << kv_pair.first.first << "]:" << kv_pair.first.second;
         const auto server = kv_pair.second;
         for (auto& c : server->connections_) {
             tx += c->get_total_num_sent_bytes();
@@ -307,7 +282,7 @@ ConnectionManager::get_total_bytes(size_t& tx, size_t& rx)
         }
     }
 
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
 }
 
 /***************************************************/
@@ -318,8 +293,8 @@ ConnectionManager::reset()
     // we don't touch the Request* pointers.
     // pair<NetLoc, Server*> kv_pair;
     for (const auto& kv_pair: servers_) {
-        logself(DEBUG, "clearing server [%s]:%u", 
-                kv_pair.first.first.c_str(), kv_pair.first.second);
+        vlogself(2) << "clearing server ["<< kv_pair.first.first <<"]:"
+                    << kv_pair.first.second;
         const auto server = kv_pair.second;
         server->connections_.clear();
     }
@@ -335,28 +310,26 @@ void
 ConnectionManager::release_conn(Connection *conn,
                                 const NetLoc& netloc)
 {
-    logself(DEBUG, "begin, releasing cnx %d", conn->objId());
+    vlogself(2) << "begin, releasing cnx "<< conn->objId();
 
     // remove it from active connections
-    myassert(inMap(servers_, netloc));
+    CHECK(inMap(servers_, netloc));
     auto& conns = servers_[netloc]->connections_;
 
     auto finditer = std::find_if(
         conns.begin(), conns.end(),
         [&](shared_ptr<Connection> const& p) { return p.get() == conn; });
-    myassert(finditer != conns.end());
+    CHECK(finditer != conns.end());
     conns.erase(finditer);
     if (conns.size() == 0) {
-        logself(DEBUG,
-                "list is now empty --> remove this list from map");
+        vlogself(2) << "list is now empty --> remove this list from map";
         servers_.erase(netloc);
     }
 
     totaltxbytes_ += conn->get_total_num_sent_bytes();
     totalrxbytes_ += conn->get_total_num_recv_bytes();
 
-    logself(DEBUG, "totaltxbytes_ %zu, totalrxbytes_ %zu",
-            totaltxbytes_, totalrxbytes_);
+    vlogself(2) << "totaltxbytes_ " << totaltxbytes_ << ", totalrxbytes_ " << totalrxbytes_;
 
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
 }

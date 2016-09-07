@@ -18,6 +18,15 @@ namespace common
 // 16k bytes
 const std::string static_bytes(0xffff, 'A');
 
+namespace http
+{
+const char request_path[] = "/special_request";
+const char resp_headers_size_name[] = "Resp-Headers-Size";
+const char resp_body_size_name[] = "Resp-Body-Size";
+const char content_length_name[] = "Content-Length";
+} // namespace http
+
+
 char*
 expandPath(const char* path) {
     char *s = NULL;

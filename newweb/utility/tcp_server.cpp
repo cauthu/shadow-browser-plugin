@@ -3,6 +3,13 @@
 #include "tcp_channel.hpp"
 #include "tcp_server.hpp"
 
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define vlogself(level) vloginst(level, this)
+
+#define loginst(level, inst) LOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define logself(level) loginst(level, this)
+
 namespace myio
 {
 
@@ -58,7 +65,7 @@ TCPServer::start_accepting()
 
     state_ = ServerState::ACCEPTING;
 
-    VLOG(2) << "tcpserver have started accepting";
+    vlogself(2) << "tcpserver have started accepting";
     return !!evlistener_;
 }
 
@@ -83,7 +90,7 @@ TCPServer::on_conn_accepted(
     struct evconnlistener *listener,
     int fd, struct sockaddr *addr, int len)
 {
-    VLOG(2) << "got a client conn, fd= " << fd;
+    vlogself(2) << "got a client conn, fd= " << fd;
 
     DestructorGuard dg(this);
 

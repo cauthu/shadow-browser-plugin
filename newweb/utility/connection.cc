@@ -28,29 +28,15 @@ using myio::Socks5ConnectorObserver;
 using myio::StreamChannel;
 using myio::TCPChannel;
 
-#ifdef ENABLE_MY_LOG_MACROS
+
+
 /* "inst" stands for instance, as in, instance of a class */
-#define loginst(level, inst, fmt, ...)                                  \
-    do {                                                                \
-        logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnx= %d): " fmt,  \
-              __LINE__, (inst)->instNum_, ##__VA_ARGS__);               \
-    } while (0)
+#define vloginst(level, inst) VLOG(level) << "cnx= " << (inst)->objId() << " "
+#define vlogself(level) vloginst(level, this)
 
-/* like loginst, but shortcut "this" as instance */
-#define logself(level, fmt, ...)                                        \
-    do {                                                                \
-        logfn(SHADOW_LOG_LEVEL_##level, __func__, "(ln %d, cnx= %d): " fmt,  \
-              __LINE__, (this)->instNum_, ##__VA_ARGS__);               \
-    } while (0)
-#else
+#define loginst(level, inst) LOG(level) << "cnx= " << (inst)->objId() << " "
+#define logself(level) loginst(level, this)
 
-/* no op */
-#define loginst(level, inst, fmt, ...)
-
-/* no op */
-#define logself(level, fmt, ...)
-
-#endif
 
 
 Connection::Connection(
@@ -187,7 +173,7 @@ Connection::_setup_spdylay_session()
     r = spdylay_submit_settings(
         session_, SPDYLAY_FLAG_SETTINGS_NONE,
         entry, sizeof(entry)/sizeof(spdylay_settings_entry));
-    myassert (0 == r);
+    CHECK (0 == r);
 #endif
 
     spdysess_.reset(session);
@@ -199,24 +185,24 @@ Connection::_setup_spdylay_session()
 void
 Connection::_maybe_http_write_to_transport()
 {
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
     CHECK_EQ(state_, State::CONNECTED);
 
     if (submitted_req_queue_.empty()) {
-        VLOG(2) << "submit queue is empty -> nothing to do";
+        vlogself(2) << "submit queue is empty -> nothing to do";
         return;
     }
 
     auto const qsize = active_req_queue_.size();
-    VLOG(2) << "active req qsize " << qsize;
+    vlogself(2) << "active req qsize " << qsize;
     CHECK_LE(qsize, 1);
 
     if (qsize > 0) {
-        VLOG(2) << "there's an active req -> can't write to output";
+        vlogself(2) << "there's an active req -> can't write to output";
         return;
     }
 
-    VLOG(2) << "writing a req to transport";
+    vlogself(2) << "writing a req to transport";
 
     auto req = submitted_req_queue_.front();
     CHECK_NOTNULL(req);
@@ -230,11 +216,15 @@ Connection::_maybe_http_write_to_transport()
     // content-length value a lil later
     auto rv = evbuffer_add_printf(
         buf.get(),
-        "GET /special_request HTTP/1.1\r\n"
-        "Resp-Headers-Size: %d\r\n"
-        "Resp-Body-Size: %d\r\n"
-        "Content-Length: ",
-        req->resp_headers_size_, req->resp_body_size_);
+        "GET %s HTTP/1.1\r\n"
+        "%s: %d\r\n"
+        "%s: %d\r\n"
+        "%s: ",
+        common::http::request_path,
+        common::http::resp_headers_size_name, req->resp_headers_size_,
+        common::http::resp_body_size_name, req->resp_body_size_,
+        common::http::content_length_name
+        );
     CHECK_GT(rv, 0);
 
     /* figure out how many opaque payload bytes we can send */
@@ -242,32 +232,25 @@ Connection::_maybe_http_write_to_transport()
     CHECK_GT(req->req_total_size_, already_used_size);
     auto num_opaque_bytes_avail = req->req_total_size_ - already_used_size;
 
-    VLOG(2) << "num_opaque_bytes_avail= " << num_opaque_bytes_avail;
+    vlogself(2) << "num_opaque_bytes_avail= " << num_opaque_bytes_avail;
 
     // complete the content length header and overall headers
     rv = evbuffer_add_printf(
         buf.get(), "%zu\r\n\r\n", num_opaque_bytes_avail);
     CHECK_GT(rv, 0);
 
-    // now include the opaque bytes in the request body
-    while (num_opaque_bytes_avail > 0) {
-        /* add reference to static bytes so we don't need to copy */
-        const auto num_add = std::min(num_opaque_bytes_avail, common::static_bytes.length());
-        rv = evbuffer_add_reference(buf.get(), common::static_bytes.c_str(),
-                                    num_add, nullptr, nullptr);
-        CHECK_EQ(rv, 0);
-        num_opaque_bytes_avail -= num_add;
-        CHECK_GE(num_opaque_bytes_avail, 0);
-    }
-
-    /* now can give buf to transport... hopefully it honors our
-     * references and doesn't unnecessarily copy bytes */
+    /* now can give buf to transport */
     rv = transport_->write_buffer(buf.get());
+    CHECK_EQ(rv, 0);
+    CHECK_EQ(evbuffer_get_length(buf.get()), 0);
+
+    // now for the body we can tell transport dummy bytes
+    rv = transport_->write_dummy(num_opaque_bytes_avail);
     CHECK_EQ(rv, 0);
 
     active_req_queue_.push(req);
 
-    VLOG(2) << "done";
+    vlogself(2) << "done";
     return;
 }
 
@@ -277,9 +260,9 @@ Connection::submit_request(Request* req)
     /* it's ok to submit requests if not yet connected, etc, but proly
      * a bug if submitting a request after we have closed
      */
-    myassert((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
+    CHECK((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
 
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     if (use_spdy_) {
         const auto& hdrs = req->get_headers();
@@ -288,7 +271,7 @@ Connection::submit_request(Request* req)
         nv[hdidx++] = ":method";
         nv[hdidx++] = "GET";
         nv[hdidx++] = ":path";
-        nv[hdidx++] = "/special_request";
+        nv[hdidx++] = common::http::request_path;
         nv[hdidx++] = ":version";
         nv[hdidx++] = "HTTP/1.1";
         nv[hdidx++] = ":host";
@@ -321,16 +304,16 @@ Connection::submit_request(Request* req)
 
     req->conn = this;
 
-    VLOG(2) << "done";
+    vlogself(2) << "done";
     return 0;
 }
 
 Connection::~Connection()
 {
-    logself(DEBUG, "begin destructor");
+    vlogself(2) << "begin destructor";
     disconnect();
     evbase_ = nullptr; // no freeing
-    logself(DEBUG, "done destructor");
+    vlogself(2) << "done destructor";
 }
 
 std::queue<Request*>
@@ -360,7 +343,7 @@ Connection::is_idle() const {
         } else {
             const int subqsize = submitted_req_queue_.size();
             const int activeqsize = active_req_queue_.size();
-            VLOG(2) << subqsize << ", " << activeqsize;
+            vlogself(2) << subqsize << ", " << activeqsize;
             return (!subqsize && !activeqsize);
         }
     }
@@ -370,8 +353,8 @@ Connection::is_idle() const {
 void
 Connection::disconnect()
 {
-    logself(DEBUG, "begin");
-    // myassert(0 == spdylay_submit_goaway(spdysess_, 0));
+    vlogself(2) << "begin";
+    // CHECK(0 == spdylay_submit_goaway(spdysess_, 0));
     // send_();
 
     /* Connection::spdylay_recv_cb() is failling the session ==
@@ -384,16 +367,16 @@ Connection::disconnect()
                         // Connection's destructor
 
     state_ = State::NO_LONGER_USABLE;
-    logself(DEBUG, "done");
+    vlogself(2) << "done";
 }
 
 void
 Connection::_maybe_http_consume_input()
 {
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     if (active_req_queue_.empty()) {
-        logself(DEBUG, "no active req waiting to be received");
+        vlogself(2) << "no active req waiting to be received";
         return;
     }
 
@@ -404,10 +387,10 @@ Connection::_maybe_http_consume_input()
     struct evbuffer *inbuf = transport_->get_input_evbuf();
     CHECK_NOTNULL(inbuf);
 
-    VLOG(2) << "num bytes available in inbuf: " << evbuffer_get_length(inbuf);
+    vlogself(2) << "num bytes available in inbuf: " << evbuffer_get_length(inbuf);
 
     if (evbuffer_get_length(inbuf) == 0) {
-        VLOG(2) << "no input available";
+        vlogself(2) << "no input available";
         return;
     }
 
@@ -419,16 +402,16 @@ Connection::_maybe_http_consume_input()
             line = evbuffer_readln(
                 inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT);
             if (line) {
-                logself(DEBUG, "got status line: [%s]", line);
+                vlogself(2) << "got status line: [" << line << "]";
                 const char *tmp = strchr(line, ' ');
                 CHECK_NOTNULL(tmp);
                 http_rsp_status_ = strtol(tmp + 1, nullptr, 10);
                 if (http_rsp_status_ != 200 && http_rsp_status_ != 206) {
                     Request *req = active_req_queue_.front();
-                    LOG(FATAL) << "req [" << req << "] got status ["
+                    logself(FATAL) << "req [" << req << "] got status ["
                                << http_rsp_status_ << " ]";
                 }
-                logself(DEBUG, "status: [%d]", http_rsp_status_);
+                vlogself(2) << "status: " << http_rsp_status_;
                 http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_HEADERS;
                 free(line);
                 line = nullptr;
@@ -441,7 +424,7 @@ Connection::_maybe_http_consume_input()
         }
 
         case HTTPRespState::HTTP_RSP_STATE_HEADERS: {
-            logself(DEBUG, "try to get response headers");
+            vlogself(2) << "try to get response headers";
             while (nullptr != (line = evbuffer_readln(
                                    inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT)))
             {
@@ -459,8 +442,8 @@ Connection::_maybe_http_consume_input()
                     // response meta info and then move to next state
                     // to read body
 
-                    myassert(body_len_ >= 0);
-                    myassert(0 == (rsp_hdrs_.size() % 2));
+                    CHECK(body_len_ >= 0);
+                    CHECK(0 == (rsp_hdrs_.size() % 2));
 
                     // notify user of response meta info
 
@@ -468,7 +451,7 @@ Connection::_maybe_http_consume_input()
                     int j = 0;
                     for (; j < rsp_hdrs_.size(); ++j) {
                         nv[j] = rsp_hdrs_[j];
-                        logself(DEBUG, "nv[%d] = [%s]", j, nv[j]);
+                        vlogself(2) << "nv[" << j << "] = [" << nv[j] << "]";
                     }
                     nv[j] = nullptr; /* null sentinel */
                     Request *req = active_req_queue_.front();
@@ -483,10 +466,10 @@ Connection::_maybe_http_consume_input()
                     line = nullptr;
                     break; // out of while loop trying to read header lines
                 } else {
-                    logself(DEBUG, "whole rsp hdr line: [%s]", line);
+                    vlogself(2) << "whole rsp hdr line: [" << line << "]";
                     // XXX/TODO: expect all lower case
                     char *tmp = strchr(line, ':');
-                    myassert(tmp);
+                    CHECK(tmp);
                     rsp_hdrs_.push_back(line);
                     *tmp = '\0'; /* colon becomes NULL */
                     ++tmp;
@@ -495,7 +478,7 @@ Connection::_maybe_http_consume_input()
                     rsp_hdrs_.push_back(tmp);
                     if (!strcasecmp(line, "content-length")) {
                         body_len_ = strtol(tmp, nullptr, 10);
-                        logself(DEBUG, "body content length: [%d]", body_len_);
+                        vlogself(2) << "body content length: " << body_len_;
                     }
                     // DO NOT free line. because it's in the rsp_hdrs_;
                     line = nullptr;
@@ -513,8 +496,8 @@ Connection::_maybe_http_consume_input()
         }
 
         case HTTPRespState::HTTP_RSP_STATE_BODY: {
-            myassert(body_len_ > 0);
-            logself(DEBUG, "get rsp body, current body_len_ %d", body_len_);
+            CHECK(body_len_ > 0);
+            vlogself(2) << "get rsp body, current body_len_ " << body_len_;
             Request *req = active_req_queue_.front();
             while (evbuffer_get_length(inbuf) > 0 && body_len_ > 0) {
                 int numconsumed = 0;
@@ -530,13 +513,12 @@ Connection::_maybe_http_consume_input()
                     const int consumed_of_this_one = std::min((size_t)body_len_, v[i].iov_len);
                     numconsumed += consumed_of_this_one;
                     body_len_ -= consumed_of_this_one;
-                    myassert(body_len_ >= 0);
+                    CHECK(body_len_ >= 0);
                     req->notify_rsp_body_data(
                         (const uint8_t *)v[i].iov_base, consumed_of_this_one);
                 }
-                logself(DEBUG, "consumed %d bytes -> new body_len_ %d",
-                        numconsumed, body_len_);
-                myassert(0 == evbuffer_drain(inbuf, numconsumed));
+                vlogself(2) << "consumed " << numconsumed << " bytes -> new body_len_ " << body_len_;
+                CHECK(0 == evbuffer_drain(inbuf, numconsumed));
             }
             if (body_len_ == 0) {
                 /* remove req from active queue */
@@ -560,7 +542,7 @@ Connection::_maybe_http_consume_input()
             break;
         }
         default:
-            LOG(FATAL) << "invalid http_rsp_state_: "
+            logself(FATAL) << "invalid http_rsp_state_: "
                        << common::as_integer(http_rsp_state_);
             break;
         }
@@ -588,33 +570,33 @@ Connection::onNewReadDataAvailable(StreamChannel* ch) noexcept
     CHECK_EQ(transport_.get(), ch);
 
     int rv = 0;
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     if (use_spdy_) {
         spdylay_session* session = spdysess_.get();
         if((rv = spdylay_session_recv(session)) != 0) {
             disconnect();
             if (SPDYLAY_ERR_EOF == rv) {
-                logself(DEBUG, "remote peer closed");
+                vlogself(2) << "remote peer closed";
             } else {
-                LOG(WARNING) << "spdylay_session_recv() returned \""
+                logself(WARNING) << "spdylay_session_recv() returned \""
                              << spdylay_strerror(rv) << "\"";
             }
             return;
         } else if((rv = spdylay_session_send(session)) < 0) {
-            LOG(FATAL) << "not reached";
+            logself(FATAL) << "not reached";
         }
         if(rv == 0) {
             if(spdylay_session_want_read(session) == 0 &&
                spdylay_session_want_write(session) == 0) {
-                LOG(FATAL) << "not reached";
+                logself(FATAL) << "not reached";
                 rv = -1;
             }
         }
     } else {
         _maybe_http_consume_input();
     }
-    VLOG(2) << "done";
+    vlogself(2) << "done";
 }
 
 void
@@ -648,7 +630,7 @@ Connection::onSocksTargetConnectResult(
         CHECK_NOTNULL(transport_);
         socks_connector_.reset();
 
-        VLOG(2) << "connected to target (thru socks proxy)";
+        vlogself(2) << "connected to target (thru socks proxy)";
         state_ = State::CONNECTED;
         _maybe_send();
 
@@ -656,11 +638,11 @@ Connection::onSocksTargetConnectResult(
     }
 
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL:
-        LOG(FATAL) << "to implement";
+        logself(FATAL) << "to implement";
         break;
 
     default:
-        LOG(FATAL) << "invalid result";
+        logself(FATAL) << "invalid result";
         break;
     }
 }
@@ -669,7 +651,7 @@ void
 Connection::onConnected(StreamChannel* ch) noexcept
 {
     if (state_ == State::PROXY_CONNECTING) {
-        VLOG(2) << "now connected to the PROXY";
+        vlogself(2) << "now connected to the PROXY";
 
         CHECK_EQ(transport_.get(), ch);
         state_ = State::PROXY_CONNECTED;
@@ -679,7 +661,7 @@ Connection::onConnected(StreamChannel* ch) noexcept
         CHECK_NE(addr, 0);
         CHECK_NE(port, 0);
 
-        VLOG(2) << "now tell proxy to connect to target";
+        vlogself(2) << "now tell proxy to connect to target";
         CHECK(!socks_connector_);
         socks_connector_.reset(
             new Socks5Connector(std::move(transport_), addr, port));
@@ -688,12 +670,12 @@ Connection::onConnected(StreamChannel* ch) noexcept
         state_ = State::CONNECTING;
     }
     else if (state_ == State::CONNECTING) {
-        VLOG(2) << "connected to target";
+        vlogself(2) << "connected to target";
         state_ = State::CONNECTED;
         _maybe_send();
     }
     else {
-        LOG(FATAL) << "invalid state";
+        logself(FATAL) << "invalid state";
     }
 }
 
@@ -711,14 +693,14 @@ Connection::onConnectTimeout(myio::StreamChannel*) noexcept
 int
 Connection::initiate_connection()
 {
-    logself(DEBUG, "begin");
+    vlogself(2) << "begin";
 
     int rv = 0;
 
-    VLOG(2) << "socks5 " << socks5_addr_ << ":" << socks5_port_;
+    vlogself(2) << "socks5 " << socks5_addr_ << ":" << socks5_port_;
 
     if (state_ == State::DISCONNECTED && socks5_addr_ && socks5_port_) {
-        VLOG(2) << "first, connect to socks proxy";
+        vlogself(2) << "first, connect to socks proxy";
 
         CHECK(!transport_);
         transport_.reset(new TCPChannel(evbase_, socks5_addr_, socks5_port_, this));
@@ -727,7 +709,7 @@ Connection::initiate_connection()
         rv = transport_->start_connecting(this);
         CHECK_EQ(rv, 0);
 
-        VLOG(2) <<  "transition to state PROXY_CONNECTING";
+        vlogself(2) <<  "transition to state PROXY_CONNECTING";
         state_ = State::PROXY_CONNECTING;
     }
     else if (state_ == State::DISCONNECTED) {
@@ -744,11 +726,11 @@ Connection::initiate_connection()
         rv = transport_->start_connecting(this);
         CHECK_EQ(rv, 0);
 
-        VLOG(2) << "transition to state CONNECTING";
+        vlogself(2) << "transition to state CONNECTING";
         state_ = State::CONNECTING;
     }
     else {
-        LOG(FATAL) << "invalid state: " << common::as_integer(state_);
+        logself(FATAL) << "invalid state: " << common::as_integer(state_);
     }
 
     return rv;
@@ -763,9 +745,9 @@ Connection::_maybe_send()
         if (rv) {
             disconnect();
             if (SPDYLAY_ERR_EOF == rv) {
-                VLOG(1) << "remote peer closed";
+                vlogself(1) << "remote peer closed";
             } else {
-                LOG(WARNING) << "spdylay_session_send() returned \""
+                logself(WARNING) << "spdylay_session_send() returned \""
                              << spdylay_strerror(rv) << "\"";
             }
             return;
@@ -786,7 +768,7 @@ ssize_t
 Connection::spdylay_send_cb(spdylay_session *session, const uint8_t *data,
                             size_t length, int flags)
 {
-    VLOG(2) << "begin, length= " << length;
+    vlogself(2) << "begin, length= " << length;
     CHECK_EQ(session, spdysess_.get());
 
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
@@ -794,17 +776,17 @@ Connection::spdylay_send_cb(spdylay_session *session, const uint8_t *data,
     const auto rv = transport_->write(data, length);
     if (rv == 0) {
         cumulative_num_sent_bytes_ += length;
-        VLOG(2) << "able to write " << length << " bytes to transport";
+        vlogself(2) << "able to write " << length << " bytes to transport";
         retval = length;
     }
     else if (rv == -1) {
-        LOG(WARNING) << "transport didn't accept our write";
+        logself(WARNING) << "transport didn't accept our write";
         retval = SPDYLAY_ERR_CALLBACK_FAILURE;
     } else {
-        LOG(FATAL) << "invalid rv= " << rv;
+        logself(FATAL) << "invalid rv= " << rv;
     }
  
-    VLOG(2) << "returning " << retval;
+    vlogself(2) << "returning " << retval;
     return retval;
 }
 
@@ -813,7 +795,7 @@ ssize_t
 Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
                             size_t length, int flags)
 {
-    VLOG(2) << "begin, length="<< length;
+    vlogself(2) << "begin, length="<< length;
     CHECK_EQ(session, spdysess_.get());
 
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
@@ -821,13 +803,13 @@ Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
     const auto numread = transport_->read(buf, length);
 
     if (numread == 0) {
-        VLOG(2) << "no data is currently available for reading";
+        vlogself(2) << "no data is currently available for reading";
         retval = transport_->is_closed()
                  ? SPDYLAY_ERR_EOF
                  : SPDYLAY_ERR_WOULDBLOCK;
     }
     else if (numread > 0) {
-        VLOG(2) << "able to read " << numread << " bytes";
+        vlogself(2) << "able to read " << numread << " bytes";
         retval = numread;
         if (0 == cumulative_num_recv_bytes_
             && cnx_first_recv_byte_cb_)
@@ -837,10 +819,10 @@ Connection::spdylay_recv_cb(spdylay_session *session, uint8_t *buf,
         cumulative_num_recv_bytes_ += numread;
     }
     else {
-        LOG(WARNING) << "transport::read() returns: " << numread;
+        logself(WARNING) << "transport::read() returns: " << numread;
     }
 
-    VLOG(2) << "returning " << retval;
+    vlogself(2) << "returning " << retval;
     return retval;
 }
 
@@ -851,23 +833,23 @@ Connection::spdylay_on_data_recv_cb(spdylay_session *session,
 {
     CHECK_EQ(session, spdysess_.get());
     const int32_t sid = stream_id;
-    VLOG(2) << "begin, sid " << sid << ", len " << len << ", cnx " << objId();
+    vlogself(2) << "begin, sid " << sid << ", len " << len << ", cnx " << objId();
     if ((flags & SPDYLAY_DATA_FLAG_FIN) != 0) {
 
         DestructorGuard dg(this);
 
-        VLOG(2) << "last data frame of resource";
+        vlogself(2) << "last data frame of resource";
 
         if (inSet(psids_, sid)) {
             notify_pushed_body_done_(sid, this, cb_data_);
             return;
         }
 
-        myassert(inMap(sid2req_, sid));
+        CHECK(inMap(sid2req_, sid));
         Request* req = sid2req_[sid];
         req->notify_rsp_body_done();
     }
-    VLOG(2) << "done";
+    vlogself(2) << "done";
 }
 
 void
@@ -875,10 +857,10 @@ Connection::spdylay_on_data_chunk_recv_cb(spdylay_session *session,
                                           uint8_t flags, int32_t stream_id,
                                           const uint8_t *data, size_t len)
 {
-    myassert(session == spdysess_.get());
+    CHECK(session == spdysess_.get());
     const int32_t sid = stream_id;
-    logself(DEBUG, "begin, sid %d, len %d, cnx %u",
-            sid, len, instNum_);
+    // logself(DEBUG, "begin, sid %d, len %d, cnx %u",
+    //         sid, len, instNum_);
 
     DestructorGuard dg(this);
 
@@ -887,11 +869,11 @@ Connection::spdylay_on_data_chunk_recv_cb(spdylay_session *session,
         return;
     }
 
-    myassert(inMap(sid2req_, sid));
+    CHECK(inMap(sid2req_, sid));
     Request* req = sid2req_[sid];
     req->notify_rsp_body_data(data, len);
 
-    logself(DEBUG, "done");
+    // logself(DEBUG, "done");
 }
 
 void
@@ -901,10 +883,10 @@ Connection::handle_server_push_ctrl_recv(spdylay_frame *frame)
     const int32_t pushsid = frame->syn_stream.stream_id;
     const int32_t assoc_sid = frame->syn_stream.assoc_stream_id;
 
-    logself(DEBUG, "begin, server-pushed stream %d with assoc id %d",
-            pushsid, assoc_sid);
+    // logself(DEBUG, "begin, server-pushed stream %d with assoc id %d",
+    //         pushsid, assoc_sid);
 
-    myassert (assoc_sid != 0);
+    CHECK (assoc_sid != 0);
 
     char **nv = frame->syn_stream.nv;
     const char *content_length = 0;
@@ -916,7 +898,7 @@ Connection::handle_server_push_ctrl_recv(spdylay_frame *frame)
     for(size_t i = 0; nv[i]; i += 2) {
         if(strcmp(nv[i], ":status") == 0) {
             code = strtoul(nv[i+1], 0, 10);
-            myassert(code == 200);
+            CHECK(code == 200);
         } else if(nv[i][0] != ':') {
             if(strcasecmp(nv[i], "content-length") == 0) {
                 contentlen = strtoul(nv[i+1], 0, 10);
@@ -926,7 +908,7 @@ Connection::handle_server_push_ctrl_recv(spdylay_frame *frame)
         }
     }
 
-    logself(DEBUG, "pushed url: [%s], contentlen %d", pushedurl, contentlen);
+    // logself(DEBUG, "pushed url: [%s], contentlen %d", pushedurl, contentlen);
 
     //sid2psids_[assoc_sid].push_back(pushsid);
     psids_.insert(pushsid);
@@ -934,7 +916,7 @@ Connection::handle_server_push_ctrl_recv(spdylay_frame *frame)
     notify_pushed_meta_(
         pushsid, pushedurl, contentlen, (const char**)nv, this, cb_data_);
 
-    logself(DEBUG, "done");
+    // logself(DEBUG, "done");
 }
     
 void
@@ -942,23 +924,23 @@ Connection::spdylay_on_ctrl_recv_cb(spdylay_session *session,
                                     spdylay_frame_type type,
                                     spdylay_frame *frame)
 {
-    logself(DEBUG, "begin");
-    myassert(session == spdysess_.get());
+    // logself(DEBUG, "begin");
+    CHECK(session == spdysess_.get());
     switch(type) {
     case SPDYLAY_SYN_STREAM:
         handle_server_push_ctrl_recv(frame);
         break;
     case SPDYLAY_RST_STREAM:
-        myassert(0);
+        CHECK(0);
         break;
     case SPDYLAY_SYN_REPLY: {
         const int32_t sid = frame->syn_reply.stream_id;
-        myassert(inMap(sid2req_, sid));
+        CHECK(inMap(sid2req_, sid));
         Request* req = sid2req_[sid];
-        myassert(req);
-        logself(DEBUG,
-                "SYN REPLY sid: %d, cnx: %u, req: %u",
-                sid, instNum_, req->instNum_);
+        CHECK(req);
+        // logself(DEBUG,
+        //         "SYN REPLY sid: %d, cnx: %u, req: %u",
+        //         sid, instNum_, req->instNum_);
 
         char **nv = frame->syn_reply.nv;
         const char *status = 0;
@@ -966,10 +948,10 @@ Connection::spdylay_on_ctrl_recv_cb(spdylay_session *session,
         const char *content_length = 0;
         unsigned int code = 0;
         for(size_t i = 0; nv[i]; i += 2) {
-            logself(DEBUG, "name-value pair: %s: %s", nv[i], nv[i+1]);
+            // logself(DEBUG, "name-value pair: %s: %s", nv[i], nv[i+1]);
             if(strcmp(nv[i], ":status") == 0) {
                 code = strtoul(nv[i+1], 0, 10);
-                myassert(code == 200);
+                CHECK(code == 200);
                 status = nv[i+1];
             } else if(strcmp(nv[i], ":version") == 0) {
                 version = nv[i+1];
@@ -982,17 +964,17 @@ Connection::spdylay_on_ctrl_recv_cb(spdylay_session *session,
             }
         }
         if(!status || !version) {
-            myassert(0);
+            CHECK(0);
             return;
         }
         DestructorGuard dg(this);
-        logself(DEBUG, "notifying of response meta");
+        // logself(DEBUG, "notifying of response meta");
         req->notify_rsp_meta(code, nv);
     }
     default:
         break;
     }
-    logself(DEBUG, "done");
+    // logself(DEBUG, "done");
 }
 
 void
@@ -1000,19 +982,19 @@ Connection::spdylay_before_ctrl_send_cb(spdylay_session *session,
                                         spdylay_frame_type type,
                                         spdylay_frame *frame)
 {
-    logself(DEBUG, "begin");
-    myassert(session == spdysess_.get());
+    // logself(DEBUG, "begin");
+    CHECK(session == spdysess_.get());
     if(type == SPDYLAY_SYN_STREAM) {
         const int32_t sid = frame->syn_stream.stream_id;
         Request *req = reinterpret_cast<Request*>(
             spdylay_session_get_stream_user_data(session, sid));
-        myassert(req);
-        logself(DEBUG, "new SYN sid: %d, cnx: %u, req: %u",
-                sid, instNum_, req->instNum_);
+        CHECK(req);
+        // logself(DEBUG, "new SYN sid: %d, cnx: %u, req: %u",
+        //         sid, instNum_, req->instNum_);
         sid2req_[frame->syn_stream.stream_id] = req;
         req->dump_debug();
         DestructorGuard dg(this);
         req->notify_req_about_to_send();
     }
-    logself(DEBUG, "done");
+    // logself(DEBUG, "done");
 }

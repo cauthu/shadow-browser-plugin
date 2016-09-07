@@ -16,21 +16,21 @@ INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
-    init_easylogging();
+    common::init_easylogging();
 
     START_EASYLOGGINGPP(argc, argv);
 
     LOG(INFO) << "io_process starting...";
 
     unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
-        init_evbase(), event_base_free);
+        common::init_evbase(), event_base_free);
 
     /* ***************************************** */
 
     const uint16_t service_port = 12345;
 
     myio::TCPServer::UniquePtr tcpServerForIPC(
-        new myio::TCPServer(evbase.get(), getaddr("localhost"),
+        new myio::TCPServer(evbase.get(), common::getaddr("localhost"),
                             service_port, nullptr));
     IPCServer::UniquePtr ipcserver(new IPCServer(std::move(tcpServerForIPC)));
 
@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
     LOG(INFO) << "done setup. run event loop";
 
-    dispatch_evbase(evbase.get());
+    common::dispatch_evbase(evbase.get());
 
     LOG(FATAL) << "not reached";
     return 0;

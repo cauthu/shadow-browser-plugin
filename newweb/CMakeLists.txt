@@ -30,4 +30,4 @@ add_subdirectory(utility)
 ## recurse to build each plug-in
 
 add_subdirectory(browser)
-# add_subdirectory(webserver)
+add_subdirectory(webserver)

@@ -160,5 +160,4 @@ GenericMessageChannel::onError(StreamChannel* channel, int errorcode) noexcept
     observer_->onError(this, errorcode);
 }
 
-
 }

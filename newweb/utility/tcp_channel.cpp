@@ -4,6 +4,15 @@
 
 #include "tcp_channel.hpp"
 #include "easylogging++.h"
+#include "common.hpp"
+
+
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define vlogself(level) vloginst(level, this)
+
+#define loginst(level, inst) LOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define logself(level) loginst(level, this)
 
 namespace myio {
 
@@ -22,7 +31,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd)
 {
     CHECK_GE(fd_, 0);
     CHECK(!is_client_);
-    VLOG(2) << "contructing a (server) tcp chan, fd= " << fd;
+    vlogself(2) << "contructing a (server) tcp chan, fd= " << fd;
     _initialize_read_write_events();
     _set_read_monitoring(true);
     _maybe_toggle_write_monitoring();
@@ -35,7 +44,7 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
     CHECK_EQ(state_, ChannelState::INIT);
     CHECK(is_client_);
 
-    VLOG(2) << "start connecting...";
+    vlogself(2) << "start connecting...";
 
     connect_observer_ = observer;
     CHECK_NOTNULL(connect_observer_);
@@ -166,13 +175,48 @@ TCPChannel::is_closed() const
     return state_ == ChannelState::CLOSED;
 }
 
+void
+TCPChannel::drop_future_input(StreamChannelInputDropObserver* observer,
+                              size_t len)
+{
+    // crash if we have not fully completed the previous request
+    CHECK(!input_drop_req_.observer);
+    CHECK_EQ(input_drop_req_.num_requested, 0);
+    CHECK_EQ(input_drop_req_.num_remaining, 0);
+
+    CHECK_NOTNULL(observer);
+    CHECK_GT(len, 0);
+
+    input_drop_req_.observer = observer;
+    input_drop_req_.num_requested = input_drop_req_.num_remaining = len;
+}
+
+int
+TCPChannel::write_dummy(size_t len)
+{
+    vlogself(2) << "begin, len: " << len;
+    while (len > 0) {
+        /* add reference to static bytes so we don't need to copy. we
+         * don't need to pass a free callback.
+         */
+        const auto num_to_add = std::min(len, common::static_bytes.length());
+        const auto rv = evbuffer_add_reference(
+            output_evb_.get(), common::static_bytes.c_str(),
+            num_to_add, nullptr, nullptr);
+        CHECK_EQ(rv, 0);
+        len -= num_to_add;
+    }
+    vlogself(2) << "done";
+    return 0;
+}
+
 /********************/
 
 void
 TCPChannel::_initialize_read_write_events()
 {
     CHECK_GE(fd_, 0);
-    VLOG(2) << "initialize (but not enable) read and write events, fd= " << fd_;
+    vlogself(2) << "initialize (but not enable) read and write events, fd= " << fd_;
     socket_read_ev_.reset(
         event_new(evbase_, fd_, EV_READ | EV_PERSIST, s_socket_readcb, this));
     socket_write_ev_.reset(
@@ -207,11 +251,11 @@ TCPChannel::_set_read_monitoring(bool enabled)
 {
     CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
     if (enabled) {
-        VLOG(2) << "start monitoring read event for fd= " << fd_;
+        vlogself(2) << "start monitoring read event for fd= " << fd_;
         auto rv = event_add(socket_read_ev_.get(), nullptr);
         CHECK_EQ(rv, 0);
     } else {
-        VLOG(2) << "STOP monitoring read event for fd= " << fd_;
+        vlogself(2) << "STOP monitoring read event for fd= " << fd_;
         auto rv = event_del(socket_read_ev_.get());
         CHECK_EQ(rv, 0);
     }
@@ -238,26 +282,72 @@ TCPChannel::_on_socket_readcb(int fd, short what)
 {
     CHECK_EQ(fd, fd_);
 
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     DestructorGuard dg(this);
 
     if (what & EV_READ) {
-        const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
-        VLOG(2) << "evbuffer_read() returns: " << rv;
-        if (evbuffer_get_length(input_evb_.get()) >= read_lw_mark_) {
-            observer_->onNewReadDataAvailable(this);
-        }
-        if (rv == 0) {
-            observer_->onEOF(this);
-        } else if ((rv == -1) && (errno != EAGAIN)) {
-            observer_->onError(this, errno);
+        if (_maybe_dropread()) {
+            const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
+            vlogself(2) << "evbuffer_read() returns: " << rv;
+            if (rv > 0 && evbuffer_get_length(input_evb_.get()) >= read_lw_mark_) {
+                observer_->onNewReadDataAvailable(this);
+            }
+            if (rv == 0) {
+                observer_->onEOF(this);
+            } else if ((rv == -1) && (errno != EAGAIN)) {
+                observer_->onError(this, errno);
+            }
         }
     } else {
         CHECK(0) << "invalid events: " << what;
     }
 
-    VLOG(2) << "done";
+    vlogself(2) << "done";
+}
+
+bool
+TCPChannel::_maybe_dropread()
+{
+    // will possibly notify observer, so but not going to set up a
+    // destructor guard here; leave it caller to do
+
+    // don't care about contents, so can use static
+    static char drop_buf[4096];
+    auto maybe_theres_more = true;
+
+    while (input_drop_req_.num_remaining > 0) {
+        // read into drop buf instead of into input_evb_
+        vlogself(2) << "want to dropread " << input_drop_req_.num_remaining << " bytes";
+        const auto num_to_read =
+            std::min(input_drop_req_.num_remaining, sizeof drop_buf);
+        const auto rv = ::read(fd_, drop_buf, num_to_read);
+        vlogself(2) << "got " << rv;
+        if (rv > 0) {
+            input_drop_req_.num_remaining -= rv;
+            if (input_drop_req_.num_remaining == 0) {
+                // notify first before resetting, to prevent user from
+                // immediately submitting another drop req. not that
+                // we couldn't handle it; just dont think we need to
+                input_drop_req_.observer->onCompleteInputDrop(
+                    this, input_drop_req_.num_requested);
+                // now reset
+                input_drop_req_.observer = nullptr;
+                input_drop_req_.num_requested = 0;
+            }
+        } else {
+            if (rv == 0) {
+                observer_->onEOF(this);
+            } else if ((rv == -1) && (errno != EAGAIN)) {
+                observer_->onError(this, errno);
+            }
+            maybe_theres_more = false;
+            break;
+        }
+    }
+
+    vlogself(2) << "done, returning: " << maybe_theres_more;
+    return maybe_theres_more;
 }
 
 void
@@ -265,21 +355,21 @@ TCPChannel::_on_socket_writecb(int fd, short what)
 {
     CHECK_EQ(fd, fd_);
 
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     DestructorGuard dg(this);
 
     if (what & EV_WRITE) {
         const auto rv = evbuffer_write(output_evb_.get(), fd_);
-        VLOG(2) << "evbuffer_write() return: " << rv;
+        vlogself(2) << "evbuffer_write() return: " << rv;
         _maybe_toggle_write_monitoring();
         if (rv == 0) {
             _on_eof();
         } else if (rv == -1) {
             if (errno == EINPROGRESS) {
-                LOG(FATAL) << "getting EINPROGRESS after a write()";
+                logself(FATAL) << "getting EINPROGRESS after a write()";
             } else if (errno != EAGAIN) {
-                LOG(WARNING) << "errno= " << errno << " (" << strerror(errno) << ")";
+                logself(WARNING) << "errno= " << errno << " (" << strerror(errno) << ")";
                 _on_error();
             }
         }
@@ -287,7 +377,7 @@ TCPChannel::_on_socket_writecb(int fd, short what)
         CHECK(0) << "invalid events: " << what;
     }
 
-    VLOG(2) << "done";
+    vlogself(2) << "done";
 }
 
 void
@@ -319,7 +409,10 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , output_evb_(evbuffer_new(), evbuffer_free)
     , read_lw_mark_(0)
     , tamaraw_timer_ev_(nullptr, event_free)
-{}
+{
+    input_drop_req_.observer = nullptr;
+    input_drop_req_.num_requested = input_drop_req_.num_remaining = 0;
+}
 
 void
 TCPChannel::s_socket_connect_eventcb(int fd, short what, void* arg)

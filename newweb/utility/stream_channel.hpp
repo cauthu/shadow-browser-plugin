@@ -25,6 +25,18 @@ public:
     virtual void onConnectTimeout(StreamChannel*) noexcept = 0;
 };
 
+class StreamChannelInputDropObserver
+{
+public:
+    /* this will be called ONCE when the channel has now dropped all
+     * the bytes requested in latest drop_future_input().
+     *
+     * "len" will be the value that was requested
+     */
+    virtual void onCompleteInputDrop(StreamChannel*, size_t len) noexcept = 0;
+
+};
+
 class StreamChannelObserver
 {
 public:
@@ -51,14 +63,6 @@ public:
     virtual void onEOF(StreamChannel*) noexcept = 0;
     /* will be called on any kind of error, whether read or write */
     virtual void onError(StreamChannel*, int errorcode) noexcept = 0;
-
-
-    // /******* if the channel is in non-buffered mode *******/
-
-    // /* these notify the observer so that observer can call the
-    //  * non-buffered versions of read/write */
-    // virtual void onReadable(StreamChannel*) noexcept = 0;
-    // virtual void onWritable(StreamChannel*) noexcept = 0;
 
 };
 
@@ -103,25 +107,19 @@ public:
      */
     virtual uint8_t* peek(ssize_t len) = 0;
 
-    // /* for use in non-buffered mode.
-    //  *
-    //  * On success, the number of bytes read is returned (zero
-    //  * indicates end of file). On error, -1 is returned, and errno is
-    //  * set appropriately.
-    //  */
-    // virtual int nb_read(uint8_t *data, size_t len) = 0;
-
-    // /* for use in non-buffered mode.
-    //  *
-    //  * if "len" is negative, then the library will guess how much to
-    //  * read
-    //  *
-    //  * returns number of bytes read on success, 0 on EOF, and -1 on an
-    //  * error (with errno set appropriately)
-    //  */
-    // virtual int nb_read_buffer(struct evbuffer* buf, int len) = 0;
-
     virtual struct evbuffer* get_input_evbuf() = 0;
+
+    /* request the channel to just ingore the next "len" bytes from
+     * the socket/network, i.e., do not put them in the input buffer
+     * that's visible to the application.
+     *
+     * only one such request at a time, i.e., if this is called when
+     * the channel has not finished with a previous request, it might
+     * throw/crash
+     *
+     * when the channel has fulfilled the request, it will notify
+     */
+    virtual void drop_future_input(StreamChannelInputDropObserver*, size_t len) = 0;
 
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const = 0;
@@ -142,28 +140,8 @@ public:
     /* returns 0 on success, -1 on failure. */
     virtual int write_buffer(struct evbuffer *buf) = 0;
 
-    // /* for use in non-buffered mode.
-    //  *
-    //  * On success, the number of bytes written is returned (zero
-    //  * indicates nothing was written).  On error, -1 is returned, and
-    //  * errno is set appropriately.
-    //  */
-    // virtual ssize_t nb_write(uint8_t *data, size_t len) = 0;
-
-    // /* for use in non-buffered mode.
-    //  *
-    //  * returns a number of bytes written on success, and -1 on
-    //  * failure.
-    //  */
-    // virtual int nb_write_buffer(struct evbuffer* buf) = 0;
-    
-    // /* this evbuf contains data to be sent to remote endpoint. you can
-    //  * append data into this evbuffer if you don't want to use the
-    //  * write/write_buffer calls above.
-    //  *
-    //  * NOTE! may only add (not remove) data from the output buffer.
-    //  */
-    // virtual struct evbuffer* get_output_evbuf() = 0;
+    /* write "len" bytes of dummy data */
+    virtual int write_dummy(size_t len) = 0;
 
     /* close/disconnect the channel, dropping pending/buffered data if
      * any */

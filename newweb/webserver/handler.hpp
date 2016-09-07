@@ -1,81 +1,67 @@
 #ifndef HANDLER_HPP
 #define HANDLER_HPP
 
-#include <unistd.h> /* close */
-#include <string.h> /* memset */
-#include <sys/epoll.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <stddef.h>
-#include <netdb.h>
-#include <glib.h>
-#include <glib/gprintf.h>
-#include "myassert.h"
-#include <time.h>
-#include <shd-library.h>
-#include <event2/event.h>
-#include <event2/buffer.h>
-
-#include "myevent.hpp"
-
-#include <map>
-#include <list>
 #include <string>
 #include <queue>
 #include <set>
 
-class Handler
+#include "../utility/object.hpp"
+#include "../utility/stream_channel.hpp"
+
+
+class Handler;
+
+class HandlerObserver
 {
 public:
-    Handler(myevent_base* evbase, const std::string& docroot,
-            const int client_fd);
-    ~Handler();
+    virtual void onHandlerDone(Handler*) noexcept = 0;
+};
 
-    void recv_from_client();
-    void send_to_client();
-    void on_client_sock_eof();
-    void on_client_sock_error();
+class Handler : public Object
+              , public myio::StreamChannelObserver
+              , public myio::StreamChannelInputDropObserver
+{
+public:
+    typedef std::unique_ptr<Handler, folly::DelayedDestruction::Destructor> UniquePtr;
 
-    const uint32_t instNum_; // monotonic id of this handler
+    explicit Handler(myio::StreamChannel::UniquePtr channel,
+                     HandlerObserver* observer);
 
 private:
 
-    /* schedule later self-destruction */
-    void deleteLater();
+    virtual ~Handler();
 
-    myevent_base* evbase_; /* borrowed. do not free */
-    static uint32_t nextInstNum;
+    /********* StreamChannelObserver interface *************/
+    virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
+    virtual void onEOF(myio::StreamChannel*) noexcept override;
+    virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+    virtual void onWrittenData(myio::StreamChannel*) noexcept override {};
 
-    const std::string docroot_;
-    myevent_socket_t* cliSideSock_ev_;
-    int cliSideSock_;
-    struct evbuffer* inbuf_;
-    struct evbuffer* outbuf_;
+    /********* StreamChannelInputDropObserver interface *************/
+    virtual void onCompleteInputDrop(myio::StreamChannel*, size_t) noexcept override;
 
-    enum {
+    ///////////////////
+
+    void _maybe_consume_input();
+
+    myio::StreamChannel::UniquePtr channel_; // the underlying stream
+    HandlerObserver* observer_;
+
+    enum class HTTPReqState {
         HTTP_REQ_STATE_REQ_LINE,
         HTTP_REQ_STATE_HEADERS,
-    };
-    int http_req_state_;
+        HTTP_REQ_STATE_BODY
+    } http_req_state_;
 
-    enum {
-        HTTP_RSP_STATE_META,
-        HTTP_RSP_STATE_BODY,
-    };
-    int http_rsp_state_;
-
-    class RequestInfo
+    struct RequestInfo
     {
-    public:
-        RequestInfo(const char* p) : path(p), first_byte_pos(-1) {}
-        RequestInfo(const std::string& p) : path(p), first_byte_pos(-1) {}
-
-        const std::string path; /* the path from the "GET path", not
-                                 * the absolute file path */
-        int first_byte_pos; /* -1 means it's not in the request */
+        size_t resp_headers_size;
+        size_t resp_body_size;
     };
+
+    // of the current _request_ we're extracting from client (parsed
+    // from content-length header)
+    size_t remaining_req_body_length_;
 
     /* not yet complete requests. once a request is complete, should
      * remove it from here. each element is the "path" component of
@@ -85,26 +71,11 @@ private:
      * it, then should pop() it off the queue.
      */
     std::queue<RequestInfo> submitted_req_queue_;
-    int active_fd_; /* of the file requested, actively being served,
-                     * or -1 */
 
-    /* use a flag to avoid unnecessarily -- though not affecting
-     * correctness -- calling the event's methods()
-     */
-    bool write_to_client_enabled_;
-    void enable_write_to_client_();
-    void disable_write_to_client_();
-
-    bool read_from_client_enabled_;
-    void enable_read_from_client_();
-    void disable_read_from_client_();
-
-    /* if this function wants more data (in inbuf_) for processing, it
-     * will enable_read_from_client_(), and return true. also, if
-     * submitted_req_queue_ is not empty, it will
-     * enable_write_to_client_().
-     */
-    bool process_inbuf_();
+    enum class HTTPRespState {
+        HTTP_RSP_STATE_META,
+        HTTP_RSP_STATE_BODY,
+    } http_rsp_state_;
 
     uint16_t peer_port_;
 
@@ -112,10 +83,6 @@ private:
     size_t numRespBodyBytesExpectedToSend_;
     size_t numRespBytesSent_;
     size_t numBodyBytesRead_;
-
-#ifdef TEST_BYTE_RANGE
-    size_t numRespMetaBytes_;
-#endif
 
 };
 

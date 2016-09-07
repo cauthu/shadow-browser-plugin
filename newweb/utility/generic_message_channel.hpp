@@ -52,7 +52,7 @@ public:
  * facebook's wangle framework?
  *
  */
-class GenericMessageChannel : public myio::StreamChannelObserver
+class GenericMessageChannel : public StreamChannelObserver
                             , public Object
 {
 public:
@@ -82,6 +82,8 @@ protected:
     virtual void onEOF(StreamChannel*) noexcept override;
     virtual void onError(StreamChannel*, int errorcode) noexcept override;
     virtual void onWrittenData(StreamChannel*) noexcept override {};
+
+    ////////
 
     void _consume_input();
     void _update_read_watermark();
