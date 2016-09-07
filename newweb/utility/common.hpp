@@ -11,6 +11,13 @@
 #include <netinet/in.h>
 #include <event2/event.h>
 #include <type_traits>
+#include <string>
+
+
+namespace common
+{
+
+extern const std::string static_bytes;
 
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
@@ -45,9 +52,6 @@ dispatch_evbase(struct event_base*);
 void
 init_easylogging();
 
-namespace common
-{
-
 template <typename Enumeration>
 auto as_integer(Enumeration const value)
     -> typename std::underlying_type<Enumeration>::type
@@ -55,7 +59,8 @@ auto as_integer(Enumeration const value)
     return static_cast<typename std::underlying_type<Enumeration>::type>(value);
 }
 
-}
+} // end namespace common
+
 
 #ifdef ENABLE_MY_LOG_MACROS
 #define logDEBUG(fmt, ...)                                              \

@@ -12,6 +12,12 @@
 #include "common.hpp"
 #include "easylogging++.h"
 
+namespace common
+{
+
+// 16k bytes
+const std::string static_bytes(0xffff, 'A');
+
 char*
 expandPath(const char* path) {
     char *s = NULL;
@@ -172,3 +178,5 @@ init_easylogging()
     el::Loggers::reconfigureLogger("default", defaultConf);
 
 }
+
+} // end namespace common

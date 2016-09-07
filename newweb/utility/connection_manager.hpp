@@ -19,6 +19,8 @@ class ConnectionManager : public Object
 {
 public:
 
+    typedef std::unique_ptr<ConnectionManager, folly::DelayedDestruction::Destructor> UniquePtr;
+
     typedef boost::function<void(Request*)> RequestErrorCb;
 
     /* "request_error_cb": will be called with the failed Request.
@@ -31,7 +33,6 @@ public:
                       RequestErrorCb request_error_cb,
                       const uint8_t max_persist_cnx_per_srv=8,
                       const uint8_t max_retries_per_resource=2);
-    ~ConnectionManager();
 
     void submit_request(Request *req);
     void reset();
@@ -39,12 +40,11 @@ public:
     uint64_t get_timestamp_recv_first_byte() const { return timestamp_recv_first_byte_; }
     void get_total_bytes(size_t& tx, size_t& rx);
 
-    /* schedule this for later deletion */
-    // void deleteLater(ShadowCreateCallbackFunc scheduleCallback);
-
     typedef std::pair<std::string, uint16_t> NetLoc;
 
 private:
+
+    virtual ~ConnectionManager() = default;
 
     /* to receive notification from Connection object. */
     void cnx_first_recv_byte_cb(Connection*);

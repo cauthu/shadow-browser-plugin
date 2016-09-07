@@ -74,7 +74,7 @@ Connection::Connection(
     , notify_pushed_body_done_(pushed_body_done_cb)
     , spdysess_{nullptr, spdylay_session_del}
     , http_rsp_state_(HTTPRespState::HTTP_RSP_STATE_STATUS_LINE)
-    , http_rsp_status_(-1), first_byte_pos_(0), body_len_(-1)
+    , http_rsp_status_(-1), body_len_(-1)
     , cumulative_num_sent_bytes_(0), cumulative_num_recv_bytes_(0)
 {
     /* ssp acts as an http proxy, only it uses spdy to transport. so
@@ -226,30 +226,42 @@ Connection::_maybe_http_write_to_transport()
         evbuffer_new(), evbuffer_free);
     CHECK_NOTNULL(buf.get());
 
-    // add first line
+    // add request line and some headers. need to fill out
+    // content-length value a lil later
     auto rv = evbuffer_add_printf(
-        buf.get(), "GET %s HTTP/1.1\r\n", req->path_.c_str());
+        buf.get(),
+        "GET /special_request HTTP/1.1\r\n"
+        "Resp-Headers-Size: %d\r\n"
+        "Resp-Body-Size: %d\r\n"
+        "Content-Length: ",
+        req->resp_headers_size_, req->resp_body_size_);
     CHECK_GT(rv, 0);
 
-    // add headers
-    const auto& hdrs = req->get_headers();
-    for (auto const & it : hdrs) {
-        rv = evbuffer_add_printf(
-            buf.get(), "%s: %s\r\n", it.first.c_str(), it.second.c_str());
-        CHECK_GT(rv, 0);
+    /* figure out how many opaque payload bytes we can send */
+    const auto already_used_size = evbuffer_get_length(buf.get());
+    CHECK_GT(req->req_total_size_, already_used_size);
+    auto num_opaque_bytes_avail = req->req_total_size_ - already_used_size;
+
+    VLOG(2) << "num_opaque_bytes_avail= " << num_opaque_bytes_avail;
+
+    // complete the content length header and overall headers
+    rv = evbuffer_add_printf(
+        buf.get(), "%zu\r\n\r\n", num_opaque_bytes_avail);
+    CHECK_GT(rv, 0);
+
+    // now include the opaque bytes in the request body
+    while (num_opaque_bytes_avail > 0) {
+        /* add reference to static bytes so we don't need to copy */
+        const auto num_add = std::min(num_opaque_bytes_avail, common::static_bytes.length());
+        rv = evbuffer_add_reference(buf.get(), common::static_bytes.c_str(),
+                                    num_add, nullptr, nullptr);
+        CHECK_EQ(rv, 0);
+        num_opaque_bytes_avail -= num_add;
+        CHECK_GE(num_opaque_bytes_avail, 0);
     }
 
-    first_byte_pos_ = req->get_first_byte_pos();
-    if (first_byte_pos_ > 0) {
-        VLOG(2) << "adding first_byte_pos_ " << first_byte_pos_;
-        rv = evbuffer_add_printf(
-            buf.get(), "Range: bytes=%zu-\r\n", first_byte_pos_);
-        CHECK_GT(rv, 0);
-    }
-
-    rv = evbuffer_add_printf(buf.get(), "\r\n");
-    CHECK_EQ(rv, 2);
-
+    /* now can give buf to transport... hopefully it honors our
+     * references and doesn't unnecessarily copy bytes */
     rv = transport_->write_buffer(buf.get());
     CHECK_EQ(rv, 0);
 
@@ -268,7 +280,6 @@ Connection::submit_request(Request* req)
     myassert((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
 
     VLOG(2) << "begin";
-    VLOG(2) << "path [" << req->get_path() << "]";
 
     if (use_spdy_) {
         const auto& hdrs = req->get_headers();
@@ -277,21 +288,25 @@ Connection::submit_request(Request* req)
         nv[hdidx++] = ":method";
         nv[hdidx++] = "GET";
         nv[hdidx++] = ":path";
-        nv[hdidx++] = req->get_path().c_str();
+        nv[hdidx++] = "/special_request";
         nv[hdidx++] = ":version";
         nv[hdidx++] = "HTTP/1.1";
         nv[hdidx++] = ":host";
         nv[hdidx++] = req->host_.c_str();
         nv[hdidx++] = ":scheme";
         nv[hdidx++] = "http";
-        // vector<pair<string, string> >::const_iterator it = hdrs.begin();
-        for (auto const& it : hdrs) {
-            const char *name = it.first.c_str();
-            const char *value = it.second.c_str();
-            VLOG(2) << "hdr name [" << name << "] value [" << value << "]";
-            nv[hdidx++] = name;
-            nv[hdidx++] = value;
-        };
+
+        string resp_headers_size_str = std::to_string(req->resp_headers_size_);
+        string resp_body_size_str = std::to_string(req->resp_body_size_);
+
+        nv[hdidx++] = "resp-headers-size";
+        nv[hdidx++] = resp_headers_size_str.c_str();
+
+        nv[hdidx++] = "resp-body-size";
+        nv[hdidx++] = resp_body_size_str.c_str();
+
+        CHECK(0) << "to implement!";
+
         nv[hdidx++] = nullptr;
 
         /* spdylay_submit_request() will make copies of nv */
@@ -383,7 +398,6 @@ Connection::_maybe_http_consume_input()
     }
 
     char *line = nullptr;
-    bool content_range_found = false;
     bool keep_consuming = true;
 
     // don't free this inbuf
@@ -411,12 +425,11 @@ Connection::_maybe_http_consume_input()
                 http_rsp_status_ = strtol(tmp + 1, nullptr, 10);
                 if (http_rsp_status_ != 200 && http_rsp_status_ != 206) {
                     Request *req = active_req_queue_.front();
-                    LOG(FATAL) << "req [" << req->url_ << "] got status ["
+                    LOG(FATAL) << "req [" << req << "] got status ["
                                << http_rsp_status_ << " ]";
                 }
                 logself(DEBUG, "status: [%d]", http_rsp_status_);
                 http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_HEADERS;
-                content_range_found = false;
                 free(line);
                 line = nullptr;
             } else {
@@ -448,10 +461,6 @@ Connection::_maybe_http_consume_input()
 
                     myassert(body_len_ >= 0);
                     myassert(0 == (rsp_hdrs_.size() % 2));
-
-                    if (!content_range_found && first_byte_pos_ > 0) {
-                        LOG(FATAL) << "content-range header is missing in response.";
-                    }
 
                     // notify user of response meta info
 
@@ -487,19 +496,6 @@ Connection::_maybe_http_consume_input()
                     if (!strcasecmp(line, "content-length")) {
                         body_len_ = strtol(tmp, nullptr, 10);
                         logself(DEBUG, "body content length: [%d]", body_len_);
-                    } else if (!strcasecmp(line, "content-range")) {
-                        int first_byte_pos = 0;
-                        int last_byte_pos = 0;
-                        int full_len = 0;
-                        myassert(-1 != parseContentRange(tmp, 0, &first_byte_pos, &last_byte_pos, &full_len));
-                        if (first_byte_pos != first_byte_pos_) {
-                            LOG(FATAL) << "response first-byte-pos is " << first_byte_pos
-                                       << ", but we expect " << first_byte_pos_;
-                        }
-                        logself(DEBUG, "parsed first_byte_pos %d, last_byte_pos %d, full_len %d",
-                                first_byte_pos, last_byte_pos, full_len);
-                        myassert((full_len - 1) == last_byte_pos);
-                        content_range_found = true;
                     }
                     // DO NOT free line. because it's in the rsp_hdrs_;
                     line = nullptr;
@@ -798,7 +794,7 @@ Connection::spdylay_send_cb(spdylay_session *session, const uint8_t *data,
     const auto rv = transport_->write(data, length);
     if (rv == 0) {
         cumulative_num_sent_bytes_ += length;
-        VLOG(2) << "able to send " << length << " bytes";
+        VLOG(2) << "able to write " << length << " bytes to transport";
         retval = length;
     }
     else if (rv == -1) {

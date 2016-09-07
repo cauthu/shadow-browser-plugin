@@ -105,7 +105,7 @@ ConnectionManager::submit_request(Request *req)
         myassert(!conn);
         conn.reset(new Connection(
                        evbase_,
-                       getaddr(netloc.first.c_str()), netloc.second,
+                       common::getaddr(netloc.first.c_str()), netloc.second,
                        socks5_addr_, socks5_port_,
                        0, 0,
                        boost::bind(&ConnectionManager::cnx_error_cb, this, _1, netloc),
@@ -153,7 +153,7 @@ ConnectionManager::cnx_first_recv_byte_cb(Connection* conn)
                 timestamp_recv_first_byte_);
         return;
     }
-    timestamp_recv_first_byte_ = gettimeofdayMs(nullptr);
+    timestamp_recv_first_byte_ = common::gettimeofdayMs(nullptr);
     myassert(timestamp_recv_first_byte_ > 0);
     logself(DEBUG, "timestamp_recv_first_byte_: %" PRIu64, timestamp_recv_first_byte_);
     logself(DEBUG, "done");
@@ -274,9 +274,9 @@ ConnectionManager::retry_requests(queue<Request*> requests)
              * contiguous bytes from 0 that we have received. so, we
              * can use that as the next first_byte_pos.
              */
-            req->set_first_byte_pos(req->get_body_size());
-            logself(DEBUG, "set first_byte_pos to %d",
-                    req->get_first_byte_pos());
+            // req->set_first_byte_pos(req->get_body_size());
+            // logself(DEBUG, "set first_byte_pos to %d",
+            //         req->get_first_byte_pos());
         }
 
         this->submit_request(req);
@@ -331,24 +331,11 @@ ConnectionManager::reset()
 
 /***************************************************/
 
-static void
-delete_connman(void *ptr)
-{
-    delete ((ConnectionManager*)ptr);
-}
-
-/***************************************************/
-
 void
 ConnectionManager::release_conn(Connection *conn,
                                 const NetLoc& netloc)
 {
     logself(DEBUG, "begin, releasing cnx %d", conn->objId());
-
-    // mark the cnx for deletion later. we don't want to do it here on
-    // the call stack of the cnx itself
-
-    // conn->deleteLater(scheduleCallback);
 
     // remove it from active connections
     myassert(inMap(servers_, netloc));
@@ -372,11 +359,4 @@ ConnectionManager::release_conn(Connection *conn,
             totaltxbytes_, totalrxbytes_);
 
     logself(DEBUG, "done");
-}
-
-/***************************************************/
-
-ConnectionManager::~ConnectionManager()
-{
-    reset();
 }
