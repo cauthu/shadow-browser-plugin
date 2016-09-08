@@ -244,7 +244,7 @@ Connection::_maybe_http_write_to_transport()
     CHECK_EQ(rv, 0);
     CHECK_EQ(evbuffer_get_length(buf.get()), 0);
 
-    // now for the body we can tell transport dummy bytes
+    vlogself(2) << "now for the body we can tell transport to use dummy bytes";
     rv = transport_->write_dummy(num_opaque_bytes_avail);
     CHECK_EQ(rv, 0);
 

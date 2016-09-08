@@ -107,6 +107,11 @@ public:
      */
     virtual uint8_t* peek(ssize_t len) = 0;
 
+    /* get to the underlying input buffer maintained by the channel.
+     *
+     * of course user should only read data from this buffer, and not
+     * add data to it.
+     */
     virtual struct evbuffer* get_input_evbuf() = 0;
 
     /* request the channel to just ingore the next "len" bytes from
@@ -140,7 +145,8 @@ public:
     /* returns 0 on success, -1 on failure. */
     virtual int write_buffer(struct evbuffer *buf) = 0;
 
-    /* write "len" bytes of dummy data */
+    /* write "len" bytes of dummy data. for now it should be all
+     * ascii */
     virtual int write_dummy(size_t len) = 0;
 
     /* close/disconnect the channel, dropping pending/buffered data if

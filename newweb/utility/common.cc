@@ -24,6 +24,9 @@ const char request_path[] = "/special_request";
 const char resp_headers_size_name[] = "Resp-Headers-Size";
 const char resp_body_size_name[] = "Resp-Body-Size";
 const char content_length_name[] = "Content-Length";
+
+const char dummy_name[] = "Dummy-Header";
+
 } // namespace http
 
 

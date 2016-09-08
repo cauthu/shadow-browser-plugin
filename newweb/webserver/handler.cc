@@ -1,6 +1,9 @@
 /* handles a connection with the client
  */
 
+
+#include <strings.h>
+
 #include "handler.hpp"
 #include "../utility/common.hpp"
 #include "../utility/easylogging++.h"
@@ -36,16 +39,14 @@ using myio::StreamChannel;
 
 
 Handler::Handler(StreamChannel::UniquePtr channel,
-    HandlerObserver* observer)
+                 HandlerObserver* observer)
     : channel_(std::move(channel))
     , observer_(observer)
     , http_req_state_(HTTPReqState::HTTP_REQ_STATE_REQ_LINE)
     , remaining_req_body_length_(0)
-    , http_rsp_state_(HTTPRespState::HTTP_RSP_STATE_META)
-    , numRespBodyBytesExpectedToSend_(0)
-    , numBodyBytesRead_(0), numRespBytesSent_(0)
 {
     CHECK_NOTNULL(observer_);
+    bzero(&current_req_, sizeof current_req_);
 }
 
 void
@@ -70,6 +71,8 @@ Handler::_maybe_consume_input()
     do {
         switch (http_req_state_) {
         case HTTPReqState::HTTP_REQ_STATE_REQ_LINE: {
+            CHECK_EQ(current_req_.active, 0);
+
             /* readln() does drain the buffer */
             line = evbuffer_readln(
                 inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT);
@@ -92,12 +95,11 @@ Handler::_maybe_consume_input()
                 CHECK_LT((relpath_end - line), line_len);
                 *relpath_end = '\0';
 
-                if (strcasecmp(relpath, common::http::request_path)) {
+                if (strcmp(relpath, common::http::request_path)) {
                     logself(FATAL) << "URI path [" << relpath << "] not expected";
                 }
 
-                RequestInfo reqinfo = {0};
-                submitted_req_queue_.push(reqinfo);
+                current_req_.active = 1;
 
                 http_req_state_ = HTTPReqState::HTTP_REQ_STATE_HEADERS;
                 free(line);
@@ -118,7 +120,7 @@ Handler::_maybe_consume_input()
                     free(line);
                     line = nullptr;
 
-                    const RequestInfo& reqinfo = submitted_req_queue_.front();
+                    const RequestInfo& reqinfo = current_req_;
                     vlogself(2) << "req: resp_headers_size: " << reqinfo.resp_headers_size
                             << ", resp_body_size: " << reqinfo.resp_body_size
                             << ", content_length: " << remaining_req_body_length_;
@@ -127,14 +129,15 @@ Handler::_maybe_consume_input()
                         // there's a req body we need to consume
                         http_req_state_ = HTTPReqState::HTTP_REQ_STATE_BODY;
                     } else {
-                        // no req body, so switch to reading next request
-                        http_req_state_ = HTTPReqState::HTTP_REQ_STATE_REQ_LINE;
+                        // no req body, so go serve response
+                        _serve_response();
                     }
-                } else {
+                }
+                else {
                     vlogself(2) << "whole req hdr line: [" << line << "]";
 
                     const auto line_len = strlen(line);
-                    CHECK_LT(line_len, 127);
+                    CHECK_LT(line_len, 127); // arbitrary value
 
                     char *tmp = strchr(line, ':');
                     CHECK_NOTNULL(tmp);
@@ -146,7 +149,10 @@ Handler::_maybe_consume_input()
                     *tmp = '\0'; /* blank space becomes NULL */
                     ++tmp;
 
-                    RequestInfo& reqinfo = submitted_req_queue_.back();
+                    const auto name_str = line;
+                    const auto value_str = tmp;
+
+                    RequestInfo& reqinfo = current_req_;
 
                     struct {
                         const char* hdr_name;
@@ -165,9 +171,6 @@ Handler::_maybe_consume_input()
                             &remaining_req_body_length_,
                         }
                     };
-
-                    const auto name_str = line;
-                    const auto value_str = tmp;
 
                     auto matched = false;
                     for (auto hdr_to_parse : hdrs_to_parse) {
@@ -201,9 +204,11 @@ Handler::_maybe_consume_input()
 
         case HTTPReqState::HTTP_REQ_STATE_BODY: {
             CHECK_GT(remaining_req_body_length_, 0);
-            // drain body bytes already in input buf
+            vlogself(2) << "drain body bytes that might already in input buf";
             const auto buflen = evbuffer_get_length(inbuf);
             const auto drain_len = std::min(buflen, remaining_req_body_length_);
+            vlogself(2) << buflen << ", " << remaining_req_body_length_ << ", "
+                        << drain_len;
             auto rv = evbuffer_drain(inbuf, drain_len);
             CHECK_EQ(rv, 0);
             remaining_req_body_length_ -= drain_len;
@@ -217,8 +222,8 @@ Handler::_maybe_consume_input()
                 channel_->drop_future_input(
                     this, remaining_req_body_length_);
             } else {
-                // have fully finished with req body, so update state
-                http_req_state_ = HTTPReqState::HTTP_REQ_STATE_REQ_LINE;
+                // have fully finished with req body, so go serve
+                _serve_response();
             }
             break;
         }
@@ -228,13 +233,66 @@ Handler::_maybe_consume_input()
             break;
         }
 
-    } while (keep_consuming);
+    } while (keep_consuming && evbuffer_get_length(inbuf) > 0);
 
     if (line) {
         free(line);
     }
     vlogself(2) << "done";
     return;
+}
+
+void
+Handler::_serve_response()
+{
+    CHECK_EQ(remaining_req_body_length_, 0);
+    CHECK_EQ(current_req_.active, 1);
+
+    std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> buf(
+        evbuffer_new(), evbuffer_free);
+    CHECK_NOTNULL(buf.get());
+
+    auto rv = evbuffer_add_printf(
+        buf.get(),
+        "HTTP/1.1 200 OK\r\n"
+        "%s: %ld\r\n"
+        "%s: ",
+        common::http::content_length_name, current_req_.resp_body_size,
+        common::http::dummy_name);
+    CHECK_GT(rv, 0);
+
+    // tell channel to write buf
+    rv = channel_->write_buffer(buf.get());
+    CHECK_EQ(rv, 0);
+    CHECK_EQ(evbuffer_get_length(buf.get()), 0);
+
+    vlogself(2) << "tell channel to write "
+                << current_req_.resp_headers_size << " dummy header bytes";
+    CHECK_GT(current_req_.resp_headers_size, 0);
+
+    rv = channel_->write_dummy(current_req_.resp_headers_size);
+    CHECK_EQ(rv, 0);
+
+    // end the dummy header and overall resp meta info
+    rv = evbuffer_add_printf(buf.get(), "\r\n\r\n");
+    CHECK_GT(rv, 0);
+
+    rv = channel_->write_buffer(buf.get());
+    CHECK_EQ(rv, 0);
+    CHECK_EQ(evbuffer_get_length(buf.get()), 0);
+
+    if (current_req_.resp_body_size > 0) {
+        vlogself(2) << "tell channel to write "
+                    << current_req_.resp_body_size << " dummy BODY bytes";
+
+        rv = channel_->write_dummy(current_req_.resp_body_size);
+        CHECK_EQ(rv, 0);
+    }
+
+    vlogself(2) << "reset state to get next request";
+
+    bzero(&current_req_, sizeof current_req_);
+    http_req_state_ = HTTPReqState::HTTP_REQ_STATE_REQ_LINE;
 }
 
 void
@@ -271,7 +329,7 @@ Handler::onCompleteInputDrop(StreamChannel* channel, size_t len) noexcept
     remaining_req_body_length_ -= len;
     CHECK_EQ(remaining_req_body_length_, 0);
 
-    http_req_state_ = HTTPReqState::HTTP_REQ_STATE_REQ_LINE;
+    _serve_response();
 }
 
 Handler::~Handler()

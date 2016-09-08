@@ -43,6 +43,7 @@ private:
     ///////////////////
 
     void _maybe_consume_input();
+    void _serve_response();
 
     myio::StreamChannel::UniquePtr channel_; // the underlying stream
     HandlerObserver* observer_;
@@ -53,36 +54,18 @@ private:
         HTTP_REQ_STATE_BODY
     } http_req_state_;
 
+    // we are not supporting pipelining, so there can be only one
+    // active request at a time
     struct RequestInfo
     {
+        int active; // this request is currently being processed
         size_t resp_headers_size;
         size_t resp_body_size;
-    };
+    } current_req_;
 
     // of the current _request_ we're extracting from client (parsed
     // from content-length header)
     size_t remaining_req_body_length_;
-
-    /* not yet complete requests. once a request is complete, should
-     * remove it from here. each element is the "path" component of
-     * the get request line, e.g., the "/index.html" of "GET
-     * /index.html ...". submitted_req_queue_.front() is the request
-     * actively being served. once we finish sending the response for
-     * it, then should pop() it off the queue.
-     */
-    std::queue<RequestInfo> submitted_req_queue_;
-
-    enum class HTTPRespState {
-        HTTP_RSP_STATE_META,
-        HTTP_RSP_STATE_BODY,
-    } http_rsp_state_;
-
-    uint16_t peer_port_;
-
-    /* for debugging / asserting, for the current active response */
-    size_t numRespBodyBytesExpectedToSend_;
-    size_t numRespBytesSent_;
-    size_t numBodyBytesRead_;
 
 };
 

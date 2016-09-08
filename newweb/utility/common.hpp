@@ -25,6 +25,9 @@ extern const char request_path[];
 extern const char resp_headers_size_name[];
 extern const char resp_body_size_name[];
 extern const char content_length_name[];
+
+extern const char dummy_name[];
+
 } // namespace http
 
 /* if "path" begins with '~', then replace '~' with the homedir path
