@@ -39,8 +39,8 @@ fbshipit-source-id: 30de0b99ec622471e52a775835b5a0564437febc
 #include <type_traits>
 #include <utility>
 
-#include <folly/Preprocessor.h>
-#include <folly/detail/UncaughtExceptionCounter.h>
+#include "Preprocessor.h"
+#include "detail/UncaughtExceptionCounter.h"
 
 namespace folly {
 
