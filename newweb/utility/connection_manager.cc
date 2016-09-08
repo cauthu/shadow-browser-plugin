@@ -245,7 +245,7 @@ ConnectionManager::retry_requests(queue<Request*> requests)
         req->increment_num_retries();
         logself(INFO) <<
             "re-requesting resource ["<<req->objId()<<"] for the "<<req->get_num_retries()<<" time";
-        if (req->get_body_size() > 0) {
+        if (req->actual_resp_body_size() > 0) {
             /* the request "body_size()" represents number of
              * contiguous bytes from 0 that we have received. so, we
              * can use that as the next first_byte_pos.

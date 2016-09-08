@@ -63,6 +63,7 @@ class Connection : public Object
                  , public myio::Socks5ConnectorObserver
                  , public myio::StreamChannelConnectObserver
                  , public myio::StreamChannelObserver
+                 , public myio::StreamChannelInputDropObserver
 {
 public:
 
@@ -144,6 +145,10 @@ private:
     virtual void onEOF(myio::StreamChannel*) noexcept override;
     virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
 
+    /***** StreamChannelInputDropObserver interface */
+    virtual void onInputBytesDropped(myio::StreamChannel*, size_t) noexcept override;
+
+    ////////////
 
     static ssize_t s_spdylay_send_cb(spdylay_session *, const uint8_t *,
                                      size_t, int, void*);
@@ -210,6 +215,9 @@ private:
 
     // read from socket and process the read data
     void _maybe_http_consume_input();
+
+    void _got_a_chunk_of_resp_body(size_t);
+    void _done_with_resp();
 
     void handle_server_push_ctrl_recv(spdylay_frame *frame);
 
@@ -278,10 +286,12 @@ private:
     std::vector<char *> rsp_hdrs_; // DO free every _other_ one of
                                    // these ptrs (i.e., index 0, 2, 4,
                                    // etc)
-    ssize_t body_len_; // -1, or amount of data _left_ to read from
-                       // server/deliver to user. this is of the
-                       // response body only, and not of the full
-                       // entity.
+    size_t remaining_resp_body_len_; /* amount of data _left_ to read
+                                      * from server/deliver to
+                                      * user. this is of the response
+                                      * body only, and not of the full
+                                      * entity.
+                                      */
 
     /* total num bytes sent/received on this cnx (not counting the
      * socks handshake, which is negligible) */

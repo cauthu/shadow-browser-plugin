@@ -28,12 +28,17 @@ public:
 class StreamChannelInputDropObserver
 {
 public:
-    /* this will be called ONCE when the channel has now dropped all
-     * the bytes requested in latest drop_future_input().
+    /* this will be called either ONCE when the channel has now
+     * dropped all the bytes requested in latest drop_future_input(),
+     * or possibly multiple times, depending on the "notify_progress"
+     * specified in the request.
      *
-     * "len" will be the value that was requested
+     * "len" will be the number of bytes that has been dropped since
+     * last notification, or the whole number of bytes that was
+     * specified in the request if progress notification was not
+     * requested.
      */
-    virtual void onCompleteInputDrop(StreamChannel*, size_t len) noexcept = 0;
+    virtual void onInputBytesDropped(StreamChannel*, size_t len) noexcept = 0;
 
 };
 
@@ -122,9 +127,12 @@ public:
      * the channel has not finished with a previous request, it might
      * throw/crash
      *
-     * when the channel has fulfilled the request, it will notify
+     * "notify_progress": false -> when the channel has fulfilled the
+     * whole request, it will notify. true -> notify as bytes are
+     * dropped
      */
-    virtual void drop_future_input(StreamChannelInputDropObserver*, size_t len) = 0;
+    virtual void drop_future_input(StreamChannelInputDropObserver*,
+                                   size_t len, bool notify_progress) = 0;
 
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const = 0;

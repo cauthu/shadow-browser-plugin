@@ -9,6 +9,7 @@
 
 #include "object.hpp"
 #include "stream_channel.hpp"
+#include "easylogging++.h"
 
 namespace myio
 {
@@ -56,7 +57,8 @@ public:
 
     virtual struct evbuffer* get_input_evbuf() override { return input_evb_.get(); }
 
-    virtual void drop_future_input(StreamChannelInputDropObserver*, size_t) override;
+    virtual void drop_future_input(StreamChannelInputDropObserver*,
+                                   size_t, bool notify_progress) override;
 
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const override;
@@ -152,13 +154,45 @@ protected:
     // onNewReadDataAvailable()
     size_t read_lw_mark_;
 
-    /* drop this many bytes from the input socket */
-    struct InputDropRequest
+    /* drop this many bytes from the input socket , not from the the
+     * input buf */
+    class InputDropInfo
     {
-        StreamChannelInputDropObserver* observer;
-        size_t num_requested;
-        size_t num_remaining;
-    } input_drop_req_;
+    public:
+        void reset()
+        {
+            observer_ = nullptr;
+            num_requested_ = num_remaining_ = 0;
+            interested_in_progress_ = false;
+        }
+        void set(StreamChannelInputDropObserver* observer,
+                 size_t len, bool interested_in_progress)
+        {
+            CHECK_GT(len, 0);
+            observer_ = observer;
+            num_requested_ = num_remaining_ = len;
+            interested_in_progress_ = interested_in_progress;
+        }
+        const bool is_active() const { return num_requested_ > 0; }
+        const size_t& num_remaining() const { return num_remaining_; }
+        const size_t& num_requested() const { return num_requested_; }
+        const bool& interested_in_progress() const { return interested_in_progress_; }
+        StreamChannelInputDropObserver* observer() { return observer_; }
+
+        // has dropped another block of "len" bytes
+        void progress(size_t len)
+        {
+            CHECK_GE(len, num_remaining_);
+            num_remaining_ -= len;
+        }
+
+    private:
+        StreamChannelInputDropObserver* observer_;
+        size_t num_requested_;
+        size_t num_remaining_;
+        bool interested_in_progress_; // whether observer interested
+                                      // in progress updates
+    } input_drop_;
 
     /* timer to send at constant rate */
     std::unique_ptr<struct event, void(*)(struct event*)> tamaraw_timer_ev_;

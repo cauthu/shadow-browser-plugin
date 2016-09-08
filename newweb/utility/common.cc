@@ -20,12 +20,18 @@ const std::string static_bytes(0xffff, 'A');
 
 namespace http
 {
+const char request_line[] = "GET /special_request HTTP/1.1";
 const char request_path[] = "/special_request";
-const char resp_headers_size_name[] = "Resp-Headers-Size";
-const char resp_body_size_name[] = "Resp-Body-Size";
-const char content_length_name[] = "Content-Length";
+const char resp_headers_size_name[] = "resp-headers-size";
+const char resp_body_size_name[] = "resp-body-size";
+const char content_length_name[] = "content-length";
 
-const char dummy_name[] = "Dummy-Header";
+const char dummy_name[] = "dummy-header";
+
+const char resp_status_line[] = "HTTP/1.1 200 OK";
+
+const size_t request_line_len = sizeof (request_line) - 1;
+const size_t resp_status_line_len = sizeof (resp_status_line) - 1;
 
 } // namespace http
 

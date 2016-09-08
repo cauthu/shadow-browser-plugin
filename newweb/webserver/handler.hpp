@@ -38,7 +38,7 @@ private:
     virtual void onWrittenData(myio::StreamChannel*) noexcept override {};
 
     /********* StreamChannelInputDropObserver interface *************/
-    virtual void onCompleteInputDrop(myio::StreamChannel*, size_t) noexcept override;
+    virtual void onInputBytesDropped(myio::StreamChannel*, size_t) noexcept override;
 
     ///////////////////
 

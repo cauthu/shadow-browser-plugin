@@ -14,6 +14,7 @@
 #define loginst(level, inst) LOG(level) << "tcpCh= " << (inst)->objId() << " "
 #define logself(level) loginst(level, this)
 
+
 namespace myio {
 
 /*******************************************/
@@ -177,18 +178,11 @@ TCPChannel::is_closed() const
 
 void
 TCPChannel::drop_future_input(StreamChannelInputDropObserver* observer,
-                              size_t len)
+                              size_t len, bool notify_progress)
 {
     // crash if we have not fully completed the previous request
-    CHECK(!input_drop_req_.observer);
-    CHECK_EQ(input_drop_req_.num_requested, 0);
-    CHECK_EQ(input_drop_req_.num_remaining, 0);
-
-    CHECK_NOTNULL(observer);
-    CHECK_GT(len, 0);
-
-    input_drop_req_.observer = observer;
-    input_drop_req_.num_requested = input_drop_req_.num_remaining = len;
+    CHECK(!input_drop_.is_active());
+    input_drop_.set(observer, len, notify_progress);
 }
 
 int
@@ -309,40 +303,61 @@ TCPChannel::_on_socket_readcb(int fd, short what)
 bool
 TCPChannel::_maybe_dropread()
 {
-    // will possibly notify observer, so but not going to set up a
+    // will possibly notify observer, but not going to set up a
     // destructor guard here; leave it caller to do
 
     // don't care about contents, so can use static
     static char drop_buf[4096];
-    auto maybe_theres_more = true;
+    auto maybe_theres_more = true; // from socket
+    size_t dropped_this_time = 0; // to be accumulated in the loop
 
-    while (input_drop_req_.num_remaining > 0) {
+    while (input_drop_.num_remaining() && maybe_theres_more) {
         // read into drop buf instead of into input_evb_
-        vlogself(2) << "want to dropread " << input_drop_req_.num_remaining << " bytes";
+        vlogself(2) << "want to dropread "
+                    << input_drop_.num_remaining() << " bytes";
         const auto num_to_read =
-            std::min(input_drop_req_.num_remaining, sizeof drop_buf);
+            std::min(input_drop_.num_remaining(), sizeof drop_buf);
         const auto rv = ::read(fd_, drop_buf, num_to_read);
         vlogself(2) << "got " << rv;
         if (rv > 0) {
-            input_drop_req_.num_remaining -= rv;
-            if (input_drop_req_.num_remaining == 0) {
-                // notify first before resetting, to prevent user from
-                // immediately submitting another drop req. not that
-                // we couldn't handle it; just dont think we need to
-                input_drop_req_.observer->onCompleteInputDrop(
-                    this, input_drop_req_.num_requested);
-                // now reset
-                input_drop_req_.observer = nullptr;
-                input_drop_req_.num_requested = 0;
-            }
+            dropped_this_time += rv;
+            input_drop_.progress(rv);
         } else {
+            // not able to read due to....
             if (rv == 0) {
+                // eof
                 observer_->onEOF(this);
-            } else if ((rv == -1) && (errno != EAGAIN)) {
-                observer_->onError(this, errno);
+            } else if (rv == -1) {
+                if (errno == EAGAIN) {
+                    // no more avail right now
+                } else {
+                    // error
+                    observer_->onError(this, errno);
+                }
             }
+
+            // whetever the reason, there is no more to read this time
+            // around
             maybe_theres_more = false;
-            break;
+        }
+    }
+
+    if (dropped_this_time) {
+        vlogself(2) << "total dropped this time around: " << dropped_this_time;
+        if (input_drop_.interested_in_progress()) {
+            // notify of any new progress
+            input_drop_.observer()->onInputBytesDropped(this, dropped_this_time);
+        } else if (input_drop_.num_remaining()) {
+            // notify just once, when have dropped all requested amount
+
+            /* notify first before resetting, to prevent user from
+             * immediately submitting another drop req. not that we
+             * couldn't handle it; just dont think we need to
+             */
+            input_drop_.observer()->onInputBytesDropped(this, input_drop_.num_requested());
+
+            // now reset
+            input_drop_.reset();
         }
     }
 
@@ -410,8 +425,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , read_lw_mark_(0)
     , tamaraw_timer_ev_(nullptr, event_free)
 {
-    input_drop_req_.observer = nullptr;
-    input_drop_req_.num_requested = input_drop_req_.num_remaining = 0;
+    input_drop_.reset();
 }
 
 void

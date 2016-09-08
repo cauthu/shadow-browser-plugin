@@ -21,12 +21,18 @@ extern const std::string static_bytes;
 
 namespace http
 {
+extern const char request_line[];
 extern const char request_path[];
 extern const char resp_headers_size_name[];
 extern const char resp_body_size_name[];
 extern const char content_length_name[];
 
 extern const char dummy_name[];
+
+extern const char resp_status_line[];
+
+extern const size_t request_line_len;
+extern const size_t resp_status_line_len;
 
 } // namespace http
 

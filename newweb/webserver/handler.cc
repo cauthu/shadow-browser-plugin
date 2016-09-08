@@ -71,33 +71,17 @@ Handler::_maybe_consume_input()
     do {
         switch (http_req_state_) {
         case HTTPReqState::HTTP_REQ_STATE_REQ_LINE: {
-            CHECK_EQ(current_req_.active, 0);
-
             /* readln() does drain the buffer */
+            size_t line_len = 0;
             line = evbuffer_readln(
-                inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT);
+                inbuf, &line_len, EVBUFFER_EOL_CRLF_STRICT);
             if (line) {
+                CHECK_EQ(current_req_.active, 0);
                 vlogself(2) << "got request line: [" << line << "]";
 
-                const auto line_len = strlen(line);
-                CHECK_GT(line_len, 5);
-                CHECK_LT(line_len, 63);
-
-                /* get the (relative) path of the request */
-                if (strncasecmp(line, "GET ", 4)) {
-                    logself(FATAL) << "bad request line: [" << line << "]";
-                }
-
-                char* relpath = line + 4;
-                char* relpath_end = strcasestr(relpath, " ");
-                CHECK_NOTNULL(relpath_end);
-                // make sure we're not out of bound
-                CHECK_LT((relpath_end - line), line_len);
-                *relpath_end = '\0';
-
-                if (strcmp(relpath, common::http::request_path)) {
-                    logself(FATAL) << "URI path [" << relpath << "] not expected";
-                }
+                // we handle exactly one request
+                CHECK_EQ(line_len, common::http::request_line_len);
+                DCHECK(!strcmp(line, common::http::request_line));
 
                 current_req_.active = 1;
 
@@ -112,8 +96,9 @@ Handler::_maybe_consume_input()
         }
 
         case HTTPReqState::HTTP_REQ_STATE_HEADERS: {
+            size_t line_len = 0;
             while (nullptr != (line = evbuffer_readln(
-                                   inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT)))
+                                   inbuf, &line_len, EVBUFFER_EOL_CRLF_STRICT)))
             {
                 if (line[0] == '\0') {
                     vlogself(2) << "no more hdrs";
@@ -121,9 +106,12 @@ Handler::_maybe_consume_input()
                     line = nullptr;
 
                     const RequestInfo& reqinfo = current_req_;
-                    vlogself(2) << "req: resp_headers_size: " << reqinfo.resp_headers_size
-                            << ", resp_body_size: " << reqinfo.resp_body_size
-                            << ", content_length: " << remaining_req_body_length_;
+                    vlogself(2) << "req: resp_headers_size: "
+                                << reqinfo.resp_headers_size
+                                << ", resp_body_size: "
+                                << reqinfo.resp_body_size
+                                << ", content_length: "
+                                << remaining_req_body_length_;
 
                     if (remaining_req_body_length_) {
                         // there's a req body we need to consume
@@ -132,11 +120,13 @@ Handler::_maybe_consume_input()
                         // no req body, so go serve response
                         _serve_response();
                     }
+
+                    break; // out of while loop trying to read header
+                           // lines
                 }
                 else {
                     vlogself(2) << "whole req hdr line: [" << line << "]";
 
-                    const auto line_len = strlen(line);
                     CHECK_LT(line_len, 127); // arbitrary value
 
                     char *tmp = strchr(line, ':');
@@ -209,9 +199,11 @@ Handler::_maybe_consume_input()
             const auto drain_len = std::min(buflen, remaining_req_body_length_);
             vlogself(2) << buflen << ", " << remaining_req_body_length_ << ", "
                         << drain_len;
-            auto rv = evbuffer_drain(inbuf, drain_len);
-            CHECK_EQ(rv, 0);
-            remaining_req_body_length_ -= drain_len;
+            if (drain_len > 0) {
+                auto rv = evbuffer_drain(inbuf, drain_len);
+                CHECK_EQ(rv, 0);
+                remaining_req_body_length_ -= drain_len;
+            }
 
             if (remaining_req_body_length_ > 0) {
                 CHECK_EQ(drain_len, buflen);
@@ -220,7 +212,7 @@ Handler::_maybe_consume_input()
                 vlogself(2) << "tell channel to drop "
                         << remaining_req_body_length_ << " future bytes";
                 channel_->drop_future_input(
-                    this, remaining_req_body_length_);
+                    this, remaining_req_body_length_, false);
             } else {
                 // have fully finished with req body, so go serve
                 _serve_response();
@@ -254,9 +246,10 @@ Handler::_serve_response()
 
     auto rv = evbuffer_add_printf(
         buf.get(),
-        "HTTP/1.1 200 OK\r\n"
+        "%s\r\n"
         "%s: %ld\r\n"
         "%s: ",
+        common::http::resp_status_line,
         common::http::content_length_name, current_req_.resp_body_size,
         common::http::dummy_name);
     CHECK_GT(rv, 0);
@@ -320,8 +313,9 @@ Handler::onError(StreamChannel* channel, int errorcode) noexcept
 }
 
 void
-Handler::onCompleteInputDrop(StreamChannel* channel, size_t len) noexcept
+Handler::onInputBytesDropped(StreamChannel* channel, size_t len) noexcept
 {
+    vlogself(2) << "notified of " << len << " input bytes dropped";
     CHECK_EQ(channel_.get(), channel);
     CHECK_EQ(http_req_state_, HTTPReqState::HTTP_REQ_STATE_BODY);
     CHECK_EQ(remaining_req_body_length_, len);

@@ -1,10 +1,9 @@
 
-#include <errno.h>
-#include <netinet/tcp.h>
 #include <string.h>
-
 #include <algorithm>
 #include <vector>
+
+#include <boost/lexical_cast.hpp>
 
 #include "connection.hpp"
 #include "easylogging++.h"
@@ -28,6 +27,7 @@ using myio::Socks5ConnectorObserver;
 using myio::StreamChannel;
 using myio::TCPChannel;
 
+using boost::lexical_cast;
 
 
 /* "inst" stands for instance, as in, instance of a class */
@@ -60,7 +60,7 @@ Connection::Connection(
     , notify_pushed_body_done_(pushed_body_done_cb)
     , spdysess_{nullptr, spdylay_session_del}
     , http_rsp_state_(HTTPRespState::HTTP_RSP_STATE_STATUS_LINE)
-    , http_rsp_status_(-1), body_len_(-1)
+    , http_rsp_status_(-1), remaining_resp_body_len_(0)
     , cumulative_num_sent_bytes_(0), cumulative_num_recv_bytes_(0)
 {
     /* ssp acts as an http proxy, only it uses spdy to transport. so
@@ -84,102 +84,6 @@ Connection::Connection(
     }
 
     initiate_connection();
-}
-
-ssize_t
-Connection::s_spdylay_send_cb(spdylay_session *session, const uint8_t *data,
-                              size_t length, int flags, void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    return conn->spdylay_send_cb(session, data, length, flags);;
-}
-
-ssize_t
-Connection::s_spdylay_recv_cb(spdylay_session *session, uint8_t *buf, size_t length,
-                            int flags, void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    return conn->spdylay_recv_cb(session, buf, length, flags);
-}
-
-void
-Connection::s_spdylay_on_data_recv_cb(spdylay_session *session,
-                                    uint8_t flags, int32_t stream_id,
-                                    int32_t len, void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    conn->spdylay_on_data_recv_cb(session, flags, stream_id, len);
-}
-
-void
-Connection::s_spdylay_on_data_chunk_recv_cb(spdylay_session *session,
-                                            uint8_t flags, int32_t stream_id,
-                                            const uint8_t *data, size_t len,
-                                            void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    conn->spdylay_on_data_chunk_recv_cb(session, flags, stream_id,
-                                        data, len);
-}
-
-void
-Connection::s_spdylay_on_ctrl_recv_cb(spdylay_session *session, spdylay_frame_type type,
-                                    spdylay_frame *frame, void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    conn->spdylay_on_ctrl_recv_cb(session, type, frame);
-}
-
-void
-Connection::s_spdylay_before_ctrl_send_cb(spdylay_session *session,
-                                          spdylay_frame_type type,
-                                          spdylay_frame *frame,
-                                          void *user_data)
-{
-    Connection *conn = (Connection*)(user_data);
-    conn->spdylay_before_ctrl_send_cb(session, type, frame);
-}
-
-void
-Connection::_setup_spdylay_session()
-{
-    spdylay_session_callbacks callbacks;
-    bzero(&callbacks, sizeof callbacks);
-    callbacks.send_callback = s_spdylay_send_cb;
-    callbacks.recv_callback = s_spdylay_recv_cb;
-    callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
-    callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
-    callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
-    /* callbacks.on_stream_close_callback = spdylay_on_stream_close_cb; */
-    callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
-    /* callbacks.on_ctrl_not_send_callback = spdylay_on_ctrl_not_send_cb; */
-
-    spdylay_session *session = nullptr;
-
-    // version 3 just adds flow control, compared to version 2
-    auto r = spdylay_session_client_new(&session, 2, &callbacks, this);
-    CHECK_EQ(r, 0);
-
-#if 0
-    spdylay_settings_entry entry[2];
-    entry[0].settings_id = SPDYLAY_SETTINGS_MAX_CONCURRENT_STREAMS;
-    entry[0].value = 8; // XXX
-    entry[0].flags = SPDYLAY_ID_FLAG_SETTINGS_NONE;
-
-    entry[1].settings_id = SPDYLAY_SETTINGS_INITIAL_WINDOW_SIZE;
-    entry[1].value = 4096; // XXX
-    entry[1].flags = SPDYLAY_ID_FLAG_SETTINGS_NONE;
-
-    r = spdylay_submit_settings(
-        session_, SPDYLAY_FLAG_SETTINGS_NONE,
-        entry, sizeof(entry)/sizeof(spdylay_settings_entry));
-    CHECK (0 == r);
-#endif
-
-    spdysess_.reset(session);
-    session = nullptr;
-
-    return;
 }
 
 void
@@ -216,21 +120,21 @@ Connection::_maybe_http_write_to_transport()
     // content-length value a lil later
     auto rv = evbuffer_add_printf(
         buf.get(),
-        "GET %s HTTP/1.1\r\n"
-        "%s: %d\r\n"
-        "%s: %d\r\n"
+        "%s\r\n"
+        "%s: %zu\r\n"
+        "%s: %zu\r\n"
         "%s: ",
-        common::http::request_path,
-        common::http::resp_headers_size_name, req->resp_headers_size_,
-        common::http::resp_body_size_name, req->resp_body_size_,
+        common::http::request_line,
+        common::http::resp_headers_size_name, req->exp_resp_headers_size(),
+        common::http::resp_body_size_name, req->exp_resp_body_size(),
         common::http::content_length_name
         );
     CHECK_GT(rv, 0);
 
     /* figure out how many opaque payload bytes we can send */
     const auto already_used_size = evbuffer_get_length(buf.get());
-    CHECK_GT(req->req_total_size_, already_used_size);
-    auto num_opaque_bytes_avail = req->req_total_size_ - already_used_size;
+    CHECK_GT(req->req_total_size(), already_used_size);
+    auto num_opaque_bytes_avail = req->req_total_size() - already_used_size;
 
     vlogself(2) << "num_opaque_bytes_avail= " << num_opaque_bytes_avail;
 
@@ -279,8 +183,8 @@ Connection::submit_request(Request* req)
         nv[hdidx++] = ":scheme";
         nv[hdidx++] = "http";
 
-        string resp_headers_size_str = std::to_string(req->resp_headers_size_);
-        string resp_body_size_str = std::to_string(req->resp_body_size_);
+        string resp_headers_size_str = std::to_string(req->exp_resp_headers_size());
+        string resp_body_size_str = std::to_string(req->exp_resp_body_size());
 
         nv[hdidx++] = "resp-headers-size";
         nv[hdidx++] = resp_headers_size_str.c_str();
@@ -399,19 +303,16 @@ Connection::_maybe_http_consume_input()
         switch (http_rsp_state_) {
         case HTTPRespState::HTTP_RSP_STATE_STATUS_LINE: {
             /* readln() DOES drain the buffer if it returns a line */
+
+            size_t line_len = 0;
             line = evbuffer_readln(
-                inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT);
+                inbuf, &line_len, EVBUFFER_EOL_CRLF_STRICT);
             if (line) {
                 vlogself(2) << "got status line: [" << line << "]";
-                const char *tmp = strchr(line, ' ');
-                CHECK_NOTNULL(tmp);
-                http_rsp_status_ = strtol(tmp + 1, nullptr, 10);
-                if (http_rsp_status_ != 200 && http_rsp_status_ != 206) {
-                    Request *req = active_req_queue_.front();
-                    logself(FATAL) << "req [" << req << "] got status ["
-                               << http_rsp_status_ << " ]";
-                }
-                vlogself(2) << "status: " << http_rsp_status_;
+
+                CHECK_EQ(line_len, common::http::resp_status_line_len);
+                DCHECK(!strcmp(line, common::http::resp_status_line));
+
                 http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_HEADERS;
                 free(line);
                 line = nullptr;
@@ -425,8 +326,9 @@ Connection::_maybe_http_consume_input()
 
         case HTTPRespState::HTTP_RSP_STATE_HEADERS: {
             vlogself(2) << "try to get response headers";
+            size_t line_len = 0;
             while (nullptr != (line = evbuffer_readln(
-                                   inbuf, nullptr, EVBUFFER_EOL_CRLF_STRICT)))
+                                   inbuf, &line_len, EVBUFFER_EOL_CRLF_STRICT)))
             {
                 /* a header line is assumped to be:
 
@@ -439,10 +341,13 @@ Connection::_maybe_http_consume_input()
                 */
                 if (line[0] == '\0') {
                     // the end of headers, so we notify user of
-                    // response meta info and then move to next state
-                    // to read body
+                    // response meta info and then maybe move to next
+                    // state to read body
 
-                    CHECK(body_len_ >= 0);
+                    free(line);
+                    line = nullptr;
+
+                    CHECK_GE(remaining_resp_body_len_, 0);
                     CHECK(0 == (rsp_hdrs_.size() % 2));
 
                     // notify user of response meta info
@@ -455,15 +360,22 @@ Connection::_maybe_http_consume_input()
                     }
                     nv[j] = nullptr; /* null sentinel */
                     Request *req = active_req_queue_.front();
-                    req->notify_rsp_meta(http_rsp_status_, nv);
+                    req->notify_rsp_meta(200, nv);
                     free(nv);
                     for (int i = 0; i < rsp_hdrs_.size(); i += 2) {
                         free(rsp_hdrs_[i]);
                     }
                     rsp_hdrs_.clear();
-                    http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_BODY;
-                    free(line);
-                    line = nullptr;
+
+                    // what's next?
+                    if (remaining_resp_body_len_ > 0) {
+                        // there's a req body we need to consume
+                        http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_BODY;
+                    } else {
+                        // no response body
+                        _done_with_resp();
+                    }
+
                     break; // out of while loop trying to read header lines
                 } else {
                     vlogself(2) << "whole rsp hdr line: [" << line << "]";
@@ -476,9 +388,14 @@ Connection::_maybe_http_consume_input()
                     *tmp = '\0'; /* blank space becomes NULL */
                     ++tmp;
                     rsp_hdrs_.push_back(tmp);
-                    if (!strcasecmp(line, "content-length")) {
-                        body_len_ = strtol(tmp, nullptr, 10);
-                        vlogself(2) << "body content length: " << body_len_;
+                    if (!strcasecmp(line, common::http::content_length_name)) {
+                        try {
+                            remaining_resp_body_len_ = lexical_cast<size_t>(tmp);
+                        } catch (const boost::bad_lexical_cast&) {
+                            logself(FATAL) << "bad header value: " << tmp;
+                        }
+
+                        vlogself(2) << "body content length: " << remaining_resp_body_len_;
                     }
                     // DO NOT free line. because it's in the rsp_hdrs_;
                     line = nullptr;
@@ -496,47 +413,32 @@ Connection::_maybe_http_consume_input()
         }
 
         case HTTPRespState::HTTP_RSP_STATE_BODY: {
-            CHECK(body_len_ > 0);
-            vlogself(2) << "get rsp body, current body_len_ " << body_len_;
-            Request *req = active_req_queue_.front();
-            while (evbuffer_get_length(inbuf) > 0 && body_len_ > 0) {
-                int numconsumed = 0;
-                struct evbuffer_iovec v[2];
-                // using evbuffer_peek() to avoid copying
-                const int n = evbuffer_peek(
-                    inbuf, body_len_, nullptr, v, ARRAY_LEN(v));
-                for (int i = 0; i < n; ++i) {
-                    /* this iov might be more than what we asked for */
-                    /* at time point, body_len_ is guaranteed to be
-                     * non-negative, so ok to cast to size_t
-                     */
-                    const int consumed_of_this_one = std::min((size_t)body_len_, v[i].iov_len);
-                    numconsumed += consumed_of_this_one;
-                    body_len_ -= consumed_of_this_one;
-                    CHECK(body_len_ >= 0);
-                    req->notify_rsp_body_data(
-                        (const uint8_t *)v[i].iov_base, consumed_of_this_one);
-                }
-                vlogself(2) << "consumed " << numconsumed << " bytes -> new body_len_ " << body_len_;
-                CHECK(0 == evbuffer_drain(inbuf, numconsumed));
+            CHECK(remaining_resp_body_len_ > 0);
+            vlogself(2) << "get rsp body, current body_len_ " << remaining_resp_body_len_;
+
+            const auto buflen = evbuffer_get_length(inbuf);
+            const auto drain_len = std::min(buflen, remaining_resp_body_len_);
+            vlogself(2) << buflen << ", " << remaining_resp_body_len_ << ", "
+                        << drain_len;
+            if (drain_len > 0) {
+                auto rv = evbuffer_drain(inbuf, drain_len);
+                CHECK_EQ(rv, 0);
+                _got_a_chunk_of_resp_body(drain_len);
             }
-            if (body_len_ == 0) {
-                /* remove req from active queue */
-                active_req_queue_.pop();
-                req->notify_rsp_body_done();
-                body_len_ = -1;
-                http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_STATUS_LINE;
-                if (!notify_request_done_cb_.empty()) {
-                    notify_request_done_cb_(this, req);
-                }
-                /* if there's more in the submitted queue, we should be
-                 * able move some into the active queue, now that we just
-                 * cleared some space in the active queue
-                 */
-                /* http_write_to_transport() takes care of enabling the
-                 * write event */
-                _maybe_http_write_to_transport();
-                // goto handle_response;
+
+            if (remaining_resp_body_len_ > 0) {
+                CHECK_EQ(drain_len, buflen);
+                CHECK_EQ(evbuffer_get_length(inbuf), 0);
+                keep_consuming = false;
+                vlogself(2) << "tell channel to drop "
+                            << remaining_resp_body_len_ << " future bytes";
+                transport_->drop_future_input(
+                    this, remaining_resp_body_len_, true);
+            } else {
+                // have fully received resp body
+                /* no pipelining, so input buf should also be empty */
+                CHECK_EQ(evbuffer_get_length(inbuf), 0);
+                _done_with_resp();
             }
 
             break;
@@ -549,6 +451,53 @@ Connection::_maybe_http_consume_input()
     } while (keep_consuming);
 
     return;
+}
+
+void
+Connection::onInputBytesDropped(StreamChannel* ch, size_t len) noexcept
+{
+    CHECK_EQ(transport_.get(), ch);
+    _got_a_chunk_of_resp_body(len);
+}
+
+void
+Connection::_got_a_chunk_of_resp_body(size_t len)
+{
+    CHECK_GE(remaining_resp_body_len_, len);
+    remaining_resp_body_len_ -= len;
+
+    DestructorGuard dg(this);
+
+    Request *req = active_req_queue_.front();
+    req->notify_rsp_body_data(nullptr, len);
+
+    if (remaining_resp_body_len_ == 0) {
+        _done_with_resp();
+    }
+}
+
+void
+Connection::_done_with_resp()
+{
+    CHECK_EQ(remaining_resp_body_len_, 0);
+
+    Request *req = active_req_queue_.front();
+
+    /* remove req from active queue before notifying */
+    active_req_queue_.pop();
+
+    DestructorGuard dg(this);
+    req->notify_rsp_done();
+
+    http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_STATUS_LINE;
+    if (!notify_request_done_cb_.empty()) {
+        notify_request_done_cb_(this, req);
+    }
+    /* if there's more in the submitted queue, we should be
+     * able move some into the active queue, now that we just
+     * cleared some space in the active queue
+     */
+    _maybe_http_write_to_transport();
 }
 
 void
@@ -682,12 +631,13 @@ Connection::onConnected(StreamChannel* ch) noexcept
 void
 Connection::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
-
+    LOG(FATAL) << "to be implemented";
 }
 
 void
 Connection::onConnectTimeout(myio::StreamChannel*) noexcept
 {
+    LOG(FATAL) << "to be implemented";
 }
 
 int
@@ -847,7 +797,7 @@ Connection::spdylay_on_data_recv_cb(spdylay_session *session,
 
         CHECK(inMap(sid2req_, sid));
         Request* req = sid2req_[sid];
-        req->notify_rsp_body_done();
+        req->notify_rsp_done();
     }
     vlogself(2) << "done";
 }
@@ -997,4 +947,100 @@ Connection::spdylay_before_ctrl_send_cb(spdylay_session *session,
         req->notify_req_about_to_send();
     }
     // logself(DEBUG, "done");
+}
+
+ssize_t
+Connection::s_spdylay_send_cb(spdylay_session *session, const uint8_t *data,
+                              size_t length, int flags, void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    return conn->spdylay_send_cb(session, data, length, flags);;
+}
+
+ssize_t
+Connection::s_spdylay_recv_cb(spdylay_session *session, uint8_t *buf, size_t length,
+                            int flags, void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    return conn->spdylay_recv_cb(session, buf, length, flags);
+}
+
+void
+Connection::s_spdylay_on_data_recv_cb(spdylay_session *session,
+                                    uint8_t flags, int32_t stream_id,
+                                    int32_t len, void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    conn->spdylay_on_data_recv_cb(session, flags, stream_id, len);
+}
+
+void
+Connection::s_spdylay_on_data_chunk_recv_cb(spdylay_session *session,
+                                            uint8_t flags, int32_t stream_id,
+                                            const uint8_t *data, size_t len,
+                                            void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    conn->spdylay_on_data_chunk_recv_cb(session, flags, stream_id,
+                                        data, len);
+}
+
+void
+Connection::s_spdylay_on_ctrl_recv_cb(spdylay_session *session, spdylay_frame_type type,
+                                    spdylay_frame *frame, void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    conn->spdylay_on_ctrl_recv_cb(session, type, frame);
+}
+
+void
+Connection::s_spdylay_before_ctrl_send_cb(spdylay_session *session,
+                                          spdylay_frame_type type,
+                                          spdylay_frame *frame,
+                                          void *user_data)
+{
+    Connection *conn = (Connection*)(user_data);
+    conn->spdylay_before_ctrl_send_cb(session, type, frame);
+}
+
+void
+Connection::_setup_spdylay_session()
+{
+    spdylay_session_callbacks callbacks;
+    bzero(&callbacks, sizeof callbacks);
+    callbacks.send_callback = s_spdylay_send_cb;
+    callbacks.recv_callback = s_spdylay_recv_cb;
+    callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
+    callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
+    callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
+    /* callbacks.on_stream_close_callback = spdylay_on_stream_close_cb; */
+    callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
+    /* callbacks.on_ctrl_not_send_callback = spdylay_on_ctrl_not_send_cb; */
+
+    spdylay_session *session = nullptr;
+
+    // version 3 just adds flow control, compared to version 2
+    auto r = spdylay_session_client_new(&session, 2, &callbacks, this);
+    CHECK_EQ(r, 0);
+
+#if 0
+    spdylay_settings_entry entry[2];
+    entry[0].settings_id = SPDYLAY_SETTINGS_MAX_CONCURRENT_STREAMS;
+    entry[0].value = 8; // XXX
+    entry[0].flags = SPDYLAY_ID_FLAG_SETTINGS_NONE;
+
+    entry[1].settings_id = SPDYLAY_SETTINGS_INITIAL_WINDOW_SIZE;
+    entry[1].value = 4096; // XXX
+    entry[1].flags = SPDYLAY_ID_FLAG_SETTINGS_NONE;
+
+    r = spdylay_submit_settings(
+        session_, SPDYLAY_FLAG_SETTINGS_NONE,
+        entry, sizeof(entry)/sizeof(spdylay_settings_entry));
+    CHECK (0 == r);
+#endif
+
+    spdysess_.reset(session);
+    session = nullptr;
+
+    return;
 }

@@ -3,6 +3,15 @@
 #include "easylogging++.h"
 #include "common.hpp"
 
+
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define vlogself(level) vloginst(level, this)
+
+#define loginst(level, inst) LOG(level) << "tcpCh= " << (inst)->objId() << " "
+#define logself(level) loginst(level, this)
+
+
 namespace myio
 {
 
@@ -45,7 +54,7 @@ Socks5Connector::onNewReadDataAvailable(StreamChannel* ch) noexcept
 void
 Socks5Connector::_consume_input()
 {
-    VLOG(2) << "begin";
+    vlogself(2) << "begin";
 
     switch (state_) {
     case State::SOCKS5_GREETING:
@@ -61,7 +70,7 @@ Socks5Connector::_consume_input()
             return;
         }
 
-        VLOG(2) << "write the connect request";
+        vlogself(2) << "write the connect request";
 
         // const char namelen = target_host_.length();
         const uint16_t port = htons(port_);
@@ -73,7 +82,7 @@ Socks5Connector::_consume_input()
         rv = transport_->write((uint8_t*)req.c_str(), req.size());
         CHECK_EQ(rv, 0);
 
-        VLOG(2) << "transport accepted the write -> change state";
+        vlogself(2) << "transport accepted the write -> change state";
         state_ = State::SOCKS5_READ_RESP_NEXT;
 
         break;
@@ -99,11 +108,11 @@ Socks5Connector::_consume_input()
     }
 
     default:
-        LOG(FATAL) << "invalid state: " << common::as_integer(state_);
+        logself(FATAL) << "invalid state: " << common::as_integer(state_);
         break;
     }
 
-    VLOG(2) << "done";
+    vlogself(2) << "done";
 }
 
 void
