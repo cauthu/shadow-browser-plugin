@@ -80,7 +80,8 @@ public:
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) = 0;
 
-    virtual void set_observer(StreamChannelObserver*) = 0;
+    virtual void set_observer(StreamChannelObserver* o) { observer_ = o; }
+    virtual StreamChannelObserver* observer(StreamChannelObserver* o) const { return observer_; }
 
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel).
@@ -165,6 +166,8 @@ public:
 protected:
 
     virtual ~StreamChannel() = default;
+
+    StreamChannelObserver *observer_;
 };
 
 }

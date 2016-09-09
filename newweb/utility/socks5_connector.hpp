@@ -38,8 +38,11 @@ public:
     typedef std::unique_ptr<Socks5Connector, Destructor> UniquePtr;
 
     /* the transport should already be connected to the proxy, and
-     * zero bytes have been sent/received on it.  will let the proxy
-     * resolve "target_host".
+     * zero bytes have been sent/received on it
+     *
+     * this object needs to itself as observer of the transport, so
+     * once it's done, the user might need to once again set himself
+     * as the observer of the transport
      */
     Socks5Connector(StreamChannel::UniquePtr transport,
                     const in_addr_t target_host, uint16_t port);

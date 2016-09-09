@@ -87,6 +87,13 @@ TCPChannel::set_observer(StreamChannelObserver* observer)
     CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
     CHECK(!observer_);
     observer_ = observer;
+
+    // might need better way to handle the case when input buffer is
+    // not empty and we have a new observer, because currently, the
+    // new observer won't be notified of onNewReadDataAvailable()
+    // until next time new data comes in from socket, which might not
+    // happen
+    CHECK_EQ(get_avail_input_length(), 0);
 }
 
 int

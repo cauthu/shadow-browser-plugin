@@ -592,6 +592,11 @@ Connection::onSocksTargetConnectResult(
 
         vlogself(2) << "connected to target (thru socks proxy)";
         state_ = State::CONNECTED;
+
+        // need to set ourselves as observer again because
+        // socks5connector overtook us
+        transport_->set_observer(this);
+
         _maybe_send();
 
         break;
