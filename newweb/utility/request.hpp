@@ -28,12 +28,17 @@ typedef boost::function<void(Request *req)> ResponseDoneCb;
 typedef boost::function<void(Request *req)> RequestAboutToSendCb;
 
 
+/*
+ * response "meta" is the non-body part of the response, i.e., the
+ * status[line] and headers
+ */
+
 class Request : public Object
 {
 public:
     Request(const std::string& host, const uint16_t& port,
             const size_t& req_total_size,
-            const size_t& resp_headers_size, const size_t& resp_body_size,
+            const size_t& resp_meta_size, const size_t& resp_body_size,
 
             RequestAboutToSendCb req_about_to_send_cb,
             ResponseMetaCb rsp_meta_cb,
@@ -74,7 +79,7 @@ public:
     void increment_num_retries() { ++num_retries_; }
 
     const size_t& req_total_size() const { return req_total_size_; }
-    const size_t& exp_resp_headers_size() const { return exp_resp_headers_size_; }
+    const size_t& exp_resp_meta_size() const { return exp_resp_meta_size_; }
     const size_t& exp_resp_body_size() const { return exp_resp_body_size_; }
 
     // these are const, so ok to expose
@@ -101,7 +106,7 @@ private:
     const size_t req_total_size_;
 
     // these are amounts we want the server to send to us
-    const size_t exp_resp_headers_size_;
+    const size_t exp_resp_meta_size_;
     const size_t exp_resp_body_size_;
 
     // this is what we see

@@ -129,7 +129,7 @@ Connection::_maybe_http_write_to_transport()
         "%s: %zu\r\n"
         "%s: ",
         common::http::request_line,
-        common::http::resp_headers_size_name, req->exp_resp_headers_size(),
+        common::http::resp_meta_size_name, req->exp_resp_meta_size(),
         common::http::resp_body_size_name, req->exp_resp_body_size(),
         common::http::content_length_name
         );
@@ -160,7 +160,7 @@ Connection::_maybe_http_write_to_transport()
 
     // set the read size hint to the approximate expected size of meta
     // info of the response
-    transport_->set_read_size_hint(req->exp_resp_headers_size());
+    transport_->set_read_size_hint(req->exp_resp_meta_size());
 
     vlogself(2) << "done";
     return;
@@ -191,14 +191,14 @@ Connection::submit_request(Request* req)
         nv[hdidx++] = ":scheme";
         nv[hdidx++] = "http";
 
-        string resp_headers_size_str = std::to_string(req->exp_resp_headers_size());
-        string resp_body_size_str = std::to_string(req->exp_resp_body_size());
+        string resp_meta_size_val_str = std::to_string(req->exp_resp_meta_size());
+        string resp_body_size_val_str = std::to_string(req->exp_resp_body_size());
 
-        nv[hdidx++] = "resp-headers-size";
-        nv[hdidx++] = resp_headers_size_str.c_str();
+        nv[hdidx++] = common::http::resp_meta_size_name;
+        nv[hdidx++] = resp_meta_size_val_str.c_str();
 
-        nv[hdidx++] = "resp-body-size";
-        nv[hdidx++] = resp_body_size_str.c_str();
+        nv[hdidx++] = common::http::resp_body_size_name;
+        nv[hdidx++] = resp_body_size_val_str.c_str();
 
         CHECK(0) << "to implement!";
 

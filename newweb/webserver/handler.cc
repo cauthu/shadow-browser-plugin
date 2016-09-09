@@ -114,8 +114,8 @@ Handler::_maybe_consume_input()
                     line = nullptr;
 
                     const RequestInfo& reqinfo = current_req_;
-                    vlogself(2) << "req: resp_headers_size: "
-                                << reqinfo.resp_headers_size
+                    vlogself(2) << "req: resp_meta_size: "
+                                << reqinfo.resp_meta_size
                                 << ", resp_body_size: "
                                 << reqinfo.resp_body_size
                                 << ", content_length: "
@@ -157,8 +157,8 @@ Handler::_maybe_consume_input()
                         size_t* hdr_value_ptr;
                     } hdrs_to_parse[] = {
                         {
-                            common::http::resp_headers_size_name,
-                            &(reqinfo.resp_headers_size),
+                            common::http::resp_meta_size_name,
+                            &(reqinfo.resp_meta_size),
                         },
                         {
                             common::http::resp_body_size_name,
@@ -262,13 +262,13 @@ Handler::_serve_response()
         common::http::dummy_name);
     CHECK_GT(rv, 0);
 
-    /* the resp_headers_size is NOT strict; we don't have to write
+    /* the resp_meta_size is NOT strict; we don't have to write
      * exactly that amount, just close to it is fine.
      */
 
     // how much extra dummy header/meta bytes do we need to send
     ssize_t num_dummy_hdr_bytes_needed =
-        current_req_.resp_headers_size - evbuffer_get_length(buf.get());
+        current_req_.resp_meta_size - evbuffer_get_length(buf.get());
     num_dummy_hdr_bytes_needed -= 4; /* for the \r\n\r\n we will add
                                       * later to close the resp
                                       * status/header part */

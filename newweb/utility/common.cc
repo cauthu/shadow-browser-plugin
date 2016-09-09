@@ -21,7 +21,7 @@ namespace http
 {
 const char request_line[] = "GET /special_request HTTP/1.1";
 const char request_path[] = "/special_request";
-const char resp_headers_size_name[] = "resp-headers-size";
+const char resp_meta_size_name[] = "resp-meta-size";
 const char resp_body_size_name[] = "resp-body-size";
 const char content_length_name[] = "content-length";
 

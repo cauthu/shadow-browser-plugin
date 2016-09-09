@@ -31,7 +31,7 @@ namespace http
 {
 extern const char request_line[];
 extern const char request_path[];
-extern const char resp_headers_size_name[];
+extern const char resp_meta_size_name[];
 extern const char resp_body_size_name[];
 extern const char content_length_name[];
 

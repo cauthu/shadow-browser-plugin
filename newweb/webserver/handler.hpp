@@ -65,7 +65,7 @@ private:
     struct RequestInfo
     {
         int active; // this request is currently being processed
-        size_t resp_headers_size;
+        size_t resp_meta_size;
         size_t resp_body_size;
     } current_req_;
 
