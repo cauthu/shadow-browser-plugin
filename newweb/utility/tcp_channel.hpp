@@ -5,7 +5,7 @@
 #include <memory>
 #include <functional>
 
-#include "DelayedDestruction.h"
+#include "folly/DelayedDestruction.h"
 
 #include "object.hpp"
 #include "stream_channel.hpp"

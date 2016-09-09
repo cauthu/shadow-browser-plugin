@@ -1,5 +1,6 @@
 
 #include "../../utility/easylogging++.h"
+#include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
 #include "ipc.hpp"
 
@@ -20,21 +21,32 @@ IOServiceIPCClient::IOServiceIPCClient(StreamChannel::UniquePtr stream_channel)
     transport_channel_->start_connecting(this);
 }
 
+#define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder)               \
+    auto const __type = msgs::type_ ## TYPE;                            \
+    VLOG(2) << "begin building msg type: " << __type;                   \
+    msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
+    SCOPE_EXIT {                                                        \
+        auto msg = msgbuilder.Finish();                                 \
+        bufbuilder.Finish(msg);                                         \
+        VLOG(2) << "send msg type: " << __type;                         \
+        msg_channel_->sendMsg(                                          \
+            __type, bufbuilder.GetSize(),                               \
+            bufbuilder.GetBufferPointer());                             \
+    }
+
 void
 IOServiceIPCClient::_send_Hello()
 {
-    flatbuffers::FlatBufferBuilder builder;
-    msgs::HelloMsgBuilder mb(builder);
+    flatbuffers::FlatBufferBuilder bufbuilder;
+    auto hoststr = bufbuilder.CreateString("cnn.com");
 
-    mb.add_resId(319);
-    mb.add_xyz(74);
-    mb.add_flags(0b111011);
+    BEGIN_BUILD_MSG_AND_SEND_AT_END(Fetch, bufbuilder);
 
-    auto msg = mb.Finish();
-    builder.Finish(msg);
-
-    msg_channel_->sendMsg(
-        type::type_HELLO, builder.GetSize(), builder.GetBufferPointer());
+    msgbuilder.add_host(hoststr);
+    msgbuilder.add_port(80);
+    msgbuilder.add_req_total_size(123);
+    msgbuilder.add_resp_headers_size(234);
+    msgbuilder.add_resp_body_size(29384);
 }
 
 void
@@ -66,7 +78,7 @@ IOServiceIPCClient::onRecvMsg(GenericMessageChannel*, uint16_t type,
 {
     VLOG(2) << "client received msg type " << type;
     switch (type) {
-    case type::type_FETCH:
+    case type::type_Fetch:
         VLOG(2) << "client received change_priority msg";
         break;
     default:

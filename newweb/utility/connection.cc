@@ -31,10 +31,10 @@ using boost::lexical_cast;
 
 
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "cnx= " << (inst)->objId() << " "
+#define vloginst(level, inst) VLOG(level) << "cnx= " << (inst)->objId() << ": "
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "cnx= " << (inst)->objId() << " "
+#define loginst(level, inst) LOG(level) << "cnx= " << (inst)->objId() << ": "
 #define logself(level) loginst(level, this)
 
 

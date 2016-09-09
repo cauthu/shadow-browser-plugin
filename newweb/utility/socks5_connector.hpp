@@ -2,12 +2,11 @@
 #define socks5_connector_hpp
 
 
-#include <event2/buffer.h>
-#include "DelayedDestruction.h"
 #include <memory>
 
 #include "object.hpp"
 #include "stream_channel.hpp"
+#include "folly/DelayedDestruction.h"
 
 
 namespace myio

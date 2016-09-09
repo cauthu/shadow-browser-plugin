@@ -1,12 +1,11 @@
 #ifndef stream_channel_hpp
 #define stream_channel_hpp
 
-#include <sys/time.h>
 #include <event2/buffer.h>
-#include "DelayedDestruction.h"
 #include <memory>
 
 #include "object.hpp"
+#include "folly/DelayedDestruction.h"
 
 
 namespace myio
@@ -76,7 +75,7 @@ class StreamChannel : public Object
 public:
     // for convenience. DelayedDestruction (see folly's
     // AsyncTransport.h for example)
-    typedef std::unique_ptr<StreamChannel, folly::DelayedDestruction::Destructor> UniquePtr;
+    typedef std::unique_ptr<StreamChannel, /*folly::DelayedDestruction::*/Destructor> UniquePtr;
 
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) = 0;

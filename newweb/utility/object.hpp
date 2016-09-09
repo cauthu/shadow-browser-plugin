@@ -2,7 +2,8 @@
 #define object_hpp
 
 
-#include "DelayedDestruction.h"
+#include "folly/DelayedDestruction.h"
+
 
 /* a generic Object that will assign a uniq objId for every instance
  * (just a monotonically increasing instance number) and supports
@@ -20,6 +21,9 @@ public:
     /* for DelayedDestruction */
     virtual void destroy();
 
+    void setData(void* data) { data_ = data; }
+    void* data() const { return data_; }
+
 protected:
 
     Object();
@@ -30,6 +34,8 @@ protected:
 
     const uint32_t instNum_;
 
+    /* opaque pointer for user to set whatever he wants */
+    void* data_;
 };
 
 #endif /* end object_hpp */

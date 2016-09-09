@@ -7,6 +7,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(IO_PROCESS_SOURCES
   io_process.cpp
   ipc.cpp
+  http_session.cpp
   ${UTILITY_DIR}/socks5_connector.cpp
   ${UTILITY_DIR}/connection.cc
   ${UTILITY_DIR}/connection_manager.cc

@@ -4,6 +4,8 @@
 #include "../../utility/easylogging++.h"
 #include "utility/ipc/io_service/gen/combined_headers"
 
+#include "http_session.hpp"
+
 
 using myio::StreamServer;
 using myio::GenericMessageChannel;
@@ -11,54 +13,94 @@ using myio::GenericMessageChannel;
 namespace msgs = myipc::ioservice::messages;
 using msgs::type;
 
-IPCServer::IPCServer(StreamServer::UniquePtr streamserver)
-    : stream_server_(std::move(streamserver))
+using std::shared_ptr;
+
+
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) << "ipcserv= " << (inst)->objId() <<": "
+#define vlogself(level) vloginst(level, this)
+
+#define loginst(level, inst) LOG(level) << "ipcserv= " << (inst)->objId() << ": "
+#define logself(level) loginst(level, this)
+
+
+IPCServer::IPCServer(struct event_base* evbase,
+                     StreamServer::UniquePtr streamserver,
+                     const NetConfig* netconf)
+    : evbase_(evbase)
+    , stream_server_(std::move(streamserver))
+    , netconf_(netconf)
 {
     stream_server_->set_observer(this);
-    VLOG(2) << "tell stream server to start accepting";
+    vlogself(2) << "tell stream server to start accepting";
     stream_server_->start_accepting();
 }
 
 void
-IPCServer::_recv_Hello(const msgs::HelloMsg* msg)
+IPCServer::_handle_Hello(const uint32_t& routing_id, const msgs::HelloMsg* msg)
 {
-    VLOG(2) << "received HelloMsg: " << msg->resId() << ", " << msg->xyz();
+    vlogself(2) << "received HelloMsg: " << msg->resId() << ", " << msg->xyz();
 }
 
 void
-IPCServer::_recv_Fetch(const msgs::FetchMsg* msg)
+IPCServer::_handle_Fetch(const uint32_t& routing_id, const msgs::FetchMsg* msg)
 {
-    VLOG(2) << "received FetchMsg: " << msg->host() << ", " << msg->port();
+    vlogself(2) << "begin handling FetchMsg";
+
+    hsessions_[routing_id]->handle_Fetch(msg);
 }
 
 void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
-    const auto id = channel->objId();
-    VLOG(2) << "ipc server got new client, objid= " << id;
-    GenericMessageChannel::UniquePtr ch(new GenericMessageChannel(std::move(channel), this));
-    const auto ret = channels_.insert(make_pair(id, std::move(ch)));
-    CHECK(ret.second); // insist it was newly inserted
+    _setup_client(std::move(channel));
 }
 
 void
-IPCServer::onAcceptError(StreamServer*, int errorcode) noexcept
+IPCServer::_setup_client(StreamChannel::UniquePtr channel)
 {
-    LOG(WARNING) << "IPC server has accept error: " << strerror(errorcode);
+    vlogself(2) << "ipc server got new client";
+
+    GenericMessageChannel::UniquePtr ch(
+        new GenericMessageChannel(std::move(channel), this));
+
+    // use the id of the generic msg channel, not the stream channel,
+    // as the routing id
+    const auto routing_id = ch->objId();
+
+    auto ret = client_channels_.insert(make_pair(routing_id, std::move(ch)));
+    CHECK(ret.second); // insist it was newly inserted
+
+    // for now each client will get its own session
+    shared_ptr<HttpNetworkSession> hsess(
+        new HttpNetworkSession(evbase_, this, routing_id, netconf_),
+        [](HttpNetworkSession* s) { s->destroy(); });
+    DCHECK_NOTNULL(hsess.get());
+
+    auto ret2 = hsessions_.insert(make_pair(routing_id, hsess));
+    CHECK(ret2.second); // insist it was newly inserted
 }
+
+#define IPC_MSG_HANDLER(TYPE)                                           \
+    case msgs::type_ ## TYPE: {                                         \
+        _handle_ ## TYPE(routing_id, msgs::Get ## TYPE ## Msg(data));   \
+    }                                                                   \
+    break;
 
 void
 IPCServer::onRecvMsg(GenericMessageChannel* channel, uint16_t type,
                      uint16_t len, const uint8_t* data) noexcept
 {
-    VLOG(2) << "recv'ed msg type= " << type << ", len= " << len;
+    const auto routing_id = channel->objId();
+
+    vlogself(2) << "recv'ed msg type= " << msgs::EnumNametype((msgs::type)type)
+                << ", len= " << len << ", from channel= " << routing_id;
+
     switch (type) {
-    case type::type_HELLO:
-        _recv_Hello(msgs::GetHelloMsg(data));
-        break;
-    case type::type_FETCH:
-        _recv_Fetch(msgs::GetFetchMsg(data));
-        break;
+
+        IPC_MSG_HANDLER(Hello)
+        IPC_MSG_HANDLER(Fetch)
+
     default:
         CHECK(false) << "invalid IPC message type " << type;
         break;
@@ -69,16 +111,30 @@ IPCServer::onRecvMsg(GenericMessageChannel* channel, uint16_t type,
 void
 IPCServer::onEOF(GenericMessageChannel* ch) noexcept
 {
-    CHECK(inMap(channels_, ch->objId()));
-    VLOG(2) << "ipc server client stream " << ch << " eof";
-    channels_[ch->objId()] = nullptr;
+    const auto routing_id = ch->objId();
+    vlogself(2) << "ipc server client stream " << ch << " eof";
+    _remove_route(routing_id);
 }
 
 void
 IPCServer::onError(GenericMessageChannel* ch, int errorcode) noexcept
 {
-    CHECK(inMap(channels_, ch->objId()));
-    LOG(WARNING) << "ipc server client stream " << ch << " error: "
+    const auto routing_id = ch->objId();
+    // CHECK(inMap(client_channels_, routing_id));
+    logself(WARNING) << "ipc server client stream " << ch << " error: "
                  << strerror(errorcode);
-    channels_[ch->objId()] = nullptr;
+    _remove_route(routing_id);
+}
+
+void
+IPCServer::_remove_route(const uint32_t& routing_id)
+{
+    client_channels_.erase(routing_id);
+    hsessions_.erase(routing_id);
+}
+
+void
+IPCServer::onAcceptError(StreamServer*, int errorcode) noexcept
+{
+    logself(WARNING) << "IPC server has accept error: " << strerror(errorcode);
 }
