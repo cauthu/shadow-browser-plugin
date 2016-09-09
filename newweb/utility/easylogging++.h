@@ -258,11 +258,11 @@ ELPP_INTERNAL_DEBUGGING_OUT_INFO << ELPP_INTERNAL_DEBUGGING_MSG(internalInfoStre
 #if ELPP_COMPILER_MSVC  // Visual C++
 #   define ELPP_FUNC __FUNCSIG__
 #elif ELPP_COMPILER_GCC  // GCC
-#   define ELPP_FUNC __PRETTY_FUNCTION__
+#   define ELPP_FUNC __FUNCTION__
 #elif ELPP_COMPILER_INTEL  // Intel C++
-#   define ELPP_FUNC __PRETTY_FUNCTION__
+#   define ELPP_FUNC __FUNCTION__
 #elif ELPP_COMPILER_CLANG  // Clang++
-#   define ELPP_FUNC __PRETTY_FUNCTION__
+#   define ELPP_FUNC __FUNCTION__
 #else
 #   if defined(__func__)
 #      define ELPP_FUNC __func__
@@ -3881,6 +3881,7 @@ inline void FUNCTION_NAME(const T&);
                    base::type::VerboseLevel verboseLevel, Logger* logger) :
         m_level(level), m_file(file), m_line(line), m_func(func),
         m_verboseLevel(verboseLevel), m_logger(logger), m_message(logger->stream().str()) {
+            m_func.append("()");
         }
         inline Level level(void) const { return m_level; }
         inline const std::string& file(void) const { return m_file; }
