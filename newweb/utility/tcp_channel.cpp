@@ -29,7 +29,7 @@ TCPChannel::TCPChannel(struct event_base *evbase,
                        StreamChannelObserver* observer)
     : TCPChannel(evbase, -1, addr, port, observer, ChannelState::INIT, true)
 {
-    // observer can be set later
+    // observer can be set later with set_observer()
     CHECK(is_client_);
 }
 
@@ -85,8 +85,8 @@ void
 TCPChannel::set_observer(StreamChannelObserver* observer)
 {
     CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
-    CHECK(!observer_);
-    observer_ = observer;
+
+    StreamChannel::set_observer(observer);
 
     // might need better way to handle the case when input buffer is
     // not empty and we have a new observer, because currently, the
@@ -300,7 +300,11 @@ TCPChannel::_on_socket_readcb(int fd, short what)
 
     if (what & EV_READ) {
         if (_maybe_dropread()) {
-            const auto rv = evbuffer_read(input_evb_.get(), fd_, -1);
+            // should NOT try to empty the socket's read buffer (e.g.,
+            // by looping and reading until EAGAIN) because the user
+            // might need just a few bytes and decide to issue a drop
+            // request
+            const auto rv = evbuffer_read(input_evb_.get(), fd_, read_size_hint_);
             vlogself(2) << "evbuffer_read() returns: " << rv;
             if (rv > 0) {
                 if (evbuffer_get_length(input_evb_.get()) >= read_lw_mark_) {
@@ -357,7 +361,7 @@ TCPChannel::_maybe_dropread()
 
     if (dropped_this_time) {
         vlogself(2) << dropped_this_time << " bytes dropped this time around"
-                    << ", " << input_drop_.num_remaining() << " remains";
+                    << " (" << input_drop_.num_remaining() << " remaining)";
         if (input_drop_.interested_in_progress()) {
             // notify of any new progress
             input_drop_.observer()->onInputBytesDropped(this, dropped_this_time);
@@ -448,7 +452,8 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
                        const in_addr_t& addr, const in_port_t& port,
                        StreamChannelObserver* observer,
                        ChannelState starting_state, bool is_client)
-    : evbase_(evbase), observer_(observer), connect_observer_(nullptr)
+    : StreamChannel(observer)
+    , evbase_(evbase), connect_observer_(nullptr)
     , state_(starting_state), fd_(fd)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
@@ -458,6 +463,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , read_lw_mark_(0)
     , tamaraw_timer_ev_(nullptr, event_free)
 {
+    DCHECK_EQ(observer_, observer);
     input_drop_.reset();
 }
 

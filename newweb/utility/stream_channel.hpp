@@ -83,6 +83,17 @@ public:
     virtual void set_observer(StreamChannelObserver* o) { observer_ = o; }
     virtual StreamChannelObserver* observer(StreamChannelObserver* o) const { return observer_; }
 
+    /* give a hint to channel on how much to read from socket at a
+     * time
+     *
+     * -1 means no hint, so totally up to channel.
+     *
+     * 0 means read all available data from socket every time
+     *
+     * > 0 means to try to read a specific amount
+     */
+    virtual void set_read_size_hint(int len);
+
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel).
      *
@@ -165,9 +176,12 @@ public:
 
 protected:
 
+    StreamChannel(StreamChannelObserver*);
+
     virtual ~StreamChannel() = default;
 
     StreamChannelObserver *observer_;
+    int read_size_hint_;
 };
 
 }

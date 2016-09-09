@@ -262,17 +262,35 @@ Handler::_serve_response()
         common::http::dummy_name);
     CHECK_GT(rv, 0);
 
-    // tell channel to write buf
-    rv = channel_->write_buffer(buf.get());
-    CHECK_EQ(rv, 0);
-    CHECK_EQ(evbuffer_get_length(buf.get()), 0);
+    /* the resp_headers_size is NOT strict; we don't have to write
+     * exactly that amount, just close to it is fine.
+     */
 
-    vlogself(2) << "tell channel to write "
-                << current_req_.resp_headers_size << " dummy header bytes";
-    CHECK_GT(current_req_.resp_headers_size, 0);
+    // how much extra dummy header/meta bytes do we need to send
+    ssize_t num_dummy_hdr_bytes_needed =
+        current_req_.resp_headers_size - evbuffer_get_length(buf.get());
+    num_dummy_hdr_bytes_needed -= 4; /* for the \r\n\r\n we will add
+                                      * later to close the resp
+                                      * status/header part */
+    if (num_dummy_hdr_bytes_needed > 0) {
+        // only if it's greater than zero do we tell channel to write
+        // dummy
 
-    rv = channel_->write_dummy(current_req_.resp_headers_size);
-    CHECK_EQ(rv, 0);
+        // BUT FIRST: tell channel to write buf
+        rv = channel_->write_buffer(buf.get());
+        CHECK_EQ(rv, 0);
+        DCHECK_EQ(evbuffer_get_length(buf.get()), 0);
+
+        vlogself(2) << "tell channel to write "
+                    << num_dummy_hdr_bytes_needed
+                    << " dummy header bytes";
+        rv = channel_->write_dummy(num_dummy_hdr_bytes_needed);
+        CHECK_EQ(rv, 0);
+    } else {
+        // need to write at least one byte for dummy header value
+        rv = evbuffer_add_printf(buf.get(), "n/a");
+        CHECK_EQ(rv, 0);
+    }
 
     // end the dummy header and overall resp meta info
     rv = evbuffer_add_printf(buf.get(), "\r\n\r\n");
@@ -280,7 +298,7 @@ Handler::_serve_response()
 
     rv = channel_->write_buffer(buf.get());
     CHECK_EQ(rv, 0);
-    CHECK_EQ(evbuffer_get_length(buf.get()), 0);
+    DCHECK_EQ(evbuffer_get_length(buf.get()), 0);
 
     if (current_req_.resp_body_size > 0) {
         vlogself(2) << "tell channel to write "

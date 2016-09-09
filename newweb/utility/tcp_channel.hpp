@@ -134,7 +134,6 @@ protected:
     ////////////////////////////////////////////////
 
     struct event_base* evbase_; // don't free
-    StreamChannelObserver* observer_; // don't free
     StreamChannelConnectObserver* connect_observer_; // don't free
 
     ChannelState state_;

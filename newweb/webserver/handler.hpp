@@ -48,14 +48,20 @@ private:
     myio::StreamChannel::UniquePtr channel_; // the underlying stream
     HandlerObserver* observer_;
 
+    /* state of reading the request
+     *
+     * since we only serve dummy response body, we don't a separate
+     * state machine for serving the response: it's just one
+     * _serve_response() call
+     */
     enum class HTTPReqState {
         HTTP_REQ_STATE_REQ_LINE,
         HTTP_REQ_STATE_HEADERS,
         HTTP_REQ_STATE_BODY
     } http_req_state_;
 
-    // we are not supporting pipelining, so there can be only one
-    // active request at a time
+    // we don't support pipelining, so there can be only one active
+    // request at a time
     struct RequestInfo
     {
         int active; // this request is currently being processed

@@ -158,6 +158,10 @@ Connection::_maybe_http_write_to_transport()
 
     active_req_queue_.push(req);
 
+    // set the read size hint to the approximate expected size of meta
+    // info of the response
+    transport_->set_read_size_hint(req->exp_resp_headers_size());
+
     vlogself(2) << "done";
     return;
 }
@@ -301,6 +305,25 @@ Connection::_maybe_http_consume_input()
         vlogself(2) << "no input available";
         return;
     }
+
+    /*
+     * our use of evbuffer_readln() might be sub-optimal if data comes
+     * slowly, e.g., extreme case is one byte at a time, and thus the
+     * stream will notify us on every byte and we try readln() every
+     * time from begining of inputbuf. in that case, it would be best
+     * to:
+     *
+     * (1) set read low-water mark (but could be a problem if we set
+     * too high and input buf never reaches and we don't get notified
+     * --> would either need to set conservative value or need some
+     * kind of timeout mechanism); and/or
+     *
+     * (2) remember where in the input buf we stopped searching, so
+     * that next time we can start from where we left off instead of
+     * from beginning of input buf (would use evbuffer_search_eol(),
+     * which is what evbuffer_readln()).
+     *
+     */
 
     do {
         line = nullptr;
@@ -474,17 +497,22 @@ Connection::onInputBytesDropped(StreamChannel* ch, size_t len) noexcept
 void
 Connection::_got_a_chunk_of_resp_body(size_t len)
 {
+    vlogself(2) << "begin, len: " << len;
     CHECK_GE(remaining_resp_body_len_, len);
     remaining_resp_body_len_ -= len;
 
     DestructorGuard dg(this);
 
+    vlogself(2) << "notify request of recv'ed resp body chunk";
     Request *req = active_req_queue_.front();
     req->notify_rsp_body_data(nullptr, len);
 
     if (remaining_resp_body_len_ == 0) {
+        vlogself(2) << "notify request we're done receving resp body";
         _done_with_resp();
     }
+
+    vlogself(2) << "done";
 }
 
 void
