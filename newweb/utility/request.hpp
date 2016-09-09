@@ -52,7 +52,9 @@ public:
         rsp_body_data_cb_(data, len, this);
     }
     void notify_rsp_done() {
-        CHECK_EQ(exp_resp_body_size_, actual_resp_body_size_);
+        CHECK_EQ(exp_resp_body_size_, actual_resp_body_size_)
+            << "exp: " << exp_resp_body_size_
+            << ", actual: " << actual_resp_body_size_;
         DestructorGuard dg(this);
         rsp_done_cb_(this);
     }

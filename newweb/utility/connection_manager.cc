@@ -19,11 +19,16 @@ using std::shared_ptr;
 using std::make_shared;
 
 
+#define _LOG_PREFIX(inst) << "cnxman= " << (inst)->objId() << ": "
+
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "cnxman= " << (inst)->objId() << " "
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "cnxman= " << (inst)->objId() << " "
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
 

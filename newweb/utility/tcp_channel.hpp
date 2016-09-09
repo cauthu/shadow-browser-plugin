@@ -108,6 +108,10 @@ protected:
      * write, otherwise will keep getting notified of the write event
      */
     void _maybe_toggle_write_monitoring(bool force_enable=false);
+    void _handle_non_successful_socket_io(const char* io_op_str,
+                                          const ssize_t rv,
+                                          const bool crash_if_EINPROGRESS);
+
     void _on_eof();
     void _on_error();
     void _on_socket_connect_eventcb(int fd, short what);
@@ -154,8 +158,8 @@ protected:
     // onNewReadDataAvailable()
     size_t read_lw_mark_;
 
-    /* drop this many bytes from the input socket , not from the the
-     * input buf */
+    /* drop this many bytes from the input socket, NOT from the input
+     * buf */
     class InputDropInfo
     {
     public:
@@ -182,7 +186,7 @@ protected:
         // has dropped another block of "len" bytes
         void progress(size_t len)
         {
-            CHECK_GE(len, num_remaining_);
+            CHECK_LE(len, num_remaining_);
             num_remaining_ -= len;
         }
 

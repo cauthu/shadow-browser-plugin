@@ -30,11 +30,16 @@ using myio::TCPChannel;
 using boost::lexical_cast;
 
 
+#define _LOG_PREFIX(inst) << "cnx= " << (inst)->objId() << ": "
+
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "cnx= " << (inst)->objId() << ": "
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "cnx= " << (inst)->objId() << ": "
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
 
@@ -90,7 +95,6 @@ void
 Connection::_maybe_http_write_to_transport()
 {
     vlogself(2) << "begin";
-    CHECK_EQ(state_, State::CONNECTED);
 
     if (submitted_req_queue_.empty()) {
         vlogself(2) << "submit queue is empty -> nothing to do";
@@ -356,7 +360,7 @@ Connection::_maybe_http_consume_input()
                     int j = 0;
                     for (; j < rsp_hdrs_.size(); ++j) {
                         nv[j] = rsp_hdrs_[j];
-                        vlogself(2) << "nv[" << j << "] = [" << nv[j] << "]";
+                        dvlogself(2) << "nv[" << j << "] = [" << nv[j] << "]";
                     }
                     nv[j] = nullptr; /* null sentinel */
                     Request *req = active_req_queue_.front();
@@ -378,7 +382,7 @@ Connection::_maybe_http_consume_input()
 
                     break; // out of while loop trying to read header lines
                 } else {
-                    vlogself(2) << "whole rsp hdr line: [" << line << "]";
+                    dvlogself(2) << "whole rsp hdr line: [" << line << "]";
                     // XXX/TODO: expect all lower case
                     char *tmp = strchr(line, ':');
                     CHECK(tmp);
@@ -388,11 +392,17 @@ Connection::_maybe_http_consume_input()
                     *tmp = '\0'; /* blank space becomes NULL */
                     ++tmp;
                     rsp_hdrs_.push_back(tmp);
-                    if (!strcasecmp(line, common::http::content_length_name)) {
+
+                    const auto name_str = line;
+                    const auto value_str = tmp;
+
+                    vlogself(2) << "rsp hdr name: [" << name_str << "]";
+
+                    if (!strcasecmp(name_str, common::http::content_length_name)) {
                         try {
-                            remaining_resp_body_len_ = lexical_cast<size_t>(tmp);
+                            remaining_resp_body_len_ = lexical_cast<size_t>(value_str);
                         } catch (const boost::bad_lexical_cast&) {
-                            logself(FATAL) << "bad header value: " << tmp;
+                            logself(FATAL) << "bad header value: " << value_str;
                         }
 
                         vlogself(2) << "body content length: " << remaining_resp_body_len_;
@@ -414,7 +424,8 @@ Connection::_maybe_http_consume_input()
 
         case HTTPRespState::HTTP_RSP_STATE_BODY: {
             CHECK(remaining_resp_body_len_ > 0);
-            vlogself(2) << "get rsp body, current body_len_ " << remaining_resp_body_len_;
+            vlogself(2) << "get rsp body, remaining_resp_body_len_ "
+                        << remaining_resp_body_len_;
 
             const auto buflen = evbuffer_get_length(inbuf);
             const auto drain_len = std::min(buflen, remaining_resp_body_len_);

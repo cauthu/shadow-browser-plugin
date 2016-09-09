@@ -15,6 +15,8 @@ INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
+    common::init_common();
+
     common::init_easylogging();
 
     START_EASYLOGGINGPP(argc, argv);

@@ -30,11 +30,16 @@ using boost::lexical_cast;
 using myio::StreamChannel;
 
 
+#define _LOG_PREFIX(inst) << "hndlr= " << (inst)->objId() << ": "
+
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "hndlr= " << (inst)->objId() << " "
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "hndlr= " << (inst)->objId() << " "
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
 
@@ -47,6 +52,8 @@ Handler::Handler(StreamChannel::UniquePtr channel,
 {
     CHECK_NOTNULL(observer_);
     bzero(&current_req_, sizeof current_req_);
+
+    channel_->set_observer(this);
 }
 
 void
@@ -61,7 +68,8 @@ Handler::_maybe_consume_input()
     struct evbuffer *inbuf = channel_->get_input_evbuf();
     CHECK_NOTNULL(inbuf);
 
-    vlogself(2) << "num bytes available in inbuf: " << evbuffer_get_length(inbuf);
+    vlogself(2) << "num bytes available in inbuf: "
+                << evbuffer_get_length(inbuf);
 
     if (evbuffer_get_length(inbuf) == 0) {
         vlogself(2) << "no input available";
@@ -292,6 +300,7 @@ void
 Handler::onNewReadDataAvailable(StreamChannel* channel) noexcept
 {
     CHECK_EQ(channel_.get(), channel);
+    vlogself(2) << "notified of new data";
     _maybe_consume_input();
 }
 

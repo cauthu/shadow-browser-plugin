@@ -30,6 +30,7 @@ Request::Request(
     , rsp_meta_cb_(rsp_meta_cb), rsp_body_data_cb_(rsp_body_data_cb)
     , rsp_done_cb_(rsp_done_cb)
     , conn(NULL), num_retries_(0)
+    , actual_resp_body_size_(0)
 {
     vlogself(2) << "a new request ";
     CHECK_GT(host_.length(), 0);

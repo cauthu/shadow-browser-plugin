@@ -10,11 +10,17 @@ using std::shared_ptr;
 using std::string;
 
 
+
+#define _LOG_PREFIX(inst) << "hsess= " << (inst)->objId() << ": "
+
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "hsess= " << (inst)->objId() <<": "
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "hsess= " << (inst)->objId() << ": "
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
 
@@ -71,15 +77,12 @@ HttpNetworkSession::_response_meta_cb(const int& status,
                                       char **headers,
                                       Request* req)
 {
-    vlogself(2) << "begin";
+    dvlogself(2) << "begin";
 
     // don't care to do anything other than making sure it's 200
     CHECK_EQ(status, 200);
 
-    SCOPE_EXIT {
-        vlogself(2) << "done";
-    };
-
+    dvlogself(2) << "done";
 }
 
 void
