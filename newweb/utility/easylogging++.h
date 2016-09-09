@@ -1595,8 +1595,8 @@ namespace el {
 namespace el {\
 namespace base {\
 namespace utils {\
-std::string s_currentUser = el::base::utils::OS::currentUser(); \
-std::string s_currentHost = el::base::utils::OS::currentHost(); \
+/* std::string s_currentUser = el::base::utils::OS::currentUser(); \ */ \
+/* std::string s_currentHost = el::base::utils::OS::currentHost(); \ */ \
 bool s_termSupportsColor = el::base::utils::OS::termSupportsColor(); \
 }\
 }\
@@ -2346,13 +2346,13 @@ namespace base {
                                                          base::consts::kTraceLevelShortLogValue);
             }
             if (hasFlag(base::FormatFlags::User)) {
-                std::string s = base::utils::s_currentUser;
-                base::utils::Str::replaceFirstWithEscape(m_format, base::consts::kCurrentUserFormatSpecifier,
-                                                         base::utils::s_currentUser);
+                /* std::string s = base::utils::s_currentUser; */
+                /* base::utils::Str::replaceFirstWithEscape(m_format, base::consts::kCurrentUserFormatSpecifier, */
+                /*                                          base::utils::s_currentUser); */
             }
             if (hasFlag(base::FormatFlags::Host)) {
-                base::utils::Str::replaceFirstWithEscape(m_format, base::consts::kCurrentHostFormatSpecifier,
-                                                         base::utils::s_currentHost);
+                /* base::utils::Str::replaceFirstWithEscape(m_format, base::consts::kCurrentHostFormatSpecifier, */
+                /*                                          base::utils::s_currentHost); */
             }
             // Ignore Level::Global and Level::Unknown
         }

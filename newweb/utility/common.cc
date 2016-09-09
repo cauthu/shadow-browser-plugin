@@ -185,8 +185,8 @@ init_easylogging()
     // don't get to run, so we manually set them here
     el::base::elStorage.reset(
         new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder())));
-    el::base::utils::s_currentUser = el::base::utils::OS::currentUser();
-    el::base::utils::s_currentHost = el::base::utils::OS::currentHost();
+    // el::base::utils::s_currentUser = el::base::utils::OS::currentUser();
+    // el::base::utils::s_currentHost = el::base::utils::OS::currentHost();
     el::base::utils::s_termSupportsColor = el::base::utils::OS::termSupportsColor();
 #endif
 
