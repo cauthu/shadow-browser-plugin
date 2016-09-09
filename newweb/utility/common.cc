@@ -103,10 +103,16 @@ getaddr(const char *hostname)
         } else if(strcmp(hostname, "localhost") == 0) {
             addr = htonl(INADDR_LOOPBACK);
         } else {
+            struct addrinfo hints;
+            memset(&hints, 0, sizeof hints); // make sure the struct is empty
+            hints.ai_family = AF_INET;
+            hints.ai_socktype = SOCK_STREAM; // TCP stream sockets
+            hints.ai_flags = AI_PASSIVE;     // fill in my IP for me
+
             struct addrinfo* info;
-            int result = getaddrinfo(hostname, NULL, NULL, &info);
+            int result = getaddrinfo(hostname, nullptr, &hints, &info);
             if(result != 0) {
-                CHECK(0); // not reached
+                CHECK(0) << "error: " << gai_strerror(result);
             }
 
             addr = ((struct sockaddr_in*)(info->ai_addr))->sin_addr.s_addr;
