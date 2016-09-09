@@ -9,7 +9,6 @@
 
 #include <boost/function.hpp>
 
-#include "myevent.hpp"
 #include "request.hpp"
 #include "connection.hpp"
 #include "object.hpp"
