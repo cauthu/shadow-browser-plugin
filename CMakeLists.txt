@@ -100,9 +100,11 @@ include_directories(${GLIB_INCLUDES})
 ## plug-ins need to disable fortification to ensure syscalls are intercepted
 #add_definitions(-D_GNU_SOURCE)
 add_cflags("-fno-inline -fno-strict-aliasing -U_FORTIFY_SOURCE")
+add_cxxflags("-fno-inline -fno-strict-aliasing -U_FORTIFY_SOURCE")
 
 ## CFLAGS status update
 message(STATUS "CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}")
+message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
 ## recurse to build each plug-in
 
