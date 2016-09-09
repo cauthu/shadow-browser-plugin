@@ -15,8 +15,7 @@
 namespace common
 {
 
-// 16k bytes
-const std::string static_bytes(0xffff, 'A');
+std::string* static_bytes = nullptr;
 
 namespace http
 {
@@ -35,6 +34,12 @@ const size_t resp_status_line_len = sizeof (resp_status_line) - 1;
 
 } // namespace http
 
+void
+init_common()
+{
+    static_bytes = new std::string(static_bytes_length, 'A');
+    CHECK_NOTNULL(static_bytes);
+}
 
 char*
 expandPath(const char* path) {
@@ -194,13 +199,12 @@ init_easylogging()
    defaultConf.setToDefault();
    defaultConf.setGlobally(
        el::ConfigurationType::Format,
-       "%datetime{%h:%m:%s} %level - [%fbase :%line]: %msg");
+       "%datetime{%h:%m:%s} %level - %fbase :%line, %func ::   %msg");
    defaultConf.set(
        el::Level::Verbose, el::ConfigurationType::Format,
-       "%datetime{%h:%m:%s} %level-%vlevel - [%fbase :%line]: %msg");
+       "%datetime{%h:%m:%s} %level-%vlevel - %fbase :%line, %func ::   %msg");
 
     el::Loggers::reconfigureLogger("default", defaultConf);
-
 }
 
 } // end namespace common

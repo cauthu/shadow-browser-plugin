@@ -17,7 +17,15 @@
 namespace common
 {
 
-extern const std::string static_bytes;
+/* need to call this to initialize some static vars. otherwise shadow
+ * will crash because it doesn't seem to deal with static vars
+ * properly, e.g., std::string vars like "static_bytes" below
+ */
+void init_common();
+
+/* 16K */
+const size_t static_bytes_length = 0xffff;
+extern std::string* static_bytes;
 
 namespace http
 {
