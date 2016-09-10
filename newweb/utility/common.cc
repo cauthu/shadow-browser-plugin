@@ -160,24 +160,25 @@ init_evbase()
 void
 dispatch_evbase(struct event_base* evbase)
 {
-    /******  run the loop until told to stop ******/
-    /* EVLOOP_NO_EXIT_ON_EMPTY not yet available, so we have to
-     * install a dummy persistent timer to always have some event
-     */
-    struct timeval tv = {0};
-    tv.tv_sec = 60;
-    tv.tv_usec = 0;
-    struct event *dummy_work_ev = event_new(
-        evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){}, nullptr);
-    CHECK_NOTNULL(dummy_work_ev);
-    auto rv = event_add(dummy_work_ev, &tv);
-    CHECK_EQ(rv, 0);
+    // /******  run the loop until told to stop ******/
+    // /* EVLOOP_NO_EXIT_ON_EMPTY not yet available, so we have to
+    //  * install a dummy persistent timer to always have some event
+    //  */
+    // struct timeval tv = {0};
+    // tv.tv_sec = 60;
+    // tv.tv_usec = 0;
+    // struct event *dummy_work_ev = event_new(
+    //     evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){
+    //         printf("timedout\n");}, nullptr);
+    // CHECK_NOTNULL(dummy_work_ev);
+    // auto rv = event_add(dummy_work_ev, &tv);
+    // CHECK_EQ(rv, 0);
 
     event_base_dispatch(evbase);
 
-    if (dummy_work_ev) {
-        event_free(dummy_work_ev);
-    }
+    // if (dummy_work_ev) {
+    //     event_free(dummy_work_ev);
+    // }
 }
 
 void
