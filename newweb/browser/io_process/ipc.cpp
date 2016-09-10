@@ -93,7 +93,7 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
     break;
 
 void
-IPCServer::onRecvMsg(GenericMessageChannel* channel, uint16_t type,
+IPCServer::onRecvMsg(GenericMessageChannel* channel, uint8_t type,
                      uint16_t len, const uint8_t* data) noexcept
 {
     const auto routing_id = channel->objId();

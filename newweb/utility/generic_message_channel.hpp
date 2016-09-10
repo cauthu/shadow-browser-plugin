@@ -38,7 +38,7 @@ class GenericMessageChannelObserver
 {
 public:
     /* "type" is the 2-byte type in the header mentioned above */
-    virtual void onRecvMsg(GenericMessageChannel*, uint16_t type,
+    virtual void onRecvMsg(GenericMessageChannel*, uint8_t type,
                            uint16_t len, const uint8_t*) noexcept = 0;
     virtual void onEOF(GenericMessageChannel*) noexcept = 0;
     virtual void onError(GenericMessageChannel*, int errorcode) noexcept = 0;
@@ -61,16 +61,13 @@ public:
     /* will take ownership of the stream channel */
     explicit GenericMessageChannel(StreamChannel::UniquePtr, GenericMessageChannelObserver*);
 
-    void sendMsg(uint16_t type, uint16_t len, const uint8_t* data);
-    void sendMsg(uint16_t type); // send empty msg
+    void sendMsg(uint8_t type, uint16_t len, const uint8_t* data);
+    void sendMsg(uint8_t type); // send empty msg
 
 protected:
 
-    // the msg type is two bytes, in network byte order
-    static const int MSG_TYPE_SIZE = 2;
-    // the msg len is two bytes, in network byte order
-    static const int MSG_LEN_SIZE = 2;
-
+    static const int MSG_TYPE_SIZE = sizeof (uint8_t);
+    static const int MSG_LEN_SIZE = sizeof (uint16_t);
     static const int HEADER_SIZE = MSG_TYPE_SIZE + MSG_LEN_SIZE;
 
     /* keep the destructor protected/private to prevent direct
@@ -87,7 +84,7 @@ protected:
 
     void _consume_input();
     void _update_read_watermark();
-    void _send_type_and_len(uint16_t type, uint16_t len);
+    void _send_type_and_len(uint8_t type, uint16_t len);
 
     StreamChannel::UniquePtr channel_; // the underlying stream
     GenericMessageChannelObserver* observer_; // dont free
@@ -97,7 +94,7 @@ protected:
     } state_;
 
     /* type and len of the current message we're extracting */
-    uint16_t msg_type_;
+    uint8_t msg_type_;
     uint16_t msg_len_;
 };
 

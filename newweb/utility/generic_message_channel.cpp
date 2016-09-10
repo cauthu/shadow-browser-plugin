@@ -52,7 +52,6 @@ GenericMessageChannel::_consume_input()
                 memcpy((uint8_t*)&msg_len_, buf + MSG_TYPE_SIZE, MSG_LEN_SIZE);
 
                 // convert to host byte order
-                msg_type_ = ntohs(msg_type_);
                 msg_len_ = ntohs(msg_len_);
 
                 // update state
@@ -98,9 +97,9 @@ GenericMessageChannel::_consume_input()
 }
 
 void
-GenericMessageChannel::sendMsg(uint16_t type, uint16_t len, const uint8_t* data)
+GenericMessageChannel::sendMsg(uint8_t type, uint16_t len, const uint8_t* data)
 {
-    VLOG(2) << "sending msg type: " << type << ", len: " << len;
+    VLOG(2) << "sending msg type: " << unsigned(type) << ", len: " << len;
     _send_type_and_len(type, len);
 
     if (len) {
@@ -110,16 +109,17 @@ GenericMessageChannel::sendMsg(uint16_t type, uint16_t len, const uint8_t* data)
 }
 
 void
-GenericMessageChannel::sendMsg(uint16_t type)
+GenericMessageChannel::sendMsg(uint8_t type)
 {
     _send_type_and_len(type, 0);
 }
 
 /* type and len values should be HOST byte order */
 void
-GenericMessageChannel::_send_type_and_len(uint16_t type, uint16_t len)
+GenericMessageChannel::_send_type_and_len(uint8_t type, uint16_t len)
 {
-    type = htons(type);
+    static_assert((sizeof type) == MSG_TYPE_SIZE, "bad sizes");
+
     auto rv = channel_->write((const uint8_t*)&type, sizeof(type));
     CHECK_EQ(rv, 0);
 

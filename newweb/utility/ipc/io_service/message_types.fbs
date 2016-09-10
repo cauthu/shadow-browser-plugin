@@ -2,7 +2,7 @@
 namespace myipc.ioservice.messages;
 
 
-enum type:ushort
+enum type:ubyte
 {
     Hello,
     Fetch,

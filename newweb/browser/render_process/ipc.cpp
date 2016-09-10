@@ -73,7 +73,7 @@ IOServiceIPCClient::onConnectTimeout(StreamChannel* ch) noexcept
 }
 
 void
-IOServiceIPCClient::onRecvMsg(GenericMessageChannel*, uint16_t type,
+IOServiceIPCClient::onRecvMsg(GenericMessageChannel*, uint8_t type,
                               uint16_t len, const uint8_t *data) noexcept
 {
     VLOG(2) << "client received msg type " << type;

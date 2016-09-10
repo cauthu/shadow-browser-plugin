@@ -25,7 +25,7 @@ protected:
     virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
 
     /******* implement GenericMessageChannelObserver interface *********/
-    virtual void onRecvMsg(myio::GenericMessageChannel*, uint16_t, uint16_t, const uint8_t*) noexcept override;
+    virtual void onRecvMsg(myio::GenericMessageChannel*, uint8_t, uint16_t, const uint8_t*) noexcept override;
     virtual void onEOF(myio::GenericMessageChannel*) noexcept override;
     virtual void onError(myio::GenericMessageChannel*, int errorcode) noexcept override;
 
