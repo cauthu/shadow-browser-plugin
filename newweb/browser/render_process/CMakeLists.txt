@@ -9,6 +9,8 @@ set(RENDER_PROCESS_SOURCES
   ipc.cpp
   ${UTILITY_DIR}/object.cpp
   ${UTILITY_DIR}/common.cc
+  ${UTILITY_DIR}/stream_channel.cpp
+  ${UTILITY_DIR}/timer.cpp
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/generic_message_channel.cpp
 )

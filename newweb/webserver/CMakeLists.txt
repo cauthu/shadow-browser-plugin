@@ -7,6 +7,8 @@ set(WEBSERVER_SOURCES
   webserver.cc
   handler.cc
   ${UTILITY_DIR}/common.cc
+  ${UTILITY_DIR}/stream_channel.cpp
+  ${UTILITY_DIR}/timer.cpp
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/tcp_server.cpp
   ${UTILITY_DIR}/object.cpp
