@@ -1,0 +1,11 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+table ConnectMsg
+{
+    string: host;
+    port: ushort;
+}
+
+root_type ConnectMsg;
