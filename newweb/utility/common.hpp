@@ -44,6 +44,14 @@ extern const size_t resp_status_line_len;
 
 } // namespace http
 
+namespace ports
+{
+
+const uint16_t client_side_transport_proxy = 2001;
+const uint16_t server_side_transport_proxy = 2002;
+
+} // namespace ports
+
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
  *

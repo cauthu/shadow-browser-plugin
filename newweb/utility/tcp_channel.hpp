@@ -46,7 +46,6 @@ public:
     virtual void set_observer(StreamChannelObserver*) override;
 
     /* --------- StreamChannel impl ------------- */
-    /* return same value as bufferevent_socket_connect() */
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) override;
 
@@ -59,28 +58,15 @@ public:
 
     virtual void drop_future_input(StreamChannelInputDropObserver*,
                                    size_t, bool notify_progress) override;
-
-    /* get number of availabe input bytes */
     virtual size_t get_avail_input_length() const override;
     virtual size_t get_output_length() const override;
-
-    /* same as bufferevent_setwatermark() for read */
     virtual void set_read_watermark(size_t lowmark, size_t highmark) override;
-
-    /* same to output. same as libevent's bufferevent_write calls. in
-     * particular, any write before channel is established will be
-     * buffered */
     virtual int write(const uint8_t *data, size_t len) override;
     virtual int write_buffer(struct evbuffer *buf) override;
-
-    /* write "len" bytes of dummy data */
     virtual int write_dummy(size_t len) override;
-
-    /* close/disconnect the channel, dropping pending/buffered data if
-     * any */
     virtual void close() override;
-
     virtual bool is_closed() const override;
+    virtual int release_fd() override;
 
 protected:
 
@@ -197,8 +183,6 @@ protected:
                                       // in progress updates
     } input_drop_;
 
-    /* timer to send at constant rate */
-    std::unique_ptr<struct event, void(*)(struct event*)> tamaraw_timer_ev_;
 };
 
 

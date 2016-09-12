@@ -181,13 +181,23 @@ TCPChannel::close()
         ::close(fd_);
         fd_ = -1;
     }
-    tamaraw_timer_ev_.reset();
 }
 
 bool
 TCPChannel::is_closed() const
 {
     return state_ == ChannelState::CLOSED;
+}
+
+int
+TCPChannel::release_fd()
+{
+    CHECK_EQ(evbuffer_get_length(input_evb_.get()), 0);
+
+    auto ret = fd_;
+    fd_ = -1;
+    close();
+    return ret;
 }
 
 void
@@ -461,7 +471,6 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , input_evb_(evbuffer_new(), evbuffer_free)
     , output_evb_(evbuffer_new(), evbuffer_free)
     , read_lw_mark_(0)
-    , tamaraw_timer_ev_(nullptr, event_free)
 {
     DCHECK_EQ(observer_, observer);
     input_drop_.reset();

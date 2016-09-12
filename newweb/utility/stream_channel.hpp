@@ -174,6 +174,8 @@ public:
 
     virtual bool is_closed() const = 0;
 
+    virtual int release_fd() = 0;
+
 protected:
 
     StreamChannel(StreamChannelObserver*);
