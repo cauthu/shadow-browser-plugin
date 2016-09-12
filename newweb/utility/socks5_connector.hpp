@@ -43,6 +43,8 @@ public:
      * this object needs to itself as observer of the transport, so
      * once it's done, the user might need to once again set himself
      * as the observer of the transport
+     *
+     * the "port" is in HOST-byte order
      */
     Socks5Connector(StreamChannel::UniquePtr transport,
                     const in_addr_t target_host, uint16_t port);
