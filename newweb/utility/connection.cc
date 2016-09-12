@@ -212,7 +212,9 @@ Connection::submit_request(Request* req)
         submitted_req_queue_.push_back(req);
     }
 
-    _maybe_send();
+    if (state_ == State::CONNECTED) {
+        _maybe_send();
+    }
 
     req->conn = this;
 
