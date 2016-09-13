@@ -1,6 +1,7 @@
 #ifndef CSP_HPP
 #define CSP_HPP
 
+#include "../../utility/object.hpp"
 #include "../../utility/stream_server.hpp"
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/socks5_connector.hpp"
@@ -8,16 +9,19 @@
 
 #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
+#include "client_handler.hpp"
 
-class CSPHandler : public Object
+class ClientHandler;
+
+class ClientSideProxy : public Object
                  , public myio::StreamServerObserver
                  , public myio::StreamChannelConnectObserver
                  , public myio::Socks5ConnectorObserver
 {
 public:
-    typedef std::unique_ptr<CSPHandler, /*folly::*/Destructor> UniquePtr;
+    typedef std::unique_ptr<ClientSideProxy, /*folly::*/Destructor> UniquePtr;
 
-    explicit CSPHandler(struct event_base* evbase,
+    explicit ClientSideProxy(struct event_base* evbase,
                             myio::StreamServer::UniquePtr,
                             const in_addr_t& peer_addr,
                             const in_port_t& peer_port,
@@ -27,7 +31,7 @@ public:
 
 protected:
 
-    virtual ~CSPHandler();
+    virtual ~ClientSideProxy();
 
     /* StreamServerObserver interface */
     virtual void onAccepted(myio::StreamServer*,
@@ -46,17 +50,22 @@ protected:
 
     //////////////
 
-    void _on_connected_to_server_peer();
+    void _on_connected_to_ssp();
 
-    void _on_buflo_channel_pair_result_cb(myio::buflo::BufloMuxChannel*,
-                                          bool) {}
-    void _on_buflo_channel_closed_cb(myio::buflo::BufloMuxChannel*) {}
-    void _on_buflo_channel_stream_create_result_cb(myio::buflo::BufloMuxChannel*,
-                                                   bool, int) {}
-    void _on_buflo_channel_stream_data_cb(myio::buflo::BufloMuxChannel*,
-                                          int) {}
-    void _on_buflo_channel_stream_closed_cb(myio::buflo::BufloMuxChannel*,
-                                            int) {}
+    void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
+    // void _on_buflo_channel_stream_id_assigned_cb(
+    //     myio::buflo::BufloMuxChannel*,
+    //     int, void*);
+    // void _on_buflo_channel_stream_create_result_cb(
+    //     myio::buflo::BufloMuxChannel*,
+    //     int, bool);
+    // void _on_buflo_channel_stream_data_cb(myio::buflo::BufloMuxChannel*,
+    //                                       int);
+    // void _on_buflo_channel_stream_closed_cb(myio::buflo::BufloMuxChannel*,
+    //                                         int);
+
+    // the ProxyClientHandler tells us it's closing down
+    void _on_client_handler_done(ClientHandler*);
 
     struct event_base* evbase_;
     /* server to listen for client connections */
@@ -88,6 +97,7 @@ protected:
     } state_;
 
 
+    std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
 };
 
 

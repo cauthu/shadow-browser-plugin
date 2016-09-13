@@ -6,6 +6,10 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(TRANSPORT_PROXY_SOURCES
   main.cpp
   csp/csp.cpp
+  csp/client_handler.cpp
+  ssp/ssp.cpp
+  ssp/csp_handler.cpp
+  ssp/stream_handler.cpp
   ${UTILITY_DIR}/common.cc
   ${UTILITY_DIR}/stream_channel.cpp
   ${UTILITY_DIR}/timer.cpp

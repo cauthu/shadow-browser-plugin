@@ -47,8 +47,8 @@ extern const size_t resp_status_line_len;
 namespace ports
 {
 
-const uint16_t client_side_transport_proxy = 2001;
-const uint16_t server_side_transport_proxy = 2002;
+const uint16_t client_side_transport_proxy = 8080;
+const uint16_t server_side_transport_proxy = 8081;
 
 } // namespace ports
 

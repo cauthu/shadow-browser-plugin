@@ -14,13 +14,64 @@ namespace myio { namespace buflo
 
 class BufloMuxChannel;
 
-typedef boost::function<void(BufloMuxChannel*, bool)> ChannelPairResultCb;
 typedef boost::function<void(BufloMuxChannel*)> ChannelClosedCb;
 
-typedef boost::function<void(BufloMuxChannel*, bool, int)> StreamCreateResultCb;
-typedef boost::function<void(BufloMuxChannel*, int)> StreamDataCb;
-typedef boost::function<void(BufloMuxChannel*, int)> StreamClosedCb;
+/*
+ * tell user that the channel wants to create a new stream with id
+ * "sid" to connect to the target
+ *
+ * the user should call set_stream_connect_result() to tell the
+ * channel about the result
+ */
+typedef boost::function<void(BufloMuxChannel*, int sid,
+                             const char* host, uint16_t port)> NewStreamConnectRequestCb;
 
+/*
+ * call back to tell user about the stream id has been assigned for
+ * one of their earlier create_stream() calls
+ *
+ * the "void cbdata" is the value passed into create_stream() call
+ */
+// typedef boost::function<void(BufloMuxChannel*, int, void* cbdata)> StreamIdAssignedCb;
+
+/*
+ * call back to tell user about result of stream connect id. the bool
+ * arg specifies whether the stream creation is successful, in which
+ * case the int is the stream id that should be used in calls to other
+ * apis.
+ */
+// typedef boost::function<void(BufloMuxChannel*, int, bool)> StreamCreateResultCb;
+
+// typedef boost::function<void(BufloMuxChannel*, int)> StreamDataCb;
+// typedef boost::function<void(BufloMuxChannel*, int)> StreamClosedCb;
+
+/* callback interface */
+class BufloMuxChannelStreamObserver
+{
+public:
+
+    /* for notifying callers of create_stream(), which should only be
+     * used by client-side proxy
+     */
+    virtual void onStreamIdAssigned(BufloMuxChannel*, int sid) = 0;
+    virtual void onStreamCreateResult(BufloMuxChannel*, bool) = 0;
+
+    // /* for notifying server-side proxy of new (client) stream connect
+    //  * requests
+    //  *
+    //  * "sid" is stream id
+    //  *
+    //  * port is HOST-byte order
+    //  *
+    //  * the observer should tell the buflomuxchannel the result of the request with 
+    //  */
+    // virtual void onNewStreamRequest(BufloMuxChannel*, int sid,
+    //                                 const char* host, uint16_t port) = 0;
+
+    /* for streams for either side */
+    virtual void onStreamNewDataAvailable(BufloMuxChannel*) = 0;
+    virtual void onStreamClosed(BufloMuxChannel*) = 0;
+};
 
 class BufloMuxChannel : public Object
 {
@@ -30,7 +81,11 @@ public:
     typedef std::unique_ptr<BufloMuxChannel, Destructor> UniquePtr;
 
     virtual int create_stream(const char* host,
-                              const in_port_t& port) = 0;
+                              const in_port_t& port,
+                              void *cbdata) = 0;
+
+    virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) = 0;
+    virtual bool set_stream_connect_result(int sid, bool ok) = 0;
 
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel).
@@ -68,22 +123,6 @@ public:
      */
     virtual struct evbuffer* get_input_evbuf(int sid) = 0;
 
-    // /* request the channel to just ingore the next "len" bytes from
-    //  * the socket/network, i.e., do not put them in the input buffer
-    //  * that's visible to the application.
-    //  *
-    //  * only one such request at a time, i.e., if this is called when
-    //  * the channel has not finished with a previous request, it might
-    //  * throw/crash
-    //  *
-    //  * "notify_progress": false -> when the channel has fulfilled the
-    //  * whole request, it will notify. true -> notify as bytes are
-    //  * dropped
-    //  */
-    // virtual void drop_future_input(int sid,
-    //                                BufloMuxChannelInputDropObserver*,
-    //                                size_t len, bool notify_progress) = 0;
-
     /* get number of availabe input bytes */
     virtual size_t get_avail_input_length(int sid) const = 0;
     /* get number of buffered output bytes */
@@ -119,36 +158,25 @@ protected:
 
     BufloMuxChannel(int fd,
                     bool is_client_side,
-                    ChannelPairResultCb ch_pair_result_cb,
                     ChannelClosedCb ch_closed_cb,
-                    StreamCreateResultCb st_create_result_cb,
-                    StreamDataCb st_data_cb,
-                    StreamClosedCb st_closed_cb)
+                    NewStreamConnectRequestCb st_connect_req_cb)
         : fd_(fd), is_client_side_(is_client_side)
-        , ch_pair_result_cb_(ch_pair_result_cb)
         , ch_closed_cb_(ch_closed_cb)
-        , st_create_result_cb_(st_create_result_cb)
-        , st_data_cb_(st_data_cb)
-        , st_closed_cb_(st_closed_cb)
+        , st_connect_req_cb_(st_connect_req_cb)
     {
         CHECK_GT(fd_, 0);
-        CHECK(ch_pair_result_cb_);
         CHECK(ch_closed_cb_);
-        CHECK(st_data_cb_);
-        CHECK(st_closed_cb_);
         if (is_client_side_) {
-            CHECK(st_create_result_cb_);
+            CHECK(!st_connect_req_cb);
+        } else {
+            CHECK(st_connect_req_cb);
         }
     }
 
     virtual ~BufloMuxChannel() = default;
 
-    ChannelPairResultCb ch_pair_result_cb_;
     ChannelClosedCb ch_closed_cb_;
-
-    StreamCreateResultCb st_create_result_cb_;
-    StreamDataCb st_data_cb_;
-    StreamClosedCb st_closed_cb_;
+    NewStreamConnectRequestCb st_connect_req_cb_;
 
     int fd_;
     const bool is_client_side_;

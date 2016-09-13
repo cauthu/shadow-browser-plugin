@@ -31,7 +31,9 @@ int main(int argc, char **argv)
 
     const uint16_t service_port = 12345;
 
-    NetConfig netconf(0, 0, false, false);
+    NetConfig netconf(common::getaddr("127.0.0.1"),
+                      common::ports::client_side_transport_proxy,
+                      false, false);
 
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), common::getaddr("localhost"),

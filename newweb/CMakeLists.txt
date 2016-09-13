@@ -30,3 +30,5 @@ add_subdirectory(utility)
 add_subdirectory(browser)
 
 add_subdirectory(webserver)
+
+add_subdirectory(transport_proxy)

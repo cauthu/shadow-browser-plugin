@@ -1,5 +1,6 @@
 
 #include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 #include <string>
 
 #include "buflo_mux_channel_impl_spdy.hpp"
@@ -57,17 +58,11 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side,
     size_t cell_size,
-    ChannelPairResultCb ch_pair_result_cb,
     ChannelClosedCb ch_closed_cb,
-    StreamCreateResultCb st_create_result_cb,
-    StreamDataCb st_data_cb,
-    StreamClosedCb st_closed_cb)
+    NewStreamConnectRequestCb st_connect_req_cb)
     : BufloMuxChannel(fd, is_client_side,
-                      ch_pair_result_cb,
                       ch_closed_cb,
-                      st_create_result_cb,
-                      st_data_cb,
-                      st_closed_cb)
+                      st_connect_req_cb)
     , evbase_(evbase)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
@@ -106,45 +101,74 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
 int
 BufloMuxChannelImplSpdy::create_stream(const char* host,
-                                       const in_port_t& port)
+                                       const in_port_t& port,
+                                       void *cbdata)
 {
-    /* it's ok to submit requests if not yet connected, etc, but proly
-     * a bug if submitting a request after we have closed
-     */
-    // CHECK((state_ != State::NO_LONGER_USABLE) && (state_ != State::DESTROYED));
+    LOG(FATAL) << "not yet implemented";
+    return 0;
+}
 
+int
+BufloMuxChannelImplSpdy::create_stream(const char* host,
+                                       const in_port_t& port,
+                                       BufloMuxChannelStreamObserver *observer)
+{
     vlogself(2) << "begin";
 
     string hostport_str(host);
     hostport_str.append(":");
     hostport_str.append(std::to_string(port));
 
-    const char **nv = (const char**)calloc(5*2 + 1, sizeof(char*));
-    size_t hdidx = 0;
+    // const char **nv = (const char**)calloc(5*2 + 1, sizeof(char*));
+    // size_t hdidx = 0;
 
-    nv[hdidx++] = ":method";
-    nv[hdidx++] = "CONNECT";
-    nv[hdidx++] = ":scheme";
-    nv[hdidx++] = "http";
-    nv[hdidx++] = ":path";
-    nv[hdidx++] = "/";
-    nv[hdidx++] = ":version";
-    nv[hdidx++] = "HTTP/1.1";
+    // nv[hdidx++] = ":method";
+    // nv[hdidx++] = "CONNECT";
+    // nv[hdidx++] = ":scheme";
+    // nv[hdidx++] = "http";
+    // nv[hdidx++] = ":path";
+    // nv[hdidx++] = "/";
+    // nv[hdidx++] = ":version";
+    // nv[hdidx++] = "HTTP/1.1";
+
+
+    const char **nv = (const char**)calloc(1*2 + 1, sizeof(char*));
+    size_t hdidx = 0;
     nv[hdidx++] = ":host";
     nv[hdidx++] = hostport_str.c_str();
 
     nv[hdidx++] = nullptr;
 
-    /* spdylay_submit_request() will make copies of nv */
-    int rv = spdylay_submit_request(spdysess_, 0, nv, nullptr, nullptr);
+    /* spdylay will make copies of nv */
+    int rv = spdylay_submit_syn_stream(spdysess_, 0, 0, 0, nv, observer);
     CHECK_EQ(rv, 0);
 
     free(nv);
 
     _pump_spdy_send();
+    if (_maybe_flush_data_to_cell_outbuf()) {
+        _maybe_toggle_write_monitoring(true);
+    }
 
     vlogself(2) << "done";
     return 0;
+}
+
+bool
+BufloMuxChannelImplSpdy::set_stream_observer(int sid,
+                                             BufloMuxChannelStreamObserver* observer)
+{
+    const auto rv = spdylay_session_set_stream_user_data(
+        spdysess_, sid, observer);
+    return (rv == 0);
+}
+
+bool
+BufloMuxChannelImplSpdy::set_stream_connect_result(int sid, bool ok)
+{
+
+    // submit the response
+    return false;
 }
 
 int
@@ -218,6 +242,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     // control has priority over data
     if (!_maybe_add_control_cell_to_outbuf()) {
         // no control things to add, so we can add spdy data
+        _pump_spdy_send();
         if (!_maybe_add_data_cell_to_outbuf()) {
             // not even data, so add dummy
             _ensure_a_whole_dummy_cell_at_end_outbuf();
@@ -231,7 +256,11 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 
     vlogself(2) << "done";
 }
-        
+
+/*
+ * THIS WILL NOT toggle socket write monitoring. other code is
+ * responsibly for checking spdylay_session_want_write() if interested
+ */
 void
 BufloMuxChannelImplSpdy::_pump_spdy_send()
 {
@@ -251,10 +280,25 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
 }
 
 bool
+BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
+{
+    CHECK(!defense_active_);
+    bool did_write = false;
+    while (evbuffer_get_length(spdy_outbuf_)) {
+        const auto rv = _maybe_add_data_cell_to_outbuf();
+        CHECK(rv);
+        did_write = true;
+    }
+    vlogself(2) << "returning " << did_write;
+    return did_write;
+}
+
+/*
+ * possibly add ONE cell of spdy data to the cell outbuf
+ */
+bool
 BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
 {
-    _pump_spdy_send();
-
     static const uint8_t type_field = CellType::DATA;
 
     /* append a data cell if there's data in spdy_outbuf_ */
@@ -347,6 +391,9 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 void
 BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(bool force_enable)
 {
+    CHECK(!defense_active_);
+    dvlogself(2) << "force= " << force_enable
+                 << ", cell_outbuf_ len= " << evbuffer_get_length(cell_outbuf_);
     if (force_enable || evbuffer_get_length(cell_outbuf_)) {
         // there is some output data to write, or we are being forced,
         // then start monitoring
@@ -602,21 +649,17 @@ BufloMuxChannelImplSpdy::_on_spdylay_before_ctrl_send_cb(
 
     if (type == SPDYLAY_SYN_STREAM) {
         const int32_t sid = frame->syn_stream.stream_id;
-        // void *cb_data =
-        //     spdylay_session_get_stream_user_data(session, sid));
-        // CHECK(cb_data);
-        // logself(DEBUG, "new SYN sid: %d, cnx: %u, req: %u",
-        //         sid, instNum_, req->instNum_);
-        // sid2req_[frame->syn_stream.stream_id] = req;
+        auto *observer = (BufloMuxChannelStreamObserver*)
+            spdylay_session_get_stream_user_data(session, sid);
 
         std::unique_ptr<StreamState> sstate(new StreamState());
         const auto ret = stream_states_.insert(
             make_pair(sid, std::move(sstate)));
         CHECK(ret.second); // insist it was newly inserted
 
-        // notify the user that a stream has been created for them
+        vlogself(2) << "notify that stream id is assigned";
         DestructorGuard dg(this);
-        st_create_result_cb_(this, true, sid);
+        observer->onStreamIdAssigned(this, sid);
     }
 
     vlogself(2) << "done";
@@ -635,10 +678,30 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
         // only the server side should receive this
         CHECK(!is_client_side_);
 
+        string host_hdr;
+
         auto nv = frame->syn_stream.nv;
         for (int i = 0; nv[i]; i += 2) {
-            req_headers_[sid].push_back(std::make_pair(nv[i], nv[i+1]));
+            if (!strcmp(nv[i], ":host")) {
+                host_hdr = nv[i+1];
+                break;
+            }
         }
+
+        vlogself(2) << "host hdr= [" << host_hdr << "]";
+
+        auto const colon_pos = host_hdr.find(':');
+        CHECK_GT(colon_pos, 0);
+
+        string host_str = host_hdr.substr(0, colon_pos + 1);
+        string port_str = host_hdr.substr(colon_pos + 1);
+        const uint16_t port = boost::lexical_cast<uint16_t>(port_str);
+
+        vlogself(2) << "host= [" << host_hdr << "] port= " << port;
+
+        DestructorGuard dg(this);
+        st_connect_req_cb_(this, sid, host_str.c_str(), port);
+
         break;
     }
     default:
@@ -661,49 +724,7 @@ BufloMuxChannelImplSpdy::s_spdylay_on_ctrl_recv_cb(spdylay_session *session,
 void
 BufloMuxChannelImplSpdy::_on_spdylay_on_request_recv_cb(const int sid)
 {
-    vlogself(2) << "begin, sid= "<< sid;
-
-    string host;
-
-    const vector<pair<string, string> >& headers = req_headers_.at(sid);
-    for(size_t i = 0; i < headers.size(); ++i) {
-        const string &field = headers[i].first;
-        const string &value = headers[i].second;
-        if (field == ":method") {
-            CHECK_EQ(value, "connect");
-        } else if (field == ":host") {
-            host = value;
-            break;
-        }
-    }
-
-    vlogself(2) << "host= [" << host << "]";
-
-    /// make connection to target
-
-    struct sockaddr_storage server_addr;
-    memset(&server_addr, 0, sizeof(server_addr));
-    int server_addrlen = sizeof(server_addr);
-
-    auto rv = evutil_parse_sockaddr_port(
-        host.c_str(), (struct sockaddr*)&server_addr, &server_addrlen);
-    CHECK_EQ(rv, 0);
-
-    // only support ipv4 now
-    CHECK_EQ(server_addr.ss_family, AF_INET);
-
-    TCPChannel::UniquePtr server_conn(
-        new TCPChannel(evbase_,
-                       ((struct sockaddr_in *)&server_addr)->sin_addr.s_addr,
-                       ntohs(((struct sockaddr_in *)&server_addr)->sin_port),
-                       this));
-    rv = server_conn->start_connecting(this);
-    CHECK_EQ(rv, 0);
-
-    /* dont need csr anymore */
-    req_headers_.erase(sid);
-
-    vlogself(2) << "done";
+    logself(FATAL) << "should not reached";
 }
 
 void
@@ -720,7 +741,7 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
 {
     spdylay_session_callbacks callbacks;
     bzero(&callbacks, sizeof callbacks);
-    // callbacks.send_callback = s_spdylay_send_cb;
+    callbacks.send_callback = s_spdylay_send_cb;
     // callbacks.recv_callback = s_spdylay_recv_cb;
     callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
     // callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
@@ -799,39 +820,15 @@ BufloMuxChannelImplSpdy::s_socket_writecb(int fd, short what, void* arg)
     ch->_on_socket_writecb(fd, what);
 }
 
-void
-BufloMuxChannelImplSpdy::onConnected(StreamChannel*) noexcept
+ssize_t
+BufloMuxChannelImplSpdy::s_spdylay_send_cb(spdylay_session *session,
+                                           const uint8_t *data,
+                                           size_t length,
+                                           int flags,
+                                           void *user_data)
 {
-}
-
-void
-BufloMuxChannelImplSpdy::onConnectError(StreamChannel*, int) noexcept
-{
-}
-
-void
-BufloMuxChannelImplSpdy::onConnectTimeout(StreamChannel*) noexcept
-{
-}
-
-void
-BufloMuxChannelImplSpdy::onNewReadDataAvailable(StreamChannel*) noexcept
-{
-}
-
-void
-BufloMuxChannelImplSpdy::onWrittenData(StreamChannel*) noexcept
-{
-}
-
-void
-BufloMuxChannelImplSpdy::onEOF(StreamChannel*) noexcept
-{
-}
-
-void
-BufloMuxChannelImplSpdy::onError(StreamChannel*, int) noexcept
-{
+    auto *ch = (BufloMuxChannelImplSpdy*)(user_data);
+    return ch->_on_spdylay_send_cb(session, data, length, flags);;
 }
 
 BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()

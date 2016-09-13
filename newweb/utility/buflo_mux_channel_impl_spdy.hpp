@@ -22,8 +22,8 @@ namespace myio { namespace buflo
 {
 
 class BufloMuxChannelImplSpdy : public BufloMuxChannel
-                              , public StreamChannelObserver
-                              , public StreamChannelConnectObserver
+                              // , public StreamChannelObserver
+                              // , public StreamChannelConnectObserver
 {
 public:
     // for convenience. DelayedDestruction (see folly's
@@ -32,15 +32,19 @@ public:
 
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             size_t cell_size,
-                            ChannelPairResultCb ch_pair_result_cb,
                             ChannelClosedCb ch_closed_cb,
-                            StreamCreateResultCb st_create_result_cb,
-                            StreamDataCb st_data_cb,
-                            StreamClosedCb st_closed_cb);
+                            NewStreamConnectRequestCb st_connect_req_cb);
+
+    int create_stream(const char* host,
+                      const in_port_t& port,
+                      BufloMuxChannelStreamObserver*);
 
     /* BufloMuxChannel interface */
     virtual int create_stream(const char* host,
-                              const in_port_t& port) override;
+                              const in_port_t& port,
+                              void* cbdata) override;
+    virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) override;
+    virtual bool set_stream_connect_result(int sid, bool ok) override;
     virtual int read(int sid, uint8_t *data, size_t len) override;
     virtual int read_buffer(int sid, struct evbuffer* buf, size_t len) override;
     virtual int drain(int sid, size_t len) override;
@@ -51,17 +55,6 @@ public:
     virtual int write_buffer(int sid, struct evbuffer *buf) override;
     virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
-
-    /***** implement StreamChannelConnectObserver interface */
-    virtual void onConnected(myio::StreamChannel*) noexcept override;
-    virtual void onConnectError(myio::StreamChannel*, int) noexcept override;
-    virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
-
-    /***** implement StreamChannel interface */
-    virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
-    virtual void onWrittenData(myio::StreamChannel*) noexcept override;
-    virtual void onEOF(myio::StreamChannel*) noexcept override;
-    virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
 
 protected:
 
@@ -75,6 +68,8 @@ protected:
     bool _maybe_add_control_cell_to_outbuf() {return false;}
     /* return true if it does append a cell to cell outbuf */
     bool _maybe_add_data_cell_to_outbuf();
+
+    bool _maybe_flush_data_to_cell_outbuf();
 
     /* this will add a dummy cell if there is not already a WHOLE
      * dummy cell at the end of cell outbuf. if there's only a partial
@@ -107,11 +102,6 @@ protected:
     static void s_socket_writecb(int fd, short what, void* arg);
 
     // spdy callbacks
-    ssize_t _on_spdylay_send_cb(spdylay_session *session,
-                             const uint8_t *data,
-                             size_t length,
-                             int flags);
-
     void      _on_spdylay_before_ctrl_send_cb(spdylay_session *session,
                                               spdylay_frame_type type,
                                               spdylay_frame *frame);
@@ -132,6 +122,16 @@ protected:
     static void s_spdylay_on_request_recv_cb(spdylay_session *session,
                                              int32_t stream_id,
                                              void *user_data);
+
+    ssize_t       _on_spdylay_send_cb(spdylay_session *session,
+                                      const uint8_t *data,
+                                      size_t length,
+                                      int flags);
+    static ssize_t s_spdylay_send_cb(spdylay_session *session,
+                                     const uint8_t *data,
+                                     size_t length,
+                                     int flags,
+                                     void *user_data);
 
     class StreamState
     {
@@ -158,14 +158,6 @@ protected:
     };
 
     //////////////////////
-
-
-    ChannelPairResultCb ch_pair_result_cb_;
-    ChannelClosedCb ch_closed_cb_;
-
-    StreamCreateResultCb st_create_result_cb_;
-    StreamDataCb st_data_cb_;
-    StreamClosedCb st_closed_cb_;
 
     struct event_base* evbase_;
     int fd_;
@@ -222,9 +214,9 @@ protected:
 
     /*****************  for server-side proxy   *************/
 
-    // in on_ctrl_recv(), record the request headers from client, but
-    // only need for a short while: use in on_request_recv()
-    std::map<int, std::vector<std::pair<std::string, std::string>>> req_headers_;
+    // // in on_ctrl_recv(), record the "host" header from client, but
+    // // only need for a short while: use in on_request_recv()
+    // std::map<int, std::string> requested_host_hdr_;
 
 };
 

@@ -27,10 +27,11 @@ using myio::TCPChannel;
 using myio::StreamServer;
 using myio::StreamChannel;
 using myio::Socks5Connector;
+using myio::buflo::BufloMuxChannel;
 using myio::buflo::BufloMuxChannelImplSpdy;
 
 
-CSPHandler::CSPHandler(struct event_base* evbase,
+ClientSideProxy::ClientSideProxy(struct event_base* evbase,
                                StreamServer::UniquePtr streamserver,
                                const in_addr_t& peer_addr,
                                const in_port_t& peer_port,
@@ -42,31 +43,49 @@ CSPHandler::CSPHandler(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , peer_fd_(-1)
 {
-    stream_server_->set_observer(this);
+    // stream_server_->set_observer(this);
 
     // connect to peer first
     if (socks5_addr_) {
-        peer_channel_.reset(new TCPChannel(evbase_, socks5_addr_, socks5_port_, nullptr));
+        peer_channel_.reset(
+            new TCPChannel(evbase_, socks5_addr_, socks5_port_, nullptr));
         state_ = State::PROXY_CONNECTING;
+    } else {
+        peer_channel_.reset(
+            new TCPChannel(evbase_, peer_addr_, peer_port_, nullptr));
+        state_ = State::CONNECTING;
     }
     const auto rv = peer_channel_->start_connecting(this);
     CHECK_EQ(rv, 0);
+
+    // stream_server_->set_observer(this);
+    // auto rv = stream_server_->start_accepting();
+    // CHECK(rv);
 }
 
 void
-CSPHandler::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
+ClientSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
-    // a new client that we should proxy
+    vlogself(2) << "a new proxy client";
+
+    ClientHandler::UniquePtr chandler(
+        new ClientHandler(std::move(channel), buflo_ch_.get(),
+                          boost::bind(&ClientSideProxy::_on_client_handler_done,
+                                      this, _1)));
+    const auto chid = chandler->objId();
+    const auto ret = client_handlers_.insert(
+        make_pair(chid, std::move(chandler)));
+    CHECK(ret.second); // insist it was newly inserted
 }
 
 void
-CSPHandler::onAcceptError(StreamServer*, int errorcode) noexcept
+ClientSideProxy::onAcceptError(StreamServer*, int errorcode) noexcept
 {
-    LOG(WARNING) << "CSPHandler has accept error: " << strerror(errorcode);
+    LOG(WARNING) << "ClientSideProxy has accept error: " << strerror(errorcode);
 }
 
 void
-CSPHandler::onConnected(StreamChannel* ch) noexcept
+ClientSideProxy::onConnected(StreamChannel* ch) noexcept
 {
     if (state_ == State::PROXY_CONNECTING) {
         vlogself(2) << "now connected to the PROXY";
@@ -85,7 +104,7 @@ CSPHandler::onConnected(StreamChannel* ch) noexcept
     else if (state_ == State::CONNECTING) {
         vlogself(2) << "connected to peer";
         state_ = State::CONNECTED;
-        _on_connected_to_server_peer();
+        _on_connected_to_ssp();
     }
     else {
         logself(FATAL) << "invalid state";
@@ -93,7 +112,7 @@ CSPHandler::onConnected(StreamChannel* ch) noexcept
 }
 
 void
-CSPHandler::onSocksTargetConnectResult(
+ClientSideProxy::onSocksTargetConnectResult(
     Socks5Connector* connector,
     Socks5ConnectorObserver::ConnectResult result) noexcept
 {
@@ -112,7 +131,7 @@ CSPHandler::onSocksTargetConnectResult(
         vlogself(2) << "connected to target (thru socks proxy)";
         state_ = State::CONNECTED;
 
-        _on_connected_to_server_peer();
+        _on_connected_to_ssp();
 
         break;
     }
@@ -128,7 +147,7 @@ CSPHandler::onSocksTargetConnectResult(
 }
 
 void
-CSPHandler::_on_connected_to_server_peer()
+ClientSideProxy::_on_connected_to_ssp()
 {
     peer_fd_ = peer_channel_->release_fd();
     CHECK_GT(peer_fd_, 0);
@@ -138,16 +157,9 @@ CSPHandler::_on_connected_to_server_peer()
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
             evbase_, peer_fd_, true, 512,
-            boost::bind(&CSPHandler::_on_buflo_channel_pair_result_cb,
-                        this, _1, _2),
-            boost::bind(&CSPHandler::_on_buflo_channel_closed_cb,
+            boost::bind(&ClientSideProxy::_on_buflo_channel_closed,
                         this, _1),
-            boost::bind(&CSPHandler::_on_buflo_channel_stream_create_result_cb,
-                        this, _1, _2, _3),
-            boost::bind(&CSPHandler::_on_buflo_channel_stream_data_cb,
-                        this, _1, _2),
-            boost::bind(&CSPHandler::_on_buflo_channel_stream_closed_cb,
-                        this, _1, _2)
+            NULL
             ));
     CHECK_NOTNULL(buflo_ch_.get());
 
@@ -158,33 +170,30 @@ CSPHandler::_on_connected_to_server_peer()
 }
 
 void
-CSPHandler::onConnectError(StreamChannel* ch, int errorcode) noexcept
+ClientSideProxy::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
     LOG(FATAL) << "to be implemented";
 }
 
 void
-CSPHandler::onConnectTimeout(StreamChannel*) noexcept
+ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 {
     LOG(FATAL) << "to be implemented";
 }
 
 void
-CSPHandler::_on_buflo_channel_pair_result_cb(myio::buflo::BufloMuxChannel*,
-                                             bool ok)
+ClientSideProxy::_on_buflo_channel_closed(myio::buflo::BufloMuxChannel*)
 {
+    LOG(FATAL) << "todo";
 }
 
 void
-CSPHandler_on_buflo_channel_closed_cb(myio::buflo::BufloMuxChannel*) {}
-    void _on_buflo_channel_stream_create_result_cb(myio::buflo::BufloMuxChannel*,
-                                                   bool, int) {}
-    void _on_buflo_channel_stream_data_cb(myio::buflo::BufloMuxChannel*,
-                                          int) {}
-    void _on_buflo_channel_stream_closed_cb(myio::buflo::BufloMuxChannel*,
-                                            int) {}
+ClientSideProxy::_on_client_handler_done(ClientHandler* chandler)
+{
+    client_handlers_.erase(chandler->objId());
+}
 
-CSPHandler::~CSPHandler()
+ClientSideProxy::~ClientSideProxy()
 {
     LOG(FATAL) << "not reached";
 }
