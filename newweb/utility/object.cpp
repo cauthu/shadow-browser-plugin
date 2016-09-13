@@ -20,7 +20,3 @@ Object::objId() const
 {
     return instNum_;
 }
-
-void
-Object::destroy()
-{}

@@ -18,8 +18,11 @@ public:
     /* every Object every created will have unique id */
     const uint32_t& objId() const;
 
-    /* for DelayedDestruction */
-    virtual void destroy();
+
+    // make this final to prevent child classes from overriding, which
+    // might render DelayedDestruction useless, i.e., the child
+    // doesn't call DelayedDestruction::destroy()
+    virtual void destroy() override final { DelayedDestruction::destroy(); }
 
     void setData(void* data) { data_ = data; }
     void* data() const { return data_; }
