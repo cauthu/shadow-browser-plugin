@@ -171,6 +171,10 @@ TCPChannel::write_buffer(struct evbuffer* buf)
 void
 TCPChannel::close()
 {
+    if (state_ == ChannelState::CLOSED) {
+        return;
+    }
+
     state_ = ChannelState::CLOSED;
     socket_read_ev_.reset();
     socket_write_ev_.reset();
@@ -178,6 +182,7 @@ TCPChannel::close()
                         // client to read
     output_evb_.reset();
     if (fd_ != -1) {
+        vlogself(2) << "::close(fd=" << fd_ << ")";
         ::close(fd_);
         fd_ = -1;
     }
@@ -495,6 +500,12 @@ TCPChannel::s_socket_writecb(int fd, short what, void* arg)
 {
     TCPChannel* ch = (TCPChannel*)arg;
     ch->_on_socket_writecb(fd, what);
+}
+
+TCPChannel::~TCPChannel()
+{
+    vlogself(2) << "tcpchannel destructing";
+    close();
 }
 
 } // end myio namespace

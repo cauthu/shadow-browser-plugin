@@ -85,7 +85,7 @@ protected:
 
     // destructor should be private or protected to prevent direct
     // deletion. we're using folly::DelayedDestruction
-    virtual ~TCPChannel() = default;
+    virtual ~TCPChannel();
 
     void _initialize_read_write_events();
     void _set_read_monitoring(bool);
