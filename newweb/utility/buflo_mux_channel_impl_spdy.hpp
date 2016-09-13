@@ -160,7 +160,7 @@ protected:
     //////////////////////
 
     struct event_base* evbase_;
-    int fd_;
+    // int fd_; // buflo_mux_channel already has this
     /* using separate events for read and write, so it's easy to
      * enable/disable
      */
