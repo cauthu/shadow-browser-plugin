@@ -63,6 +63,7 @@ protected:
     void _setup_spdylay_session();
     void _buflo_timer_fired(Timer* timer);
     void _pump_spdy_send();
+    void _pump_spdy_recv();
 
     /* return true if it does append a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() {return false;}
@@ -82,7 +83,7 @@ protected:
     void _send_cell_outbuf();
 
     void _consume_input();
-    void _handle_non_dummy_input_cell();
+    void _handle_non_dummy_input_cell(size_t);
     void _handle_failed_socket_io(const char* io_op_str,
                                   const ssize_t rv,
                                   bool crash_if_EINPROGRESS);
@@ -129,6 +130,16 @@ protected:
                                       int flags);
     static ssize_t s_spdylay_send_cb(spdylay_session *session,
                                      const uint8_t *data,
+                                     size_t length,
+                                     int flags,
+                                     void *user_data);
+
+    ssize_t       _on_spdylay_recv_cb(spdylay_session *session,
+                                      uint8_t *data,
+                                      size_t length,
+                                      int flags);
+    static ssize_t s_spdylay_recv_cb(spdylay_session *session,
+                                     uint8_t *data,
                                      size_t length,
                                      int flags,
                                      void *user_data);
@@ -199,13 +210,13 @@ protected:
         ReadState state_;
         uint8_t type_;
         uint16_t payload_len_;
-        uint8_t* payload_;
+        // uint8_t* payload_;
 
         void reset()
         {
             state_ = ReadState::READ_HEADER;
             payload_len_ = 0;
-            payload_ = nullptr;
+            // payload_ = nullptr;
         }
     } cell_read_info_;
 

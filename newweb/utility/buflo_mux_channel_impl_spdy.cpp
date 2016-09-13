@@ -119,36 +119,15 @@ BufloMuxChannelImplSpdy::create_stream(const char* host,
     hostport_str.append(":");
     hostport_str.append(std::to_string(port));
 
-    // const char **nv = (const char**)calloc(5*2 + 1, sizeof(char*));
-    // size_t hdidx = 0;
-
-    // nv[hdidx++] = ":method";
-    // nv[hdidx++] = "CONNECT";
-    // nv[hdidx++] = ":scheme";
-    // nv[hdidx++] = "http";
-    // nv[hdidx++] = ":path";
-    // nv[hdidx++] = "/";
-    // nv[hdidx++] = ":version";
-    // nv[hdidx++] = "HTTP/1.1";
-
-
-    const char **nv = (const char**)calloc(1*2 + 1, sizeof(char*));
-    size_t hdidx = 0;
-    nv[hdidx++] = ":host";
-    nv[hdidx++] = hostport_str.c_str();
-
-    nv[hdidx++] = nullptr;
+    const char *nv[] = {
+        ":host", hostport_str.c_str(),
+        nullptr};
 
     /* spdylay will make copies of nv */
     int rv = spdylay_submit_syn_stream(spdysess_, 0, 0, 0, nv, observer);
     CHECK_EQ(rv, 0);
 
-    free(nv);
-
     _pump_spdy_send();
-    if (_maybe_flush_data_to_cell_outbuf()) {
-        _maybe_toggle_write_monitoring(true);
-    }
 
     vlogself(2) << "done";
     return 0;
@@ -166,8 +145,18 @@ BufloMuxChannelImplSpdy::set_stream_observer(int sid,
 bool
 BufloMuxChannelImplSpdy::set_stream_connect_result(int sid, bool ok)
 {
+    if (ok) {
+        static const char *nv[] = {
+            "ok", "true",
+            nullptr,
+        };
+        auto rv = spdylay_submit_syn_reply(spdysess_, 0, sid, nv);
+        return (rv == 0);
+    } else {
+        close_stream(sid);
+        return false;
+    }
 
-    // submit the response
     return false;
 }
 
@@ -223,7 +212,13 @@ BufloMuxChannelImplSpdy::write_dummy(int sid, size_t len)
 
 void
 BufloMuxChannelImplSpdy::close_stream(int sid) 
-{}
+{
+    vlogself(2) << "RESET stream " << sid;
+    auto rv = spdylay_submit_rst_stream(spdysess_, sid, SPDYLAY_CANCEL);
+    if (!rv) {
+        _pump_spdy_send();
+    }
+}
 
 void
 BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
@@ -258,8 +253,9 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 }
 
 /*
- * THIS WILL NOT toggle socket write monitoring. other code is
- * responsibly for checking spdylay_session_want_write() if interested
+ * after telling spdy to write to its buf, if defense is not active,
+ * then will enable write monitoring so we can actually send to peer
+ * asap
  */
 void
 BufloMuxChannelImplSpdy::_pump_spdy_send()
@@ -272,6 +268,30 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
             vlogself(1) << "remote peer closed";
         } else {
             logself(WARNING) << "spdylay_session_send() returned \""
+                             << spdylay_strerror(rv) << "\"";
+        }
+        CHECK(0) << "todo";
+        return;
+    }
+
+    if (!defense_active_) {
+        if (_maybe_flush_data_to_cell_outbuf()) {
+            _maybe_toggle_write_monitoring(true);
+        }
+    }
+}
+
+void
+BufloMuxChannelImplSpdy::_pump_spdy_recv()
+{
+    // tell spdy session to send -- it will call our send_cb
+    spdylay_session* session = spdysess_;
+    auto rv = spdylay_session_recv(session);
+    if (rv) {
+        if (SPDYLAY_ERR_EOF == rv) {
+            vlogself(1) << "remote peer closed";
+        } else {
+            logself(WARNING) << "spdylay_session_recv() returned \""
                              << spdylay_strerror(rv) << "\"";
         }
         CHECK(0) << "todo";
@@ -486,11 +506,12 @@ BufloMuxChannelImplSpdy::_consume_input()
 
     do {
         const auto num_avail_bytes = evbuffer_get_length(cell_inbuf_);
+        vlogself(2) << "num_avail_bytes= " << num_avail_bytes;
 
         // loop to process all complete msgs
         switch (cell_read_info_.state_) {
         case ReadState::READ_HEADER:
-            VLOG(2) << "trying to read msg type and length";
+            vlogself(2) << "trying to read msg type and length";
             if (num_avail_bytes >= CELL_HEADER_SIZE) {
                 // we're using a libevent version without
                 // copyout[_from]()
@@ -507,15 +528,15 @@ BufloMuxChannelImplSpdy::_consume_input()
 
                 // update state
                 cell_read_info_.state_ = ReadState::READ_BODY;
-                VLOG(2) << "got type= " << cell_read_info_.type_
-                        << ", payload len= " << cell_read_info_.payload_len_;
+                vlogself(2) << "got type= " << unsigned(cell_read_info_.type_)
+                            << ", payload len= " << cell_read_info_.payload_len_;
 
                 // TODO: optimize: if cell type is dummy, do the
                 // drain/dropread logic here
 
                 // not draining input buf here!
             } else {
-                VLOG(2) << "not enough bytes yet";
+                vlogself(2) << "not enough bytes yet";
                 keep_consuming = false; // to break out of loop
             }
             break;
@@ -523,27 +544,16 @@ BufloMuxChannelImplSpdy::_consume_input()
             if (num_avail_bytes >= cell_size_) {
 
                 if (cell_read_info_.type_ != CellType::DUMMY) {
-                    // we want the whole cell to be available, but we
-                    // only need to make up to the payload, if any,
-                    // contiguous
-
-                    const auto need_contiguous_amt =
-                        CELL_HEADER_SIZE + cell_read_info_.payload_len_;
-                    auto data = evbuffer_pullup(cell_inbuf_, need_contiguous_amt);
-                    CHECK_NOTNULL(data);
-
-                    cell_read_info_.payload_ = data + CELL_HEADER_SIZE;
-
-                    _handle_non_dummy_input_cell();
+                    _handle_non_dummy_input_cell(cell_read_info_.payload_len_);
+                } else {
+                    // drain a whole cell from buf
+                    auto rv = evbuffer_drain(cell_inbuf_, cell_size_);
+                    CHECK_EQ(rv, 0);
                 }
-
-                // drain a whole cell from buf
-                auto rv = evbuffer_drain(cell_inbuf_, cell_size_);
-                CHECK_EQ(rv, 0);
 
                 cell_read_info_.reset();
             } else {
-                VLOG(2) << "not enough bytes yet";
+                vlogself(2) << "not enough bytes yet";
                 keep_consuming = false; // to break out of loop
             }
             break;
@@ -556,8 +566,36 @@ BufloMuxChannelImplSpdy::_consume_input()
 }
 
 void
-BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell()
+BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
 {
+    /*
+     * the whole cell, including header, is available at the front of
+     * the cell_inbuf_, but it might not be contiguous---call
+     * evbuffer_pullup() if you need
+     *
+     * responsible for removing the cell from the input buf
+     */
+
+    CHECK_GT(payload_len, 0);
+    CHECK_LE(payload_len, cell_size_);
+
+    auto ptr = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE + payload_len);
+
+    switch (cell_read_info_.type_) {
+    case CellType::DATA: {
+        auto rv = evbuffer_add(spdy_inbuf_, ptr+CELL_HEADER_SIZE, payload_len);
+        CHECK_EQ(rv, 0);
+        _pump_spdy_recv();
+        break;
+    }
+    default:
+        logself(FATAL) << "not reached";
+    }
+
+    // now drain the whole cell
+    auto rv = evbuffer_drain(cell_inbuf_, cell_size_);
+    CHECK_EQ(rv, 0);
+
     return;
 }
 
@@ -599,14 +637,20 @@ void
 BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
 {
     // if defense activated, we should write on our schedule, and not
-    // depend on socket events
+    // depend on socket events. if activating defense after the write
+    // event has been added, then can tell libevent to remove the
+    // event so we don't reach here
     CHECK(!defense_active_);
+
+    vlogself(2) << "begin";
 
     if (what & EV_WRITE) {
         _send_cell_outbuf();
     } else {
         CHECK(0) << "invalid events: " << what;
     }
+
+    vlogself(2) << "done";
 }
 
 ssize_t
@@ -633,6 +677,33 @@ BufloMuxChannelImplSpdy::_on_spdylay_send_cb(
         logself(FATAL) << "invalid rv= " << rv;
     }
  
+    vlogself(2) << "done, returning " << retval;
+    return retval;
+}
+
+ssize_t
+BufloMuxChannelImplSpdy::_on_spdylay_recv_cb(
+    spdylay_session *session,
+    uint8_t *data,
+    size_t length,
+    int flags)
+{
+    vlogself(2) << "begin, length= " << length;
+    CHECK_EQ(session, spdysess_);
+
+    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+
+    const auto rv = evbuffer_remove(spdy_inbuf_, data, length);
+    if (rv >= 0) {
+        retval = rv;
+    }
+    else if (rv == -1) {
+        logself(WARNING) << "inbuf didn't accept our remove";
+        retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+    } else {
+        logself(FATAL) << "invalid rv= " << rv;
+    }
+
     vlogself(2) << "done, returning " << retval;
     return retval;
 }
@@ -693,17 +764,32 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
         auto const colon_pos = host_hdr.find(':');
         CHECK_GT(colon_pos, 0);
 
-        string host_str = host_hdr.substr(0, colon_pos + 1);
+        string host_str = host_hdr.substr(0, colon_pos);
         string port_str = host_hdr.substr(colon_pos + 1);
         const uint16_t port = boost::lexical_cast<uint16_t>(port_str);
 
-        vlogself(2) << "host= [" << host_hdr << "] port= " << port;
+        vlogself(2) << "host= [" << host_str << "] port= " << port;
 
         DestructorGuard dg(this);
         st_connect_req_cb_(this, sid, host_str.c_str(), port);
 
         break;
     }
+
+    case SPDYLAY_RST_STREAM: {
+        const auto sid = frame->syn_stream.stream_id;
+
+        vlogself(2) << "CLOSE stream: " << sid;
+
+        auto *observer = (BufloMuxChannelStreamObserver*)
+            spdylay_session_get_stream_user_data(session, sid);
+        CHECK_NOTNULL(observer);
+        DestructorGuard dg(this);
+        observer->onStreamClosed(this);
+
+        break;
+    }
+
     default:
         break;
     }
@@ -742,7 +828,7 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
     spdylay_session_callbacks callbacks;
     bzero(&callbacks, sizeof callbacks);
     callbacks.send_callback = s_spdylay_send_cb;
-    // callbacks.recv_callback = s_spdylay_recv_cb;
+    callbacks.recv_callback = s_spdylay_recv_cb;
     callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
     // callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
     // callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
@@ -794,18 +880,6 @@ BufloMuxChannelImplSpdy::s_spdylay_before_ctrl_send_cb(
     conn->_on_spdylay_before_ctrl_send_cb(session, type, frame);
 }
 
-// void
-// BufloMuxChannelImplSpdy::s_spdylay_on_ctrl_not_send_cb(
-//     spdylay_session *session,
-//     spdylay_frame_type type,
-//     spdylay_frame *frame,
-//     int error_code,
-//     void *user_data)
-// {
-//     auto *conn = (BufloMuxChannelImplSpdy*)(user_data);
-//     conn->_on_spdylay_on_ctrl_not_send_cb(session, type, frame, error_code);
-// }
-
 void
 BufloMuxChannelImplSpdy::s_socket_readcb(int fd, short what, void* arg)
 {
@@ -829,6 +903,17 @@ BufloMuxChannelImplSpdy::s_spdylay_send_cb(spdylay_session *session,
 {
     auto *ch = (BufloMuxChannelImplSpdy*)(user_data);
     return ch->_on_spdylay_send_cb(session, data, length, flags);;
+}
+
+ssize_t
+BufloMuxChannelImplSpdy::s_spdylay_recv_cb(spdylay_session *session,
+                                           uint8_t *data,
+                                           size_t length,
+                                           int flags,
+                                           void *user_data)
+{
+    auto *ch = (BufloMuxChannelImplSpdy*)(user_data);
+    return ch->_on_spdylay_recv_cb(session, data, length, flags);;
 }
 
 BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()

@@ -1,6 +1,14 @@
-
 #ifndef CSP_HANDLER_HPP
 #define CSP_HANDLER_HPP
+
+
+/* this handles one CSP, given the buflo mux channel connected to that
+ * csp
+ *
+ * when the buflo mux channel notifies me of a new stream connect
+ * request, i simply hand it off to a StreamHandler
+ */
+
 
 #include <memory>
 #include <boost/function.hpp>
@@ -12,14 +20,9 @@
 #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
 
-/* this handles one CSP, given the buflo mux channel connected to that
- * csp
- *
- * when the buflo mux channel notifies me of a new stream connect
- * request, i simply hand it off to a StreamHandler
- */
+#include "stream_handler.hpp"
 
-class StreamHandler;
+
 class CSPHandler;
 
 typedef boost::function<void(CSPHandler*)> CSPHandlerDoneCb;
@@ -59,6 +62,8 @@ protected:
     myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
 
     CSPHandlerDoneCb handler_done_cb_;
+
+    std::map<uint32_t, StreamHandler::UniquePtr> shandlers_;
 };
 
 #endif /* end CSP_HANDLER_HPP */

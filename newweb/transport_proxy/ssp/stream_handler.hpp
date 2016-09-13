@@ -30,7 +30,7 @@ public:
 
 protected:
 
-    virtual ~StreamHandler() = default;
+    virtual ~StreamHandler();
 
     /***** implement StreamChannelConnectObserver interface */
     virtual void onConnected(myio::StreamChannel*) noexcept override;
@@ -59,6 +59,7 @@ protected:
 
     //////////////
 
+    void _close(bool);
 
     struct event_base* evbase_;
     myio::buflo::BufloMuxChannel* buflo_ch_;
@@ -68,6 +69,7 @@ protected:
     enum class State {
         CONNECTING, /* to target */
         LINKED,
+        CLOSED
     } state_;
 
     // tcp connection to target

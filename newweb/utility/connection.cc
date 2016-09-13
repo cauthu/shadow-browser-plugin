@@ -633,8 +633,12 @@ Connection::onSocksTargetConnectResult(
     }
 
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL:
-        logself(FATAL) << "to implement";
+    case Socks5ConnectorObserver::ConnectResult::ERR_FAIL_TRANSPORT_EOF:
+    case Socks5ConnectorObserver::ConnectResult::ERR_FAIL_TRANSPORT_ERROR: {
+        DestructorGuard dg(this);
+        cnx_error_cb_(this);
         break;
+    }
 
     default:
         logself(FATAL) << "invalid result";

@@ -43,8 +43,6 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , peer_fd_(-1)
 {
-    // stream_server_->set_observer(this);
-
     // connect to peer first
     if (socks5_addr_) {
         peer_channel_.reset(
@@ -55,12 +53,9 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
             new TCPChannel(evbase_, peer_addr_, peer_port_, nullptr));
         state_ = State::CONNECTING;
     }
+
     const auto rv = peer_channel_->start_connecting(this);
     CHECK_EQ(rv, 0);
-
-    // stream_server_->set_observer(this);
-    // auto rv = stream_server_->start_accepting();
-    // CHECK(rv);
 }
 
 void
@@ -190,6 +185,7 @@ ClientSideProxy::_on_buflo_channel_closed(myio::buflo::BufloMuxChannel*)
 void
 ClientSideProxy::_on_client_handler_done(ClientHandler* chandler)
 {
+    vlogself(2) << "chandler done; remove it";
     client_handlers_.erase(chandler->objId());
 }
 

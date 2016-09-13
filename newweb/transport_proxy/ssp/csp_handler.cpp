@@ -18,7 +18,7 @@
 #define logself(level) loginst(level, this)
 
 
-
+using std::make_pair;
 using myio::StreamChannel;
 using myio::buflo::BufloMuxChannelImplSpdy;
 using myio::buflo::BufloMuxChannel;
@@ -56,17 +56,20 @@ CSPHandler::_on_buflo_new_stream_connect_request(
 {
     // hand off the stream to handler
 
-    StreamHandler::UniquePtr chandler(
+    StreamHandler::UniquePtr shandler(
         new StreamHandler(
             evbase_, buflo_channel_.get(), sid, host, port,
             boost::bind(&CSPHandler::_on_stream_handler_done, this, _1)));
-
-    
+    const auto shid = shandler->objId();
+    const auto ret = shandlers_.insert(
+        make_pair(shid, std::move(shandler)));
+    CHECK(ret.second); // insist it was newly inserted
 }
 
 void
-CSPHandler::_on_stream_handler_done(StreamHandler*)
+CSPHandler::_on_stream_handler_done(StreamHandler* shandler)
 {
-
+    const auto shid = shandler->objId();
+    shandlers_.erase(shid);
 }
 

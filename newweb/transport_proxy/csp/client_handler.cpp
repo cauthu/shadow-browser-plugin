@@ -40,7 +40,8 @@ ClientHandler::onStreamIdAssigned(BufloMuxChannel*,
 void
 ClientHandler::onStreamCreateResult(BufloMuxChannel*,
                                          bool) noexcept
-{}
+{
+}
 
 void
 ClientHandler::onStreamNewDataAvailable(BufloMuxChannel*) noexcept
@@ -48,7 +49,9 @@ ClientHandler::onStreamNewDataAvailable(BufloMuxChannel*) noexcept
 
 void
 ClientHandler::onStreamClosed(BufloMuxChannel*) noexcept
-{}
+{
+    _close(true);
+}
 
 
 void
@@ -79,9 +82,7 @@ ClientHandler::_read_socks5_greeting(size_t num_avail_bytes)
             vlogself(2) << "... good -> send reply greeting";
             return true;
         } else {
-            state_ = State::CLOSED;
-            DestructorGuard dg(this);
-            handler_done_cb_(this);
+            _close(true);
         }
     }
 
@@ -129,9 +130,7 @@ ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
             }
         }
 
-        state_ = State::CLOSED;
-        DestructorGuard dg(this);
-        handler_done_cb_(this);
+        _close(true);
     }
 
     return false;
@@ -180,3 +179,25 @@ ClientHandler::onEOF(StreamChannel*) noexcept
 void
 ClientHandler::onError(StreamChannel*, int) noexcept
 {}
+
+void
+ClientHandler::_close(bool do_notify)
+{
+    if (state_ != State::CLOSED) {
+        state_ = State::CLOSED;
+
+        buflo_channel_ = nullptr;
+        client_channel_.reset();
+
+        if (do_notify) {
+            DestructorGuard dg(this);
+            handler_done_cb_(this);
+        }
+    }
+}
+
+ClientHandler::~ClientHandler()
+{
+    vlogself(2) << "clienthandler destructing";
+    _close(false);
+}

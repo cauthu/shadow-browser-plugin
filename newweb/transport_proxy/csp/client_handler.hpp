@@ -36,6 +36,8 @@ public:
 
 protected:
 
+    virtual ~ClientHandler();
+
     /* implement BufloMuxChannelStreamObserver interface */
     virtual void onStreamIdAssigned(myio::buflo::BufloMuxChannel*, int) noexcept override;
     virtual void onStreamCreateResult(myio::buflo::BufloMuxChannel*, bool) noexcept override;
@@ -55,6 +57,8 @@ protected:
     bool _read_socks5_greeting(size_t);
     bool _read_socks5_connect_req(size_t);
     bool _create_stream(const char* host, uint16_t port);
+    void _close(bool);
+
 
     myio::StreamChannel::UniquePtr client_channel_;
     myio::buflo::BufloMuxChannelImplSpdy* buflo_channel_;
