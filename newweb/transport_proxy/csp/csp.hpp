@@ -11,6 +11,9 @@
 
 #include "client_handler.hpp"
 
+namespace csp
+{
+
 class ClientHandler;
 
 class ClientSideProxy : public Object
@@ -100,5 +103,6 @@ protected:
     std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
 };
 
+} // namespace csp
 
 #endif /* CSP_HPP */

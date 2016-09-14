@@ -23,14 +23,18 @@ using myio::StreamChannel;
 using myio::buflo::BufloMuxChannel;
 
 
+namespace csp
+{
+
+
 ClientHandler::ClientHandler(StreamChannel::UniquePtr client_channel,
                              BufloMuxChannel* buflo_channel,
-                             HandlerDoneCb handler_done_cb)
+                             ClientHandlerDoneCb handler_done_cb)
     : client_channel_(std::move(client_channel))
     , buflo_channel_(buflo_channel)
-    , state_(State::READ_SOCKS5_GREETING)
     , sid_(-1)
     , handler_done_cb_(handler_done_cb)
+    , state_(State::READ_SOCKS5_GREETING)
 {
     client_channel_->set_observer(this);
 }
@@ -44,30 +48,47 @@ ClientHandler::onStreamIdAssigned(BufloMuxChannel*,
 
 void
 ClientHandler::onStreamCreateResult(BufloMuxChannel*,
-                                    bool ok) noexcept
+                                    bool ok,
+                                    const in_addr_t& addr,
+                                    const uint16_t& port) noexcept
 {
+    vlogself(2) << "begin";
+
     CHECK_EQ(state_, State::CREATE_BUFLO_STREAM);
     if (ok) {
         CHECK_GT(sid_, -1);
+
+        _write_socks5_connect_request_granted();
+
         state_ = State::FORWARDING;
 
         // hand off the the two streams to inner outer handler to do
         // the forwarding
         inner_outer_handler_.reset(
             new InnerOuterHandler(
-                std::move(client_channel_), sid_, buflo_channel_,
+                client_channel_.get(), sid_, buflo_channel_,
                 boost::bind(&ClientHandler::_on_inner_outer_handler_done,
-                            this, _1)));
+                            this, _1, _2)));
         buflo_channel_ = nullptr;
     } else {
-        _close(true);
+        _close();
     }
+
+    vlogself(2) << "done";
 }
 
 void
-ClientHandler::_on_inner_outer_handler_done(InnerOuterHandler*)
+ClientHandler::_on_inner_outer_handler_done(InnerOuterHandler*,
+                                            bool inner_stream_already_closed)
 {
-    _close(true);
+    CHECK_EQ(state_, State::FORWARDING);
+    if (inner_stream_already_closed) {
+        buflo_channel_ = nullptr; /* stream is closed, so clear
+                                   * buflo_channel_ so we don't try to
+                                   * tell it close the stream
+                                   */
+    }
+    _close();
 }
 
 void
@@ -80,7 +101,10 @@ void
 ClientHandler::onStreamClosed(BufloMuxChannel*) noexcept
 {
     CHECK_EQ(state_, State::CREATE_BUFLO_STREAM);
-    _close(true);
+    buflo_channel_ = nullptr; // stream is closed, so clear
+                              // buflo_channel_ so we don't try to
+                              // tell it close the stream
+    _close();
 }
 
 
@@ -89,6 +113,23 @@ ClientHandler::onNewReadDataAvailable(StreamChannel* ch) noexcept
 {
     // read data from client
     _consume_client_input();
+}
+
+void
+ClientHandler::_write_socks5_connect_request_granted()
+{
+    static const unsigned char resp[] = "\x05\x00\x00\x01";
+
+    // TODO/write the proper response
+
+    // for now we just format the first 4 bytes since our client only
+    // checks those bytes. the remaining 6 bytes we just use zero
+
+    auto rv = client_channel_->write(resp, 4);
+    CHECK_EQ(rv, 0);
+
+    rv = client_channel_->write_dummy(6);
+    CHECK_EQ(rv, 0);
 }
 
 bool
@@ -112,7 +153,7 @@ ClientHandler::_read_socks5_greeting(size_t num_avail_bytes)
             vlogself(2) << "... good -> send reply greeting";
             return true;
         } else {
-            _close(true);
+            _close();
         }
     }
 
@@ -148,23 +189,23 @@ ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
             struct sockaddr_in sa;
             char str[INET_ADDRSTRLEN] = {0};
             sa.sin_addr.s_addr = target_addr;
-            inet_ntop(AF_INET, &(sa.sin_addr), str, INET_ADDRSTRLEN);
+            auto ret = inet_ntop(AF_INET, &(sa.sin_addr), str, INET_ADDRSTRLEN);
+            CHECK_EQ(ret, str) << "inet_ntop failed; errno: " << errno;
             vlogself(2) << "connect req: [" << str << "]:" << port;
 
-            auto rv = buflo_channel_->create_stream(str, port, this);
-            if (!rv) {
-                state_ = State::CREATE_BUFLO_STREAM;
-                // we should not consume more input because we're now
-                // waiting for stream creation
-                return false;
-            }
-            return true;
-        }
+            auto rv = buflo_channel_->create_stream2(str, port, this);
+            CHECK_EQ(rv, 0);
 
-        vlogself(2) << "closing down";
-        _close(true);
+            state_ = State::CREATE_BUFLO_STREAM;
+        } else {
+            logself(WARNING) << "bad socks5 request; closing down";
+            _close();
+        }
     }
 
+    // we should not consume more input because either we're now
+    // waiting for stream creation or there's not enough data yet to
+    // reach the socks5 request
     return false;
 }
 
@@ -201,13 +242,14 @@ ClientHandler::_consume_client_input()
         default:
             logself(FATAL) << "not reached";
         }
-    } while (keep_consuming);
+    } while (keep_consuming && (state_ != State::CLOSED));
 
 }
 
 void
 ClientHandler::onWrittenData(StreamChannel* ch) noexcept
 {
+    // don't care
 }
 
 void
@@ -216,7 +258,7 @@ ClientHandler::onEOF(StreamChannel*) noexcept
     vlogself(2) << "client channel eof";
     CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
           (state_ == State::READ_SOCKS5_GREETING));
-    _close(true);
+    _close();
 }
 
 void
@@ -225,34 +267,62 @@ ClientHandler::onError(StreamChannel*, int) noexcept
     vlogself(2) << "client channel error";
     CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
           (state_ == State::READ_SOCKS5_GREETING));
-    _close(true);
+    _close();
 }
 
+/* basically we don't support half-closed tunnels; we tear down when
+ * either side closes. but we can reach close from several different
+ * paths:
+ *
+ * * when we're still establishing the tunnel (e.g. while reading
+ * socks5 request with client, or while creating the bufflo
+ * stream). and if we close_stream() the buflo channel might call our
+ * onStreamClosed() callback, etc.
+ *
+ * * we're notified that the innerouterhandler is done
+ *
+ * * the csp destroys us (e.g., due to its buflo mux channel with ssp
+ * is torn down)
+ *
+ * so it's a little complex, our "free/close" calls can cause others
+ * to call us. so we adopt this simple strategy: on any error/close
+ * from anyone, we close by: first step is checking the barrier:
+ * whether state is CLOSED, if not, set it, and then 1) reset/close
+ * outer client channel, 2) reset/close inner stream if not null, 3)
+ * notify csp we're done (calling handler_done_cb_)
+ */
 void
-ClientHandler::_close(bool do_notify)
+ClientHandler::_close()
 {
-    if (state_ == State::CLOSED) {
-        return;
+    vlogself(2) << "begin";
+
+    if (state_ != State::CLOSED) {
+        state_ = State::CLOSED;
+
+        client_channel_.reset();
+
+        if (buflo_channel_) {
+            // unregistering ourselves as the stream observer so we won't
+            // be called back at onStreamClosed()
+            buflo_channel_->set_stream_observer(sid_, nullptr);
+            buflo_channel_->close_stream(sid_);
+            buflo_channel_ = nullptr;
+        }
+
+        if (handler_done_cb_) {
+            DestructorGuard dg(this);
+            handler_done_cb_(this);
+            handler_done_cb_ = NULL;
+        }
     }
 
-    state_ = State::CLOSED;
-
-    client_channel_.reset();
-    inner_outer_handler_.reset();
-    if (buflo_channel_) {
-        buflo_channel_->set_stream_observer(sid_, nullptr);
-        buflo_channel_->close_stream(sid_);
-        buflo_channel_ = nullptr;
-    }
-
-    if (do_notify) {
-        DestructorGuard dg(this);
-        handler_done_cb_(this);
-    }
+    vlogself(2) << "done";
 }
 
 ClientHandler::~ClientHandler()
 {
     vlogself(2) << "clienthandler destructing";
-    _close(false);
+    _close();
 }
+
+} // namespace csp

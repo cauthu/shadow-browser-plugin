@@ -42,12 +42,12 @@ int main(int argc, char **argv)
     myio::TCPServer::UniquePtr tcpserver(
         new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
 
-    ClientSideProxy::UniquePtr csp;
+    csp::ClientSideProxy::UniquePtr csp;
     ssp::ServerSideProxy::UniquePtr ssp;
 
     if (is_client) {
         VLOG(2) << "ssp host: [" << ssp_host << "]";
-        csp.reset(new ClientSideProxy(
+        csp.reset(new csp::ClientSideProxy(
                       evbase.get(),
                       std::move(tcpserver),
                       common::getaddr(ssp_host.c_str()),

@@ -26,24 +26,6 @@ typedef boost::function<void(BufloMuxChannel*)> ChannelClosedCb;
 typedef boost::function<void(BufloMuxChannel*, int sid,
                              const char* host, uint16_t port)> NewStreamConnectRequestCb;
 
-/*
- * call back to tell user about the stream id has been assigned for
- * one of their earlier create_stream() calls
- *
- * the "void cbdata" is the value passed into create_stream() call
- */
-// typedef boost::function<void(BufloMuxChannel*, int, void* cbdata)> StreamIdAssignedCb;
-
-/*
- * call back to tell user about result of stream connect id. the bool
- * arg specifies whether the stream creation is successful, in which
- * case the int is the stream id that should be used in calls to other
- * apis.
- */
-// typedef boost::function<void(BufloMuxChannel*, int, bool)> StreamCreateResultCb;
-
-// typedef boost::function<void(BufloMuxChannel*, int)> StreamDataCb;
-// typedef boost::function<void(BufloMuxChannel*, int)> StreamClosedCb;
 
 /* callback interface */
 class BufloMuxChannelStreamObserver
@@ -54,19 +36,8 @@ public:
      * used by client-side proxy
      */
     virtual void onStreamIdAssigned(BufloMuxChannel*, int sid) = 0;
-    virtual void onStreamCreateResult(BufloMuxChannel*, bool) = 0;
-
-    // /* for notifying server-side proxy of new (client) stream connect
-    //  * requests
-    //  *
-    //  * "sid" is stream id
-    //  *
-    //  * port is HOST-byte order
-    //  *
-    //  * the observer should tell the buflomuxchannel the result of the request with 
-    //  */
-    // virtual void onNewStreamRequest(BufloMuxChannel*, int sid,
-    //                                 const char* host, uint16_t port) = 0;
+    virtual void onStreamCreateResult(BufloMuxChannel*, bool,
+                                      const in_addr_t&, const uint16_t&) = 0;
 
     /* for streams for either side */
     virtual void onStreamNewDataAvailable(BufloMuxChannel*) = 0;
@@ -84,8 +55,15 @@ public:
                               const in_port_t& port,
                               void *cbdata) = 0;
 
+    virtual int create_stream2(const char* host,
+                              const in_port_t& port,
+                              BufloMuxChannelStreamObserver*) = 0;
+
     virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) = 0;
-    virtual bool set_stream_connect_result(int sid, bool ok) = 0;
+    /* tell the channel that the stream connect request has
+     * succeeded. if it has failed, the user can just call
+     * close_stream() */
+    virtual bool set_stream_connected(int sid) = 0;
 
     /* obtain up to "len" bytes of input data (i.e., received from
      * other end point of channel).
@@ -95,7 +73,7 @@ public:
      * 
      * the returned data is removed from the stream's buffer
      */
-    virtual int read(int sid, uint8_t *data, size_t len) = 0;
+    // virtual int read(int sid, uint8_t *data, size_t len) = 0;
 
     /* returns the number of bytes moved. */
     virtual int read_buffer(int sid, struct evbuffer* buf, size_t len) = 0;
@@ -139,17 +117,21 @@ public:
      *
      * returns 0 on success, and -1 on failure.
      */
-    virtual int write(int sid, const uint8_t *data, size_t len) = 0;
+    // virtual int write(int sid, const uint8_t *data, size_t len) = 0;
 
     /* returns 0 on success, -1 on failure. */
     virtual int write_buffer(int sid, struct evbuffer *buf) = 0;
 
     /* write "len" bytes of dummy data. for now it should be all
      * ascii */
-    virtual int write_dummy(int sid, size_t len) = 0;
+    // virtual int write_dummy(int sid, size_t len) = 0;
 
     /* close/disconnect the channel, dropping pending/buffered data if
-     * any */
+     * any.
+     *
+     * the user will not be notified of any further activity,
+     * including "onStreamClosed" by the stream
+     */
     virtual void close_stream(int sid) = 0;
 
     // virtual bool is_closed() const = 0;

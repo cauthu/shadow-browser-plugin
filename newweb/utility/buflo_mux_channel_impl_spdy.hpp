@@ -22,8 +22,6 @@ namespace myio { namespace buflo
 {
 
 class BufloMuxChannelImplSpdy : public BufloMuxChannel
-                              // , public StreamChannelObserver
-                              // , public StreamChannelConnectObserver
 {
 public:
     // for convenience. DelayedDestruction (see folly's
@@ -35,25 +33,25 @@ public:
                             ChannelClosedCb ch_closed_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
-    int create_stream(const char* host,
-                      const in_port_t& port,
-                      BufloMuxChannelStreamObserver*);
+    virtual int create_stream2(const char* host,
+                               const in_port_t& port,
+                               BufloMuxChannelStreamObserver*) override;
 
     /* BufloMuxChannel interface */
     virtual int create_stream(const char* host,
                               const in_port_t& port,
                               void* cbdata) override;
     virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) override;
-    virtual bool set_stream_connect_result(int sid, bool ok) override;
-    virtual int read(int sid, uint8_t *data, size_t len) override;
+    virtual bool set_stream_connected(int sid) override;
+    // virtual int read(int sid, uint8_t *data, size_t len) override;
     virtual int read_buffer(int sid, struct evbuffer* buf, size_t len) override;
     virtual int drain(int sid, size_t len) override;
     virtual uint8_t* peek(int sid, ssize_t len) override;
     virtual struct evbuffer* get_input_evbuf(int sid) override;
     virtual size_t get_avail_input_length(int sid) const override;
-    virtual int write(int sid, const uint8_t *data, size_t len) override;
+    // virtual int write(int sid, const uint8_t *data, size_t len) override;
     virtual int write_buffer(int sid, struct evbuffer *buf) override;
-    virtual int write_dummy(int sid, size_t len) override;
+    // virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
 
 protected:
@@ -90,6 +88,7 @@ protected:
     void _on_socket_eof();
     void _on_socket_error();
     void _init_stream_state(const int&);
+    void _init_stream_data_provider(const int& sid);
 
     /* shadow doesn't support edge-triggered (epoll) monitoring, so we
      * have to disable write monitoring if we don't have data to
@@ -164,6 +163,18 @@ protected:
                                              int32_t stream_id,
                                              spdylay_status_code status_code,
                                              void *user_data);
+
+    void      _on_spdylay_on_data_chunk_recv_cb(spdylay_session *session,
+                                                uint8_t flags,
+                                                int32_t stream_id,
+                                                const uint8_t *data,
+                                                size_t len);
+    static void s_spdylay_on_data_chunk_recv_cb(spdylay_session *session,
+                                                uint8_t flags,
+                                                int32_t stream_id,
+                                                const uint8_t *data,
+                                                size_t len,
+                                                void *user_data);
 
     class StreamState
     {

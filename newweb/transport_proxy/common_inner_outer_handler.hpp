@@ -17,11 +17,20 @@
  * both streams must have been fully established and ready to transfer
  * application data, e.g., on client side, the socks handshake must
  * have been finished
+ *
+ * this handler does NOT take ownership of the streams, so it won't do
+ * any actual closing of either stream. it just notifies its handler
+ * when either stream closes.
+ *
  */
 
 class InnerOuterHandler;
 
-typedef boost::function<void(InnerOuterHandler*)> InnerOuterHandlerDoneCb;
+/* bool specifies whether the inner stream's closure is the cause for
+ * the handler to be done, i.e., the person being notified might not
+ * want/need to close the inner stream
+ */
+typedef boost::function<void(InnerOuterHandler*, bool)> InnerOuterHandlerDoneCb;
 
 class InnerOuterHandler : public Object
                         , public myio::buflo::BufloMuxChannelStreamObserver
@@ -31,21 +40,24 @@ public:
     typedef std::unique_ptr<InnerOuterHandler, /*folly::*/Destructor> UniquePtr;
 
     explicit InnerOuterHandler(
-        myio::StreamChannel::UniquePtr outer_channel,
+        myio::StreamChannel* outer_channel,
         int inner_sid,
         myio::buflo::BufloMuxChannel* buflo_channel,
         InnerOuterHandlerDoneCb);
 
 protected:
 
-    virtual ~InnerOuterHandler();
+    virtual ~InnerOuterHandler() = default;
 
     /* implement BufloMuxChannelStreamObserver interface */
     virtual void onStreamIdAssigned(myio::buflo::BufloMuxChannel*, int) noexcept override
     {
         LOG(FATAL) << "not reached";
     }
-    virtual void onStreamCreateResult(myio::buflo::BufloMuxChannel*, bool) noexcept override
+    virtual void onStreamCreateResult(myio::buflo::BufloMuxChannel*,
+                                      bool,
+                                      const in_addr_t&,
+                                      const uint16_t&) noexcept override
     {
         LOG(FATAL) << "not reached";
     }
@@ -62,10 +74,10 @@ protected:
     ////////////
 
     void _consume_data_from_outer();
-    void _close(const bool&, const bool&);
+    void _be_done(bool inner_stream_already_closed=false);
     bool _forward_client_data(const size_t& num_avail_bytes);
 
-    myio::StreamChannel::UniquePtr outer_channel_;
+    myio::StreamChannel* outer_channel_;
     myio::buflo::BufloMuxChannel* buflo_channel_;
     const int inner_sid_;
 

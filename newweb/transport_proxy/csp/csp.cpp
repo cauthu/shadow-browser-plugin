@@ -31,6 +31,9 @@ using myio::buflo::BufloMuxChannel;
 using myio::buflo::BufloMuxChannelImplSpdy;
 
 
+namespace csp
+{
+
 ClientSideProxy::ClientSideProxy(struct event_base* evbase,
                                StreamServer::UniquePtr streamserver,
                                const in_addr_t& peer_addr,
@@ -194,3 +197,4 @@ ClientSideProxy::~ClientSideProxy()
     LOG(FATAL) << "not reached";
 }
 
+} // namespace csp

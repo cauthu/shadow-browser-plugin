@@ -165,7 +165,7 @@ public:
     virtual int write_buffer(struct evbuffer *buf) = 0;
 
     /* write "len" bytes of dummy data. for now it should be all
-     * ascii */
+     * ascii. return 0 on success */
     virtual int write_dummy(size_t len) = 0;
 
     /* close/disconnect the channel, dropping pending/buffered data if

@@ -4,8 +4,7 @@
 #include "../../utility/object.hpp"
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/buflo_mux_channel.hpp"
-
-#include "../../utility/buflo_mux_channel_impl_spdy.hpp"
+#include "../common_inner_outer_handler.hpp"
 
 namespace ssp
 {
@@ -15,7 +14,6 @@ class StreamHandler;
 typedef boost::function<void(StreamHandler*)> StreamHandlerDoneCb;
 
 class StreamHandler : public Object
-                    // , public myio::StreamChannelObserver
                     , public myio::StreamChannelConnectObserver
                     , public myio::buflo::BufloMuxChannelStreamObserver
 {
@@ -28,7 +26,6 @@ public:
                              const char* target_host,
                              const uint16_t& port,
                              StreamHandlerDoneCb);
-
 
 protected:
 
@@ -46,42 +43,34 @@ protected:
         LOG(FATAL) << "not reached";
     }
     virtual void onStreamCreateResult(myio::buflo::BufloMuxChannel*,
-                                      bool) override
+                                      bool,
+                                      const in_addr_t&,
+                                      const uint16_t&) override
     {
         LOG(FATAL) << "not reached";
     }
-    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) override;
-    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) override;
-
-    // /***** implement StreamChannel interface */
-    // virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
-    // virtual void onWrittenData(myio::StreamChannel*) noexcept override;
-    // virtual void onEOF(myio::StreamChannel*) noexcept override;
-    // virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept override;
+    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept override;
 
     //////////////
 
-    /* "notify_handler_done" is whether to call handler_done_cb_;
-     *
-     * "close_buflo_stream" is whether to tell buflo channel to close
-     * stream; should be false when buflo channel itself is already
-     * telling us the stream is being closed
-     */
-    void _close(const bool& notify_handler_done, const bool& close_buflo_stream);
+    void _close();
+    void _on_inner_outer_handler_done(InnerOuterHandler*, bool);
+
 
     struct event_base* evbase_;
-    myio::buflo::BufloMuxChannel* buflo_ch_;
+    myio::TCPChannel::UniquePtr target_channel_;
+    myio::buflo::BufloMuxChannel* buflo_channel_;
     const int sid_;
+    InnerOuterHandler::UniquePtr inner_outer_handler_;
     StreamHandlerDoneCb handler_done_cb_;
 
     enum class State {
-        CONNECTING, /* to target */
-        LINKED,
+        CONNECTING_TARGET,
+        FORWARDING /* handled by InnerOuterHandler */,
         CLOSED
     } state_;
 
-    // tcp connection to target
-    myio::TCPChannel::UniquePtr target_channel_;
 };
 
 }

@@ -3,6 +3,7 @@
 
 #include "csp_handler.hpp"
 #include "stream_handler.hpp"
+#include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
 
 #define _LOG_PREFIX(inst) << "csphandler= " << (inst)->objId() << ": "

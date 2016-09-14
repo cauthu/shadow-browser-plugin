@@ -30,6 +30,19 @@ using std::pair;
 #define CELL_HEADER_SIZE ((CELL_TYPE_FIELD_SIZE) + (CELL_PAYLOAD_LEN_FIELD_SIZE))
 
 
+#define MAYBE_GET_STREAMSTATE(sid, errretval)                           \
+    auto streamstate = stream_states_[sid].get();                       \
+    do {                                                                \
+        if (!streamstate) {                                             \
+            logself(ERROR) << "unknown sid: " << sid;                   \
+            /* std::map just created an empty unique_ptr */             \
+            /* so we erase it */                                        \
+            stream_states_.erase(sid);                                  \
+            return errretval;                                           \
+        }                                                               \
+    } while(0)
+
+
 namespace myio { namespace buflo
 {
 
@@ -109,7 +122,7 @@ BufloMuxChannelImplSpdy::create_stream(const char* host,
 }
 
 int
-BufloMuxChannelImplSpdy::create_stream(const char* host,
+BufloMuxChannelImplSpdy::create_stream2(const char* host,
                                        const in_port_t& port,
                                        BufloMuxChannelStreamObserver *observer)
 {
@@ -143,37 +156,39 @@ BufloMuxChannelImplSpdy::set_stream_observer(int sid,
 }
 
 bool
-BufloMuxChannelImplSpdy::set_stream_connect_result(int sid, bool ok)
+BufloMuxChannelImplSpdy::set_stream_connected(int sid)
 {
-    if (ok) {
-        static const char *nv[] = {
-            "ok", "true",
-            nullptr,
-        };
-        auto rv = spdylay_submit_syn_reply(spdysess_, 0, sid, nv);
-        CHECK_EQ(rv, 0);
-        
-        spdylay_data_provider data_provider;
-        bzero(&data_provider, sizeof data_provider);
+    static const char *nv[] = {
+        "ok", "true",
+        nullptr,
+    };
+    // don't use flag_fin because it would mean this would be the last
+    // frame sent on this stream
+    auto rv = spdylay_submit_syn_reply(spdysess_, 0, sid, nv);
+    CHECK_EQ(rv, 0);
 
-        return true;
-    } else {
-        close_stream(sid);
-        return false;
-    }
+    _init_stream_data_provider(sid);
 
-    return false;
+    _pump_spdy_send();
+
+    return true;
 }
 
-int
-BufloMuxChannelImplSpdy::read(int sid, uint8_t *data, size_t len)
-{
-    return 0;
-}
+// int
+// BufloMuxChannelImplSpdy::read(int sid, uint8_t *data, size_t len)
+// {
+//     logself(FATAL) << "to implement";
+//     return 0;
+// }
 
 int
-BufloMuxChannelImplSpdy::read_buffer(int sid, struct evbuffer* buf, size_t len) {
-    return 0;
+BufloMuxChannelImplSpdy::read_buffer(int sid, struct evbuffer* buf, size_t len)
+{
+    MAYBE_GET_STREAMSTATE(sid, -1);
+
+    const auto rv = evbuffer_remove_buffer(
+        /* src */ streamstate->outward_buf_, /* dst */ buf, len);
+    return rv;
 }
 
 int
@@ -190,34 +205,58 @@ uint8_t* BufloMuxChannelImplSpdy::peek(int sid, ssize_t len)
 struct evbuffer*
 BufloMuxChannelImplSpdy::get_input_evbuf(int sid)
 {
-    return nullptr;
+    MAYBE_GET_STREAMSTATE(sid, nullptr);
+
+    // return the buf that user can read their new input data, i.e.,
+    // outward data.  XXX/maybe rename function
+
+    return streamstate->outward_buf_;
 }
 
 size_t
 BufloMuxChannelImplSpdy::get_avail_input_length(int sid) const
 {
-    return 0;
+    if (inMap(stream_states_, sid)) {
+        return evbuffer_get_length(stream_states_.at(sid)->outward_buf_);
+    } else {
+        return 0;
+    }
 }
 
-int
-BufloMuxChannelImplSpdy::write(int sid, const uint8_t *data, size_t len) 
-{
-    logself(FATAL) << "to implement";
-    return -1;
-}
+// int
+// BufloMuxChannelImplSpdy::write(int sid, const uint8_t *data, size_t len)
+// {
+//     logself(FATAL) << "to implement";
+//     return -1;
+// }
 
 int
 BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf) 
 {
-    
+    MAYBE_GET_STREAMSTATE(sid, -1);
+
+    auto rv = evbuffer_add_buffer(
+        /* dst */ streamstate->inward_buf_,
+        /* src */ buf);
+    CHECK_EQ(rv, 0);
+
+    if (streamstate->inward_deferred_) {
+        rv = spdylay_session_resume_data(spdysess_, sid);
+        CHECK_EQ(rv, 0);
+        streamstate->inward_deferred_ = false;
+    }
+
+    _pump_spdy_send();
+
     return 0;
 }
 
-int
-BufloMuxChannelImplSpdy::write_dummy(int sid, size_t len) 
-{
-    return 0;
-}
+// int
+// BufloMuxChannelImplSpdy::write_dummy(int sid, size_t len)
+// {
+//     logself(FATAL) << "to implement";
+//     return 0;
+// }
 
 void
 BufloMuxChannelImplSpdy::close_stream(int sid) 
@@ -284,6 +323,8 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 void
 BufloMuxChannelImplSpdy::_pump_spdy_send()
 {
+    vlogself(2) << "begin";
+
     // tell spdy session to send -- it will call our send_cb
     spdylay_session* session = spdysess_;
     auto rv = spdylay_session_send(session);
@@ -299,15 +340,20 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
     }
 
     if (!defense_active_) {
+        vlogself(2) << "maybe flush to cell outbuf";
         if (_maybe_flush_data_to_cell_outbuf()) {
             _maybe_toggle_write_monitoring(true);
         }
     }
+
+    vlogself(2) << "done";
 }
 
 void
 BufloMuxChannelImplSpdy::_pump_spdy_recv()
 {
+    vlogself(2) << "begin";
+
     // tell spdy session to send -- it will call our send_cb
     spdylay_session* session = spdysess_;
     auto rv = spdylay_session_recv(session);
@@ -321,6 +367,8 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
         CHECK(0) << "todo";
         return;
     }
+
+    vlogself(2) << "done";
 }
 
 bool
@@ -328,6 +376,8 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
 {
     CHECK(!defense_active_);
     bool did_write = false;
+    vlogself(2) << "begin, spdy outbuf len: "
+                << evbuffer_get_length(spdy_outbuf_);
     while (evbuffer_get_length(spdy_outbuf_)) {
         const auto rv = _maybe_add_data_cell_to_outbuf();
         CHECK(rv);
@@ -568,6 +618,10 @@ BufloMuxChannelImplSpdy::_consume_input()
             if (num_avail_bytes >= cell_size_) {
 
                 if (cell_read_info_.type_ != CellType::DUMMY) {
+                    // TODO/ handle_non_dummy_input_cell will pump
+                    // spdy recv on the cell; maybe we consider
+                    // pumping spdy recv only once we have processed
+                    // all data cells available in the cell inbuf
                     _handle_non_dummy_input_cell(cell_read_info_.payload_len_);
                 } else {
                     // drain a whole cell from buf
@@ -753,7 +807,7 @@ BufloMuxChannelImplSpdy::_on_spdylay_recv_cb(
     const auto rv = evbuffer_remove(spdy_inbuf_, data, length);
     CHECK_GE(rv, 0);
     // we should never get error from evbuffer
-    auto retval = rv;
+    auto retval = (rv > 0) ? rv : SPDYLAY_ERR_WOULDBLOCK;
 
     // else if (rv == -1) {
     //     logself(WARNING) << "inbuf didn't accept our remove";
@@ -791,7 +845,9 @@ BufloMuxChannelImplSpdy::_on_spdylay_before_ctrl_send_cb(
         CHECK_NOTNULL(observer);
 
         _init_stream_state(sid);
-        
+
+        _init_stream_data_provider(sid);
+
         vlogself(2) << "notify that stream id is assigned";
         DestructorGuard dg(this);
         observer->onStreamIdAssigned(this, sid);
@@ -807,6 +863,19 @@ BufloMuxChannelImplSpdy::_init_stream_state(const int& sid)
     const auto ret = stream_states_.insert(
         make_pair(sid, std::move(sstate)));
     CHECK(ret.second); // insist it was newly inserted
+}
+
+void
+BufloMuxChannelImplSpdy::_init_stream_data_provider(const int& sid)
+{
+    spdylay_data_provider data_provider;
+    bzero(&data_provider, sizeof data_provider);
+    data_provider.read_callback = s_spdylay_data_read_cb;
+
+    // don't use flag_fin because it would mean this would be the last
+    // frame sent on this stream
+    const auto rv = spdylay_submit_data(spdysess_, sid, 0, &data_provider);
+    CHECK_EQ(rv, 0);
 }
 
 void
@@ -856,18 +925,42 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
         break;
     }
 
-    case SPDYLAY_RST_STREAM: {
-        const auto sid = frame->syn_stream.stream_id;
+    case SPDYLAY_SYN_REPLY: {
+        /*
+         * this must be the csp receiving the reply from ssp
+         */
 
-        vlogself(2) << "CLOSE stream: " << sid;
+        const auto sid = frame->syn_stream.stream_id;
+        CHECK(is_client_side_);
+
+        string ok_value;
+        // make sure to use frame->syn_XYZ of the right type
+        auto nv = frame->syn_reply.nv;
+        for (int i = 0; nv[i]; i += 2) {
+            if (!strcmp(nv[i], "ok")) {
+                ok_value = nv[i+1];
+                break;
+            }
+        }
+
+        // if the ssp couldn't connect to target, we expect that it
+        // would have just reset the stream
+        CHECK_EQ(ok_value.compare("true"), 0);
 
         auto *observer = (BufloMuxChannelStreamObserver*)
-            spdylay_session_get_stream_user_data(session, sid);
+                         spdylay_session_get_stream_user_data(session, sid);
         CHECK_NOTNULL(observer);
+        observer->onStreamCreateResult(this, true, 0, 0);
+        break;
 
-        DestructorGuard dg(this);
-        observer->onStreamClosed(this);
+    }
 
+    case SPDYLAY_RST_STREAM: {
+        const auto sid = frame->syn_stream.stream_id;
+        vlogself(2) << "stream: " << sid << " being reset by peer";
+        // we don't notify observer because we will reach
+        // _on_spdylay_on_stream_close_cb() and let it notify user if
+        // appropriate
         break;
     }
 
@@ -911,7 +1004,7 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
     callbacks.send_callback = s_spdylay_send_cb;
     callbacks.recv_callback = s_spdylay_recv_cb;
     callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
-    // callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
+    callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
     // callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
     callbacks.on_stream_close_callback = s_spdylay_on_stream_close_cb;
     callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
@@ -997,6 +1090,41 @@ BufloMuxChannelImplSpdy::s_spdylay_recv_cb(spdylay_session *session,
     return ch->_on_spdylay_recv_cb(session, data, length, flags);;
 }
 
+void
+BufloMuxChannelImplSpdy::s_spdylay_on_data_chunk_recv_cb(
+    spdylay_session *session,
+    uint8_t flags, int32_t stream_id,
+    const uint8_t *data, size_t len,
+    void *user_data)
+{
+    auto *ch = (BufloMuxChannelImplSpdy*)user_data;
+    ch->_on_spdylay_on_data_chunk_recv_cb(session, flags, stream_id,
+                                          data, len);
+}
+
+void
+BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
+    spdylay_session *session,
+    uint8_t flags,
+    int32_t stream_id,
+    const uint8_t *data,
+    size_t len)
+{
+    MAYBE_GET_STREAMSTATE(stream_id, );
+
+    const auto rv = evbuffer_add(streamstate->outward_buf_, data, len);
+    CHECK_NE(rv, -1);
+
+    auto *observer = (BufloMuxChannelStreamObserver*)
+                     spdylay_session_get_stream_user_data(session, stream_id);
+    if (observer) {
+        observer->onStreamNewDataAvailable(this);
+    } else {
+        logself(WARNING) << "no observer for sid " << stream_id
+                         << " to notify of new available data";
+    }
+}
+
 ssize_t
 BufloMuxChannelImplSpdy::s_spdylay_data_read_cb(spdylay_session *session,
                        int32_t stream_id,
@@ -1018,17 +1146,11 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
                                  spdylay_data_source *source)
 {
 
+    vlogself(2) << "begin, sid: " << stream_id;
+
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
 
-    auto streamstate = stream_states_[stream_id].get();
-    if (!streamstate) {
-        stream_states_.erase(stream_id); // std::map just created an
-                                         // empty unique_ptr in the
-                                         // map, so we erase it
-        // this will cause spdy to close the stream but the session
-        // continues
-        return SPDYLAY_ERR_TEMPORAL_CALLBACK_FAILURE;
-    }
+    MAYBE_GET_STREAMSTATE(stream_id, SPDYLAY_ERR_TEMPORAL_CALLBACK_FAILURE);
 
     const auto rv = evbuffer_remove(streamstate->inward_buf_, buf, length);
     CHECK_NE(rv, -1);
@@ -1038,11 +1160,12 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
         retval = rv;
     } else {
         CHECK_EQ(rv, 0);
-        // nothing to read, so we defer
+        vlogself(2) << "nothing to read, so we defer";
         streamstate->inward_deferred_ = true;
         retval = SPDYLAY_ERR_DEFERRED;
     }
 
+    vlogself(2) << "done, returning: " << retval;
     return retval;
 }
 
