@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
 
     ClientSideProxy::UniquePtr csp;
-    ServerSideProxy::UniquePtr ssp;
+    ssp::ServerSideProxy::UniquePtr ssp;
 
     if (is_client) {
         VLOG(2) << "ssp host: [" << ssp_host << "]";
@@ -54,7 +54,7 @@ int main(int argc, char **argv)
                       common::ports::server_side_transport_proxy,
                       0, 0));
     } else {
-        ssp.reset(new ServerSideProxy(evbase.get(),
+        ssp.reset(new ssp::ServerSideProxy(evbase.get(),
                                       std::move(tcpserver)));
     }
 

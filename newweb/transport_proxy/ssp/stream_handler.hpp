@@ -7,13 +7,15 @@
 
 #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
+namespace ssp
+{
 
 class StreamHandler;
 
 typedef boost::function<void(StreamHandler*)> StreamHandlerDoneCb;
 
 class StreamHandler : public Object
-                    , public myio::StreamChannelObserver
+                    // , public myio::StreamChannelObserver
                     , public myio::StreamChannelConnectObserver
                     , public myio::buflo::BufloMuxChannelStreamObserver
 {
@@ -51,15 +53,21 @@ protected:
     virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) override;
     virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) override;
 
-    /***** implement StreamChannel interface */
-    virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
-    virtual void onWrittenData(myio::StreamChannel*) noexcept override;
-    virtual void onEOF(myio::StreamChannel*) noexcept override;
-    virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+    // /***** implement StreamChannel interface */
+    // virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
+    // virtual void onWrittenData(myio::StreamChannel*) noexcept override;
+    // virtual void onEOF(myio::StreamChannel*) noexcept override;
+    // virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
 
     //////////////
 
-    void _close(bool);
+    /* "notify_handler_done" is whether to call handler_done_cb_;
+     *
+     * "close_buflo_stream" is whether to tell buflo channel to close
+     * stream; should be false when buflo channel itself is already
+     * telling us the stream is being closed
+     */
+    void _close(const bool& notify_handler_done, const bool& close_buflo_stream);
 
     struct event_base* evbase_;
     myio::buflo::BufloMuxChannel* buflo_ch_;
@@ -76,5 +84,6 @@ protected:
     myio::TCPChannel::UniquePtr target_channel_;
 };
 
+}
 
 #endif /* STREAM_HANDLER */

@@ -151,7 +151,12 @@ BufloMuxChannelImplSpdy::set_stream_connect_result(int sid, bool ok)
             nullptr,
         };
         auto rv = spdylay_submit_syn_reply(spdysess_, 0, sid, nv);
-        return (rv == 0);
+        CHECK_EQ(rv, 0);
+        
+        spdylay_data_provider data_provider;
+        bzero(&data_provider, sizeof data_provider);
+
+        return true;
     } else {
         close_stream(sid);
         return false;
@@ -197,27 +202,46 @@ BufloMuxChannelImplSpdy::get_avail_input_length(int sid) const
 int
 BufloMuxChannelImplSpdy::write(int sid, const uint8_t *data, size_t len) 
 {
-    return 0;
+    logself(FATAL) << "to implement";
+    return -1;
 }
 
 int
 BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf) 
 {
+    
     return 0;
 }
 
 int
 BufloMuxChannelImplSpdy::write_dummy(int sid, size_t len) 
-{return 0;}
+{
+    return 0;
+}
 
 void
 BufloMuxChannelImplSpdy::close_stream(int sid) 
 {
+    /*
+     * if the observer triggers stream closure, either by calling this
+     * directly, or via some other method, then assume that we don't
+     * want to notify him of the closure because presumably he might
+     * have been destroyed. so we clear the observer here first before
+     * resetting the stream
+     */
+
     vlogself(2) << "RESET stream " << sid;
+
+    // first, clear the observer
+    set_stream_observer(sid, nullptr);
+
     auto rv = spdylay_submit_rst_stream(spdysess_, sid, SPDYLAY_CANCEL);
-    if (!rv) {
-        _pump_spdy_send();
-    }
+    CHECK_EQ(rv, 0);
+
+    _pump_spdy_send();
+
+    // we don't clean up things like stream state here; instead will
+    // do in on_stream_close_callback
 }
 
 void
@@ -653,6 +677,33 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     vlogself(2) << "done";
 }
 
+void
+BufloMuxChannelImplSpdy::s_spdylay_on_stream_close_cb(spdylay_session *session,
+                                                      int32_t stream_id,
+                                                      spdylay_status_code status_code,
+                                                      void *user_data)
+{
+    auto *ch = (BufloMuxChannelImplSpdy*)user_data;
+    ch->_on_spdylay_on_stream_close_cb(session, stream_id, status_code);
+}
+
+void
+BufloMuxChannelImplSpdy::_on_spdylay_on_stream_close_cb(spdylay_session *session,
+                                                        int32_t stream_id,
+                                                        spdylay_status_code status_code)
+{
+    vlogself(2) << "begin, sid= " << stream_id;
+    auto *observer = (BufloMuxChannelStreamObserver*)
+                     spdylay_session_get_stream_user_data(session, stream_id);
+    if (observer) {
+        observer->onStreamClosed(this);
+    }
+
+    // erase will do nothing if stream_id is not in map
+    stream_states_.erase(stream_id);
+    vlogself(2) << "done";
+}
+
 ssize_t
 BufloMuxChannelImplSpdy::_on_spdylay_send_cb(
     spdylay_session *session,
@@ -660,22 +711,30 @@ BufloMuxChannelImplSpdy::_on_spdylay_send_cb(
     size_t length,
     int flags)
 {
+    /*
+     * spdylay tells us it wants to write the bytes. we add the bytes
+     * to the spdy output buf for writing later (either on buflo
+     * schedule or when socket is writable, etc.)
+     *
+     */
+
     vlogself(2) << "begin, length= " << length;
     CHECK_EQ(session, spdysess_);
 
-    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-
-    // add data to the output buf for writing later
     const auto rv = evbuffer_add(spdy_outbuf_, data, length);
-    if (rv == 0) {
-        retval = length;
-    }
-    else if (rv == -1) {
-        logself(WARNING) << "outbuf didn't accept our add";
-        retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-    } else {
-        logself(FATAL) << "invalid rv= " << rv;
-    }
+    CHECK_EQ(rv, 0);
+    // we should always be able to add all the bytes to the buf
+    auto retval = length;
+
+    // if (rv == 0) {
+    //     retval = length;
+    // }
+    // else if (rv == -1) {
+    //     logself(WARNING) << "outbuf didn't accept our add";
+    //     retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+    // } else {
+    //     logself(FATAL) << "invalid rv= " << rv;
+    // }
  
     vlogself(2) << "done, returning " << retval;
     return retval;
@@ -691,18 +750,17 @@ BufloMuxChannelImplSpdy::_on_spdylay_recv_cb(
     vlogself(2) << "begin, length= " << length;
     CHECK_EQ(session, spdysess_);
 
-    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-
     const auto rv = evbuffer_remove(spdy_inbuf_, data, length);
-    if (rv >= 0) {
-        retval = rv;
-    }
-    else if (rv == -1) {
-        logself(WARNING) << "inbuf didn't accept our remove";
-        retval = SPDYLAY_ERR_CALLBACK_FAILURE;
-    } else {
-        logself(FATAL) << "invalid rv= " << rv;
-    }
+    CHECK_GE(rv, 0);
+    // we should never get error from evbuffer
+    auto retval = rv;
+
+    // else if (rv == -1) {
+    //     logself(WARNING) << "inbuf didn't accept our remove";
+    //     retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+    // } else {
+    //     logself(FATAL) << "invalid rv= " << rv;
+    // }
 
     vlogself(2) << "done, returning " << retval;
     return retval;
@@ -719,21 +777,36 @@ BufloMuxChannelImplSpdy::_on_spdylay_before_ctrl_send_cb(
     CHECK_EQ(session, spdysess_);
 
     if (type == SPDYLAY_SYN_STREAM) {
+        // only client side should send syn stream (i.e., no
+        // server-push allowed)
+        CHECK(is_client_side_);
+
+        /*
+         * this is the earliest the client-side has the stream id
+         */
+
         const int32_t sid = frame->syn_stream.stream_id;
         auto *observer = (BufloMuxChannelStreamObserver*)
             spdylay_session_get_stream_user_data(session, sid);
+        CHECK_NOTNULL(observer);
 
-        std::unique_ptr<StreamState> sstate(new StreamState());
-        const auto ret = stream_states_.insert(
-            make_pair(sid, std::move(sstate)));
-        CHECK(ret.second); // insist it was newly inserted
-
+        _init_stream_state(sid);
+        
         vlogself(2) << "notify that stream id is assigned";
         DestructorGuard dg(this);
         observer->onStreamIdAssigned(this, sid);
     }
 
     vlogself(2) << "done";
+}
+
+void
+BufloMuxChannelImplSpdy::_init_stream_state(const int& sid)
+{
+    std::unique_ptr<StreamState> sstate(new StreamState());
+    const auto ret = stream_states_.insert(
+        make_pair(sid, std::move(sstate)));
+    CHECK(ret.second); // insist it was newly inserted
 }
 
 void
@@ -745,6 +818,11 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
 
     switch(type) {
     case SPDYLAY_SYN_STREAM: {
+        /*
+         * this is the earliest the server-side knows about the
+         * stream/sid
+         */
+
         const auto sid = frame->syn_stream.stream_id;
         // only the server side should receive this
         CHECK(!is_client_side_);
@@ -770,6 +848,8 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
 
         vlogself(2) << "host= [" << host_str << "] port= " << port;
 
+        _init_stream_state(sid);
+
         DestructorGuard dg(this);
         st_connect_req_cb_(this, sid, host_str.c_str(), port);
 
@@ -784,6 +864,7 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
         auto *observer = (BufloMuxChannelStreamObserver*)
             spdylay_session_get_stream_user_data(session, sid);
         CHECK_NOTNULL(observer);
+
         DestructorGuard dg(this);
         observer->onStreamClosed(this);
 
@@ -832,7 +913,7 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
     callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
     // callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
     // callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
-    // /* callbacks.on_stream_close_callback = spdylay_on_stream_close_cb; */
+    callbacks.on_stream_close_callback = s_spdylay_on_stream_close_cb;
     callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
     // callbacks.on_ctrl_not_send_callback = s_spdylay_on_ctrl_not_send_cb;
 
@@ -914,6 +995,55 @@ BufloMuxChannelImplSpdy::s_spdylay_recv_cb(spdylay_session *session,
 {
     auto *ch = (BufloMuxChannelImplSpdy*)(user_data);
     return ch->_on_spdylay_recv_cb(session, data, length, flags);;
+}
+
+ssize_t
+BufloMuxChannelImplSpdy::s_spdylay_data_read_cb(spdylay_session *session,
+                       int32_t stream_id,
+                       uint8_t *buf, size_t length,
+                       int *eof,
+                       spdylay_data_source *source,
+                       void *user_data)
+{
+    auto *ch = (BufloMuxChannelImplSpdy*)user_data;
+    return ch->_on_spdylay_data_read_cb(
+        session, stream_id, buf, length, eof, source);
+}
+
+ssize_t
+BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
+                                 int32_t stream_id,
+                                 uint8_t *buf, size_t length,
+                                 int *eof,
+                                 spdylay_data_source *source)
+{
+
+    ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
+
+    auto streamstate = stream_states_[stream_id].get();
+    if (!streamstate) {
+        stream_states_.erase(stream_id); // std::map just created an
+                                         // empty unique_ptr in the
+                                         // map, so we erase it
+        // this will cause spdy to close the stream but the session
+        // continues
+        return SPDYLAY_ERR_TEMPORAL_CALLBACK_FAILURE;
+    }
+
+    const auto rv = evbuffer_remove(streamstate->inward_buf_, buf, length);
+    CHECK_NE(rv, -1);
+
+    if (rv > 0) {
+        // able to read some bytes
+        retval = rv;
+    } else {
+        CHECK_EQ(rv, 0);
+        // nothing to read, so we defer
+        streamstate->inward_deferred_ = true;
+        retval = SPDYLAY_ERR_DEFERRED;
+    }
+
+    return retval;
 }
 
 BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()

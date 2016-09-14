@@ -7,15 +7,17 @@
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/buflo_mux_channel.hpp"
-
-#include "../../utility/buflo_mux_channel_impl_spdy.hpp"
+#include "../common_inner_outer_handler.hpp"
 
 
 /* this takes care of one proxy client (e.g., browser), sitting
  * between the client and the buflo channel
  *
  * it is given a tcp connection to the client, and the buflo
- * channel. it will handle the socks5 request from the client.
+ * channel. it will handle the socks5 request from the client, create
+ * the stream with buflo channel, etc. and once the two sides are
+ * successfully established and ready to transfer application data, it
+ * will hand them off to InnerOuterHandler
  */
 
 class ClientHandler;
@@ -31,7 +33,7 @@ public:
 
     explicit ClientHandler(
         myio::StreamChannel::UniquePtr client_channel,
-        myio::buflo::BufloMuxChannelImplSpdy* buflo_channel,
+        myio::buflo::BufloMuxChannel* buflo_channel,
         HandlerDoneCb);
 
 protected:
@@ -58,18 +60,20 @@ protected:
     bool _read_socks5_connect_req(size_t);
     bool _create_stream(const char* host, uint16_t port);
     void _close(bool);
-
-
+    void _on_inner_outer_handler_done(InnerOuterHandler*);
+    
     myio::StreamChannel::UniquePtr client_channel_;
-    myio::buflo::BufloMuxChannelImplSpdy* buflo_channel_;
+    myio::buflo::BufloMuxChannel* buflo_channel_;
+    int sid_;
+    InnerOuterHandler::UniquePtr inner_outer_handler_;
 
     enum class State {
-        CLOSED,
         READ_SOCKS5_GREETING,
         READ_SOCKS5_CONNECT_REQ,
-            CREATE_BUFLO_STREAM,
-            LINKED
-            } state_;
+        CREATE_BUFLO_STREAM,
+        FORWARDING /* handled by InnerOuterHandler */,
+        CLOSED,
+    } state_;
     HandlerDoneCb handler_done_cb_;
 };
 

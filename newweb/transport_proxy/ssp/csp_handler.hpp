@@ -17,10 +17,14 @@
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/buflo_mux_channel.hpp"
 
-#include "../../utility/buflo_mux_channel_impl_spdy.hpp"
+// #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
 
 #include "stream_handler.hpp"
+
+
+namespace ssp
+{
 
 
 class CSPHandler;
@@ -44,11 +48,10 @@ protected:
     // virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannelImplSpdy*) noexcept override;
     // virtual void onStreamClosed(myio::buflo::BufloMuxChannelImplSpdy*) noexcept override;
 
-    // /***** implement StreamChannel interface */
-    // virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
-    // virtual void onWrittenData(myio::StreamChannel*) noexcept override;
-    // virtual void onEOF(myio::StreamChannel*) noexcept override;
-    // virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+    // /***** implement StreamChannelConnectObserver interface */
+    // virtual void onConnected(myio::StreamChannel*) noexcept override;
+    // virtual void onConnectError(myio::StreamChannel*, int errorcode) noexcept override;
+    // virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
 
 
     ////////////
@@ -59,11 +62,14 @@ protected:
     void _on_stream_handler_done(StreamHandler*);
 
     struct event_base* evbase_;
-    myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
+    // myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
+    myio::buflo::BufloMuxChannel::UniquePtr buflo_channel_;
 
     CSPHandlerDoneCb handler_done_cb_;
 
     std::map<uint32_t, StreamHandler::UniquePtr> shandlers_;
 };
+
+}
 
 #endif /* end CSP_HANDLER_HPP */

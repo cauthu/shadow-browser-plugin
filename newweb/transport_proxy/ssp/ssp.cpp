@@ -23,6 +23,9 @@
 #define logself(level) loginst(level, this)
 
 
+namespace ssp
+{
+
 using myio::TCPChannel;
 using myio::StreamServer;
 using myio::StreamChannel;
@@ -69,4 +72,6 @@ ServerSideProxy::onAcceptError(StreamServer*, int errorcode) noexcept
 ServerSideProxy::~ServerSideProxy()
 {
     LOG(FATAL) << "not reached";
+}
+
 }

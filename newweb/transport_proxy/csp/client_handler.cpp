@@ -1,8 +1,11 @@
 
+#include <boost/bind.hpp>
+#include <arpa/inet.h>
+
 #include "client_handler.hpp"
 
 
-#define _LOG_PREFIX(inst) << "pchandler= " << (inst)->objId() << ": "
+#define _LOG_PREFIX(inst) << "chandler= " << (inst)->objId() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -18,15 +21,15 @@
 
 using myio::StreamChannel;
 using myio::buflo::BufloMuxChannel;
-using myio::buflo::BufloMuxChannelImplSpdy;
 
 
 ClientHandler::ClientHandler(StreamChannel::UniquePtr client_channel,
-                             BufloMuxChannelImplSpdy* buflo_channel,
+                             BufloMuxChannel* buflo_channel,
                              HandlerDoneCb handler_done_cb)
     : client_channel_(std::move(client_channel))
     , buflo_channel_(buflo_channel)
     , state_(State::READ_SOCKS5_GREETING)
+    , sid_(-1)
     , handler_done_cb_(handler_done_cb)
 {
     client_channel_->set_observer(this);
@@ -34,22 +37,49 @@ ClientHandler::ClientHandler(StreamChannel::UniquePtr client_channel,
 
 void
 ClientHandler::onStreamIdAssigned(BufloMuxChannel*,
-                                       int) noexcept
-{}
+                                  int sid) noexcept
+{
+    sid_ = sid;
+}
 
 void
 ClientHandler::onStreamCreateResult(BufloMuxChannel*,
-                                         bool) noexcept
+                                    bool ok) noexcept
 {
+    CHECK_EQ(state_, State::CREATE_BUFLO_STREAM);
+    if (ok) {
+        CHECK_GT(sid_, -1);
+        state_ = State::FORWARDING;
+
+        // hand off the the two streams to inner outer handler to do
+        // the forwarding
+        inner_outer_handler_.reset(
+            new InnerOuterHandler(
+                std::move(client_channel_), sid_, buflo_channel_,
+                boost::bind(&ClientHandler::_on_inner_outer_handler_done,
+                            this, _1)));
+        buflo_channel_ = nullptr;
+    } else {
+        _close(true);
+    }
+}
+
+void
+ClientHandler::_on_inner_outer_handler_done(InnerOuterHandler*)
+{
+    _close(true);
 }
 
 void
 ClientHandler::onStreamNewDataAvailable(BufloMuxChannel*) noexcept
-{}
+{
+    logself(FATAL) << "not reached";
+}
 
 void
 ClientHandler::onStreamClosed(BufloMuxChannel*) noexcept
 {
+    CHECK_EQ(state_, State::CREATE_BUFLO_STREAM);
     _close(true);
 }
 
@@ -128,8 +158,10 @@ ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
                 // waiting for stream creation
                 return false;
             }
+            return true;
         }
 
+        vlogself(2) << "closing down";
         _close(true);
     }
 
@@ -144,6 +176,9 @@ ClientHandler::_consume_client_input()
 
     do {
         const auto num_avail_bytes = evbuffer_get_length(inbuf);
+        if (!num_avail_bytes) {
+            break;
+        }
         switch (state_) {
 
         case State::READ_SOCKS5_GREETING: {
@@ -156,13 +191,15 @@ ClientHandler::_consume_client_input()
             break;
         }
 
-        case State::LINKED: {
-            LOG(FATAL) << "to do";
+        case State::FORWARDING: {
+            // the inner outer handler should be getting observing the
+            // client channel by now
+            logself(FATAL) << "not reached";
             break;
         }
 
         default:
-            LOG(FATAL) << "not reached";
+            logself(FATAL) << "not reached";
         }
     } while (keep_consuming);
 
@@ -170,29 +207,47 @@ ClientHandler::_consume_client_input()
 
 void
 ClientHandler::onWrittenData(StreamChannel* ch) noexcept
-{}
+{
+}
 
 void
 ClientHandler::onEOF(StreamChannel*) noexcept
-{}
+{
+    vlogself(2) << "client channel eof";
+    CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
+          (state_ == State::READ_SOCKS5_GREETING));
+    _close(true);
+}
 
 void
 ClientHandler::onError(StreamChannel*, int) noexcept
-{}
+{
+    vlogself(2) << "client channel error";
+    CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
+          (state_ == State::READ_SOCKS5_GREETING));
+    _close(true);
+}
 
 void
 ClientHandler::_close(bool do_notify)
 {
-    if (state_ != State::CLOSED) {
-        state_ = State::CLOSED;
+    if (state_ == State::CLOSED) {
+        return;
+    }
 
+    state_ = State::CLOSED;
+
+    client_channel_.reset();
+    inner_outer_handler_.reset();
+    if (buflo_channel_) {
+        buflo_channel_->set_stream_observer(sid_, nullptr);
+        buflo_channel_->close_stream(sid_);
         buflo_channel_ = nullptr;
-        client_channel_.reset();
+    }
 
-        if (do_notify) {
-            DestructorGuard dg(this);
-            handler_done_cb_(this);
-        }
+    if (do_notify) {
+        DestructorGuard dg(this);
+        handler_done_cb_(this);
     }
 }
 

@@ -24,6 +24,9 @@ using myio::TCPChannel;
 using myio::buflo::BufloMuxChannel;
 
 
+namespace ssp
+{
+
 StreamHandler::StreamHandler(struct event_base* evbase,
                              BufloMuxChannel* buflo_ch,
                              const int sid,
@@ -40,7 +43,7 @@ StreamHandler::StreamHandler(struct event_base* evbase,
     const auto addr = common::getaddr(target_host);
 
     target_channel_.reset(
-        new TCPChannel(evbase_, addr, port, this));
+        new TCPChannel(evbase_, addr, port, nullptr));
     auto rv = target_channel_->start_connecting(this);
     CHECK_EQ(rv, 0);
 
@@ -50,57 +53,80 @@ StreamHandler::StreamHandler(struct event_base* evbase,
 void
 StreamHandler::onConnected(StreamChannel*) noexcept
 {
-    vlogself(2) << "connected to target!";
+    CHECK_EQ(state_, State::CONNECTING);
+
+    vlogself(2) << "connected to target";
     if (buflo_ch_->set_stream_connect_result(sid_, true)) {
         vlogself(2) << "linked!";
         state_ = State::LINKED;
     } else {
         // some error
-        vlogself(2) << "some error!";
-        _close(true);
+        vlogself(2) << "some error";
+        _close(true, true);
     }
 }
 
 void
 StreamHandler::onConnectError(StreamChannel*, int) noexcept
 {
-    buflo_ch_->set_stream_connect_result(sid_, false);
-    _close(true);
+    CHECK_EQ(state_, State::CONNECTING);
+
+    // buflo_ch_->set_stream_connect_result(sid_, false);
+    _close(true, true);
 }
 
 void
 StreamHandler::onConnectTimeout(StreamChannel*) noexcept
 {
-    buflo_ch_->set_stream_connect_result(sid_, false);
-    _close(true);
+    CHECK_EQ(state_, State::CONNECTING);
+
+    // buflo_ch_->set_stream_connect_result(sid_, false);
+    _close(true, true);
 }
 
-void
-StreamHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*)
-{}
+// void
+// StreamHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*)
+// {
+//     CHECK_EQ(state_, State::LINKED);
+
+// }
 
 void
 StreamHandler::onStreamClosed(myio::buflo::BufloMuxChannel*)
-{}
+{
+    CHECK_EQ(state_, State::LINKED);
+    _close(true, false);
+}
+
+// void
+// StreamHandler::onNewReadDataAvailable(myio::StreamChannel*) noexcept
+// {
+//     CHECK_EQ(state_, State::LINKED);
+// }
+
+// void
+// StreamHandler::onWrittenData(myio::StreamChannel*) noexcept
+// {
+//     CHECK_EQ(state_, State::LINKED);
+// }
+
+// void
+// StreamHandler::onEOF(myio::StreamChannel*) noexcept
+// {
+//     CHECK_EQ(state_, State::LINKED);
+//     _close(true, true);
+// }
+
+// void
+// StreamHandler::onError(myio::StreamChannel*, int errorcode) noexcept
+// {
+//     CHECK_EQ(state_, State::LINKED);
+//     _close(true, true);
+// }
 
 void
-StreamHandler::onNewReadDataAvailable(myio::StreamChannel*) noexcept
-{}
-
-void
-StreamHandler::onWrittenData(myio::StreamChannel*) noexcept
-{}
-
-void
-StreamHandler::onEOF(myio::StreamChannel*) noexcept
-{}
-
-void
-StreamHandler::onError(myio::StreamChannel*, int errorcode) noexcept
-{}
-
-void
-StreamHandler::_close(const bool do_notify)
+StreamHandler::_close(const bool& notify_handler_done,
+                      const bool& close_buflo_stream)
 {
     if (state_ == State::CLOSED) {
         return;
@@ -108,12 +134,16 @@ StreamHandler::_close(const bool do_notify)
 
     state_ = State::CLOSED;
 
-    // close the stream
-    buflo_ch_->close_stream(sid_);
-
     target_channel_.reset();
 
-    if (do_notify) {
+    if (close_buflo_stream) {
+        buflo_ch_->set_stream_observer(sid_, nullptr);
+        buflo_ch_->close_stream(sid_);
+    }
+
+    buflo_ch_ = nullptr;
+
+    if (notify_handler_done) {
         DestructorGuard dg(this);
         handler_done_cb_(this);
     }
@@ -121,7 +151,10 @@ StreamHandler::_close(const bool do_notify)
 
 StreamHandler::~StreamHandler()
 {
+    vlogself(2) << "streamhandler destructing";
     // assume that we are being deleted by csp handler and so don't
     // need to notify it
-    _close(false);
+    _close(false, true);
+}
+
 }

@@ -7,6 +7,10 @@
 
 #include "csp_handler.hpp"
 
+
+namespace ssp
+{
+
 class CSPHandler;
 
 class ServerSideProxy : public Object
@@ -40,5 +44,6 @@ protected:
     std::map<uint32_t, CSPHandler::UniquePtr> csp_handlers_;
 };
 
+}
 
 #endif /* SSP_HPP */

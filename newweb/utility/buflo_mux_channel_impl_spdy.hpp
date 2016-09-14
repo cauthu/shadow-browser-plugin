@@ -89,6 +89,7 @@ protected:
                                   bool crash_if_EINPROGRESS);
     void _on_socket_eof();
     void _on_socket_error();
+    void _init_stream_state(const int&);
 
     /* shadow doesn't support edge-triggered (epoll) monitoring, so we
      * have to disable write monitoring if we don't have data to
@@ -144,28 +145,61 @@ protected:
                                      int flags,
                                      void *user_data);
 
+    ssize_t      _on_spdylay_data_read_cb(spdylay_session *session,
+                                          int32_t stream_id,
+                                          uint8_t *buf, size_t length,
+                                          int *eof,
+                                          spdylay_data_source *source);
+    static ssize_t s_spdylay_data_read_cb(spdylay_session *session,
+                                          int32_t stream_id,
+                                          uint8_t *buf, size_t length,
+                                          int *eof,
+                                          spdylay_data_source *source,
+                                          void *user_data);
+
+    void      _on_spdylay_on_stream_close_cb(spdylay_session *session,
+                                             int32_t stream_id,
+                                             spdylay_status_code status_code);
+    static void s_spdylay_on_stream_close_cb(spdylay_session *session,
+                                             int32_t stream_id,
+                                             spdylay_status_code status_code,
+                                             void *user_data);
+
     class StreamState
     {
     public:
         StreamState()
         {
-            inbuf_ = evbuffer_new();
-            outbuf_ = evbuffer_new();
+            inward_buf_ = evbuffer_new();
+            outward_buf_ = evbuffer_new();
+            inward_deferred_ = false;
         }
         ~StreamState()
         {
-            if (inbuf_) {
-                evbuffer_free(inbuf_);
-                inbuf_ = nullptr;
+            if (inward_buf_) {
+                evbuffer_free(inward_buf_);
+                inward_buf_ = nullptr;
             }
-            if (outbuf_) {
-                evbuffer_free(outbuf_);
-                outbuf_ = nullptr;
+            if (outward_buf_) {
+                evbuffer_free(outward_buf_);
+                outward_buf_ = nullptr;
             }
         }
 
-        struct evbuffer* inbuf_;
-        struct evbuffer* outbuf_;
+        // stores data from outer-side of the tunnel (i.e., the client
+        // or the server) towards the tunnel stream. spdy will read
+        // from this buf
+        struct evbuffer* inward_buf_;
+        bool inward_deferred_; /* when there's currently no data for
+                                * spdy to read, we will tell it to
+                                * stop trying to read from this
+                                * stream. so when have data again,
+                                * resume it
+                                */
+
+        // stores data spdy receives from the tunnel stream to be sent
+        // outward, i.e., to client or server
+        struct evbuffer* outward_buf_;
     };
 
     //////////////////////
@@ -210,24 +244,16 @@ protected:
         ReadState state_;
         uint8_t type_;
         uint16_t payload_len_;
-        // uint8_t* payload_;
 
         void reset()
         {
             state_ = ReadState::READ_HEADER;
             payload_len_ = 0;
-            // payload_ = nullptr;
         }
     } cell_read_info_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
 
-
-    /*****************  for server-side proxy   *************/
-
-    // // in on_ctrl_recv(), record the "host" header from client, but
-    // // only need for a short while: use in on_request_recv()
-    // std::map<int, std::string> requested_host_hdr_;
 
 };
 

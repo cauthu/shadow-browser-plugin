@@ -20,9 +20,12 @@
 
 using std::make_pair;
 using myio::StreamChannel;
-using myio::buflo::BufloMuxChannelImplSpdy;
 using myio::buflo::BufloMuxChannel;
+using myio::buflo::BufloMuxChannelImplSpdy;
 
+
+namespace ssp
+{
 
 CSPHandler::CSPHandler(struct event_base* evbase,
                        StreamChannel::UniquePtr csp_channel,
@@ -73,3 +76,4 @@ CSPHandler::_on_stream_handler_done(StreamHandler* shandler)
     shandlers_.erase(shid);
 }
 
+}

@@ -5,6 +5,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(TRANSPORT_PROXY_SOURCES
   main.cpp
+  common_inner_outer_handler.cpp
   csp/csp.cpp
   csp/client_handler.cpp
   ssp/ssp.cpp
