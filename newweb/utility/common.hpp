@@ -49,6 +49,7 @@ namespace ports
 
 const uint16_t client_side_transport_proxy = 8080;
 const uint16_t server_side_transport_proxy = 8081;
+const uint16_t transport_proxy_ipc = 9010;
 
 } // namespace ports
 

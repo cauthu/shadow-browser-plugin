@@ -135,11 +135,50 @@ init_evbase()
         event_config_new(), event_config_free);
     CHECK_NOTNULL(evconfig);
 
+    /* I'm going to have events running at two priorities: high
+     * priority (0) probably exclusively used by the buflo defense
+     * timers; everything else uses the low priority (1)
+     *
+     * "When you do not set the priority for an event, the default is
+     * the number of queues in the event base, divided by 2."
+     *
+     * which, if we use 2-levels, then default is 2/2=1 is the low
+     * priority, and that's what we want.
+     */
+
+#if 0
+    /* we want to use the same libevent that tor plugin uses, just to
+     * avoid unexpected issues. that version 2.0.21-stable doesn't
+     * have event_config_set_max_dispatch_interval() so we can't use it.
+     *
+     * we might not need it, but we should check in the buflo timer
+     * fired callback how far off schedule it is and log WARNING/ERROR
+     * if it accumulates too much delays.
+     */
+
+    // check for high priority events every 10 msg (cuz for now the
+    // most frequent buflo timer we support is 10ms)
+    struct timeval msec_10 = { 0, 10*1000 };
+    auto rv = event_config_set_max_dispatch_interval(
+        evconfig.get(), &msec_10, 5, 1);
+    CHECK_EQ(rv, 0);
+#endif
+
     // we mean to run single-threaded, so we don't need locks
     CHECK_EQ(event_config_set_flag(evconfig.get(), EVENT_BASE_FLAG_NOLOCK), 0);
 
     struct event_base* evbase = event_base_new_with_config(evconfig.get());
     CHECK_NOTNULL(evbase);
+
+    /* available starting in 2.1.1-alpha */
+    // rv = event_base_get_npriorities(evbase);
+    // CHECK_EQ(rv, 1);
+
+    auto rv = event_base_priority_init(evbase, 2);
+    CHECK_EQ(rv, 0);
+
+    // rv = event_base_get_npriorities(evbase);
+    // CHECK_EQ(rv, 2);
 
     /* double check a few things */
     auto chosen_method = event_base_get_method(evbase);
@@ -161,11 +200,11 @@ void
 dispatch_evbase(struct event_base* evbase)
 {
     // /******  run the loop until told to stop ******/
-    // /* EVLOOP_NO_EXIT_ON_EMPTY not yet available, so we have to
-    //  * install a dummy persistent timer to always have some event
+    // /* only add timeout event to double-check the default priority is
+    //  * 1, since we are only levels of priorities.
     //  */
     // struct timeval tv = {0};
-    // tv.tv_sec = 60;
+    // tv.tv_sec = 3600;
     // tv.tv_usec = 0;
     // struct event *dummy_work_ev = event_new(
     //     evbase, -1, EV_PERSIST | EV_TIMEOUT, [](int, short, void*){
@@ -173,6 +212,10 @@ dispatch_evbase(struct event_base* evbase)
     // CHECK_NOTNULL(dummy_work_ev);
     // auto rv = event_add(dummy_work_ev, &tv);
     // CHECK_EQ(rv, 0);
+
+    /* available in 2.1.1-alpha */
+    // const auto priority = event_get_priority(dummy_work_ev);
+    // CHECK_EQ(priority, 1);
 
     event_base_dispatch(evbase);
 
