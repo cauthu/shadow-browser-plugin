@@ -76,12 +76,14 @@ InnerOuterHandler::onWrittenData(myio::StreamChannel*) noexcept
 void
 InnerOuterHandler::onEOF(myio::StreamChannel*) noexcept
 {
+    vlogself(2) << "outer stream EOF";
     _be_done();
 }
 
 void
 InnerOuterHandler::onError(myio::StreamChannel*, int errorcode) noexcept
 {
+    vlogself(2) << "outer stream error";
     _be_done();
 }
 

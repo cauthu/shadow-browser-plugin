@@ -319,11 +319,13 @@ TCPChannel::_on_socket_readcb(int fd, short what)
             // by looping and reading until EAGAIN) because the user
             // might need just a few bytes and decide to issue a drop
             // request
-            const auto rv = evbuffer_read(input_evb_.get(), fd_, read_size_hint_);
+            const auto rv = evbuffer_read(
+                input_evb_.get(), fd_, read_size_hint_);
             vlogself(2) << "evbuffer_read() returns: " << rv;
             if (rv > 0) {
+                num_total_read_bytes_ += rv;
                 if (evbuffer_get_length(input_evb_.get()) >= read_lw_mark_) {
-                    DCHECK_NOTNULL(observer_);
+                    CHECK_NOTNULL(observer_);
                     observer_->onNewReadDataAvailable(this);
                 }
             } else {
@@ -363,6 +365,7 @@ TCPChannel::_maybe_dropread()
         const auto rv = ::read(fd_, drop_buf, num_to_read);
         dvlogself(2) << "got " << rv;
         if (rv > 0) {
+            num_total_read_bytes_ += rv;
             dropped_this_time += rv;
             input_drop_.progress(rv);
         } else {
@@ -437,6 +440,14 @@ TCPChannel::_on_socket_writecb(int fd, short what)
         _maybe_toggle_write_monitoring();
         if (rv <= 0) {
             _handle_non_successful_socket_io("write", rv, true);
+            CHECK_NOTNULL(observer_);
+        } else {
+            num_total_written_bytes_ += rv;
+            static const size_t write_lw_mark_ = 0;
+            if (evbuffer_get_length(output_evb_.get()) <= write_lw_mark_) {
+                CHECK_NOTNULL(observer_);
+                observer_->onWrittenData(this);
+            }
         }
     } else {
         CHECK(0) << "invalid events: " << what;
@@ -504,7 +515,7 @@ TCPChannel::s_socket_writecb(int fd, short what, void* arg)
 
 TCPChannel::~TCPChannel()
 {
-    vlogself(2) << "tcpchannel destructing";
+    vlogself(2) << "tcpchannel destructing (fd= " << fd_ << ")";
     close();
 }
 

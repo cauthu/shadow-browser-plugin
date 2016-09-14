@@ -77,6 +77,9 @@ public:
     // AsyncTransport.h for example)
     typedef std::unique_ptr<StreamChannel, /*folly::DelayedDestruction::*/Destructor> UniquePtr;
 
+    /* optional "connect_timeout" is how long to wait for the connect
+     * to succeed and calls onConnectTimeout() if it times out
+     */
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) = 0;
 
@@ -134,6 +137,10 @@ public:
      * the socket/network, i.e., do not put them in the input buffer
      * that's visible to the application.
      *
+     * NOTE: this only drop FUTURE bytes from socket; data already in
+     * the input buf is not affected. user will have to use drain() as
+     * appropriate.
+     *
      * only one such request at a time, i.e., if this is called when
      * the channel has not finished with a previous request, it might
      * throw/crash
@@ -176,6 +183,15 @@ public:
 
     virtual int release_fd() = 0;
 
+    virtual const size_t& num_total_read_bytes() const final
+    {
+        return num_total_read_bytes_;
+    }
+    virtual const size_t& num_total_written_bytes() const final
+    {
+        return num_total_written_bytes_;
+    }
+
 protected:
 
     StreamChannel(StreamChannelObserver*);
@@ -184,6 +200,10 @@ protected:
 
     StreamChannelObserver *observer_;
     int read_size_hint_;
+
+    // total num of bytes read from and written to socket
+    size_t num_total_read_bytes_;
+    size_t num_total_written_bytes_;
 };
 
 }

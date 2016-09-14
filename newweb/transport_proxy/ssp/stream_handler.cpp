@@ -46,9 +46,13 @@ StreamHandler::StreamHandler(struct event_base* evbase,
 
     const auto addr = common::getaddr(target_host);
 
+    struct timeval timeout = {0};
+    timeout.tv_sec = 3;
+    timeout.tv_usec = 0;
+
     target_channel_.reset(
         new TCPChannel(evbase_, addr, port, nullptr));
-    auto rv = target_channel_->start_connecting(this);
+    auto rv = target_channel_->start_connecting(this, &timeout);
     CHECK_EQ(rv, 0);
 
     state_ = State::CONNECTING_TARGET;
@@ -83,6 +87,7 @@ void
 StreamHandler::onConnectError(StreamChannel*, int) noexcept
 {
     CHECK_EQ(state_, State::CONNECTING_TARGET);
+    logself(WARNING) << "error connecting to target";
     _close();
 }
 
@@ -90,6 +95,7 @@ void
 StreamHandler::onConnectTimeout(StreamChannel*) noexcept
 {
     CHECK_EQ(state_, State::CONNECTING_TARGET);
+    logself(WARNING) << "times out connecting to target";
     _close();
 }
 

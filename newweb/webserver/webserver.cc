@@ -1,4 +1,6 @@
 
+#include <boost/lexical_cast.hpp>
+
 #include "../utility/tcp_server.hpp"
 #include "../utility/common.hpp"
 #include "../utility/easylogging++.h"
@@ -57,14 +59,20 @@ int main(int argc, char **argv)
 
     common::init_easylogging();
 
+    uint16_t listenport = 80;
+
+    for (int i = 0; i < argc; ++i) {
+        if (!strcmp(argv[i], "--port")) {
+            listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
+        }
+    }
+
     START_EASYLOGGINGPP(argc, argv);
 
     LOG(INFO) << "webserver starting...";
 
     std::unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
         common::init_evbase(), event_base_free);
-
-    const uint16_t listenport = 80;
 
     VLOG(2) << "listen port " << listenport;
 
