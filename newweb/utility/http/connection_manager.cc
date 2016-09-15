@@ -33,6 +33,9 @@ using std::make_shared;
 
 
 
+namespace http
+{
+
 /***************************************************/
 
 ConnectionManager::ConnectionManager(struct event_base *evbase,
@@ -338,3 +341,5 @@ ConnectionManager::release_conn(Connection *conn,
 
     vlogself(2) << "done";
 }
+
+} // end namespace http

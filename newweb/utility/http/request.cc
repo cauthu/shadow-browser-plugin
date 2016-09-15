@@ -15,6 +15,9 @@ using std::string;
 #define logself(level) loginst(level, this)
 
 
+namespace http
+{
+
 Request::Request(
     const string& host, const uint16_t& port,
     const size_t& req_total_size,
@@ -42,3 +45,5 @@ Request::dump_debug() const
     vlogself(2) << "dumping request to log:";
     vlogself(2) << "  host: " << host_;
 }
+
+} // end namespace http

@@ -49,9 +49,11 @@ private:
 
     virtual ~HttpNetworkSession() = default;
 
-    void _response_meta_cb(const int& status, char **headers, Request* req);
-    void _response_body_data_cb(const uint8_t *data, const size_t& len, Request* req);
-    void _response_done_cb(Request* req, bool success);
+    void _response_meta_cb(const int& status, char **headers,
+                           http::Request* req);
+    void _response_body_data_cb(const uint8_t *data, const size_t& len,
+                                http::Request* req);
+    void _response_done_cb(http::Request* req, bool success);
 
     /////////////
 
@@ -63,9 +65,9 @@ private:
     const uint32_t routing_id_;
     const NetConfig* netconf_; // don't free
 
-    ConnectionManager::UniquePtr connman_;
+    http::ConnectionManager::UniquePtr connman_;
 
-    std::map<uint32_t, std::shared_ptr<Request> > pending_requests_;
+    std::map<uint32_t, std::shared_ptr<http::Request> > pending_requests_;
 };
 
 #endif /* end http_session_hpp */

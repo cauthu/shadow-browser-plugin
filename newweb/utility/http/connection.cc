@@ -44,6 +44,9 @@ using boost::lexical_cast;
 
 
 
+namespace http
+{
+
 Connection::Connection(
     struct event_base *evbase,
     const in_addr_t& addr, const in_port_t& port,
@@ -1094,3 +1097,5 @@ Connection::_setup_spdylay_session()
 
     return;
 }
+
+} // end namespace http

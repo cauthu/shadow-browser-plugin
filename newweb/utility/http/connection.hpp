@@ -30,6 +30,10 @@
 #include <queue>
 #include <deque>
 
+
+namespace http
+{
+
 class Connection;
 
 typedef boost::function<void(Connection*)> ConnectionErrorCb;
@@ -298,5 +302,7 @@ private:
     size_t cumulative_num_recv_bytes_;
 
 };
+
+} // namespace http
 
 #endif /* CONNECTION_HPP */

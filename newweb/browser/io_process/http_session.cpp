@@ -24,6 +24,10 @@ using std::string;
 #define logself(level) loginst(level, this)
 
 
+using http::Request;
+using http::ConnectionManager;
+
+
 HttpNetworkSession::HttpNetworkSession(struct event_base* evbase,
                                        IPCServer* ipcserver,
                                        uint32_t routing_id,

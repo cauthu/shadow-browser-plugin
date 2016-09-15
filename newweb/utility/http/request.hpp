@@ -8,6 +8,9 @@
 #include "../object.hpp"
 #include "../easylogging++.h"
 
+namespace http
+{
+
 class Connection;
 class Request;
 
@@ -112,5 +115,8 @@ private:
     // this is what we see
     size_t actual_resp_body_size_;
 };
+
+
+} // end namespace http
 
 #endif /* SHD_REQUEST_HPP */

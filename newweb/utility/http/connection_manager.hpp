@@ -15,6 +15,9 @@
 #include "connection.hpp"
 
 
+namespace http
+{
+
 class ConnectionManager : public Object
 {
 public:
@@ -83,5 +86,7 @@ private:
      */
     std::map<NetLoc, std::shared_ptr<Server> > servers_;
 };
+
+} // end namespace http
 
 #endif /* CONNECTION_MANAGER_HPP */
