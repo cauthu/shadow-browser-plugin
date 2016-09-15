@@ -5,6 +5,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(TRANSPORT_PROXY_SOURCES
   main.cpp
+  ipc.cpp
   common_inner_outer_handler.cpp
   csp/csp.cpp
   csp/client_handler.cpp
@@ -18,6 +19,7 @@ set(TRANSPORT_PROXY_SOURCES
   ${UTILITY_DIR}/tcp_server.cpp
   ${UTILITY_DIR}/socks5_connector.cpp
   ${UTILITY_DIR}/buflo_mux_channel_impl_spdy.cpp
+  ${UTILITY_DIR}/generic_message_channel.cpp
   ${UTILITY_DIR}/object.cpp
 )
 
@@ -30,6 +32,11 @@ add_shadow_plugin(shadow-plugin-transport_proxy ${TRANSPORT_PROXY_SOURCES})
 target_link_libraries(shadow-plugin-transport_proxy ${LINK_LIBS})
 install(TARGETS shadow-plugin-transport_proxy DESTINATION plugins)
 
+# "add_dependencies(shadow-plugin-io_process" won't work because
+# building the bitcode will fail without the
+# ioservice_messages_generated.h
+add_dependencies(shadow-plugin-transport_proxy-bitcode transport_proxy_ipc_messages_flatbuffers)
+
 
 
 ## create and install an executable that can run outside of shadow
@@ -37,3 +44,5 @@ remove_definitions(-DIN_SHADOW)
 add_executable(transport_proxy ${TRANSPORT_PROXY_SOURCES})
 target_link_libraries(transport_proxy ${LINK_LIBS})
 install(TARGETS transport_proxy DESTINATION bin)
+
+add_dependencies(transport_proxy transport_proxy_ipc_messages_flatbuffers)
