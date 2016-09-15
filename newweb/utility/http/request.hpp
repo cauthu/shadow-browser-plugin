@@ -5,8 +5,8 @@
 #include <vector>
 #include <boost/function.hpp>
 
-#include "object.hpp"
-#include "easylogging++.h"
+#include "../object.hpp"
+#include "../easylogging++.h"
 
 class Connection;
 class Request;

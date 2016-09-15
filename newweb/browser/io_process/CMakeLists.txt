@@ -11,10 +11,10 @@ set(IO_PROCESS_SOURCES
   ${UTILITY_DIR}/stream_channel.cpp
   ${UTILITY_DIR}/timer.cpp
   ${UTILITY_DIR}/socks5_connector.cpp
-  ${UTILITY_DIR}/connection.cc
-  ${UTILITY_DIR}/connection_manager.cc
-  ${UTILITY_DIR}/request.cc
-  ${UTILITY_DIR}/http_parse.c
+  ${UTILITY_DIR}/http/connection.cc
+  ${UTILITY_DIR}/http/connection_manager.cc
+  ${UTILITY_DIR}/http/request.cc
+  ${UTILITY_DIR}/http/http_parse.c
   ${UTILITY_DIR}/common.cc
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/tcp_server.cpp

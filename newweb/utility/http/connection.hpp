@@ -9,19 +9,18 @@
 #include <arpa/inet.h>
 #include <stddef.h>
 #include <netdb.h>
-#include "myassert.h"
 #include <time.h>
 #include <event2/event.h>
 #include <event2/buffer.h>
 
 #include <boost/function.hpp>
 
-#include "object.hpp"
-#include "common.hpp"
+#include "../object.hpp"
+#include "../common.hpp"
+#include "../socks5_connector.hpp"
+#include "../tcp_channel.hpp"
+
 #include "request.hpp"
-#include "socks5_connector.hpp"
-#include "stream_channel.hpp"
-#include "tcp_channel.hpp"
 
 #include <spdylay/spdylay.h>
 

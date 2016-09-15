@@ -9,9 +9,10 @@
 
 #include <boost/function.hpp>
 
+#include "../object.hpp"
+
 #include "request.hpp"
 #include "connection.hpp"
-#include "object.hpp"
 
 
 class ConnectionManager : public Object

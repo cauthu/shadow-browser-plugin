@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#include "../utility/http_parse.h"
+#include "../utility/http/http_parse.h"
 
 #ifdef __cplusplus /* If this is a C++ compiler, end C linkage */
 }

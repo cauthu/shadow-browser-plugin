@@ -25,8 +25,8 @@
 #include <map>
 
 #include "../../utility/object.hpp"
-#include "../../utility/request.hpp"
-#include "../../utility/connection_manager.hpp"
+#include "../../utility/http/request.hpp"
+#include "../../utility/http/connection_manager.hpp"
 #include "utility/ipc/io_service/gen/combined_headers"
 
 #include "ipc.hpp"

@@ -6,8 +6,8 @@
 #include <boost/lexical_cast.hpp>
 
 #include "connection.hpp"
-#include "easylogging++.h"
-#include "common.hpp"
+#include "../easylogging++.h"
+#include "../common.hpp"
 
 #ifdef __cplusplus /* If this is a C++ compiler, use C linkage */
 extern "C" {

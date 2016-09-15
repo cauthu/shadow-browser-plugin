@@ -4,7 +4,7 @@
 #include <boost/bind.hpp>
 
 #include "connection_manager.hpp"
-#include "easylogging++.h"
+#include "../easylogging++.h"
 
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
