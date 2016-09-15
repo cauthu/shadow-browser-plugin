@@ -21,6 +21,8 @@
 namespace myio { namespace buflo
 {
 
+typedef boost::function<void(BufloMuxChannel*)> ChannelReadyCb;
+
 class BufloMuxChannelImplSpdy : public BufloMuxChannel
 {
 public:
@@ -30,6 +32,7 @@ public:
 
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             size_t cell_size,
+                            ChannelReadyCb ch_ready_cb,
                             ChannelClosedCb ch_closed_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
@@ -67,6 +70,9 @@ protected:
     void _pump_spdy_send();
     void _pump_spdy_recv();
 
+    void      _on_read_peer_cell_size(short what);
+    static void s_read_peer_cell_size(int, short, void*);
+
     /* return true if it does append a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() {return false;}
     /* return true if it does append a cell to cell outbuf */
@@ -84,7 +90,7 @@ protected:
     void _ensure_a_whole_dummy_cell_at_end_outbuf();
     void _send_cell_outbuf();
 
-    void _consume_input();
+    void _read_cells();
     void _handle_non_dummy_input_cell(size_t);
     void _handle_failed_socket_io(const char* io_op_str,
                                   const ssize_t rv,
@@ -226,9 +232,15 @@ protected:
      */
     std::unique_ptr<struct event, void(*)(struct event*)> socket_read_ev_;
     std::unique_ptr<struct event, void(*)(struct event*)> socket_write_ev_;
+    ChannelReadyCb ch_ready_cb_;
 
+    /* for cells that we send */
     const size_t cell_size_;
     const size_t cell_body_size_;
+
+    /* for cells that the peer sends and we receive */
+    size_t peer_cell_size_;
+    size_t peer_cell_body_size_;
 
     struct {
         void reset()
@@ -264,11 +276,12 @@ protected:
         CONTROL, DATA, DUMMY
     };
 
-    // the state we're in for processing the input
+    // the state we're in for processing the input.
     enum class ReadState
     {
         READ_HEADER = 0, READ_BODY = 1
     };
+
     struct {
         ReadState state_;
         uint8_t type_;

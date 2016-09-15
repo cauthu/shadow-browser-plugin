@@ -74,6 +74,7 @@ protected:
 
     void _on_connected_to_ssp();
 
+    void _on_buflo_channel_ready(myio::buflo::BufloMuxChannel*);
     void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
 
     // the ProxyClientHandler tells us it's closing down

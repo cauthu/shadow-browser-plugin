@@ -39,7 +39,9 @@ CSPHandler::CSPHandler(struct event_base* evbase,
 
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase, fd, false, 512,
+            evbase, fd, false, 1024,
+            boost::bind(&CSPHandler::_on_buflo_channel_ready,
+                        this, _1),
             boost::bind(&CSPHandler::_on_buflo_channel_closed,
                         this, _1),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,
@@ -51,8 +53,14 @@ CSPHandler::CSPHandler(struct event_base* evbase,
 }
 
 void
+CSPHandler::_on_buflo_channel_ready(BufloMuxChannel*)
+{
+}
+
+void
 CSPHandler::_on_buflo_channel_closed(BufloMuxChannel*)
 {
+    DestructorGuard dg(this);
     handler_done_cb_(this);
 }
 

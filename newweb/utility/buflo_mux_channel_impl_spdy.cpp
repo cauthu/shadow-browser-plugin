@@ -71,6 +71,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side,
     size_t cell_size,
+    ChannelReadyCb ch_ready_cb,
     ChannelClosedCb ch_closed_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
     : BufloMuxChannel(fd, is_client_side,
@@ -79,8 +80,11 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , evbase_(evbase)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
+    , ch_ready_cb_(ch_ready_cb)
     , cell_size_(cell_size)
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
+    , peer_cell_size_(0)
+    , peer_cell_body_size_(0)
     , defense_info_{0}
     , whole_dummy_cell_at_end_outbuf_(false)
 {
@@ -91,7 +95,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
     defense_info_.reset();
 
-    /* use highest priority for the buflo timer */
+    /* use highest priority, which is 0, for the buflo timer */
     buflo_timer_.reset(
         new Timer(evbase, false,
                   boost::bind(&BufloMuxChannelImplSpdy::_buflo_timer_fired,
@@ -108,6 +112,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     ALLOC_EVBUF(cell_inbuf_);
     ALLOC_EVBUF(cell_outbuf_);
 
+#undef ALLOC_EVBUF
+
     cell_read_info_.reset();
 
     socket_read_ev_.reset(
@@ -115,11 +121,25 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     socket_write_ev_.reset(
         event_new(evbase_, fd_, EV_WRITE | EV_PERSIST, s_socket_writecb, this));
 
-    auto rv = event_add(socket_read_ev_.get(), nullptr);
-    CHECK_EQ(rv, 0);
-
     // the write event has to be enabled only when we have data to
     // write
+
+    // we should be able to send our 2-byte cell size now, to avoid
+    // having to use a new State enum value and set up an EV_WRITE
+    // event, etc.
+
+    const uint16_t cs = htons(cell_size_);
+    auto rv = write(fd_, (uint8_t*)&cs, sizeof cs);
+    CHECK_EQ(rv, sizeof cs);
+
+    struct timeval timeout;
+    timeout.tv_sec = 4;
+    timeout.tv_usec = 0;
+    // set up a one-time event to read peer's cell size, and we will
+    // then enable the regular read event
+    rv = event_base_once(evbase_, fd_, EV_READ|EV_TIMEOUT,
+                         s_read_peer_cell_size, this, &timeout);
+    CHECK_EQ(rv, 0);
 }
 
 int
@@ -243,6 +263,7 @@ BufloMuxChannelImplSpdy::read_buffer(int sid, struct evbuffer* buf, size_t len)
 int
 BufloMuxChannelImplSpdy::drain(int sid, size_t len) 
 {
+    logself(FATAL) << "to implement";
     return 0;
 }
 
@@ -620,7 +641,7 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
 }
 
 void
-BufloMuxChannelImplSpdy::_consume_input()
+BufloMuxChannelImplSpdy::_read_cells()
 {
     vlogself(2) << "begin";
 
@@ -677,7 +698,7 @@ BufloMuxChannelImplSpdy::_consume_input()
             }
             break;
         case ReadState::READ_BODY:
-            if (num_avail_bytes >= cell_size_) {
+            if (num_avail_bytes >= peer_cell_size_) {
 
                 if (cell_read_info_.type_ != CellType::DUMMY) {
                     // TODO/ handle_non_dummy_input_cell will pump
@@ -687,7 +708,7 @@ BufloMuxChannelImplSpdy::_consume_input()
                     _handle_non_dummy_input_cell(cell_read_info_.payload_len_);
                 } else {
                     // drain a whole cell from buf
-                    auto rv = evbuffer_drain(cell_inbuf_, cell_size_);
+                    auto rv = evbuffer_drain(cell_inbuf_, peer_cell_size_);
                     CHECK_EQ(rv, 0);
                 }
 
@@ -717,7 +738,7 @@ BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
      */
 
     CHECK_GT(payload_len, 0);
-    CHECK_LE(payload_len, cell_size_);
+    CHECK_LE(payload_len, peer_cell_size_);
 
     auto ptr = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE + payload_len);
 
@@ -733,7 +754,7 @@ BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
     }
 
     // now drain the whole cell
-    auto rv = evbuffer_drain(cell_inbuf_, cell_size_);
+    auto rv = evbuffer_drain(cell_inbuf_, peer_cell_size_);
     CHECK_EQ(rv, 0);
 
     return;
@@ -762,7 +783,7 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
         vlogself(2) << "evbuffer_read() returns: " << rv;
         if (rv > 0) {
             // there's new data
-            _consume_input();
+            _read_cells();
         } else {
             _handle_failed_socket_io("read", rv, true);
         }
@@ -791,6 +812,36 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     }
 
     vlogself(2) << "done";
+}
+
+void
+BufloMuxChannelImplSpdy::s_read_peer_cell_size(int, short what, void *arg)
+{
+    auto ch = (BufloMuxChannelImplSpdy*)arg;
+    ch->_on_read_peer_cell_size(what);
+}
+
+void
+BufloMuxChannelImplSpdy::_on_read_peer_cell_size(short what)
+{
+    if (what & EV_TIMEOUT) {
+        logself(FATAL) << "timeout reading peer cell size";
+    } else {
+        CHECK(what & EV_READ);
+        auto rv = read(fd_, &peer_cell_size_, sizeof peer_cell_size_);
+        CHECK_EQ(rv, 2);
+        peer_cell_size_ = ntohs(peer_cell_size_);
+        vlogself(2) << "peer using cell size: " << peer_cell_size_;
+
+        peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
+
+        // now we can enable the regular read event
+        rv = event_add(socket_read_ev_.get(), nullptr);
+        CHECK_EQ(rv, 0);
+
+        DestructorGuard dg(this);
+        ch_ready_cb_(this);
+    }
 }
 
 void

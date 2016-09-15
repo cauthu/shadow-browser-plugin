@@ -171,6 +171,8 @@ ClientSideProxy::_on_connected_to_ssp()
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
             evbase_, peer_fd_, true, 512,
+            boost::bind(&ClientSideProxy::_on_buflo_channel_ready,
+                        this, _1),
             boost::bind(&ClientSideProxy::_on_buflo_channel_closed,
                         this, _1),
             NULL
@@ -181,8 +183,6 @@ ClientSideProxy::_on_connected_to_ssp()
     stream_server_->set_observer(this);
     auto rv = stream_server_->start_accepting();
     CHECK(rv);
-
-    ready_cb_(this);
 }
 
 void
@@ -195,6 +195,13 @@ void
 ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 {
     LOG(FATAL) << "to be implemented";
+}
+
+void
+ClientSideProxy::_on_buflo_channel_ready(BufloMuxChannel*)
+{
+    DestructorGuard dg(this);
+    ready_cb_(this);
 }
 
 void

@@ -17,9 +17,6 @@
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/buflo_mux_channel.hpp"
 
-// #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
-
-
 #include "stream_handler.hpp"
 
 
@@ -42,20 +39,10 @@ public:
 
 protected:
 
-    // /* implement BufloMuxChannelSpdyStreamObserver interface */
-    // virtual void onStreamIdAssigned(myio::buflo::BufloMuxChannelImplSpdy*, int) noexcept override;
-    // virtual void onStreamCreateResult(myio::buflo::BufloMuxChannelImplSpdy*, bool) noexcept override;
-    // virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannelImplSpdy*) noexcept override;
-    // virtual void onStreamClosed(myio::buflo::BufloMuxChannelImplSpdy*) noexcept override;
-
-    // /***** implement StreamChannelConnectObserver interface */
-    // virtual void onConnected(myio::StreamChannel*) noexcept override;
-    // virtual void onConnectError(myio::StreamChannel*, int errorcode) noexcept override;
-    // virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
-
 
     ////////////
 
+    void _on_buflo_channel_ready(myio::buflo::BufloMuxChannel*);
     void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
     void _on_buflo_new_stream_connect_request(
         myio::buflo::BufloMuxChannel*, int, const char*, uint16_t);
