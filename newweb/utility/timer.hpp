@@ -20,8 +20,12 @@ public:
      *
      * constructing the timer here does not activate it. use start()
      * to actually start the timer
+     *
+     * "priority" will be set on the event if >= 0. libevent uses 0 to
+     * be the highest priority
      */
-    Timer(struct event_base *evbase, bool one_shot, FiredCb cb);
+    Timer(struct event_base *evbase, bool one_shot, FiredCb cb,
+          int priority=-1);
 
     /*
      *

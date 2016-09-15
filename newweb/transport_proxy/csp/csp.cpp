@@ -46,6 +46,15 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , peer_fd_(-1)
 {
+}
+
+void
+ClientSideProxy::kickstart(CSPReadyCb ready_cb)
+{
+    CHECK_EQ(state_, State::INITIAL);
+
+    ready_cb_ = ready_cb;
+
     // connect to peer first
     if (socks5_addr_) {
         peer_channel_.reset(
@@ -59,6 +68,13 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
 
     const auto rv = peer_channel_->start_connecting(this);
     CHECK_EQ(rv, 0);
+}
+
+bool
+ClientSideProxy::start_defense_session(const uint16_t& frequencyMs,
+                                       const uint16_t& durationSec)
+{
+    return buflo_ch_->start_defense_session(frequencyMs, durationSec);
 }
 
 void
@@ -101,7 +117,7 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
     }
     else if (state_ == State::CONNECTING) {
         vlogself(2) << "connected to peer";
-        state_ = State::CONNECTED;
+        state_ = State::READY;
         _on_connected_to_ssp();
     }
     else {
@@ -127,7 +143,7 @@ ClientSideProxy::onSocksTargetConnectResult(
         socks_connector_.reset();
 
         vlogself(2) << "connected to target (thru socks proxy)";
-        state_ = State::CONNECTED;
+        state_ = State::READY;
 
         _on_connected_to_ssp();
 
@@ -165,6 +181,8 @@ ClientSideProxy::_on_connected_to_ssp()
     stream_server_->set_observer(this);
     auto rv = stream_server_->start_accepting();
     CHECK(rv);
+
+    ready_cb_(this);
 }
 
 void

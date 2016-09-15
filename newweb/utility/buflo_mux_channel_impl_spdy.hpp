@@ -37,6 +37,10 @@ public:
                                const in_port_t& port,
                                BufloMuxChannelStreamObserver*) override;
 
+    virtual bool start_defense_session(const uint16_t& frequencyMs,
+                                       const uint16_t& durationSec) override;
+    virtual void stop_defense_session() override;
+
     /* BufloMuxChannel interface */
     virtual int create_stream(const char* host,
                               const in_port_t& port,
@@ -226,8 +230,22 @@ protected:
     const size_t cell_size_;
     const size_t cell_body_size_;
 
-    bool defense_active_;
-    Timer* buflo_timer_;
+    struct {
+        void reset()
+        {
+            active = false;
+            frequencyMs = 0;
+            until = {0};
+            prev_timer_fired = {0};
+        }
+        bool active;
+        uint16_t frequencyMs;
+        struct timeval until; /* absolute time defense should stay
+                                * active until */
+        struct timeval prev_timer_fired;
+    } defense_info_;
+
+    // Timer::UniquePtr buflo_timer_;
     bool whole_dummy_cell_at_end_outbuf_;
 
     spdylay_session* spdysess_;

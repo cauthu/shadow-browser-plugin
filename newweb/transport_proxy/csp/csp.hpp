@@ -15,6 +15,11 @@ namespace csp
 {
 
 class ClientHandler;
+class ClientSideProxy;
+
+
+typedef boost::function<void(ClientSideProxy*)> CSPReadyCb;
+
 
 class ClientSideProxy : public Object
                  , public myio::StreamServerObserver
@@ -24,6 +29,16 @@ class ClientSideProxy : public Object
 public:
     typedef std::unique_ptr<ClientSideProxy, /*folly::*/Destructor> UniquePtr;
 
+    /* stream server is the server that will listen for/accept proxy
+     * clients for data transfer (i.e., socks5 clients)
+     *
+     * constructor doesn't do anything interesting
+     *
+     * use "kickstart()" to make the csp start connecting to/setting
+     * up its buflo channel with ssp, and start accepting socks5
+     * connections
+     *
+     */
     explicit ClientSideProxy(struct event_base* evbase,
                             myio::StreamServer::UniquePtr,
                             const in_addr_t& peer_addr,
@@ -31,6 +46,10 @@ public:
                             const in_addr_t& socks5_addr,
                             const in_port_t& socks5_port);
 
+    void kickstart(CSPReadyCb);
+
+    bool start_defense_session(const uint16_t& frequencyMs,
+                               const uint16_t& durationSec);
 
 protected:
 
@@ -56,16 +75,6 @@ protected:
     void _on_connected_to_ssp();
 
     void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
-    // void _on_buflo_channel_stream_id_assigned_cb(
-    //     myio::buflo::BufloMuxChannel*,
-    //     int, void*);
-    // void _on_buflo_channel_stream_create_result_cb(
-    //     myio::buflo::BufloMuxChannel*,
-    //     int, bool);
-    // void _on_buflo_channel_stream_data_cb(myio::buflo::BufloMuxChannel*,
-    //                                       int);
-    // void _on_buflo_channel_stream_closed_cb(myio::buflo::BufloMuxChannel*,
-    //                                         int);
 
     // the ProxyClientHandler tells us it's closing down
     void _on_client_handler_done(ClientHandler*);
@@ -85,7 +94,7 @@ protected:
 
     myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_ch_;
     enum class State {
-        DISCONNECTED,
+        INITIAL,
         // Connecting to socks5 proxy
         PROXY_CONNECTING,
         PROXY_CONNECTED,
@@ -93,12 +102,10 @@ protected:
         // Connecting to target (either ssp or destination webserver)
         // -- possibly through socks proxy
         CONNECTING,
-        CONNECTED,
-        NO_LONGER_USABLE,
-        // was connected and now destroyed, so don't use
-        DESTROYED,
+        READY,
     } state_;
 
+    CSPReadyCb ready_cb_;
 
     std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
 };

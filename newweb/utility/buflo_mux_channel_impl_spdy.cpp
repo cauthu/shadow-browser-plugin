@@ -81,13 +81,23 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , socket_write_ev_(nullptr, event_free)
     , cell_size_(cell_size)
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
-    , defense_active_(false)
+    , defense_info_{0}
     , whole_dummy_cell_at_end_outbuf_(false)
-    , buflo_timer_(new Timer(
-                       evbase, false,
-                       boost::bind(&BufloMuxChannelImplSpdy::_buflo_timer_fired,
-                                   this, _1)))
 {
+    // for now, restrict set of possible sizes
+    CHECK((cell_size_ == 512) ||
+          (cell_size_ == 1024) ||
+          (cell_size_ == 1500));
+
+    defense_info_.reset();
+
+    /* use highest priority for the buflo timer */
+    buflo_timer_.reset(
+        new Timer(evbase, false,
+                  boost::bind(&BufloMuxChannelImplSpdy::_buflo_timer_fired,
+                              this, _1),
+                  0));
+
     _setup_spdylay_session();
 
 #define ALLOC_EVBUF(buf) \
@@ -144,6 +154,45 @@ BufloMuxChannelImplSpdy::create_stream2(const char* host,
 
     vlogself(2) << "done";
     return 0;
+}
+
+bool
+BufloMuxChannelImplSpdy::start_defense_session(const uint16_t& frequencyMs,
+                                               const uint16_t& durationSec)
+{
+    CHECK(!defense_info_.active) << "currently only support starting session when none is active";
+
+    CHECK((frequencyMs == 10)
+          || (frequencyMs == 20)
+          || (frequencyMs == 50)
+        ); // TODO: support more
+
+    struct timeval current_tv;
+    auto rv = gettimeofday(&current_tv, nullptr);
+    CHECK_EQ(rv, 0);
+
+    struct timeval duration_tv;
+    duration_tv.tv_sec = durationSec;
+    duration_tv.tv_usec = 0;
+
+    evutil_timeradd(&current_tv, &duration_tv, &defense_info_.until);
+
+    struct timeval freq_tv = {0};
+    freq_tv.tv_usec = (frequencyMs * 1000);
+
+    buflo_timer_->start(&freq_tv);
+
+    defense_info_.active = true;
+    return true;
+}
+
+void
+BufloMuxChannelImplSpdy::stop_defense_session()
+{
+    CHECK(defense_info_.active); // for now
+
+    buflo_timer_->cancel();
+    defense_info_.reset();
 }
 
 bool
@@ -286,7 +335,20 @@ BufloMuxChannelImplSpdy::close_stream(int sid)
 void
 BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 {
-    CHECK(defense_active_);
+    CHECK(defense_info_.active);
+
+    struct timeval current_tv;
+    const auto rv = gettimeofday(&current_tv, nullptr);
+    CHECK_EQ(rv, 0);
+
+    if (evutil_timercmp(&current_tv, &defense_info_.until, >=)) {
+        vlogself(2) << "we're done defending, toggle write monitoring instead";
+        defense_info_.reset();
+        buflo_timer_->cancel();
+        // not forcing
+        _maybe_toggle_write_monitoring(false);
+        return;
+    }
 
     vlogself(2) << "begin";
 
@@ -339,7 +401,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
         return;
     }
 
-    if (!defense_active_) {
+    if (!defense_info_.active) {
         vlogself(2) << "maybe flush to cell outbuf";
         if (_maybe_flush_data_to_cell_outbuf()) {
             _maybe_toggle_write_monitoring(true);
@@ -374,7 +436,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
 bool
 BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
 {
-    CHECK(!defense_active_);
+    CHECK(!defense_info_.active);
     bool did_write = false;
     vlogself(2) << "begin, spdy outbuf len: "
                 << evbuffer_get_length(spdy_outbuf_);
@@ -418,6 +480,8 @@ BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
     rv = evbuffer_remove_buffer(spdy_outbuf_, cell_outbuf_, payload_len);
     CHECK_EQ(rv, payload_len);
 
+    vlogself(2) << "added " << payload_len << " bytes of spdy payload";
+
     // do we need to pad?
     if (cell_body_size_ > payload_len) {
         const auto pad_len = cell_body_size_ - payload_len;
@@ -436,8 +500,6 @@ BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
         vlogself(2) << "no need for padding";
     }
 
-    vlogself(2) << "done";
-
     return true;
 }
 
@@ -446,7 +508,7 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 {
     vlogself(2) << "begin";
 
-    if (defense_active_) {
+    if (defense_info_.active) {
         // now tell socket to write ONE cell's worth of bytes
 
         // there must be at least that much data in outbuf
@@ -485,7 +547,7 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 void
 BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(bool force_enable)
 {
-    CHECK(!defense_active_);
+    CHECK(!defense_info_.active);
     dvlogself(2) << "force= " << force_enable
                  << ", cell_outbuf_ len= " << evbuffer_get_length(cell_outbuf_);
     if (force_enable || evbuffer_get_length(cell_outbuf_)) {
@@ -527,7 +589,7 @@ BufloMuxChannelImplSpdy::_handle_failed_socket_io(
 void
 BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
 {
-    CHECK(defense_active_);
+    CHECK(defense_info_.active);
 
     // if there's already one dummy cell at the end of outbuf then we
     // don't want to add more
@@ -718,7 +780,7 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     // depend on socket events. if activating defense after the write
     // event has been added, then can tell libevent to remove the
     // event so we don't reach here
-    CHECK(!defense_active_);
+    CHECK(!defense_info_.active);
 
     vlogself(2) << "begin";
 

@@ -45,6 +45,9 @@ CSPHandler::CSPHandler(struct event_base* evbase,
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,
                         this, _1, _2, _3, _4)
             ));
+
+    // auto rv = buflo_channel_->start_defense_session(50, 4);
+    // CHECK(rv);
 }
 
 void

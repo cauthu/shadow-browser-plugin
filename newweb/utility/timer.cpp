@@ -4,13 +4,19 @@
 
 Timer::Timer(struct event_base *evbase,
              const bool one_shot,
-             FiredCb cb)
+             FiredCb cb,
+             int priority)
     : fired_cb_(cb)
     , one_shot_(one_shot)
 {
     auto rv = event_assign(
         &ev_, evbase, -1, (one_shot ? 0 : EV_PERSIST), s_event_cb, this);
     CHECK_EQ(rv, 0);
+
+    if (priority >= 0) {
+        rv = event_priority_set(&ev_, priority);
+        CHECK_EQ(rv, 0);
+    }
 }
 
 void

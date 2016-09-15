@@ -59,6 +59,10 @@ public:
                               const in_port_t& port,
                               BufloMuxChannelStreamObserver*) = 0;
 
+    virtual bool start_defense_session(const uint16_t& frequencyMs,
+                                       const uint16_t& durationSec) = 0;
+    virtual void stop_defense_session() = 0;
+
     virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) = 0;
     /* tell the channel that the stream connect request has
      * succeeded. if it has failed, the user can just call

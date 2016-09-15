@@ -1,6 +1,7 @@
 set(TRANSPORT_PROXY_FBS
   message_types.fbs
   connect_msg.fbs
+  start_defense_session_msg.fbs
   )
 
 set(COMBINED_HEADERS_CONTENT "")
