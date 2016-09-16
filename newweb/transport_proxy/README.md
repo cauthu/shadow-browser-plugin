@@ -1,25 +1,39 @@
-# "webserver": a Shadow plug-in
 
-This plug-in tries to immitate the behaviour of a modern webserver.
 
-## copyright holders
+client                                                                          server
 
-Giang Nguyen (nguyen59@illinois.edu)
+client  ------  CSP (ClientSideProxy)   ---------  SSP (ServerSideProxy) ------ server
 
-## licensing deviations
+client                                                                          server
 
-None specified.
 
-## last known working version
 
-This plug-in was last tested and known to work with Shadow 1.9.2.
 
-## usage
+the CSP and SSP call the buflo stream "inner", and their connections
+to the client and server, respectively, "outer".
 
-### example
+the CSP: uses a ClientHandler to maintaim a single client--server
+pair, i.e., it has a TCPChannel from the client, and a buflo stream
+towards the server. for the actual forwarding of the bytes, it hands
+the two sides to InnerOuterHandler
 
-See examples in the "browser2" plugin.
+on SSP: since the ssp needs to support multiple CSPs concurrently, it
+has one additional layer of indirection:
 
-### webserver program args
+* when it gets a new connection, it hands the connection, that
+connection must be from a CSP, so it hands the connection to a
+CSPHandler
 
-The only argument is the path to the document root directory.
+* the CSPHandler takes the connection and establishes the buflo mux
+  channel
+
+* when buflo mux channel notifies CSPHandler of a new stream connect
+  request, the CSPHandler hands off the request to a StreamHandler
+
+* StreamHandler takes care of connecting to the target server
+
+* when it's connected to the target server, it has an "outer"
+  connection, so it tells the inner (bulfo) stream that it succeeds,
+  and hands off the inner stream and outer connection to
+  InnerOuterHandler
+
