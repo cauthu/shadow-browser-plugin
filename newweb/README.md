@@ -1,7 +1,6 @@
-The `browser` and `webserver` plugins in this directory are meant to
-be used together. Mixing with other plugins, e.g., the `browser` and
-`filetransfer` plugins in the top level directory, is not guaranteed
-to work.
+The plugins in this directory are meant to
+be used together; they will not be able to interact with other plugins
+like `browser` and `filetransfer` in the top level directory.
 
 NOTE: This is unpolished "research"-quality code. You should expect
 rough edges.
@@ -10,7 +9,7 @@ rough edges.
 
 The following are required in addition to those Shadow requires:
 
-* `boost`
+* `boost` (`sudo apt-get install libboost-dev-all` :))
 * `spdylay` (https://github.com/tatsuhiro-t/spdylay)
 
 # boost logging --- NO NEED: we don't use boost logging because shadow can't quite handle it
@@ -49,7 +48,7 @@ cd build
 CC=`which clang` CXX=`which clang++` cmake .. -DCMAKE_INSTALL_PREFIX=`readlink -f ~`/.shadow
 ```
 
-If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
+**DOUBLE-CHECK (copied from old `web`)** If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
 
 
 Then, build and install the plugins, typically to `$HOME/.shadow/plugins`:
