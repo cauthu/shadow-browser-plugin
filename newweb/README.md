@@ -13,7 +13,7 @@ The following are required in addition to those Shadow requires:
 * `boost`
 * `spdylay` (https://github.com/tatsuhiro-t/spdylay)
 
-# boost logging
+# boost logging --- NO NEED: we don't use boost logging because shadow can't quite handle it
 
 we use boost logging library because other libraries like google's
 glog and easyloggingpp don't quite work under shadow (see
@@ -51,11 +51,6 @@ CC=`which clang` CXX=`which clang++` cmake .. -DCMAKE_INSTALL_PREFIX=`readlink -
 
 If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
 
-Next, to make the C++ compiler happy (if you know a more elegant way, please do tell -- I can't get `extern "C"` stuff to work):
-
-```bash
-sed -i -e "s/PluginNewInstanceFunc new/PluginNewInstanceFunc/g" $HOME/.shadow/include/shd-library.h
-```
 
 Then, build and install the plugins, typically to `$HOME/.shadow/plugins`:
 
