@@ -42,6 +42,7 @@ multi-threaded version, so we have to build our own:
 
 # quick setup
 
+from the top level `shadow-plugin-extras` dir:
 ```bash
 mkdir build
 cd build
@@ -51,7 +52,7 @@ CC=`which clang` CXX=`which clang++` cmake .. -DCMAKE_INSTALL_PREFIX=`readlink -
 **DOUBLE-CHECK (copied from old `web`)** If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
 
 
-Then, build and install the plugins, typically to `$HOME/.shadow/plugins`:
+Then, build and install the plugins, by default to `$HOME/.shadow/plugins`:
 
 ```bash
 make -jN
