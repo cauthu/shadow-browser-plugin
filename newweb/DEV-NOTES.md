@@ -21,7 +21,7 @@ next is kind of a thought dump; a collection of notes on various
 designs, rationales, idiosynacracies, inconsistencies, etc.
 
 
-### single-threaded
+### multi-processing
 
 * *we are single-threaded*: because shadow's threading implementation
    is not complete / mature
@@ -30,6 +30,21 @@ designs, rationales, idiosynacracies, inconsistencies, etc.
   process that handles IO for the browser (`io_process`) and another
   one for the web/rendering engine (`render_process`)
 
+* two other processes are `tranport_proxy` and `driver`:
+
+   * the proxy works in pairs: an client-side proxy (CSP) has to be
+     paired with a server-side proxy (SSP). the two of them establish
+     a tunnel, through which browser traffic is tunneled. clients
+     connect to the CSP via socks5, and all its connections are
+     multiplexed through the single channel between the CSP and
+     SSP. we use SPDY to implement the multiplexing instead of cooking
+     up our own multiplexing scheme. also more details in the
+     `transport_proxy/README.md`
+
+   * the driver is like chrome controller: it will instructs the
+     renderer process to load page models, etc. but it will also
+     control the proxy to make sure it's ready before telling renderer
+     to start loading a page
 
 ### event framework / async io
 
