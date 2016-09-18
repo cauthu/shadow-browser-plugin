@@ -105,8 +105,24 @@ designs, rationales, idiosynacracies, inconsistencies, etc.
   the semantics of type) and an `id` (of integral type)
 
 * the `generic_ipc_channel` sits on top of a `generic_message_channel`
-  and provides additional features:
-      * a `call` message is a message where the 
+  and provides features:
+
+      * a general/notification message (underneath it is one without
+        an `id`)
+
+      * a `call` message is a message where the user wants a
+        response. all this can be implemented with general
+        notifications, but the `call()` api of the
+        `generic_ipc_channel` is more convenient: the user can specify
+        the expected type of the return/reply/response message,
+        provide a callback when the response message is received, or
+        times out. underneath, the channel specifies a message/call
+        `id` when it sends the message to the other end.
+
+      * the other end will be notified of the call with the id, and
+        when it replies by calling `reply()` it will include the `id`
+        so that the channel can link this message as response to
+        earlier call.
 
 ### logging
 
