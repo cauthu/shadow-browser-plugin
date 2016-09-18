@@ -1,7 +1,6 @@
-The `browser` and `webserver` plugins in this directory are meant to
-be used together. Mixing with other plugins, e.g., the `browser` and
-`filetransfer` plugins in the top level directory, is not guaranteed
-to work.
+The plugins in this directory are meant to
+be used together; they will not be able to interact with other plugins
+like `browser` and `filetransfer` in the top level directory.
 
 NOTE: This is unpolished "research"-quality code. You should expect
 rough edges.
@@ -10,10 +9,10 @@ rough edges.
 
 The following are required in addition to those Shadow requires:
 
-* `boost`
+* `boost` (`sudo apt-get install libboost-dev-all` :))
 * `spdylay` (https://github.com/tatsuhiro-t/spdylay)
 
-# boost logging
+# boost logging --- NO NEED: we don't use boost logging because shadow can't quite handle it
 
 we use boost logging library because other libraries like google's
 glog and easyloggingpp don't quite work under shadow (see
@@ -43,21 +42,17 @@ multi-threaded version, so we have to build our own:
 
 # quick setup
 
+from the top level `shadow-plugin-extras` dir:
 ```bash
 mkdir build
 cd build
 CC=`which clang` CXX=`which clang++` cmake .. -DCMAKE_INSTALL_PREFIX=`readlink -f ~`/.shadow
 ```
 
-If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
+**DOUBLE-CHECK (copied from old `web`)** If you installed `spdylay` in a custom location, specify `-DCMAKE_EXTRA_INCLUDES=/path/to/include -DCMAKE_EXTRA_LIBRARIES=/path/to/lib` when running `cmake`.
 
-Next, to make the C++ compiler happy (if you know a more elegant way, please do tell -- I can't get `extern "C"` stuff to work):
 
-```bash
-sed -i -e "s/PluginNewInstanceFunc new/PluginNewInstanceFunc/g" $HOME/.shadow/include/shd-library.h
-```
-
-Then, build and install the plugins, typically to `$HOME/.shadow/plugins`:
+Then, build and install the plugins, by default to `$HOME/.shadow/plugins`:
 
 ```bash
 make -jN
