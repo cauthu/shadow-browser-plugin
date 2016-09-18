@@ -40,9 +40,6 @@ int main(int argc, char **argv)
 
     /* ***************************************** */
 
-    myio::TCPServer::UniquePtr tcpserver(
-        new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
-
     csp::ClientSideProxy::UniquePtr csp;
     ssp::ServerSideProxy::UniquePtr ssp;
 
@@ -50,6 +47,12 @@ int main(int argc, char **argv)
     IPCServer::UniquePtr ipcserver;
 
     if (is_client) {
+        /* tcpserver to accept connections from clients */
+        myio::TCPServer::UniquePtr tcpserver(
+            new myio::TCPServer(evbase.get(),
+                                common::getaddr("localhost"),
+                                listenport, nullptr));
+
         VLOG(2) << "ssp host: [" << ssp_host << "]";
         csp.reset(new csp::ClientSideProxy(
                       evbase.get(),
@@ -58,15 +61,22 @@ int main(int argc, char **argv)
                       common::ports::server_side_transport_proxy,
                       0, 0));
 
+        const uint ipcport = common::ports::transport_proxy_ipc;
+        VLOG(2) << "ipc server listens on " << ipcport;
         tcpServerForIPC.reset(
             new myio::TCPServer(
                 evbase.get(), common::getaddr("localhost"),
-                common::ports::transport_proxy_ipc,
-                nullptr));
+                ipcport, nullptr));
         ipcserver.reset(
             new IPCServer(
                 evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
     } else {
+        /* tcpserver to accept connections from CSPs */
+        myio::TCPServer::UniquePtr tcpserver(
+            new myio::TCPServer(evbase.get(),
+                                INADDR_ANY,
+                                listenport, nullptr));
+
         ssp.reset(new ssp::ServerSideProxy(evbase.get(),
                                       std::move(tcpserver)));
     }

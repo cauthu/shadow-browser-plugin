@@ -14,19 +14,6 @@ namespace myio { namespace buflo
 
 class BufloMuxChannel;
 
-typedef boost::function<void(BufloMuxChannel*)> ChannelClosedCb;
-
-/*
- * tell user that the channel wants to create a new stream with id
- * "sid" to connect to the target
- *
- * the user should call set_stream_connect_result() to tell the
- * channel about the result
- */
-typedef boost::function<void(BufloMuxChannel*, int sid,
-                             const char* host, uint16_t port)> NewStreamConnectRequestCb;
-
-
 /* callback interface */
 class BufloMuxChannelStreamObserver
 {
@@ -50,6 +37,25 @@ public:
     // for convenience. DelayedDestruction (see folly's
     // AsyncTransport.h for example)
     typedef std::unique_ptr<BufloMuxChannel, Destructor> UniquePtr;
+
+
+    enum class ChannelStatus : short
+    {
+        READY,
+        CLOSED
+    };
+    typedef boost::function<void(BufloMuxChannel*, ChannelStatus)> ChannelStatusCb;
+
+    /*
+     * tell user that the channel wants to create a new stream with id
+     * "sid" to connect to the target
+     *
+     * the user should call set_stream_connect_result() to tell the
+     * channel about the result
+     */
+    typedef boost::function<void(BufloMuxChannel*, int sid,
+                                 const char* host, uint16_t port)> NewStreamConnectRequestCb;
+
 
     virtual int create_stream(const char* host,
                               const in_port_t& port,
@@ -144,14 +150,14 @@ protected:
 
     BufloMuxChannel(int fd,
                     bool is_client_side,
-                    ChannelClosedCb ch_closed_cb,
+                    ChannelStatusCb ch_status_cb,
                     NewStreamConnectRequestCb st_connect_req_cb)
         : fd_(fd), is_client_side_(is_client_side)
-        , ch_closed_cb_(ch_closed_cb)
+        , ch_status_cb_(ch_status_cb)
         , st_connect_req_cb_(st_connect_req_cb)
     {
         CHECK_GT(fd_, 0);
-        CHECK(ch_closed_cb_);
+        CHECK(ch_status_cb_);
         if (is_client_side_) {
             CHECK(!st_connect_req_cb);
         } else {
@@ -161,7 +167,7 @@ protected:
 
     virtual ~BufloMuxChannel() = default;
 
-    ChannelClosedCb ch_closed_cb_;
+    ChannelStatusCb ch_status_cb_;
     NewStreamConnectRequestCb st_connect_req_cb_;
 
     int fd_;

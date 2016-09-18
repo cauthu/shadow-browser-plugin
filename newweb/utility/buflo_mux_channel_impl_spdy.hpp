@@ -32,8 +32,7 @@ public:
 
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             size_t cell_size,
-                            ChannelReadyCb ch_ready_cb,
-                            ChannelClosedCb ch_closed_cb,
+                            ChannelStatusCb ch_status_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
     virtual int create_stream2(const char* host,
@@ -232,7 +231,6 @@ protected:
      */
     std::unique_ptr<struct event, void(*)(struct event*)> socket_read_ev_;
     std::unique_ptr<struct event, void(*)(struct event*)> socket_write_ev_;
-    ChannelReadyCb ch_ready_cb_;
 
     /* for cells that we send */
     const size_t cell_size_;

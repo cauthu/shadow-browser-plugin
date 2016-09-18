@@ -2,6 +2,20 @@
 #include "timer.hpp"
 #include "easylogging++.h"
 
+
+#define _LOG_PREFIX(inst) << "timer= " << (inst)->objId() << ": "
+
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
+#define vlogself(level) vloginst(level, this)
+
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
+#define logself(level) loginst(level, this)
+
+
 Timer::Timer(struct event_base *evbase,
              const bool one_shot,
              FiredCb cb,
@@ -33,6 +47,8 @@ Timer::start(const struct timeval *tv)
 
     rv = event_add(&ev_, tv);
     CHECK_EQ(rv, 0);
+
+    vlogself(2) << "timer started";
 }
 
 void
@@ -51,6 +67,7 @@ Timer::restart(const struct timeval *tv)
 
 Timer::~Timer()
 {
+    vlogself(2) << "timer destroyed";
     event_del(&ev_);
 }
 

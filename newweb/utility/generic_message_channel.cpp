@@ -9,12 +9,16 @@ namespace myio
 
 
 GenericMessageChannel::GenericMessageChannel(
-    StreamChannel::UniquePtr channel, GenericMessageChannelObserver* observer)
+    StreamChannel::UniquePtr channel,
+    GenericMessageChannelObserver* observer)
     : channel_(std::move(channel)), observer_(observer)
-    , state_(StreamState::READ_TYPE_AND_LENGTH)
-    , msg_type_(0), msg_len_(0)
+    , with_msg_id_(true)
+    , header_size_(with_msg_id_
+                   ? (MSG_TYPE_SIZE + MSG_ID_SIZE + MSG_LEN_SIZE)
+                   : (MSG_TYPE_SIZE + MSG_LEN_SIZE))
+    , state_(StreamState::READ_HEADER)
+    , msg_type_(0), msg_id_(0), msg_len_(0)
 {
-    // set myself as observer of the underlying channel
     channel_->set_observer(this);
 }
 
@@ -39,24 +43,34 @@ GenericMessageChannel::_consume_input()
         auto total_len = 0;
         // loop to process all complete msgs
         switch (state_) {
-        case StreamState::READ_TYPE_AND_LENGTH:
+        case StreamState::READ_HEADER:
             VLOG(2) << "trying to read msg type and length";
             CHECK_EQ(msg_len_, 0);
-            if (num_avail_bytes >= HEADER_SIZE) {
+            if (num_avail_bytes >= header_size_) {
                 // we're using a libevent version without
                 // copyout[_from]()
-                auto buf = evbuffer_pullup(input_evb, HEADER_SIZE);
+                auto buf = evbuffer_pullup(input_evb, header_size_);
                 CHECK_NOTNULL(buf);
 
                 memcpy((uint8_t*)&msg_type_, buf, MSG_TYPE_SIZE);
-                memcpy((uint8_t*)&msg_len_, buf + MSG_TYPE_SIZE, MSG_LEN_SIZE);
+                buf += MSG_TYPE_SIZE;
 
-                // convert to host byte order
+                if (with_msg_id_) {
+                    memcpy((uint8_t*)&msg_id_, buf, MSG_ID_SIZE);
+                    buf += MSG_ID_SIZE;
+                    msg_id_ = ntohl(msg_id_);
+                }
+
+                memcpy((uint8_t*)&msg_len_, buf, MSG_LEN_SIZE);
+                buf += MSG_LEN_SIZE;
                 msg_len_ = ntohs(msg_len_);
+
+                VLOG(2) << "got type= " << unsigned(msg_type_)
+                        << " len= " << msg_len_
+                        << " id= " << msg_id_;
 
                 // update state
                 state_ = StreamState::READ_MSG;
-                VLOG(2) << "got type= " << msg_type_ << " and len= " << msg_len_;
 
                 // not draining input buf here!
             } else {
@@ -66,7 +80,7 @@ GenericMessageChannel::_consume_input()
             break;
         case StreamState::READ_MSG:
             VLOG(2) << "trying to read msg of length " << msg_len_;
-            total_len = (HEADER_SIZE + msg_len_);
+            total_len = (header_size_ + msg_len_);
             if (num_avail_bytes >= total_len) {
                 DestructorGuard db(this);
                 auto data = evbuffer_pullup(input_evb, total_len);
@@ -74,11 +88,12 @@ GenericMessageChannel::_consume_input()
 
                 // notify
                 observer_->onRecvMsg(
-                    this, msg_type_, msg_len_, data + HEADER_SIZE);
+                    this, msg_type_, msg_id_, msg_len_, data + header_size_);
+
+                msg_type_ = msg_id_ = msg_len_ = 0;
 
                 // update state
-                state_ = StreamState::READ_TYPE_AND_LENGTH;
-                msg_len_ = 0;
+                state_ = StreamState::READ_HEADER;
 
                 auto rv = evbuffer_drain(input_evb, total_len);
                 CHECK_EQ(rv, 0);
@@ -97,10 +112,11 @@ GenericMessageChannel::_consume_input()
 }
 
 void
-GenericMessageChannel::sendMsg(uint8_t type, uint16_t len, const uint8_t* data)
+GenericMessageChannel::sendMsg(uint8_t type, uint16_t len,
+                               const uint8_t* data, uint32_t id)
 {
     VLOG(2) << "sending msg type: " << unsigned(type) << ", len: " << len;
-    _send_type_and_len(type, len);
+    _send_header(type, id, len);
 
     if (len) {
         const auto rv = channel_->write(data, len);
@@ -109,19 +125,26 @@ GenericMessageChannel::sendMsg(uint8_t type, uint16_t len, const uint8_t* data)
 }
 
 void
-GenericMessageChannel::sendMsg(uint8_t type)
+GenericMessageChannel::sendMsg(uint8_t type, uint32_t id)
 {
-    _send_type_and_len(type, 0);
+    _send_header(type, id, 0);
 }
 
 /* type and len values should be HOST byte order */
 void
-GenericMessageChannel::_send_type_and_len(uint8_t type, uint16_t len)
+GenericMessageChannel::_send_header(uint8_t type, uint32_t id, uint16_t len)
 {
     static_assert((sizeof type) == MSG_TYPE_SIZE, "bad sizes");
+    static_assert((sizeof id) == MSG_ID_SIZE, "bad sizes");
 
     auto rv = channel_->write((const uint8_t*)&type, sizeof(type));
     CHECK_EQ(rv, 0);
+
+    if (with_msg_id_) {
+        id = htonl(id);
+        auto rv = channel_->write((const uint8_t*)&id, sizeof(id));
+        CHECK_EQ(rv, 0);
+    }
 
     len = htons(len);
     rv = channel_->write((const uint8_t*)&len, sizeof(len));
@@ -131,12 +154,12 @@ GenericMessageChannel::_send_type_and_len(uint8_t type, uint16_t len)
 void
 GenericMessageChannel::_update_read_watermark()
 {
-    if (state_ == StreamState::READ_TYPE_AND_LENGTH) {
+    if (state_ == StreamState::READ_HEADER) {
         CHECK_EQ(msg_len_, 0);
-        channel_->set_read_watermark(HEADER_SIZE, 0);
+        channel_->set_read_watermark(header_size_, 0);
     } else {
         CHECK_GT(msg_len_, 0);
-        channel_->set_read_watermark(HEADER_SIZE + msg_len_, 0);
+        channel_->set_read_watermark(header_size_ + msg_len_, 0);
     }
 }
 

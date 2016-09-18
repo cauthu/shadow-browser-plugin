@@ -1,4 +1,6 @@
 
+#include <boost/bind.hpp>
+
 #include "ipc.hpp"
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
@@ -8,7 +10,7 @@
 
 
 using myio::StreamServer;
-using myio::GenericMessageChannel;
+using myipc::GenericIpcChannel;
 
 namespace msgs = myipc::ioservice::messages;
 using msgs::type;
@@ -66,8 +68,13 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
 {
     vlogself(2) << "ipc server got new client";
 
-    GenericMessageChannel::UniquePtr ch(
-        new GenericMessageChannel(std::move(channel), this));
+    GenericIpcChannel::UniquePtr ch(
+        new GenericIpcChannel(
+            evbase_,
+            std::move(channel),
+            boost::bind(&IPCServer::_on_msg_recv, this, _1, _2, _3, _4),
+            boost::bind(&IPCServer::_on_called, this, _1, _2, _3, _4, _5),
+            boost::bind(&IPCServer::_on_channel_status, this, _1, _2)));
 
     // use the id of the generic msg channel, not the stream channel,
     // as the routing id
@@ -88,13 +95,13 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
 
 #define IPC_MSG_HANDLER(TYPE)                                           \
     case msgs::type_ ## TYPE: {                                         \
-        _handle_ ## TYPE(routing_id, msgs::Get ## TYPE ## Msg(data));   \
+        _handle_ ## TYPE(routing_id, msgs::Get ## TYPE ## Msg(buf));   \
     }                                                                   \
     break;
 
 void
-IPCServer::onRecvMsg(GenericMessageChannel* channel, uint8_t type,
-                     uint16_t len, const uint8_t* data) noexcept
+IPCServer::_on_msg_recv(GenericIpcChannel* channel, uint8_t type,
+                        uint16_t len, const uint8_t* buf)
 {
     const auto routing_id = channel->objId();
 
@@ -107,27 +114,25 @@ IPCServer::onRecvMsg(GenericMessageChannel* channel, uint8_t type,
         IPC_MSG_HANDLER(Fetch)
 
     default:
-        CHECK(false) << "invalid IPC message type " << type;
+        logself(FATAL) << "invalid IPC message type " << type;
         break;
     }
 
 }
 
 void
-IPCServer::onEOF(GenericMessageChannel* ch) noexcept
+IPCServer::_on_called(GenericIpcChannel*, uint32_t id, uint8_t type,
+                        uint16_t len, const uint8_t* buf)
 {
-    const auto routing_id = ch->objId();
-    vlogself(2) << "ipc server client stream " << ch << " eof";
-    _remove_route(routing_id);
+    logself(FATAL) << "to do";
 }
 
 void
-IPCServer::onError(GenericMessageChannel* ch, int errorcode) noexcept
+IPCServer::_on_channel_status(GenericIpcChannel* ch,
+                              GenericIpcChannel::ChannelStatus status)
 {
     const auto routing_id = ch->objId();
-    // CHECK(inMap(client_channels_, routing_id));
-    logself(WARNING) << "ipc server client stream " << ch << " error: "
-                 << strerror(errorcode);
+    vlogself(2) << "ipc client stream " << ch << " closed";
     _remove_route(routing_id);
 }
 

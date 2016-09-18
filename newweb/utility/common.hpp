@@ -51,6 +51,8 @@ const uint16_t client_side_transport_proxy = 8080;
 const uint16_t server_side_transport_proxy = 8081;
 const uint16_t transport_proxy_ipc = 9010;
 
+const uint16_t io_service_ipc = 7000;
+
 } // namespace ports
 
 /* if "path" begins with '~', then replace '~' with the homedir path

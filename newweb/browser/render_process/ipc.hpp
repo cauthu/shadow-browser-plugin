@@ -3,31 +3,20 @@
 
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/generic_message_channel.hpp"
+#include "../../utility/ipc/generic_ipc_channel.hpp"
+#include "../../utility/object.hpp"
 
 
-/* sits on top of and uses a stream . also observe the generic message
- * stream channel and handle msgs
- */
-class IOServiceIPCClient : public folly::DelayedDestruction
-                         , public myio::StreamChannelConnectObserver
-                         , public myio::GenericMessageChannelObserver
+class IOServiceIPCClient : public Object
 {
 public:
     typedef std::unique_ptr<IOServiceIPCClient, /*folly::*/Destructor> UniquePtr;
 
-    explicit IOServiceIPCClient(myio::StreamChannel::UniquePtr);
+    explicit IOServiceIPCClient(struct event_base*,
+                                myio::StreamChannel::UniquePtr);
 
 protected:
 
-    /******* implement StreamChannelConnectObserver interface *********/
-    virtual void onConnected(myio::StreamChannel*) noexcept override;
-    virtual void onConnectError(myio::StreamChannel*, int errorcode) noexcept override;
-    virtual void onConnectTimeout(myio::StreamChannel*) noexcept override;
-
-    /******* implement GenericMessageChannelObserver interface *********/
-    virtual void onRecvMsg(myio::GenericMessageChannel*, uint8_t, uint16_t, const uint8_t*) noexcept override;
-    virtual void onEOF(myio::GenericMessageChannel*) noexcept override;
-    virtual void onError(myio::GenericMessageChannel*, int errorcode) noexcept override;
 
     //////
 
@@ -35,8 +24,12 @@ private:
 
     void _send_Hello();
 
-    myio::StreamChannel::UniquePtr transport_channel_;
-    myio::GenericMessageChannel::UniquePtr msg_channel_;
+    void _on_msg(myipc::GenericIpcChannel*, uint8_t type,
+                 uint16_t len, const uint8_t *data);
+    void _on_channel_status(myipc::GenericIpcChannel*,
+                            myipc::GenericIpcChannel::ChannelStatus);
+
+    myipc::GenericIpcChannel::UniquePtr gen_ipc_client_;
 };
 
 #endif /* ipc_hpp */

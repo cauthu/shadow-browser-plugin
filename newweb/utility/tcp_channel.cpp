@@ -239,7 +239,7 @@ void
 TCPChannel::_initialize_read_write_events()
 {
     CHECK_GE(fd_, 0);
-    vlogself(2) << "initialize (but not enable) read and write events, fd= " << fd_;
+    // vlogself(2) << "initialize (but not enable) read and write events, fd= " << fd_;
     socket_read_ev_.reset(
         event_new(evbase_, fd_, EV_READ | EV_PERSIST, s_socket_readcb, this));
     socket_write_ev_.reset(
@@ -259,7 +259,7 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
         _set_read_monitoring(true);
         _maybe_toggle_write_monitoring();
         connect_observer_->onConnected(this);
-        vlogself(2) << " current observer: " << observer_;
+        // vlogself(2) << " current observer: " << observer_;
     }
     else if (what & EV_TIMEOUT) {
         close();

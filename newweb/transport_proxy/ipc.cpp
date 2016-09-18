@@ -4,11 +4,13 @@
 #include "ipc.hpp"
 #include "../utility/common.hpp"
 #include "../utility/easylogging++.h"
+#include "../utility/folly/ScopeGuard.h"
+
 #include "utility/ipc/transport_proxy/gen/combined_headers"
 
 
 using myio::StreamServer;
-using myio::GenericMessageChannel;
+using myipc::GenericIpcChannel;
 using csp::ClientSideProxy;
 
 namespace msgs = myipc::transport_proxy::messages;
@@ -36,33 +38,81 @@ IPCServer::IPCServer(struct event_base* evbase,
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
     , csp_(std::move(csp))
+    , establish_tunnel_call_id_(0)
 {
     stream_server_->set_observer(this);
-    vlogself(2) << "tell stream server to start accepting";
+    vlogself(2) << "ipc server starts accepting";
     stream_server_->start_accepting();
-
-    csp_->kickstart(boost::bind(&IPCServer::_on_csp_ready, this, _1));
 }
+
+
+#undef BEGIN_BUILD_MSG_AND_SEND_AT_END
+#define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder)               \
+    auto const __type = msgs::type_ ## TYPE;                            \
+    VLOG(2) << "begin building msg type: " << __type;                   \
+    msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
+    SCOPE_EXIT {                                                        \
+        auto msg = msgbuilder.Finish();                                 \
+        bufbuilder.Finish(msg);                                         \
+        VLOG(2) << "send msg type: " << __type;                         \
+        ipc_client_channel_->sendMsg(                                   \
+            __type, bufbuilder.GetSize(),                               \
+            bufbuilder.GetBufferPointer());                             \
+    }
+
+#define BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(TYPE, bufbuilder, id)      \
+    auto const __type = msgs::type_ ## TYPE;                            \
+    VLOG(2) << "begin building msg type: " << __type;                   \
+    msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
+    SCOPE_EXIT {                                                        \
+        auto msg = msgbuilder.Finish();                                 \
+        bufbuilder.Finish(msg);                                         \
+        VLOG(2) << "send msg type: " << __type;                         \
+        ipc_client_channel_->reply(                                     \
+            id, __type, bufbuilder.GetSize(),                           \
+            bufbuilder.GetBufferPointer());                             \
+    }
 
 void
 IPCServer::_on_csp_ready(ClientSideProxy*)
 {
-    // csp_->start_defense_session(20, 5);
+    CHECK_GT(establish_tunnel_call_id_, 0);
+
+    flatbuffers::FlatBufferBuilder bufbuilder;
+
+    BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+        EstablishTunnelResp, bufbuilder, establish_tunnel_call_id_);
+
+    msgbuilder.add_tunnelIsReady(true);
 }
 
 void
-IPCServer::_handle_StartDefenseSession(const msgs::StartDefenseSessionMsg* msg)
+IPCServer::_handle_EstablishTunnel(const uint32_t& id,
+                                   const msgs::EstablishTunnelMsg* msg)
 {
-    vlogself(2) << "start defense session";
+    vlogself(2) << "tell csp to establish tunnel";
 
-    csp_->start_defense_session(msg->frequencyMs(),
-                                msg->durationSec());
+    CHECK_GT(id, 0);
+    CHECK_EQ(establish_tunnel_call_id_, 0);
+    establish_tunnel_call_id_ = id;
+
+    const auto rv = csp_->establish_tunnel(
+        boost::bind(&IPCServer::_on_csp_ready, this, _1),
+        msg->forceReconnect());
+    CHECK_EQ(rv, ClientSideProxy::EstablishReturnValue::PENDING);
 }
 
 void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
+    // accepted an ipc client
     _setup_client(std::move(channel));
+}
+
+void
+IPCServer::onAcceptError(StreamServer*, int errorcode) noexcept
+{
+    logself(WARNING) << "IPC server has accept error: " << strerror(errorcode);
 }
 
 void
@@ -70,15 +120,15 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
 {
     vlogself(2) << "ipc server got new client";
 
-    GenericMessageChannel::UniquePtr ch(
-        new GenericMessageChannel(std::move(channel), this));
-
-    // use the id of the generic msg channel, not the stream channel,
-    // as the routing id
-    const auto routing_id = ch->objId();
-
-    auto ret = client_channels_.insert(make_pair(routing_id, std::move(ch)));
-    CHECK(ret.second); // insist it was newly inserted
+    // supports only one ipc client at a time
+    CHECK(!ipc_client_channel_.get());
+    ipc_client_channel_.reset(
+        new GenericIpcChannel(
+            evbase_,
+            std::move(channel),
+            boost::bind(&IPCServer::_on_msg, this, _2, _3, _4),
+            boost::bind(&IPCServer::_on_called, this, _2, _3, _4, _5),
+            boost::bind(&IPCServer::_on_client_channel_status, this, _2)));
 }
 
 #define IPC_MSG_HANDLER(TYPE)                                           \
@@ -88,44 +138,38 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
     break;
 
 void
-IPCServer::onRecvMsg(GenericMessageChannel* channel, uint8_t type,
-                     uint16_t len, const uint8_t* data) noexcept
+IPCServer::_on_msg(uint8_t type,
+                   uint16_t len, const uint8_t* data)
 {
-    const auto routing_id = channel->objId();
+    logself(FATAL) << "to do";
+}
 
-    vlogself(2) << "recv'ed msg type= " << msgs::EnumNametype((msgs::type)type)
-                << ", len= " << len << ", from channel= " << routing_id;
+#define IPC_CALL_HANDLER(TYPE)                                          \
+    case msgs::type_ ## TYPE: {                                         \
+        _handle_ ## TYPE(id, msgs::Get ## TYPE ## Msg(data));           \
+    }                                                                   \
+    break;
 
+void
+IPCServer::_on_called(uint32_t id, uint8_t type,
+                      uint16_t len, const uint8_t* data)
+{
     switch (type) {
 
         // IPC_MSG_HANDLER(Hello)
-        IPC_MSG_HANDLER(StartDefenseSession)
+        IPC_CALL_HANDLER(EstablishTunnel)
 
     default:
-        CHECK(false) << "invalid IPC message type " << type;
+        CHECK(false) << "invalid IPC message type " << unsigned(type);
         break;
     }
 
 }
 
 void
-IPCServer::onEOF(GenericMessageChannel* ch) noexcept
+IPCServer::_on_client_channel_status(GenericIpcChannel::ChannelStatus status)
 {
-    const auto routing_id = ch->objId();
-    vlogself(2) << "ipc server client stream " << ch << " eof";
+    logself(FATAL) << "to do";
 }
 
-void
-IPCServer::onError(GenericMessageChannel* ch, int errorcode) noexcept
-{
-    const auto routing_id = ch->objId();
-    // CHECK(inMap(client_channels_, routing_id));
-    logself(WARNING) << "ipc server client stream " << ch << " error: "
-                 << strerror(errorcode);
-}
-
-void
-IPCServer::onAcceptError(StreamServer*, int errorcode) noexcept
-{
-    logself(WARNING) << "IPC server has accept error: " << strerror(errorcode);
-}
+#undef BEGIN_BUILD_MSG_AND_SEND_AT_END

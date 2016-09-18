@@ -1,0 +1,9 @@
+
+namespace myipc.renderer.messages;
+
+
+enum type:ubyte
+{
+    Load,
+    LoadResp,
+}

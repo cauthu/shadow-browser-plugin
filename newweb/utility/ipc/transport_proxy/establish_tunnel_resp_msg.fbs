@@ -1,0 +1,10 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+table EstablishTunnelRespMsg
+{
+    tunnelIsReady: bool;
+}
+
+root_type EstablishTunnelRespMsg;

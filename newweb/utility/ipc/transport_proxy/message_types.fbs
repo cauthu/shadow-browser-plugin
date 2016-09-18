@@ -4,6 +4,6 @@ namespace myipc.transport_proxy.messages;
 
 enum type:ubyte
 {
-    Connect,
-    StartDefenseSession,
+    EstablishTunnel,
+    EstablishTunnelResp,
 }

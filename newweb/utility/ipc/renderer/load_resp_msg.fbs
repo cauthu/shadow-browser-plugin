@@ -1,0 +1,9 @@
+
+namespace myipc.renderer.messages;
+
+
+table LoadRespMsg
+{
+}
+
+root_type LoadRespMsg;

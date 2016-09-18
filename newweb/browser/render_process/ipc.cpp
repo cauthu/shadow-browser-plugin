@@ -1,26 +1,34 @@
 
+#include <boost/bind.hpp>
+
 #include "../../utility/easylogging++.h"
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
+#include "utility/ipc/transport_proxy/gen/combined_headers"
 #include "ipc.hpp"
 
 
 using myio::StreamChannel;
-using myio::GenericMessageChannel;
+using myipc::GenericIpcChannel;
 
 
 namespace msgs = myipc::ioservice::messages;
 using msgs::type;
 
 
-IOServiceIPCClient::IOServiceIPCClient(StreamChannel::UniquePtr stream_channel)
-    : transport_channel_(std::move(stream_channel))
-    , msg_channel_(nullptr)
+IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
+                                       StreamChannel::UniquePtr stream_channel)
 {
     VLOG(2) << "setting up ipc conn to io process";
-    transport_channel_->start_connecting(this);
+    gen_ipc_client_.reset(
+        new GenericIpcChannel(
+            evbase,
+            std::move(stream_channel),
+            boost::bind(&IOServiceIPCClient::_on_msg, this, _1, _2, _3, _4),
+            boost::bind(&IOServiceIPCClient::_on_channel_status, this, _1, _2)));
 }
 
+#undef BEGIN_BUILD_MSG_AND_SEND_AT_END
 #define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder)               \
     auto const __type = msgs::type_ ## TYPE;                            \
     VLOG(2) << "begin building msg type: " << __type;                   \
@@ -37,65 +45,21 @@ IOServiceIPCClient::IOServiceIPCClient(StreamChannel::UniquePtr stream_channel)
 void
 IOServiceIPCClient::_send_Hello()
 {
-    flatbuffers::FlatBufferBuilder bufbuilder;
-    auto hoststr = bufbuilder.CreateString("cnn.com");
-
-    BEGIN_BUILD_MSG_AND_SEND_AT_END(Fetch, bufbuilder);
-
-    msgbuilder.add_host(hoststr);
-    msgbuilder.add_port(80);
-    msgbuilder.add_req_total_size(123);
-    msgbuilder.add_resp_headers_size(234);
-    msgbuilder.add_resp_body_size(29384);
 }
 
 void
-IOServiceIPCClient::onConnected(StreamChannel* ch) noexcept
+IOServiceIPCClient::_on_msg(GenericIpcChannel*, uint8_t type,
+                            uint16_t len, const uint8_t *data)
 {
-    CHECK_EQ(transport_channel_.get(), ch);
-    VLOG(2) << "transport connected";
-    msg_channel_.reset(new GenericMessageChannel(std::move(transport_channel_), this));
-    _send_Hello();
 }
 
 void
-IOServiceIPCClient::onConnectError(StreamChannel* ch, int) noexcept
+IOServiceIPCClient::_on_channel_status(GenericIpcChannel*,
+                                       GenericIpcChannel::ChannelStatus status)
 {
-    CHECK_EQ(transport_channel_.get(), ch);
-    CHECK(false); // not reached
-}
-
-void
-IOServiceIPCClient::onConnectTimeout(StreamChannel* ch) noexcept
-{
-    CHECK_EQ(transport_channel_.get(), ch);
-    CHECK(false); // not reached
-}
-
-void
-IOServiceIPCClient::onRecvMsg(GenericMessageChannel*, uint8_t type,
-                              uint16_t len, const uint8_t *data) noexcept
-{
-    VLOG(2) << "client received msg type " << type;
-    switch (type) {
-    case type::type_Fetch:
-        VLOG(2) << "client received change_priority msg";
-        break;
-    default:
-        CHECK(false); // not reached
-        break;
+    if (status == GenericIpcChannel::ChannelStatus::CLOSED) {
+        LOG(FATAL) << "trouble";
     }
 }
 
-void
-IOServiceIPCClient::onEOF(GenericMessageChannel*) noexcept
-{
-    CHECK(false); // not reached
-}
-
-void
-IOServiceIPCClient::onError(GenericMessageChannel*, int errorcode) noexcept
-{
-    CHECK(false); // not reached
-}
-
+#undef BEGIN_BUILD_MSG_AND_SEND_AT_END

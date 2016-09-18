@@ -28,13 +28,13 @@ int main(int argc, char **argv)
 
     /* ***************************************** */
 
-    const uint16_t ioservice_port = 12345;
+    const uint16_t ioservice_port = common::ports::io_service_ipc;
 
-    myio::TCPChannel::UniquePtr tcpChanForIPC(
+    myio::TCPChannel::UniquePtr tcpch1(
         new myio::TCPChannel(evbase.get(), common::getaddr("localhost"),
                              ioservice_port, nullptr));
-    IOServiceIPCClient::UniquePtr ipcclient(
-        new IOServiceIPCClient(std::move(tcpChanForIPC)));
+    IOServiceIPCClient::UniquePtr io_ipc_client(
+        new IOServiceIPCClient(evbase.get(), std::move(tcpch1)));
 
     /* ***************************************** */
 

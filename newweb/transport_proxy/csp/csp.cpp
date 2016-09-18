@@ -44,16 +44,35 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , stream_server_(std::move(streamserver))
     , peer_addr_(peer_addr), peer_port_(peer_port)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
-    , peer_fd_(-1)
+    , state_(State::INITIAL)
 {
 }
 
-void
-ClientSideProxy::kickstart(CSPReadyCb ready_cb)
+ClientSideProxy::EstablishReturnValue
+ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
+                                  const bool forceReconnect)
 {
-    CHECK_EQ(state_, State::INITIAL);
+    vlogself(2) << "begin";
+
+    CHECK((state_ == State::INITIAL) || (state_ == State::READY));
 
     ready_cb_ = ready_cb;
+
+    if (state_ == State::READY) {
+        vlogself(2) << "currently ready";
+        if (!forceReconnect) {
+            return EstablishReturnValue::ALREADY_READY;
+        }
+
+        vlogself(2) << "being forced to reestablish";
+
+        CHECK(!socks_connector_);
+        CHECK(!peer_channel_);
+        client_handlers_.clear();
+        buflo_ch_.reset();
+    }
+
+    state_ = State::INITIAL;
 
     // connect to peer first
     if (socks5_addr_) {
@@ -68,19 +87,17 @@ ClientSideProxy::kickstart(CSPReadyCb ready_cb)
 
     const auto rv = peer_channel_->start_connecting(this);
     CHECK_EQ(rv, 0);
-}
 
-bool
-ClientSideProxy::start_defense_session(const uint16_t& frequencyMs,
-                                       const uint16_t& durationSec)
-{
-    return buflo_ch_->start_defense_session(frequencyMs, durationSec);
+    vlogself(2) << "returning pending";
+    return EstablishReturnValue::PENDING;
 }
 
 void
 ClientSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
     vlogself(2) << "a new proxy client";
+
+    CHECK_EQ(state_, State::READY) << "for simplicity, should start client traffic only once the proxy is ready";
 
     ClientHandler::UniquePtr chandler(
         new ClientHandler(std::move(channel), buflo_ch_.get(),
@@ -163,18 +180,16 @@ ClientSideProxy::onSocksTargetConnectResult(
 void
 ClientSideProxy::_on_connected_to_ssp()
 {
-    peer_fd_ = peer_channel_->release_fd();
-    CHECK_GT(peer_fd_, 0);
+    const auto peer_fd = peer_channel_->release_fd();
+    CHECK_GT(peer_fd, 0);
 
     peer_channel_.reset();
 
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase_, peer_fd_, true, 512,
-            boost::bind(&ClientSideProxy::_on_buflo_channel_ready,
-                        this, _1),
-            boost::bind(&ClientSideProxy::_on_buflo_channel_closed,
-                        this, _1),
+            evbase_, peer_fd, true, 512,
+            boost::bind(&ClientSideProxy::_on_buflo_channel_status,
+                        this, _1, _2),
             NULL
             ));
     CHECK_NOTNULL(buflo_ch_.get());
@@ -198,16 +213,15 @@ ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 }
 
 void
-ClientSideProxy::_on_buflo_channel_ready(BufloMuxChannel*)
+ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
+                                          BufloMuxChannel::ChannelStatus status)
 {
-    DestructorGuard dg(this);
-    ready_cb_(this);
-}
-
-void
-ClientSideProxy::_on_buflo_channel_closed(myio::buflo::BufloMuxChannel*)
-{
-    LOG(FATAL) << "todo";
+    if (status == BufloMuxChannel::ChannelStatus::READY) {
+        DestructorGuard dg(this);
+        ready_cb_(this);
+    } else {
+        LOG(FATAL) << "todo";
+    }
 }
 
 void

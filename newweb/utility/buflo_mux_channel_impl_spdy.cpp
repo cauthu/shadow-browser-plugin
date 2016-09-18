@@ -71,16 +71,14 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side,
     size_t cell_size,
-    ChannelReadyCb ch_ready_cb,
-    ChannelClosedCb ch_closed_cb,
+    ChannelStatusCb ch_status_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
     : BufloMuxChannel(fd, is_client_side,
-                      ch_closed_cb,
+                      ch_status_cb,
                       st_connect_req_cb)
     , evbase_(evbase)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
-    , ch_ready_cb_(ch_ready_cb)
     , cell_size_(cell_size)
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
     , peer_cell_size_(0)
@@ -763,13 +761,15 @@ BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
 void
 BufloMuxChannelImplSpdy::_on_socket_eof()
 {
-    return;
+    DestructorGuard dg(this);
+    ch_status_cb_(this, ChannelStatus::CLOSED);
 }
 
 void
 BufloMuxChannelImplSpdy::_on_socket_error()
 {
-    return;
+    DestructorGuard dg(this);
+    ch_status_cb_(this, ChannelStatus::CLOSED);
 }
 
 void
@@ -840,7 +840,7 @@ BufloMuxChannelImplSpdy::_on_read_peer_cell_size(short what)
         CHECK_EQ(rv, 0);
 
         DestructorGuard dg(this);
-        ch_ready_cb_(this);
+        ch_status_cb_(this, ChannelStatus::READY);
     }
 }
 

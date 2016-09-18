@@ -46,10 +46,18 @@ public:
                             const in_addr_t& socks5_addr,
                             const in_port_t& socks5_port);
 
-    void kickstart(CSPReadyCb);
+    // void kickstart(CSPReadyCb);
 
-    bool start_defense_session(const uint16_t& frequencyMs,
-                               const uint16_t& durationSec);
+    enum class EstablishReturnValue
+    {
+        PENDING /* ok, the reconnect is taking place. will call
+                 * CSPReadyCb when ready */,
+        ALREADY_READY /* the tunnel is currently ready, and reconnect
+                       * was not forced. the CSPReadyCb will NOT be
+                       * called */,
+    };
+
+    EstablishReturnValue establish_tunnel(CSPReadyCb, const bool force_reconnect=true);
 
 protected:
 
@@ -74,8 +82,8 @@ protected:
 
     void _on_connected_to_ssp();
 
-    void _on_buflo_channel_ready(myio::buflo::BufloMuxChannel*);
-    void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
+    void _on_buflo_channel_status(myio::buflo::BufloMuxChannel*,
+                                  myio::buflo::BufloMuxChannel::ChannelStatus);
 
     // the ProxyClientHandler tells us it's closing down
     void _on_client_handler_done(ClientHandler*);
@@ -89,11 +97,11 @@ protected:
     const in_port_t peer_port_;
     const in_addr_t socks5_addr_;
     const in_port_t socks5_port_;
-    myio::TCPChannel::UniquePtr peer_channel_;
-    int peer_fd_;
-    myio::Socks5Connector::UniquePtr socks_connector_;
 
+    myio::TCPChannel::UniquePtr peer_channel_;
+    myio::Socks5Connector::UniquePtr socks_connector_;
     myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_ch_;
+
     enum class State {
         INITIAL,
         // Connecting to socks5 proxy

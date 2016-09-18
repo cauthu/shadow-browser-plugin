@@ -2,10 +2,13 @@
 namespace myipc.transport_proxy.messages;
 
 
-table ConnectMsg
+# msg for CSP to establish tunnel to SSP
+
+table EstablishTunnelMsg
 {
-    host: string;
-    port: ushort;
+    # if true, then force CSP to re-establish even if the tunnel is
+    # currently established
+    forceReconnect: bool;
 }
 
 root_type ConnectMsg;

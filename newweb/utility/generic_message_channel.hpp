@@ -38,7 +38,7 @@ class GenericMessageChannelObserver
 {
 public:
     /* "type" is the 2-byte type in the header mentioned above */
-    virtual void onRecvMsg(GenericMessageChannel*, uint8_t type,
+    virtual void onRecvMsg(GenericMessageChannel*, uint8_t type, uint32_t id,
                            uint16_t len, const uint8_t*) noexcept = 0;
     virtual void onEOF(GenericMessageChannel*) noexcept = 0;
     virtual void onError(GenericMessageChannel*, int errorcode) noexcept = 0;
@@ -58,17 +58,25 @@ class GenericMessageChannel : public StreamChannelObserver
 public:
     typedef std::unique_ptr<GenericMessageChannel, /*folly::*/Destructor> UniquePtr;
 
-    /* will take ownership of the stream channel */
-    explicit GenericMessageChannel(StreamChannel::UniquePtr, GenericMessageChannelObserver*);
+    /* will take ownership of the stream channel
+     *
+     * assumes that the channel is already connected, ready for data
+     * exchange, etc. i.e., will not call start_connecting()
+     */
+    explicit GenericMessageChannel(StreamChannel::UniquePtr,
+                                   GenericMessageChannelObserver*);
 
-    void sendMsg(uint8_t type, uint16_t len, const uint8_t* data);
-    void sendMsg(uint8_t type); // send empty msg
+    void sendMsg(uint8_t type, uint16_t len, const uint8_t* data,
+                 uint32_t id=0);
+    /* send empty msg, i.e., equivalent to sendMsg(type, 0, nullptr,
+     * id) */
+    void sendMsg(uint8_t type, uint32_t id=0);
 
 protected:
 
     static const int MSG_TYPE_SIZE = sizeof (uint8_t);
+    static const int MSG_ID_SIZE = sizeof (uint32_t);
     static const int MSG_LEN_SIZE = sizeof (uint16_t);
-    static const int HEADER_SIZE = MSG_TYPE_SIZE + MSG_LEN_SIZE;
 
     /* keep the destructor protected/private to prevent direct
      * deletion; use DelayedDestruction's destroy() method */
@@ -84,17 +92,21 @@ protected:
 
     void _consume_input();
     void _update_read_watermark();
-    void _send_type_and_len(uint8_t type, uint16_t len);
+    void _send_header(uint8_t type, uint32_t id, uint16_t len);
 
     StreamChannel::UniquePtr channel_; // the underlying stream
     GenericMessageChannelObserver* observer_; // dont free
+    const bool with_msg_id_;
+    const size_t header_size_;
 
     enum class StreamState {
-        READ_TYPE_AND_LENGTH, READ_MSG, CLOSED
+        READ_HEADER, READ_MSG, CLOSED
     } state_;
 
-    /* type and len of the current message we're extracting */
+    /* header fields of current message we're extracting. msg_id_ is
+     * optional, depends on whether with_msg_id_ */
     uint8_t msg_type_;
+    uint32_t msg_id_;
     uint16_t msg_len_;
 };
 

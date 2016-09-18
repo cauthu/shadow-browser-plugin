@@ -8,6 +8,7 @@ set(IO_PROCESS_SOURCES
   io_process.cpp
   ipc.cpp
   http_session.cpp
+  ${UTILITY_DIR}/object.cpp
   ${UTILITY_DIR}/stream_channel.cpp
   ${UTILITY_DIR}/timer.cpp
   ${UTILITY_DIR}/socks5_connector.cpp
@@ -19,7 +20,7 @@ set(IO_PROCESS_SOURCES
   ${UTILITY_DIR}/tcp_channel.cpp
   ${UTILITY_DIR}/tcp_server.cpp
   ${UTILITY_DIR}/generic_message_channel.cpp
-  ${UTILITY_DIR}/object.cpp
+  ${UTILITY_DIR}/ipc/generic_ipc_channel.cpp
 )
 
 set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})

@@ -40,10 +40,8 @@ CSPHandler::CSPHandler(struct event_base* evbase,
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
             evbase, fd, false, 1024,
-            boost::bind(&CSPHandler::_on_buflo_channel_ready,
-                        this, _1),
-            boost::bind(&CSPHandler::_on_buflo_channel_closed,
-                        this, _1),
+            boost::bind(&CSPHandler::_on_buflo_channel_status,
+                        this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,
                         this, _1, _2, _3, _4)
             ));
@@ -53,15 +51,16 @@ CSPHandler::CSPHandler(struct event_base* evbase,
 }
 
 void
-CSPHandler::_on_buflo_channel_ready(BufloMuxChannel*)
+CSPHandler::_on_buflo_channel_status(BufloMuxChannel*,
+                                     BufloMuxChannel::ChannelStatus status)
 {
-}
+    // we are on ssp, so we currently don't need to do anything about
+    // the ::READY status
 
-void
-CSPHandler::_on_buflo_channel_closed(BufloMuxChannel*)
-{
-    DestructorGuard dg(this);
-    handler_done_cb_(this);
+    if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
+        DestructorGuard dg(this);
+        handler_done_cb_(this);
+    }
 }
 
 void

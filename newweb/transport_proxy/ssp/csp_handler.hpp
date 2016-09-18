@@ -42,8 +42,8 @@ protected:
 
     ////////////
 
-    void _on_buflo_channel_ready(myio::buflo::BufloMuxChannel*);
-    void _on_buflo_channel_closed(myio::buflo::BufloMuxChannel*);
+    void _on_buflo_channel_status(myio::buflo::BufloMuxChannel*,
+                                  myio::buflo::BufloMuxChannel::ChannelStatus);
     void _on_buflo_new_stream_connect_request(
         myio::buflo::BufloMuxChannel*, int, const char*, uint16_t);
     void _on_stream_handler_done(StreamHandler*);

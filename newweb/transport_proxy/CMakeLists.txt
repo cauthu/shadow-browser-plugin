@@ -20,6 +20,7 @@ set(TRANSPORT_PROXY_SOURCES
   ${UTILITY_DIR}/socks5_connector.cpp
   ${UTILITY_DIR}/buflo_mux_channel_impl_spdy.cpp
   ${UTILITY_DIR}/generic_message_channel.cpp
+  ${UTILITY_DIR}/ipc/generic_ipc_channel.cpp
   ${UTILITY_DIR}/object.cpp
 )
 
