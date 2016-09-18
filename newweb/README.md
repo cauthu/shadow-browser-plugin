@@ -3,7 +3,7 @@ be used together; they will not be able to interact with other plugins
 like `browser` and `filetransfer` in the top level directory.
 
 NOTE: This is unpolished "research"-quality code. You should expect
-rough edges.
+rough edges. for development noes, see `DEV-NOTES.md`.
 
 # dependencies
 
