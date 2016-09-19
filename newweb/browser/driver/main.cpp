@@ -2,6 +2,7 @@
 #include <event2/event.h>
 #include <memory>
 #include <arpa/inet.h>
+#include <boost/lexical_cast.hpp>
 
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
@@ -19,6 +20,15 @@ int main(int argc, char **argv)
 
     common::init_easylogging();
 
+    uint16_t renderer_ipcport = common::ports::default_renderer_ipc;
+    for (int i = 0; i < argc; ++i) {
+        if (!strcmp(argv[i], "--rendererIpcPort")) {
+            renderer_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
+        }
+    }
+
+    CHECK_GT(renderer_ipcport, 0);
+
     START_EASYLOGGINGPP(argc, argv);
 
     LOG(INFO) << "driver_process starting...";
@@ -29,7 +39,8 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
     Driver::UniquePtr driver(
-        new Driver(evbase.get(), common::ports::transport_proxy_ipc));
+        new Driver(evbase.get(), common::ports::transport_proxy_ipc,
+                   renderer_ipcport));
 
     /* ***************************************** */
 

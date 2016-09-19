@@ -61,7 +61,7 @@ int main(int argc, char **argv)
                       common::ports::server_side_transport_proxy,
                       0, 0));
 
-        const uint ipcport = common::ports::transport_proxy_ipc;
+        const uint16_t ipcport = common::ports::transport_proxy_ipc;
         VLOG(2) << "ipc server listens on " << ipcport;
         tcpServerForIPC.reset(
             new myio::TCPServer(

@@ -27,7 +27,8 @@ public:
     typedef std::unique_ptr<Driver, Destructor> UniquePtr;
 
     explicit Driver(struct event_base*,
-                    const uint16_t tproxy_ipc_port);
+                    const uint16_t tproxy_ipc_port,
+                    const uint16_t renderer_ipc_port);
 
 private:
 
@@ -36,6 +37,10 @@ private:
 
     //////////////
 
+    /*  for controlling tproxy  */
+
+    void _on_tproxy_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
+                            uint16_t len, const uint8_t *data);
     void _on_tproxy_ipc_ch_status(myipc::GenericIpcChannel*,
                                   myipc::GenericIpcChannel::ChannelStatus);
 
@@ -43,17 +48,40 @@ private:
     void _on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
                                    uint16_t len, const uint8_t* buf);
 
-    void _on_tproxy_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
-                            uint16_t len, const uint8_t *data);
 
+    /*  for controlling renderer  */
 
+    void _on_renderer_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
+                              uint16_t len, const uint8_t *data);
+    void _on_renderer_ipc_ch_status(myipc::GenericIpcChannel*,
+                                    myipc::GenericIpcChannel::ChannelStatus);
+
+    void _load();
+    void _on_load_resp(myipc::GenericIpcChannel::RespStatus,
+                       uint16_t len, const uint8_t* buf);
+
+    void _maybe_start_load();
 
     /////
 
     struct event_base* evbase_;
 
+    myipc::GenericIpcChannel::UniquePtr renderer_ipc_ch_;
     myipc::GenericIpcChannel::UniquePtr tproxy_ipc_ch_;
 
+    enum class RendererState
+    {
+        NOT_READY,
+            READY
+    } renderer_state_;
+
+    enum class TProxyState
+    {
+        NOT_READY,
+            READY
+    } tproxy_state_;
+
+    
 };
 
 #endif /* end driver_hpp */

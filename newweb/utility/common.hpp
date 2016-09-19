@@ -53,6 +53,8 @@ const uint16_t transport_proxy_ipc = 9010;
 
 const uint16_t io_service_ipc = 7000;
 
+const uint16_t default_renderer_ipc = 6000;
+
 } // namespace ports
 
 /* if "path" begins with '~', then replace '~' with the homedir path

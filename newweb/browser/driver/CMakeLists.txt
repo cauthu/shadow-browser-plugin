@@ -8,6 +8,7 @@ set(DRIVER_PROCESS_SOURCES
   main.cpp
   driver.cpp
   driver_tproxy.cpp
+  driver_renderer.cpp
   ${UTILITY_DIR}/object.cpp
   ${UTILITY_DIR}/common.cc
   ${UTILITY_DIR}/stream_channel.cpp
@@ -19,6 +20,11 @@ set(DRIVER_PROCESS_SOURCES
 
 set(LINK_LIBS ${EVENT2_LIBRARIES})
 
+set(IPC_MSG_BUFS
+  transport_proxy_ipc_messages_flatbuffers
+  renderer_ipc_messages_flatbuffers
+  )
+
 ## create and install a shared library that can plug into shadow
 add_definitions(-DIN_SHADOW)
 add_shadow_plugin(shadow-plugin-driver_process ${DRIVER_PROCESS_SOURCES})
@@ -27,16 +33,17 @@ install(TARGETS shadow-plugin-driver_process DESTINATION plugins)
 
 add_dependencies(
   shadow-plugin-driver_process-bitcode
-  transport_proxy_ipc_messages_flatbuffers)
+  ${IPC_MSG_BUFS}
+  )
 
 
-# ## create and install an executable that can run outside of shadow
-# remove_definitions(-DIN_SHADOW)
-# add_executable(driver_process ${DRIVER_PROCESS_SOURCES})
-# target_link_libraries(driver_process ${LINK_LIBS})
-# install(TARGETS driver_process DESTINATION bin)
+## create and install an executable that can run outside of shadow
+remove_definitions(-DIN_SHADOW)
+add_executable(driver_process ${DRIVER_PROCESS_SOURCES})
+target_link_libraries(driver_process ${LINK_LIBS})
+install(TARGETS driver_process DESTINATION bin)
 
-# add_dependencies(
-#   driver_process
-#   transport_proxy_ipc_messages_flatbuffers)
-
+add_dependencies(
+  driver_process
+  ${IPC_MSG_BUFS}
+  )

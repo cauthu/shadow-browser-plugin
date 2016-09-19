@@ -1,11 +1,14 @@
-#ifndef ipc_hpp
-#define ipc_hpp
+#ifndef ipc_io_service_hpp
+#define ipc_io_service_hpp
 
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/generic_message_channel.hpp"
 #include "../../utility/ipc/generic_ipc_channel.hpp"
 #include "../../utility/object.hpp"
+#include "utility/ipc/renderer/gen/combined_headers"
 
+
+/* handle io service ipc interface, as a client */
 
 class IOServiceIPCClient : public Object
 {
@@ -32,4 +35,5 @@ private:
     myipc::GenericIpcChannel::UniquePtr gen_ipc_client_;
 };
 
-#endif /* ipc_hpp */
+
+#endif /* ipc_io_service_hpp */

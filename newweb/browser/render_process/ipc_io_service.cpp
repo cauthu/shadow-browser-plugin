@@ -5,7 +5,7 @@
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
 #include "utility/ipc/transport_proxy/gen/combined_headers"
-#include "ipc.hpp"
+#include "ipc_io_service.hpp"
 
 
 using myio::StreamChannel;
@@ -42,15 +42,24 @@ IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
             bufbuilder.GetBufferPointer());                             \
     }
 
-void
-IOServiceIPCClient::_send_Hello()
-{
-}
+#define IPC_MSG_HANDLER(TYPE)                                           \
+    case msgs::type_ ## TYPE: {                                         \
+        _handle_ ## TYPE(msgs::Get ## TYPE ## Msg(data));               \
+    }                                                                   \
+    break;
 
 void
 IOServiceIPCClient::_on_msg(GenericIpcChannel*, uint8_t type,
                             uint16_t len, const uint8_t *data)
 {
+    // switch (type) {
+
+    //     IPC_MSG_HANDLER(Load)
+
+    // default:
+    //     logself(FATAL) << "invalid IPC message type " << unsigned(type);
+    //     break;
+    // }
 }
 
 void
@@ -62,4 +71,5 @@ IOServiceIPCClient::_on_channel_status(GenericIpcChannel*,
     }
 }
 
+#undef IPC_MSG_HANDLER
 #undef BEGIN_BUILD_MSG_AND_SEND_AT_END

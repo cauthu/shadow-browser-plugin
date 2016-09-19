@@ -27,8 +27,11 @@ using myipc::GenericIpcChannel;
 
 
 Driver::Driver(struct event_base* evbase,
-               const uint16_t tproxy_ipc_port)
+               const uint16_t tproxy_ipc_port,
+               const uint16_t renderer_ipc_port)
     : evbase_(evbase)
+    , renderer_state_(RendererState::NOT_READY)
+    , tproxy_state_(TProxyState::NOT_READY)
 {
     vlogself(2) << "connect to tproxy ipc port: " << tproxy_ipc_port;
     myio::TCPChannel::UniquePtr tcpch1(
@@ -40,17 +43,22 @@ Driver::Driver(struct event_base* evbase,
             std::move(tcpch1),
             boost::bind(&Driver::_on_tproxy_ipc_msg, this, _1, _2, _3, _4),
             boost::bind(&Driver::_on_tproxy_ipc_ch_status, this, _1, _2)));
+
+    vlogself(2) << "connect to renderer ipc port: " << renderer_ipc_port;
+    myio::TCPChannel::UniquePtr tcpch2(
+        new myio::TCPChannel(evbase_, common::getaddr("localhost"),
+                             renderer_ipc_port, nullptr));
+    renderer_ipc_ch_.reset(
+        new GenericIpcChannel(
+            evbase_,
+            std::move(tcpch2),
+            boost::bind(&Driver::_on_renderer_ipc_msg, this, _1, _2, _3, _4),
+            boost::bind(&Driver::_on_renderer_ipc_ch_status, this, _1, _2)));
+
 }
 
 Driver::~Driver()
 {
-}
-
-void
-Driver::_on_tproxy_ipc_msg(GenericIpcChannel*, uint8_t,
-                           uint16_t, const uint8_t *)
-{
-    logself(FATAL) << "not reached";
 }
 
 void
@@ -60,6 +68,28 @@ Driver::_on_tproxy_ipc_ch_status(GenericIpcChannel*,
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
         _establish_tproxy_tunnel();
+        break;
+    }
+
+    case GenericIpcChannel::ChannelStatus::CLOSED: {
+        logself(FATAL) << "to do";
+        break;
+    }
+
+    default:
+        logself(FATAL) << "not reached";
+        break;
+    }
+}
+
+void
+Driver::_on_renderer_ipc_ch_status(GenericIpcChannel*,
+                                 GenericIpcChannel::ChannelStatus status)
+{
+    switch (status) {
+    case GenericIpcChannel::ChannelStatus::READY: {
+        renderer_state_ = RendererState::READY;
+        _maybe_start_load();
         break;
     }
 

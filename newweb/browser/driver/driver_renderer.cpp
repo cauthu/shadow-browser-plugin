@@ -3,15 +3,15 @@
 
 #include "../../utility/easylogging++.h"
 #include "../../utility/folly/ScopeGuard.h"
-#include "utility/ipc/transport_proxy/gen/combined_headers"
+#include "utility/ipc/renderer/gen/combined_headers"
 
 #include "driver.hpp"
 
 
 using myipc::GenericIpcChannel;
 
-namespace tproxymsgs = myipc::transport_proxy::messages;
-using tproxymsgs::type;
+namespace renderermsgs = myipc::renderer::messages;
+using renderermsgs::type;
 
 static const uint8_t s_resp_timeout_secs = 5;
 
@@ -32,53 +32,62 @@ static const uint8_t s_resp_timeout_secs = 5;
 
 #undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END
 #define BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(TYPE, bufbuilder, on_resp_status) \
-    auto const __type = tproxymsgs::type_ ## TYPE;                      \
-    auto const __resp_type = tproxymsgs::type_ ## TYPE ## Resp;         \
+    auto const __type = renderermsgs::type_ ## TYPE;                    \
+    auto const __resp_type = renderermsgs::type_ ## TYPE ## Resp;       \
     VLOG(2) << "begin building msg type: " << unsigned(__type);         \
-    tproxymsgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);              \
+    renderermsgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);            \
     SCOPE_EXIT {                                                        \
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
         VLOG(2) << "send msg type: " << unsigned(__type);               \
-        tproxy_ipc_ch_->call(                                           \
+        renderer_ipc_ch_->call(                                         \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer(), __resp_type,                 \
             on_resp_status, &s_resp_timeout_secs);                      \
     }
 
 void
-Driver::_on_tproxy_ipc_msg(GenericIpcChannel*, uint8_t,
-                           uint16_t, const uint8_t *)
+Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t,
+                             uint16_t, const uint8_t *)
 {
-    logself(FATAL) << "not reached";
+    logself(FATAL) << "to do";
+}
+
+
+void
+Driver::_maybe_start_load()
+{
+    vlogself(2) << "begin";
+    if (renderer_state_ == RendererState::READY) {
+        _load();
+    }
+    vlogself(2) << "done";
 }
 
 void
-Driver::_establish_tproxy_tunnel()
+Driver::_load()
 {
     flatbuffers::FlatBufferBuilder bufbuilder;
 
     BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
-        EstablishTunnel, bufbuilder,
-        boost::bind(&Driver::_on_establish_tunnel_resp, this, _2, _3, _4));
-
-    msgbuilder.add_forceReconnect(true);
+        Load, bufbuilder,
+        boost::bind(&Driver::_on_load_resp, this, _2, _3, _4));
 }
 
 void
-Driver::_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
-                                  uint16_t len, const uint8_t* buf)
+Driver::_on_load_resp(GenericIpcChannel::RespStatus status,
+                      uint16_t len, const uint8_t* buf)
 {
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "establishTunnel command times out";
     }
 
-    auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
-    CHECK(msg->tunnelIsReady());
+    // CHECK_EQ(status, GenericIpcChannel::RespStatus::RECV);
 
-    vlogself(2) << "tproxy is ready";
+    // auto msg = msgs::Get
+    // renderer_state_ = RendererState::READY;
 
-    tproxy_state_ = TProxyState::READY;
-
-    _maybe_start_load();
+    // _maybe_start_load();
 }
+
+#undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END
