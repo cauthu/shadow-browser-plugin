@@ -1,12 +1,15 @@
 set(IO_SERVICE_FBS
-  message_types.fbs
-  request_resource_msg.fbs
+  message_types.fbs.txt
+  request_resource_msg.fbs.txt
+  received_response_msg.fbs.txt
+  data_received_msg.fbs.txt
+  request_complete_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")
 
 foreach(in_fname ${IO_SERVICE_FBS})
-  string(REPLACE ".fbs" "_generated.h" out_fname ${in_fname})
+  string(REPLACE ".fbs.txt" "_generated.h" out_fname ${in_fname})
   set(COMBINED_HEADERS_CONTENT "${COMBINED_HEADERS_CONTENT}#include \"${out_fname}\"\n")
 endforeach()
 
