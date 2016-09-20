@@ -105,6 +105,7 @@ void
 GenericIpcChannel::reply(uint32_t id, uint8_t type, uint16_t len,
                          const uint8_t* buf)
 {
+    vlogself(2) << "sending reply id: " << id << " type: " << unsigned(type);
     gen_msg_ch_->sendMsg(type, len, buf, id);
 }
 

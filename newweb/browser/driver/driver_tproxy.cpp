@@ -34,12 +34,13 @@ static const uint8_t s_resp_timeout_secs = 5;
 #define BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(TYPE, bufbuilder, on_resp_status) \
     auto const __type = tproxymsgs::type_ ## TYPE;                      \
     auto const __resp_type = tproxymsgs::type_ ## TYPE ## Resp;         \
-    VLOG(2) << "begin building msg type: " << unsigned(__type);         \
+    VLOG(2) << "begin building msg type: "                              \
+            << tproxymsgs::EnumNametype(__type);                        \
     tproxymsgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);              \
     SCOPE_EXIT {                                                        \
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
-        VLOG(2) << "send msg type: " << unsigned(__type);               \
+        VLOG(2) << "send msg";                                          \
         tproxy_ipc_ch_->call(                                           \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer(), __resp_type,                 \

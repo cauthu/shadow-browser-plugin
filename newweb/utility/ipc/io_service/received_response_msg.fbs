@@ -1,0 +1,11 @@
+
+namespace myipc.ioservice.messages;
+
+/* similar purpose to chrome's ResourceMsg_ReceivedResponse */
+
+table ReceivedResponseMsg
+{
+    req_id: int;
+}
+
+root_type ReceivedResponseMsg;

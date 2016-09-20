@@ -1,7 +1,6 @@
 set(IO_SERVICE_FBS
   message_types.fbs
-  hello_msg.fbs
-  fetch_msg.fbs
+  request_resource_msg.fbs
   )
 
 set(COMBINED_HEADERS_CONTENT "")

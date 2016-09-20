@@ -1,0 +1,20 @@
+
+namespace myipc.ioservice.messages;
+
+/* similar purpose to chrome's ResourceHostMsg_RequestResource */
+
+table RequestResourceMsg
+{
+    /* picked by renderer, and io service will later include in its
+       messages so renderer can link with the correct request */
+    req_id: int;
+
+    host: string;
+    port: ushort = 80;
+
+    req_total_size: uint;
+    resp_meta_size: uint;
+    resp_body_size: uint;
+}
+
+root_type RequestResourceMsg;

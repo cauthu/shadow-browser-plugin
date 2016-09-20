@@ -47,9 +47,10 @@ static const uint8_t s_resp_timeout_secs = 5;
     }
 
 void
-Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t,
+Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t type,
                              uint16_t, const uint8_t *)
 {
+    vlogself(2) << "type: " << renderermsgs::EnumNametype((renderermsgs::type)type);
     logself(FATAL) << "to do";
 }
 
@@ -58,7 +59,9 @@ void
 Driver::_maybe_start_load()
 {
     vlogself(2) << "begin";
-    if (renderer_state_ == RendererState::READY) {
+    if (renderer_state_ == RendererState::READY
+        && tproxy_state_ == TProxyState::READY)
+    {
         _load();
     }
     vlogself(2) << "done";

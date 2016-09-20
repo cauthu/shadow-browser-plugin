@@ -31,6 +31,7 @@ Timer::Timer(struct event_base *evbase,
         rv = event_priority_set(&ev_, priority);
         CHECK_EQ(rv, 0);
     }
+    vlogself(2) << "timer constructed";
 }
 
 void

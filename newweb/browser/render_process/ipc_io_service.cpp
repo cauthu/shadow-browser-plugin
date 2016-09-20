@@ -16,11 +16,26 @@ namespace msgs = myipc::ioservice::messages;
 using msgs::type;
 
 
+#define _LOG_PREFIX(inst) << "io_ipc_cli= " << (inst)->objId() << ": "
+
+/* "inst" stands for instance, as in, instance of a class */
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
+#define vlogself(level) vloginst(level, this)
+
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
+#define logself(level) loginst(level, this)
+
+
 IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
-                                       StreamChannel::UniquePtr stream_channel)
+                                       StreamChannel::UniquePtr stream_channel,
+                                       ChannelStatusCb ch_status_cb)
+    : ch_status_cb_(ch_status_cb)
 {
     VLOG(2) << "setting up ipc conn to io process";
-    gen_ipc_client_.reset(
+    gen_ipc_chan_.reset(
         new GenericIpcChannel(
             evbase,
             std::move(stream_channel),
@@ -37,7 +52,7 @@ IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
         VLOG(2) << "send msg type: " << __type;                         \
-        msg_channel_->sendMsg(                                          \
+        gen_ipc_chan_->sendMsg(                                         \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer());                             \
     }
@@ -49,25 +64,89 @@ IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
     break;
 
 void
+IOServiceIPCClient::request_resource(const int& req_id,
+                                     const char* host,
+                          const uint16_t& port,
+                          const size_t& req_total_size,
+                          const size_t& resp_meta_size,
+                          const size_t& resp_body_size)
+{
+    vlogself(2) << "begin, [" << host << "]:" << port;
+
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        auto hoststr = bufbuilder.CreateString(host);
+
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestResource, bufbuilder);
+
+        msgbuilder.add_req_id(req_id);
+        msgbuilder.add_host(hoststr);
+        msgbuilder.add_port(port);
+        msgbuilder.add_req_total_size(req_total_size);
+        msgbuilder.add_resp_meta_size(resp_meta_size);
+        msgbuilder.add_resp_body_size(resp_body_size);
+    }
+
+    vlogself(2) << "done";
+}
+
+
+void
 IOServiceIPCClient::_on_msg(GenericIpcChannel*, uint8_t type,
                             uint16_t len, const uint8_t *data)
 {
-    // switch (type) {
+    switch (type) {
 
-    //     IPC_MSG_HANDLER(Load)
+        IPC_MSG_HANDLER(ReceivedResponse)
+        IPC_MSG_HANDLER(DataReceived)
+        IPC_MSG_HANDLER(RequestComplete)
 
-    // default:
-    //     logself(FATAL) << "invalid IPC message type " << unsigned(type);
-    //     break;
-    // }
+    default:
+        logself(FATAL) << "invalid IPC message type " << unsigned(type);
+        break;
+    }
+}
+
+void
+IOServiceIPCClient::_handle_ReceivedResponse(
+    const msgs::ReceivedResponseMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    vlogself(2) << "done";
+}
+
+void
+IOServiceIPCClient::_handle_DataReceived(
+    const msgs::DataReceivedMsg* msg)
+{
+    const auto length = msg->length();
+
+    vlogself(2) << "begin, length " << length;
+    vlogself(2) << "done";
+}
+
+void
+IOServiceIPCClient::_handle_RequestComplete(
+    const msgs::RequestCompleteMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    vlogself(2) << "YAY!!! request complete!";
+
+    vlogself(2) << "done";
 }
 
 void
 IOServiceIPCClient::_on_channel_status(GenericIpcChannel*,
                                        GenericIpcChannel::ChannelStatus status)
 {
+    DestructorGuard dg(this);
+
     if (status == GenericIpcChannel::ChannelStatus::CLOSED) {
-        LOG(FATAL) << "trouble";
+        ch_status_cb_(this, IOServiceIPCClient::ChannelStatus::CLOSED);
+    } else if (status == GenericIpcChannel::ChannelStatus::READY) {
+        ch_status_cb_(this, IOServiceIPCClient::ChannelStatus::READY);
     }
 }
 

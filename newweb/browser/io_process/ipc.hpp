@@ -10,8 +10,6 @@
 
 #include "net_config.hpp"
 
-namespace msgs = myipc::ioservice::messages;
-
 
 class HttpNetworkSession;
 
@@ -31,6 +29,20 @@ public:
                        myio::StreamServer::UniquePtr,
                        const NetConfig*);
 
+    /* notify the renderer that the response META information (status
+     * line and headers) for the request has been received */
+    void send_ReceivedResponse(const int& routing_id,
+                               const int& req_id);
+
+    /* notify renderer a chunk of response body is received */
+    void send_DataReceived(const int& routing_id,
+                           const int& req_id,
+                           const int& len);
+
+    void send_RequestComplete(const int& routing_id,
+                              const int& req_id,
+                              const bool& success);
+
 private:
 
     virtual ~IPCServer() = default;
@@ -41,8 +53,8 @@ private:
 
     ///////////
 
-    void _handle_Hello(const uint32_t&, const msgs::HelloMsg* msg);
-    void _handle_Fetch(const uint32_t&, const msgs::FetchMsg* msg);
+    void _handle_RequestResource(const int&,
+                                 const myipc::ioservice::messages::RequestResourceMsg*);
 
     void _setup_client(StreamChannel::UniquePtr);
     void _remove_route(const uint32_t& routing_id);
@@ -66,7 +78,7 @@ private:
      */
 
     /* map keys are the routing ids */
-    std::map<uint32_t, myipc::GenericIpcChannel::UniquePtr> client_channels_;
+    std::map<uint32_t, myipc::GenericIpcChannel::UniquePtr> client_ipc_channels_;
 
     /* multiple clients, with different routing ids, can share the
      * same session */

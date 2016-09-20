@@ -29,15 +29,13 @@ int main(int argc, char **argv)
 
     /* ***************************************** */
 
-    const uint16_t service_port = 12345;
-
     NetConfig netconf(common::getaddr("127.0.0.1"),
                       common::ports::client_side_transport_proxy,
                       false, false);
 
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), common::getaddr("localhost"),
-                            service_port, nullptr));
+                            common::ports::io_service_ipc, nullptr));
     IPCServer::UniquePtr ipcserver(
         new IPCServer(evbase.get(), std::move(tcpServerForIPC), &netconf));
 

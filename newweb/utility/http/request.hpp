@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <boost/function.hpp>
 
 #include "../object.hpp"
@@ -12,23 +13,6 @@ namespace http
 {
 
 class Connection;
-class Request;
-
-
-typedef boost::function<void(const int status, char **headers, Request* req)> ResponseMetaCb;
-/* tell the user of a block of response body data */
-typedef boost::function<void(const uint8_t *data, const size_t& len, Request* req)> ResponseBodyDataCb;
-
-/*
- * tell the user THE WHOLE response is done, whether or not there is a
- * response body, i.e., if there is response no body, then this will
- * be called after done receiving the headers
- *
- */
-typedef boost::function<void(Request *req)> ResponseDoneCb;
-
-/* tell the user the request is about to be sent into the network */
-typedef boost::function<void(Request *req)> RequestAboutToSendCb;
 
 
 /*
@@ -39,8 +23,30 @@ typedef boost::function<void(Request *req)> RequestAboutToSendCb;
 class Request : public Object
 {
 public:
+
+    typedef boost::function<void(const int status, char **headers, Request* req)> ResponseMetaCb;
+    /* tell the user of a block of response body data */
+    typedef boost::function<void(const uint8_t *data, const size_t& len, Request* req)> ResponseBodyDataCb;
+
+    /*
+     * tell the user THE WHOLE response is done, whether or not there
+     * is a response body, i.e., if there is response no body, then
+     * this will be called after done receiving the headers
+     *
+     */
+    typedef boost::function<void(Request *req)> ResponseDoneCb;
+
+    /* tell the user the request is about to be sent into the
+     * network */
+    typedef boost::function<void(Request *req)> RequestAboutToSendCb;
+
+
     Request(const std::string& host, const uint16_t& port,
+            /* how much to send to server, counting both header and
+             * body */
             const size_t& req_total_size,
+
+            /* how much to instruct server to send back */
             const size_t& resp_meta_size, const size_t& resp_body_size,
 
             RequestAboutToSendCb req_about_to_send_cb,
@@ -55,6 +61,7 @@ public:
         rsp_meta_cb_(status, headers, this);
     }
     void notify_rsp_body_data(const uint8_t *data, const size_t& len) {
+        // "data" IS null since we don't care about data, only len
         actual_resp_body_size_ += len;
         DestructorGuard dg(this);
         rsp_body_data_cb_(data, len, this);
@@ -106,6 +113,8 @@ private:
 
     uint8_t num_retries_;
 
+    // this is how much we send to sever, counting both header and
+    // body
     const size_t req_total_size_;
 
     // these are amounts we want the server to send to us

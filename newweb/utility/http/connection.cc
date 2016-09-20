@@ -874,7 +874,7 @@ Connection::spdylay_on_data_chunk_recv_cb(spdylay_session *session,
 
     CHECK(inMap(sid2req_, sid));
     Request* req = sid2req_[sid];
-    req->notify_rsp_body_data(data, len);
+    req->notify_rsp_body_data(nullptr, len);
 
     // logself(DEBUG, "done");
 }

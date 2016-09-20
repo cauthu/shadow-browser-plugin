@@ -8,7 +8,7 @@
 
 using std::shared_ptr;
 using std::string;
-
+using std::make_pair;
 
 
 #define _LOG_PREFIX(inst) << "hsess= " << (inst)->objId() << ": "
@@ -46,20 +46,25 @@ HttpNetworkSession::HttpNetworkSession(struct event_base* evbase,
 }
 
 void
-HttpNetworkSession::handle_Fetch(const msgs::FetchMsg* msg)
+HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
+                                           const char* host,
+                                           const uint16_t port,
+                                           const size_t req_total_size,
+                                           const size_t resp_meta_size,
+                                           const size_t resp_body_size)
 {
-    const string hostname(msg->host()->c_str());
-    const auto port = msg->port();
+    const string hostname(host);
 
-    vlogself(2) << "got fetch req: [" << hostname << ":" << port
-                << "] " << msg->req_total_size()
-                << ", " << msg->resp_headers_size()
-                << ", " << msg->resp_body_size();
+    vlogself(2) << "got RequestResource: id " << req_res_req_id
+                << " [" << hostname << ":" << port << "] "
+                << ", " << req_total_size
+                << ", " << resp_meta_size
+                << ", " << resp_body_size;
 
     shared_ptr<Request> req(
         new Request(
-            hostname, port, msg->req_total_size(),
-            msg->resp_headers_size(), msg->resp_body_size(),
+            hostname, port, req_total_size,
+            resp_meta_size, resp_body_size,
             NULL,
             boost::bind(
                 &HttpNetworkSession::_response_meta_cb, this, _1, _2, _3),
@@ -72,8 +77,14 @@ HttpNetworkSession::handle_Fetch(const msgs::FetchMsg* msg)
         );
     connman_->submit_request(req.get());
 
-    const auto ret = pending_requests_.insert(make_pair(req->objId(), req));
+    PendingRequestInfo pri;
+    pri.req_res_req_id = req_res_req_id;
+    pri.req = req;
+    const auto ret = pending_requests_.insert(make_pair(req->objId(), pri));
     CHECK(ret.second);
+
+    vlogself(2) << "res req id: " << req_res_req_id
+                << " linked up with request objId: " << req->objId();
 }
 
 void
@@ -81,25 +92,64 @@ HttpNetworkSession::_response_meta_cb(const int& status,
                                       char **headers,
                                       Request* req)
 {
-    dvlogself(2) << "begin";
+    const auto req_objId = req->objId();
+    vlogself(2) << "begin, req objId: " << req_objId;
 
-    // don't care to do anything other than making sure it's 200
     CHECK_EQ(status, 200);
 
-    dvlogself(2) << "done";
+    if (!inMap(pending_requests_, req_objId)) {
+        logself(FATAL) << "unknown request objId " << req_objId;
+    }
+
+    const auto req_res_req_id = pending_requests_[req_objId].req_res_req_id;
+
+    // tell renderer
+    ipcserver_->send_ReceivedResponse(routing_id_, req_res_req_id);
+
+    vlogself(2) << "done";
 }
 
 void
 HttpNetworkSession::_response_body_data_cb(
     const uint8_t *data, const size_t& len, Request* req)
 {
+    const auto req_objId = req->objId();
+    vlogself(2) << "begin, req objId: " << req_objId
+                << " len: " << len;
 
+    CHECK_GT(len, 0);
 
+    if (!inMap(pending_requests_, req_objId)) {
+        logself(FATAL) << "unknown request objId " << req_objId;
+    }
+
+    const auto req_res_req_id = pending_requests_[req_objId].req_res_req_id;
+
+    // tell renderer about the body data chunk (just its size)
+    ipcserver_->send_DataReceived(routing_id_, req_res_req_id, len);
+
+    vlogself(2) << "done";
 }
 
 
 void
 HttpNetworkSession::_response_done_cb(Request* req, bool success)
 {
+    const auto req_objId = req->objId();
+    vlogself(2) << "begin, req objId: " << req_objId;
 
+    if (!inMap(pending_requests_, req_objId)) {
+        logself(FATAL) << "unknown request objId " << req_objId;
+    }
+
+    const auto req_res_req_id = pending_requests_[req_objId].req_res_req_id;
+
+    if (!success) {
+        logself(WARNING) << "request objId " << req_objId << "failed";
+    }
+
+    // tell renderer about the body data chunk (just its size)
+    ipcserver_->send_RequestComplete(routing_id_, req_res_req_id, success);
+
+    vlogself(2) << "done";
 }

@@ -27,7 +27,7 @@
 #include "../../utility/object.hpp"
 #include "../../utility/http/request.hpp"
 #include "../../utility/http/connection_manager.hpp"
-#include "utility/ipc/io_service/gen/combined_headers"
+// #include "utility/ipc/io_service/gen/combined_headers"
 
 #include "ipc.hpp"
 #include "net_config.hpp"
@@ -43,7 +43,12 @@ public:
                                 uint32_t routing_id,
                                 const NetConfig*);
 
-    void handle_Fetch(const msgs::FetchMsg* msg);
+    void handle_RequestResource(const int req_res_req_id,
+                                           const char* host,
+                                           const uint16_t port,
+                                           const size_t req_total_size,
+                                           const size_t resp_meta_size,
+                                const size_t resp_body_size);
 
 private:
 
@@ -67,7 +72,12 @@ private:
 
     http::ConnectionManager::UniquePtr connman_;
 
-    std::map<uint32_t, std::shared_ptr<http::Request> > pending_requests_;
+    struct PendingRequestInfo
+    {
+        int req_res_req_id; /* from the requestresource msg */
+        std::shared_ptr<http::Request> req;
+    };
+    std::map<uint32_t, PendingRequestInfo > pending_requests_;
 };
 
 #endif /* end http_session_hpp */

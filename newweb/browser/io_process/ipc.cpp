@@ -4,6 +4,8 @@
 #include "ipc.hpp"
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
+#include "../../utility/folly/ScopeGuard.h"
+
 #include "utility/ipc/io_service/gen/combined_headers"
 
 #include "http_session.hpp"
@@ -31,6 +33,22 @@ using std::shared_ptr;
 #define logself(level) loginst(level, this)
 
 
+/* send the msg at the END OF CURRENT SCOPE */
+#define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder, ipc_ch)       \
+    auto const __type = msgs::type_ ## TYPE;                            \
+    VLOG(2) << "begin building msg type: " << msgs::EnumNametype(__type); \
+    msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
+    SCOPE_EXIT {                                                        \
+        auto msg = msgbuilder.Finish();                                 \
+        bufbuilder.Finish(msg);                                         \
+        VLOG(2) << "send msg";                                          \
+        ipc_ch->sendMsg(                                                \
+            __type, bufbuilder.GetSize(),                               \
+            bufbuilder.GetBufferPointer());                             \
+    }
+
+
+
 IPCServer::IPCServer(struct event_base* evbase,
                      StreamServer::UniquePtr streamserver,
                      const NetConfig* netconf)
@@ -44,17 +62,73 @@ IPCServer::IPCServer(struct event_base* evbase,
 }
 
 void
-IPCServer::_handle_Hello(const uint32_t& routing_id, const msgs::HelloMsg* msg)
+IPCServer::send_ReceivedResponse(const int& routing_id,
+                                 const int& req_id)
 {
-    vlogself(2) << "received HelloMsg: " << msg->resId() << ", " << msg->xyz();
+    vlogself(2) << "begin, req_id: " << req_id;
+
+    CHECK(inMap(client_ipc_channels_, routing_id));
+    auto ipc_ch = client_ipc_channels_[routing_id].get();
+    CHECK_NOTNULL(ipc_ch);
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(ReceivedResponse, bufbuilder, ipc_ch);
+
+        msgbuilder.add_req_id(req_id);
+    }
+
+    vlogself(2) << "done";
 }
 
 void
-IPCServer::_handle_Fetch(const uint32_t& routing_id, const msgs::FetchMsg* msg)
+IPCServer::send_DataReceived(const int& routing_id,
+                             const int& req_id,
+                             const int& len)
+{
+    vlogself(2) << "begin, req_id: " << req_id
+                << " len: " << len;
+
+    CHECK(inMap(client_ipc_channels_, routing_id));
+    auto ipc_ch = client_ipc_channels_[routing_id].get();
+    CHECK_NOTNULL(ipc_ch);
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(DataReceived, bufbuilder, ipc_ch);
+
+        msgbuilder.add_length(len);
+    }
+
+    vlogself(2) << "done";
+}
+
+void
+IPCServer::send_RequestComplete(const int& routing_id,
+                                const int& req_id,
+                                const bool& success)
+{
+    vlogself(2) << "begin, req_id: " << req_id
+                << " success: " << success;
+
+    CHECK(inMap(client_ipc_channels_, routing_id));
+    auto ipc_ch = client_ipc_channels_[routing_id].get();
+    CHECK_NOTNULL(ipc_ch);
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestComplete, bufbuilder, ipc_ch);
+    }
+
+    vlogself(2) << "done";
+}
+
+void
+IPCServer::_handle_RequestResource(const int& routing_id,
+                                   const msgs::RequestResourceMsg* msg)
 {
     vlogself(2) << "begin handling FetchMsg";
 
-    hsessions_[routing_id]->handle_Fetch(msg);
+    hsessions_[routing_id]->handle_RequestResource(
+        msg->req_id(), msg->host()->c_str(), msg->port(),
+        msg->req_total_size(), msg->resp_meta_size(), msg->resp_body_size());
 }
 
 void
@@ -80,7 +154,7 @@ IPCServer::_setup_client(StreamChannel::UniquePtr channel)
     // as the routing id
     const auto routing_id = ch->objId();
 
-    auto ret = client_channels_.insert(make_pair(routing_id, std::move(ch)));
+    auto ret = client_ipc_channels_.insert(make_pair(routing_id, std::move(ch)));
     CHECK(ret.second); // insist it was newly inserted
 
     // for now each client will get its own session
@@ -110,8 +184,7 @@ IPCServer::_on_msg_recv(GenericIpcChannel* channel, uint8_t type,
 
     switch (type) {
 
-        IPC_MSG_HANDLER(Hello)
-        IPC_MSG_HANDLER(Fetch)
+        IPC_MSG_HANDLER(RequestResource)
 
     default:
         logself(FATAL) << "invalid IPC message type " << type;
@@ -139,7 +212,7 @@ IPCServer::_on_channel_status(GenericIpcChannel* ch,
 void
 IPCServer::_remove_route(const uint32_t& routing_id)
 {
-    client_channels_.erase(routing_id);
+    client_ipc_channels_.erase(routing_id);
     hsessions_.erase(routing_id);
 }
 

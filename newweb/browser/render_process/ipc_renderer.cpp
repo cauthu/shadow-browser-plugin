@@ -1,12 +1,13 @@
 
 #include <boost/bind.hpp>
+#include <stdlib.h>     /* srand, rand */
 
 #include "../../utility/easylogging++.h"
 #include "../../utility/stream_server.hpp"
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/renderer/gen/combined_headers"
 #include "ipc_renderer.hpp"
-
+#include "main.hpp"
 
 using myio::StreamChannel;
 using myipc::GenericIpcChannel;
@@ -41,7 +42,7 @@ IPCServer::IPCServer(struct event_base* evbase,
 }
 
 
-#undef BEGIN_BUILD_MSG_AND_SEND_AT_END
+/* send the msg at the END OF CURRENT SCOPE */
 #define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder)               \
     auto const __type = msgs::type_ ## TYPE;                            \
     VLOG(2) << "begin building msg type: " << __type;                   \
@@ -55,6 +56,7 @@ IPCServer::IPCServer(struct event_base* evbase,
             bufbuilder.GetBufferPointer());                             \
     }
 
+/* send the msg at the END OF CURRENT SCOPE */
 #define BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(TYPE, bufbuilder, id)      \
     auto const __type = msgs::type_ ## TYPE;                            \
     VLOG(2) << "begin building msg type: " << __type;                   \
@@ -72,11 +74,23 @@ void
 IPCServer::_handle_Load(const uint32_t& id,
                         const msgs::LoadMsg* msg)
 {
+    vlogself(2) << "begin, id= " << id;
     CHECK_GT(id, 0);
-    CHECK_EQ(load_call_id_, 0);
+    CHECK_EQ(load_call_id_, 0) << load_call_id_;
     load_call_id_ = id;
 
-    
+    io_service_request_resource(
+        3124, "cnn.com", 80, 123, 234, 33000 + (rand() % 1000));
+
+    {
+        // send the response for the call
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+            LoadResp, bufbuilder, load_call_id_);
+    }
+
+    // reset it
+    load_call_id_ = 0;
 }
 
 void

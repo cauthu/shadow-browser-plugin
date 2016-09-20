@@ -4,6 +4,16 @@ namespace myipc.ioservice.messages;
 
 enum type:ubyte
 {
-    Hello,
-    Fetch,
+    /* renderer tells ioservice it wants to request a resource */
+    RequestResource,
+
+    /* ioservice tells renderer the meta info of the response has been received */
+    ReceivedResponse,
+
+    /* ioservice tells renderer about a received response body chunk */
+    DataReceived,
+
+    /* ioservice tells renderer a request has completed */
+    RequestComplete,
+
 }
