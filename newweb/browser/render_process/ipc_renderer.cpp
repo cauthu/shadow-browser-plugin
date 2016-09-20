@@ -45,12 +45,12 @@ IPCServer::IPCServer(struct event_base* evbase,
 /* send the msg at the END OF CURRENT SCOPE */
 #define BEGIN_BUILD_MSG_AND_SEND_AT_END(TYPE, bufbuilder)               \
     auto const __type = msgs::type_ ## TYPE;                            \
-    VLOG(2) << "begin building msg type: " << __type;                   \
+    VLOG(2) << "begin building msg type: " << msgs::EnumNametype(__type); \
     msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
     SCOPE_EXIT {                                                        \
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
-        VLOG(2) << "send msg type: " << __type;                         \
+        VLOG(2) << "send msg";                                          \
         ipc_client_channel_->sendMsg(                                   \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer());                             \
@@ -59,16 +59,27 @@ IPCServer::IPCServer(struct event_base* evbase,
 /* send the msg at the END OF CURRENT SCOPE */
 #define BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(TYPE, bufbuilder, id)      \
     auto const __type = msgs::type_ ## TYPE;                            \
-    VLOG(2) << "begin building msg type: " << __type;                   \
+    VLOG(2) << "begin building msg type: " << msgs::EnumNametype(__type); \
     msgs::TYPE ## MsgBuilder msgbuilder(bufbuilder);                    \
     SCOPE_EXIT {                                                        \
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
-        VLOG(2) << "send msg type: " << __type;                         \
+        VLOG(2) << "send msg";                                          \
         ipc_client_channel_->reply(                                     \
             id, __type, bufbuilder.GetSize(),                           \
             bufbuilder.GetBufferPointer());                             \
     }
+
+
+void
+IPCServer::send_Loaded()
+{
+    {
+        // send the response for the call
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(Loaded, bufbuilder);
+    }
+}
 
 void
 IPCServer::_handle_Load(const uint32_t& id,
@@ -79,7 +90,7 @@ IPCServer::_handle_Load(const uint32_t& id,
     CHECK_EQ(load_call_id_, 0) << load_call_id_;
     load_call_id_ = id;
 
-    io_service_request_resource(
+    io_service_send_request_resource(
         3124, "cnn.com", 80, 123, 234, 33000 + (rand() % 1000));
 
     {

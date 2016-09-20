@@ -68,7 +68,21 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
 
         CHECK(!socks_connector_);
         CHECK(!peer_channel_);
+
+        auto rv = stream_server_->pause_accepting();
+        CHECK(rv);
+
+        /* note that this calls destructors of the client handler, and
+         * those destructors used to notify our
+         * _on_client_handler_done() which will retry to delete the
+         * handler again causing double free. the fix we have employed
+         * is to make the handler not notify us when they're being
+         * destroyed. an alternative fix is for us to swap the
+         * client_handlers_ map with a local here that we clear, so
+         * when notified later, our client_handlers_ is empty and so
+         * we won't double free the handler */
         client_handlers_.clear();
+
         buflo_ch_.reset();
     }
 
@@ -233,7 +247,7 @@ ClientSideProxy::_on_client_handler_done(ClientHandler* chandler)
 
 ClientSideProxy::~ClientSideProxy()
 {
-    LOG(FATAL) << "not reached";
+    LOG(FATAL) << "to do";
 }
 
 } // namespace csp

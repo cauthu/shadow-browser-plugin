@@ -78,12 +78,15 @@ IPCServer::_on_csp_ready(ClientSideProxy*)
 {
     CHECK_GT(establish_tunnel_call_id_, 0);
 
-    flatbuffers::FlatBufferBuilder bufbuilder;
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
 
-    BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
-        EstablishTunnelResp, bufbuilder, establish_tunnel_call_id_);
+        BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+            EstablishTunnelResp, bufbuilder, establish_tunnel_call_id_);
+        msgbuilder.add_tunnelIsReady(true);
+    }
 
-    msgbuilder.add_tunnelIsReady(true);
+    establish_tunnel_call_id_ = 0;
 }
 
 void

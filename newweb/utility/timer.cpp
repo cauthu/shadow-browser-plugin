@@ -41,12 +41,9 @@ Timer::start(const struct timeval *tv)
         CHECK(timerisset(tv)) << "a repeating timer with 0 delay??";
     }
 
-    // true means either pending or active: need to specify EV_TIMEOUT
-    // to query whether timeout status
-    auto rv = event_pending(&ev_, EV_TIMEOUT, nullptr);
-    CHECK_EQ(rv, 0) << "timer is pending/firing; maybe you want restart()?";
+    CHECK(!is_running()) << "timer is pending/firing; maybe you want restart()?";
 
-    rv = event_add(&ev_, tv);
+    auto rv = event_add(&ev_, tv);
     CHECK_EQ(rv, 0);
 
     vlogself(2) << "timer started";
@@ -64,6 +61,15 @@ Timer::restart(const struct timeval *tv)
 {
     cancel();
     start(tv);
+}
+
+bool
+Timer::is_running() const
+{
+    // since we specify EV_TIMEOUT, event_pending will return
+    // EV_TIMEOUT if it's pending for EV_TIMEOUT
+    auto rv = event_pending(&ev_, EV_TIMEOUT, nullptr);
+    return (rv != 0);
 }
 
 Timer::~Timer()

@@ -5,6 +5,7 @@
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
 #include "ipc_io_service.hpp"
+#include "main.hpp"
 
 
 using myio::StreamChannel;
@@ -132,6 +133,8 @@ IOServiceIPCClient::_handle_RequestComplete(
     vlogself(2) << "begin";
 
     vlogself(2) << "YAY!!! request complete!";
+
+    renderer_send_Loaded();
 
     vlogself(2) << "done";
 }

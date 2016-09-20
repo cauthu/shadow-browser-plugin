@@ -45,6 +45,12 @@ public:
     void cancel();
     void restart(const struct timeval *tv);
 
+    /* 
+     * this will return true if the timer is scheduled to fire in the
+     * future or is firing right now
+     */
+    bool is_running() const;
+
 private:
 
     virtual ~Timer();

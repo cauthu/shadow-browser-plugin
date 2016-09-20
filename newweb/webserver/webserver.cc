@@ -24,9 +24,10 @@ Webserver::Webserver(StreamServer::UniquePtr streamserver)
 void
 Webserver::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
-    const auto id = channel->objId();
-    VLOG(2) << "web server got new client, objid= " << id;
+    VLOG(2) << "web server got new client";
+
     Handler::UniquePtr handler(new Handler(std::move(channel), this));
+    const auto id = handler->objId();
     const auto ret = handlers_.insert(make_pair(id, std::move(handler)));
     CHECK(ret.second); // insist it was newly inserted
 }

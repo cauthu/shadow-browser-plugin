@@ -156,6 +156,11 @@ StreamHandler::_close()
 StreamHandler::~StreamHandler()
 {
     vlogself(2) << "streamhandler destructing";
+    // currently we expect only the CSPHandler deletes us (e.g., on
+    // its destructor or when it tears down the buflo tunnel), so we
+    // don't need to notify it (because it might free us again),
+    // resulting in double free
+    handler_done_cb_ = NULL;
     _close();
 }
 

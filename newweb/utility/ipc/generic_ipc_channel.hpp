@@ -6,6 +6,7 @@
 // #include <event2/bufferevent.h>
 #include <memory>
 #include <map>
+#include <set>
 #include <boost/function.hpp>
 
 #include "../object.hpp"
@@ -142,6 +143,11 @@ protected:
         Timer::UniquePtr timeout_timer;
     };
     std::map<uint32_t, CallInfo> pending_calls_;
+
+    /* to store ids of calls that have timed out so we can ignore the
+     * response when they arrive
+     */
+    std::set<uint32_t> timed_out_call_ids_;
 };
 
 

@@ -148,6 +148,10 @@ GenericIpcChannel::onRecvMsg(GenericMessageChannel*, uint8_t type, uint32_t id,
                 << " but got type " << unsigned(type);
             pending_calls_[id].on_resp_status_cb(this, RespStatus::RECV, len, buf);
             pending_calls_.erase(id);
+
+        } else if (inSet(timed_out_call_ids_, id)) {
+            timed_out_call_ids_.erase(id);
+
         } else {
             // receiving a call, we must be server
             CHECK(!is_client_) << "currently only clients can send calls to servers";
@@ -178,6 +182,8 @@ GenericIpcChannel::_on_timeout_waiting_resp(Timer*, uint32_t id)
     pending_calls_[id].on_resp_status_cb(
         this, RespStatus::TIMEDOUT, 0, nullptr);
     pending_calls_.erase(id);
+
+    timed_out_call_ids_.insert(id);
 }
 
 } // end namespace myipc

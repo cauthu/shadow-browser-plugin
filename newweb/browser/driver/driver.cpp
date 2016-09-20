@@ -32,6 +32,7 @@ Driver::Driver(struct event_base* evbase,
     : evbase_(evbase)
     , renderer_state_(RendererState::NOT_READY)
     , tproxy_state_(TProxyState::NOT_READY)
+    , state_(State::PREPARING_LOAD)
 {
     vlogself(2) << "connect to tproxy ipc port: " << tproxy_ipc_port;
     myio::TCPChannel::UniquePtr tcpch1(
@@ -55,10 +56,28 @@ Driver::Driver(struct event_base* evbase,
             boost::bind(&Driver::_on_renderer_ipc_msg, this, _1, _2, _3, _4),
             boost::bind(&Driver::_on_renderer_ipc_ch_status, this, _1, _2)));
 
+    think_time_timer_.reset(
+        new Timer(evbase_, true,
+                  boost::bind(&Driver::_on_think_time_timer_fired, this, _1)));
 }
 
 Driver::~Driver()
 {
+}
+
+void
+Driver::_on_think_time_timer_fired(Timer*)
+{
+    vlogself(2) << "begin";
+
+    // done thinkin, so prepare another round of loading
+    CHECK_EQ(state_, State::THINKING);
+
+    state_ = State::PREPARING_LOAD;
+
+    _establish_tproxy_tunnel();
+   
+    vlogself(2) << "done";
 }
 
 void

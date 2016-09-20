@@ -57,6 +57,8 @@ Driver::_on_tproxy_ipc_msg(GenericIpcChannel*, uint8_t,
 void
 Driver::_establish_tproxy_tunnel()
 {
+    CHECK_EQ(state_, State::PREPARING_LOAD);
+
     flatbuffers::FlatBufferBuilder bufbuilder;
 
     BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(

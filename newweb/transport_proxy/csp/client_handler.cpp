@@ -289,7 +289,7 @@ ClientHandler::onError(StreamChannel*, int) noexcept
  * from anyone, we close by: first step is checking the barrier:
  * whether state is CLOSED, if not, set it, and then 1) reset/close
  * outer client channel, 2) reset/close inner stream if not null, 3)
- * notify csp we're done (calling handler_done_cb_)
+ * notify csp we're done (calling handler_done_cb_) if not null
  */
 void
 ClientHandler::_close()
@@ -322,6 +322,11 @@ ClientHandler::_close()
 ClientHandler::~ClientHandler()
 {
     vlogself(2) << "clienthandler destructing";
+    // currently we expect only the ClientSideProxy deletes us (e.g.,
+    // client_handlers_.clear() when it tears down the buflo tunnel),
+    // so we don't need to notify it (because it might free us again),
+    // resulting in double free
+    handler_done_cb_ = NULL;
     _close();
 }
 

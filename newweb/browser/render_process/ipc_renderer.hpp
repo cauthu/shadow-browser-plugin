@@ -19,6 +19,8 @@ public:
     explicit IPCServer(struct event_base*,
                        myio::StreamServer::UniquePtr);
 
+    void send_Loaded();
+
 private:
 
     /* StreamServerObserver interface */

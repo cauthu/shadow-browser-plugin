@@ -355,5 +355,5 @@ Handler::onInputBytesDropped(StreamChannel* channel, size_t len) noexcept
 
 Handler::~Handler()
 {
-    logself(INFO) << "handler " << objId() << " destructor";
+    vlogself(2) << "handler destructor";
 }

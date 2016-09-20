@@ -46,14 +46,52 @@ static const uint8_t s_resp_timeout_secs = 5;
             on_resp_status, &s_resp_timeout_secs);                      \
     }
 
+
+#define IPC_MSG_HANDLER(TYPE)                                           \
+    case renderermsgs::type_ ## TYPE: {                                 \
+        _handle_renderer_ ## TYPE(renderermsgs::Get ## TYPE ## Msg(data)); \
+    }                                                                   \
+    break;
+
+
 void
 Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t type,
-                             uint16_t, const uint8_t *)
+                             uint16_t, const uint8_t *data)
 {
     vlogself(2) << "type: " << renderermsgs::EnumNametype((renderermsgs::type)type);
-    logself(FATAL) << "to do";
+
+    switch (type) {
+
+        IPC_MSG_HANDLER(Loaded)
+
+    default:
+        logself(FATAL) << "invalid IPC message type " << unsigned(type);
+        break;
+    }
 }
 
+void
+Driver::_handle_renderer_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    CHECK_EQ(state_, State::LOADING);
+
+    // page has loaded
+
+    // TODO: inspect the success/failure bool, and do logging
+
+    // now, start the think time timer
+    struct timeval think_time;
+    think_time.tv_sec = 60;
+    think_time.tv_usec = 0;
+
+    state_ = State::THINKING;
+
+    think_time_timer_->start(&think_time);
+
+    vlogself(2) << "done";
+}
 
 void
 Driver::_maybe_start_load()
@@ -70,11 +108,16 @@ Driver::_maybe_start_load()
 void
 Driver::_load()
 {
-    flatbuffers::FlatBufferBuilder bufbuilder;
+    CHECK_EQ(state_, State::PREPARING_LOAD);
+    state_ = State::LOADING;
 
-    BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
-        Load, bufbuilder,
-        boost::bind(&Driver::_on_load_resp, this, _2, _3, _4));
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+
+        BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
+            Load, bufbuilder,
+            boost::bind(&Driver::_on_load_resp, this, _2, _3, _4));
+    }
 }
 
 void
@@ -82,15 +125,8 @@ Driver::_on_load_resp(GenericIpcChannel::RespStatus status,
                       uint16_t len, const uint8_t* buf)
 {
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "establishTunnel command times out";
+        logself(FATAL) << "Load command times out";
     }
-
-    // CHECK_EQ(status, GenericIpcChannel::RespStatus::RECV);
-
-    // auto msg = msgs::Get
-    // renderer_state_ = RendererState::READY;
-
-    // _maybe_start_load();
 }
 
 #undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END

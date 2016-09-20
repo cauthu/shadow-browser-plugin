@@ -6,4 +6,5 @@ enum type:ubyte
 {
     Load,
     LoadResp,
+    Loaded,
 }

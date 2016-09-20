@@ -56,17 +56,24 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
 }
 
 void
-io_service_request_resource(const int& req_id,
-                 const char* host,
-                 const uint16_t& port,
-                 const size_t& req_total_size,
-                 const size_t& resp_meta_size,
-                 const size_t& resp_body_size)
+io_service_send_request_resource(const int& req_id,
+                                 const char* host,
+                                 const uint16_t& port,
+                                 const size_t& req_total_size,
+                                 const size_t& resp_meta_size,
+                                 const size_t& resp_body_size)
 {
     io_service_ipc_client->request_resource(
         req_id, host, port, req_total_size, resp_meta_size, resp_body_size);
 }
 
+void
+renderer_send_Loaded()
+{
+    ipcserver->send_Loaded();
+}
+
+/*==================================================*/
 
 int main(int argc, char **argv)
 {

@@ -22,12 +22,6 @@ TCPServer::TCPServer(
     , state_(ServerState::INIT)
     , evlistener_(nullptr, evconnlistener_free)
 {
-}
-
-bool
-TCPServer::start_accepting()
-{
-    CHECK_EQ(state_, ServerState::INIT);
 
     /* create socket and manually bind so that we don't specify
      * SO_KEEPALIVE. evconnlistener_new_bind() uses SO_KEEPALIVE,
@@ -62,6 +56,18 @@ TCPServer::start_accepting()
             LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
             backlog, fd));
     CHECK_NOTNULL(evlistener_);
+
+    rv = evconnlistener_disable(evlistener_.get());
+    CHECK_EQ(rv, 0);
+}
+
+bool
+TCPServer::start_accepting()
+{
+    CHECK((state_ == ServerState::INIT) || (state_ == ServerState::PAUSED));
+
+    auto rv = evconnlistener_enable(evlistener_.get());
+    CHECK_EQ(rv, 0);
 
     state_ = ServerState::ACCEPTING;
 
