@@ -9,7 +9,7 @@ set(IO_SERVICE_FBS
 set(COMBINED_HEADERS_CONTENT "")
 
 foreach(in_fname ${IO_SERVICE_FBS})
-  string(REPLACE ".fbs.txt" "_generated.h" out_fname ${in_fname})
+  string(REPLACE ".fbs.txt" ".fbs_generated.h" out_fname ${in_fname})
   set(COMBINED_HEADERS_CONTENT "${COMBINED_HEADERS_CONTENT}#include \"${out_fname}\"\n")
 endforeach()
 

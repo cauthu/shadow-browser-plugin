@@ -4,7 +4,6 @@
 #include "../../utility/easylogging++.h"
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
-#include "utility/ipc/transport_proxy/gen/combined_headers"
 #include "ipc_io_service.hpp"
 
 

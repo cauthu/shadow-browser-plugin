@@ -1,13 +1,13 @@
 set(TRANSPORT_PROXY_FBS
-  message_types.fbs
-  establish_tunnel_msg.fbs
-  establish_tunnel_resp_msg.fbs
+  message_types.fbs.txt
+  establish_tunnel_msg.fbs.txt
+  establish_tunnel_resp_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")
 
 foreach(in_fname ${TRANSPORT_PROXY_FBS})
-  string(REPLACE ".fbs" "_generated.h" out_fname ${in_fname})
+  string(REPLACE ".fbs.txt" ".fbs_generated.h" out_fname ${in_fname})
   set(COMBINED_HEADERS_CONTENT "${COMBINED_HEADERS_CONTENT}#include \"${out_fname}\"\n")
 endforeach()
 
