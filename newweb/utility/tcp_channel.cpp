@@ -7,7 +7,7 @@
 #include "common.hpp"
 
 
-#define _LOG_PREFIX(inst) << "tcpCh= " << (inst)->objId() << ": "
+#define _LOG_PREFIX(inst) << "tcpCh= " << (inst)->objId() << " (fd=" << fd_ << "): "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -298,7 +298,7 @@ TCPChannel::_maybe_toggle_write_monitoring(bool force_enable)
         auto rv = event_add(socket_write_ev_.get(), nullptr);
         CHECK_EQ(rv, 0);
     } else {
-        // stop monitoring
+        dvlogself(2) << "stop monitoring";
         auto rv = event_del(socket_write_ev_.get());
         CHECK_EQ(rv, 0);
     }

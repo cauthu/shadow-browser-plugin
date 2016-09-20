@@ -107,6 +107,15 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
 }
 
 void
+ClientSideProxy::set_auto_start_defense_session_on_next_send()
+{
+    CHECK_EQ(state_, State::READY);
+    CHECK_NOTNULL(buflo_ch_.get());
+
+    buflo_ch_->set_auto_start_defense_session_on_next_send();
+}
+
+void
 ClientSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
     vlogself(2) << "a new proxy client";

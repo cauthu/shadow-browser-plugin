@@ -79,10 +79,12 @@ IPCServer::_on_csp_ready(ClientSideProxy*)
     CHECK_GT(establish_tunnel_call_id_, 0);
 
     {
+        // send the response
         flatbuffers::FlatBufferBuilder bufbuilder;
+        const auto id = establish_tunnel_call_id_;
 
         BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
-            EstablishTunnelResp, bufbuilder, establish_tunnel_call_id_);
+            EstablishTunnelResp, bufbuilder, id);
         msgbuilder.add_tunnelIsReady(true);
     }
 
@@ -103,6 +105,23 @@ IPCServer::_handle_EstablishTunnel(const uint32_t& id,
         boost::bind(&IPCServer::_on_csp_ready, this, _1),
         msg->forceReconnect());
     CHECK_EQ(rv, ClientSideProxy::EstablishReturnValue::PENDING);
+}
+
+void
+IPCServer::_handle_SetAutoStartDefenseOnNextSend(const uint32_t& id,
+                                                 const msgs::SetAutoStartDefenseOnNextSendMsg* msg)
+{
+    CHECK_GT(id, 0);
+
+    csp_->set_auto_start_defense_session_on_next_send();
+
+    {
+        // send the response
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+            SetAutoStartDefenseOnNextSendResp, bufbuilder, id);
+        msgbuilder.add_ok(true);
+    }
 }
 
 void
@@ -159,8 +178,8 @@ IPCServer::_on_called(uint32_t id, uint8_t type,
 {
     switch (type) {
 
-        // IPC_MSG_HANDLER(Hello)
         IPC_CALL_HANDLER(EstablishTunnel)
+        IPC_CALL_HANDLER(SetAutoStartDefenseOnNextSend)
 
     default:
         CHECK(false) << "invalid IPC message type " << unsigned(type);

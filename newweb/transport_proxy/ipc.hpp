@@ -42,6 +42,9 @@ private:
 
     void _handle_EstablishTunnel(const uint32_t& id,
                                  const msgs::EstablishTunnelMsg*);
+    void _handle_SetAutoStartDefenseOnNextSend(const uint32_t& id,
+                                               const msgs::SetAutoStartDefenseOnNextSendMsg*);
+
     void _on_csp_ready(csp::ClientSideProxy*);
 
 

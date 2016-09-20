@@ -1,0 +1,11 @@
+
+namespace myipc.renderer.messages;
+
+/* renderer notifies client of successful load */
+
+table LoadedMsg
+{
+    
+}
+
+root_type LoadedMsg;

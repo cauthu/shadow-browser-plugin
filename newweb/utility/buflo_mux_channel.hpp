@@ -69,6 +69,17 @@ public:
                                        const uint16_t& durationSec) = 0;
     virtual void stop_defense_session() = 0;
 
+    /* user wants to be defended, but only once he next actually has
+     * useful activity. "start_defense_session()" immediately starts
+     * defense session, and if user doesn't have data to send yet then
+     * it's wasteful because the channel will be sending dummy data
+     *
+     * after the defense session has stopped (on its own or
+     * stop_defense_session()), user has to call this again to
+     * re-enable this behavior
+     */
+    virtual void set_auto_start_defense_session_on_next_send() = 0;
+
     virtual bool set_stream_observer(int sid, BufloMuxChannelStreamObserver*) = 0;
     /* tell the channel that the stream connect request has
      * succeeded. if it has failed, the user can just call

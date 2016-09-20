@@ -59,6 +59,8 @@ public:
 
     EstablishReturnValue establish_tunnel(CSPReadyCb, const bool force_reconnect=true);
 
+    void set_auto_start_defense_session_on_next_send();
+
 protected:
 
     virtual ~ClientSideProxy();

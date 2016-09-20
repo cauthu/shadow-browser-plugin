@@ -6,4 +6,7 @@ enum type:ubyte
 {
     EstablishTunnel,
     EstablishTunnelResp,
+
+    SetAutoStartDefenseOnNextSend,
+    SetAutoStartDefenseOnNextSendResp,
 }

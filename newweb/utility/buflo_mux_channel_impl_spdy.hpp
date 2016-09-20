@@ -39,9 +39,13 @@ public:
                                const in_port_t& port,
                                BufloMuxChannelStreamObserver*) override;
 
+    /* this starts the timer but will NOT do any immediate write,
+     * i.e., it will start writing at the timer fired
+     */
     virtual bool start_defense_session(const uint16_t& frequencyMs,
                                        const uint16_t& durationSec) override;
     virtual void stop_defense_session() override;
+    virtual void set_auto_start_defense_session_on_next_send() override;
 
     /* BufloMuxChannel interface */
     virtual int create_stream(const char* host,
@@ -72,11 +76,13 @@ protected:
     void      _on_read_peer_cell_size(short what);
     static void s_read_peer_cell_size(int, short, void*);
 
-    /* return true if it does append a cell to cell outbuf */
+    /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() {return false;}
-    /* return true if it does append a cell to cell outbuf */
-    bool _maybe_add_data_cell_to_outbuf();
+    /* return true if it did add a cell to cell outbuf */
+    bool _maybe_add_ONE_data_cell_to_outbuf();
 
+    /* WILL move all data into cell outbuf. the current defense state
+     * must be NONE */
     bool _maybe_flush_data_to_cell_outbuf();
 
     /* this will add a dummy cell if there is not already a WHOLE
@@ -90,7 +96,7 @@ protected:
     void _send_cell_outbuf();
 
     void _read_cells();
-    void _handle_non_dummy_input_cell(size_t);
+    void _handle_input_cell();
     void _handle_failed_socket_io(const char* io_op_str,
                                   const ssize_t rv,
                                   bool crash_if_EINPROGRESS);
@@ -103,7 +109,13 @@ protected:
      * have to disable write monitoring if we don't have data to
      * write, otherwise will keep getting notified of the write event
      */
-    void _maybe_toggle_write_monitoring(bool force_enable=false);
+    enum class ForceToggleMode
+    {
+        NONE,
+        FORCE_ENABLE /* enable regardless of outbuf */,
+        FORCE_DISABLE /* disable regardless of outbuf */
+    };
+    void _maybe_toggle_write_monitoring(ForceToggleMode);
 
     void      _on_socket_readcb(int fd, short what);
     static void s_socket_readcb(int fd, short what, void* arg);
@@ -240,16 +252,40 @@ protected:
     size_t peer_cell_size_;
     size_t peer_cell_body_size_;
 
+    enum class DefenseState
+    {
+        NONE = 0,
+            PENDING_FIRST_SOCKET_WRITE /* want to start defense,
+                                        * but not until the next
+                                        * time we can write to
+                                        * socket. i.e., when
+                                        * PENDING_FIRST_SOCKET_WRITE,
+                                        * the timer is NOT
+                                        * running */,
+            ACTIVE /* the buflo timer is running */,
+    };
     struct {
+        /* note on interaction with
+         * auto_start_defense_session_on_next_send_: after
+         * auto_start_defense_session_on_next_send_ is set, the
+         * defense is NOT actually started until the first time we are
+         * able to write to socket */
         void reset()
         {
-            active = false;
+            // active = false;
+            state = DefenseState::NONE;
             frequencyMs = 0;
+            num_data_cells_added = 0;
             until = {0};
             prev_timer_fired = {0};
         }
-        bool active;
+        // bool active;
+        DefenseState state;
         uint16_t frequencyMs;
+
+        /* num added to cell_outbuf_, during either pending or
+         * active */
+        uint32_t num_data_cells_added;
         struct timeval until; /* absolute time defense should stay
                                 * active until */
         struct timeval prev_timer_fired;
@@ -271,7 +307,9 @@ protected:
 
     enum CellType : uint8_t
     {
-        CONTROL, DATA, DUMMY
+        DATA,
+        DUMMY,
+        CONTROL,
     };
 
     // the state we're in for processing the input.
@@ -282,7 +320,7 @@ protected:
 
     struct {
         ReadState state_;
-        uint8_t type_;
+        uint8_t type_n_flags_;
         uint16_t payload_len_;
 
         void reset()
@@ -293,8 +331,6 @@ protected:
     } cell_read_info_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
-
-
 };
 
 }

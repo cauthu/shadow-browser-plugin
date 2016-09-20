@@ -48,14 +48,14 @@ static const uint8_t s_resp_timeout_secs = 5;
     }
 
 void
-Driver::_on_tproxy_ipc_msg(GenericIpcChannel*, uint8_t,
+Driver::_tproxy_on_ipc_msg(GenericIpcChannel*, uint8_t,
                            uint16_t, const uint8_t *)
 {
     logself(FATAL) << "not reached";
 }
 
 void
-Driver::_establish_tproxy_tunnel()
+Driver::_tproxy_establish_tunnel()
 {
     CHECK_EQ(state_, State::PREPARING_LOAD);
 
@@ -63,25 +63,52 @@ Driver::_establish_tproxy_tunnel()
 
     BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
         EstablishTunnel, bufbuilder,
-        boost::bind(&Driver::_on_establish_tunnel_resp, this, _2, _3, _4));
+        boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4));
 
     msgbuilder.add_forceReconnect(true);
 }
 
 void
-Driver::_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
+Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
                                   uint16_t len, const uint8_t* buf)
 {
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "establishTunnel command times out";
+        logself(FATAL) << "command timed out";
     }
 
     auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
     CHECK(msg->tunnelIsReady());
 
+    _tproxy_set_auto_start_defense_on_next_send();
+}
+
+void
+Driver::_tproxy_set_auto_start_defense_on_next_send()
+{
+    CHECK_EQ(state_, State::PREPARING_LOAD);
+
+    flatbuffers::FlatBufferBuilder bufbuilder;
+
+    BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
+        SetAutoStartDefenseOnNextSend, bufbuilder,
+        boost::bind(&Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp,
+                    this, _2, _3, _4));
+}
+
+void
+Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(GenericIpcChannel::RespStatus status,
+                                                         uint16_t, const uint8_t* buf)
+{
+    if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
+        logself(FATAL) << "command timed out";
+    }
+
+    auto msg = tproxymsgs::GetSetAutoStartDefenseOnNextSendRespMsg(buf);
+    CHECK(msg->ok());
+
     vlogself(2) << "tproxy is ready";
 
     tproxy_state_ = TProxyState::READY;
 
-    _maybe_start_load();
+    _renderer_maybe_start_load();
 }

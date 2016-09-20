@@ -42,8 +42,8 @@ Driver::Driver(struct event_base* evbase,
         new GenericIpcChannel(
             evbase_,
             std::move(tcpch1),
-            boost::bind(&Driver::_on_tproxy_ipc_msg, this, _1, _2, _3, _4),
-            boost::bind(&Driver::_on_tproxy_ipc_ch_status, this, _1, _2)));
+            boost::bind(&Driver::_tproxy_on_ipc_msg, this, _1, _2, _3, _4),
+            boost::bind(&Driver::_tproxy_on_ipc_ch_status, this, _1, _2)));
 
     vlogself(2) << "connect to renderer ipc port: " << renderer_ipc_port;
     myio::TCPChannel::UniquePtr tcpch2(
@@ -53,8 +53,8 @@ Driver::Driver(struct event_base* evbase,
         new GenericIpcChannel(
             evbase_,
             std::move(tcpch2),
-            boost::bind(&Driver::_on_renderer_ipc_msg, this, _1, _2, _3, _4),
-            boost::bind(&Driver::_on_renderer_ipc_ch_status, this, _1, _2)));
+            boost::bind(&Driver::_renderer_on_ipc_msg, this, _1, _2, _3, _4),
+            boost::bind(&Driver::_renderer_on_ipc_ch_status, this, _1, _2)));
 
     think_time_timer_.reset(
         new Timer(evbase_, true,
@@ -75,18 +75,18 @@ Driver::_on_think_time_timer_fired(Timer*)
 
     state_ = State::PREPARING_LOAD;
 
-    _establish_tproxy_tunnel();
+    _tproxy_establish_tunnel();
    
     vlogself(2) << "done";
 }
 
 void
-Driver::_on_tproxy_ipc_ch_status(GenericIpcChannel*,
+Driver::_tproxy_on_ipc_ch_status(GenericIpcChannel*,
                                  GenericIpcChannel::ChannelStatus status)
 {
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
-        _establish_tproxy_tunnel();
+        _tproxy_establish_tunnel();
         break;
     }
 
@@ -102,13 +102,13 @@ Driver::_on_tproxy_ipc_ch_status(GenericIpcChannel*,
 }
 
 void
-Driver::_on_renderer_ipc_ch_status(GenericIpcChannel*,
+Driver::_renderer_on_ipc_ch_status(GenericIpcChannel*,
                                  GenericIpcChannel::ChannelStatus status)
 {
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
         renderer_state_ = RendererState::READY;
-        _maybe_start_load();
+        _renderer_maybe_start_load();
         break;
     }
 

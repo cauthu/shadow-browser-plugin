@@ -49,13 +49,13 @@ static const uint8_t s_resp_timeout_secs = 5;
 
 #define IPC_MSG_HANDLER(TYPE)                                           \
     case renderermsgs::type_ ## TYPE: {                                 \
-        _handle_renderer_ ## TYPE(renderermsgs::Get ## TYPE ## Msg(data)); \
+        _renderer_handle_ ## TYPE(renderermsgs::Get ## TYPE ## Msg(data)); \
     }                                                                   \
     break;
 
 
 void
-Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t type,
+Driver::_renderer_on_ipc_msg(GenericIpcChannel*, uint8_t type,
                              uint16_t, const uint8_t *data)
 {
     vlogself(2) << "type: " << renderermsgs::EnumNametype((renderermsgs::type)type);
@@ -71,7 +71,7 @@ Driver::_on_renderer_ipc_msg(GenericIpcChannel*, uint8_t type,
 }
 
 void
-Driver::_handle_renderer_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
+Driver::_renderer_handle_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
 {
     vlogself(2) << "begin";
 
@@ -94,19 +94,19 @@ Driver::_handle_renderer_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
 }
 
 void
-Driver::_maybe_start_load()
+Driver::_renderer_maybe_start_load()
 {
     vlogself(2) << "begin";
     if (renderer_state_ == RendererState::READY
         && tproxy_state_ == TProxyState::READY)
     {
-        _load();
+        _renderer_load();
     }
     vlogself(2) << "done";
 }
 
 void
-Driver::_load()
+Driver::_renderer_load()
 {
     CHECK_EQ(state_, State::PREPARING_LOAD);
     state_ = State::LOADING;
@@ -116,12 +116,12 @@ Driver::_load()
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             Load, bufbuilder,
-            boost::bind(&Driver::_on_load_resp, this, _2, _3, _4));
+            boost::bind(&Driver::_renderer_on_load_resp, this, _2, _3, _4));
     }
 }
 
 void
-Driver::_on_load_resp(GenericIpcChannel::RespStatus status,
+Driver::_renderer_on_load_resp(GenericIpcChannel::RespStatus status,
                       uint16_t len, const uint8_t* buf)
 {
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {

@@ -41,13 +41,13 @@ private:
 
     /*  for interacting with tproxy  */
 
-    void _on_tproxy_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
+    void _tproxy_on_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
                             uint16_t len, const uint8_t *data);
-    void _on_tproxy_ipc_ch_status(myipc::GenericIpcChannel*,
+    void _tproxy_on_ipc_ch_status(myipc::GenericIpcChannel*,
                                   myipc::GenericIpcChannel::ChannelStatus);
 
-    void _establish_tproxy_tunnel();
-    void _on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
+    void _tproxy_establish_tunnel();
+    void _tproxy_on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
                                    uint16_t len, const uint8_t* buf);
 
 
@@ -55,18 +55,22 @@ private:
 
     /*  for interacting with renderer  */
 
-    void _on_renderer_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
+    void _renderer_on_ipc_msg(myipc::GenericIpcChannel*, uint8_t type,
                               uint16_t len, const uint8_t *data);
-    void _on_renderer_ipc_ch_status(myipc::GenericIpcChannel*,
+    void _renderer_on_ipc_ch_status(myipc::GenericIpcChannel*,
                                     myipc::GenericIpcChannel::ChannelStatus);
 
-    void _load();
-    void _on_load_resp(myipc::GenericIpcChannel::RespStatus,
+    void _renderer_load();
+    void _renderer_on_load_resp(myipc::GenericIpcChannel::RespStatus,
                        uint16_t len, const uint8_t* buf);
 
-    void _maybe_start_load();
+    void _tproxy_set_auto_start_defense_on_next_send();
+    void _tproxy_on_set_auto_start_defense_on_next_send_resp(myipc::GenericIpcChannel::RespStatus,
+                                                          uint16_t, const uint8_t* buf);
 
-    void _handle_renderer_Loaded(const myipc::renderer::messages::LoadedMsg*);
+    void _renderer_maybe_start_load();
+
+    void _renderer_handle_Loaded(const myipc::renderer::messages::LoadedMsg*);
 
     //////////
 

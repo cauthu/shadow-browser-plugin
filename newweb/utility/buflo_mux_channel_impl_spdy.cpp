@@ -2,6 +2,7 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <string>
+#include <bitset>
 
 #include "buflo_mux_channel_impl_spdy.hpp"
 #include "common.hpp"
@@ -10,6 +11,7 @@
 using std::string;
 using std::vector;
 using std::pair;
+using std::bitset;
 
 #define _LOG_PREFIX(inst) << "buflomux= " << (inst)->objId() << ": "
 
@@ -23,11 +25,102 @@ using std::pair;
 #define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
+/*
+  cells are fixed size. each contains a header and a body. the header
+  has 1-byte "type-and-flags" field and a 2-byte length field. the
+  length field specifies the number of useful data bytes at the front
+  of the body, and the remaining bytes at the end of the body, if any,
+  are dummy bytes.
+
+  the type-and-flags field contains CELL_TYPE_WIDTH bits for the cell
+  type, and CELL_FLAGS_WIDTH bits for the flags.
+
+  this way, when the client side sends a data cell and also wants to
+  tell the server side to activate defense, it can include approparite
+  flags in the data cell. instead of having to send a separate control
+  cell. this is an optimization.
+
+  similarly, when the client wants to tell server to stop defending,
+  it can include a flag in a data cell, saving it from having to send
+  a separate control cell. however, to make the most of this, a cell
+  should be not written to the cell_outbuf_ until the last possible
+  moment, so that the cell's flags can be updated as late as
+  possible. for example, a data cell is prepared WITHOUT the STOP flag
+  and put into the cell_outbuf_. but the network is heavily is
+  congested and we can't write any data into socket for a while. then
+  once we are able to write, enough time has elapsed that we NOW WANT
+  to tell ssp to stop, but because cell has been put into the
+  cell_outbuf_ it's hard to update its flags.
 
 
-#define CELL_TYPE_FIELD_SIZE 1
+  XXX/the way we have it right now, we don't really need the DUMMY
+  cell type because we can just have a DATA cell with a zero payload
+  length, which is equivalent to a fully dummy cell. having a separate
+  dummy cell type is useful if, for example, for a dummy cell, we can
+  skip the length field
+
+
+  cell_outbuf_ contains the bytes that are sent into the socket.
+
+  in steady state of defense mode, the cell_outbuf_ should NEVER
+  contain two full cells; it might contain part of a cell that has
+  been partially written to the socket, followed by one full cell,
+  which is to ensure that when we want to write into the socket the
+  next time, there is always at least one full cell's worth of data to
+  write.
+
+*/
+
+// sizes in bytes
+#define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
 #define CELL_PAYLOAD_LEN_FIELD_SIZE 2
-#define CELL_HEADER_SIZE ((CELL_TYPE_FIELD_SIZE) + (CELL_PAYLOAD_LEN_FIELD_SIZE))
+#define CELL_HEADER_SIZE ((CELL_TYPE_AND_FLAGS_FIELD_SIZE) + (CELL_PAYLOAD_LEN_FIELD_SIZE))
+
+
+// in bits
+#define CELL_TYPE_WIDTH 3
+#define CELL_FLAGS_WIDTH (8 - CELL_TYPE_WIDTH)
+#define CELL_TYPE_MASK ((~0) << CELL_FLAGS_WIDTH)
+#define CELL_TYPE_SHIFT_AMT CELL_FLAGS_WIDTH
+
+
+// flags bit positions in cell flags
+#define CELL_FLAGS_START_DEFENSE_POSITION 0
+#define CELL_FLAGS_STOP_DEFENSE_POSITION 1
+
+static_assert(CELL_FLAGS_START_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
+              "bit position out-of-bounds");
+static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
+              "bit position out-of-bounds");
+
+/* extract the type from the type_and_flags field t_n_f */
+#define GET_CELL_TYPE(t_n_f) \
+    (((t_n_f) & CELL_TYPE_MASK) >> CELL_TYPE_SHIFT_AMT)
+
+/* set the type into the type_and_flags field t_n_f, without affecting
+ * current flags bits */
+#define SET_CELL_TYPE(t_n_f, type)                                      \
+    do {                                                                \
+        /* first, clear out the type bits in t_n_f */                   \
+        (t_n_f) &= ~CELL_TYPE_MASK;                                     \
+        /* left shift the type by CELL_TYPE_SHIFT_AMT, then or the */   \
+        /* result with the current t_n_f */                             \
+        (t_n_f) |= (type) << CELL_TYPE_SHIFT_AMT;                       \
+    } while (0)
+
+/* extract the flags from the type_and_flags field t_n_f */
+#define GET_CELL_FLAGS(t_n_f) \
+    ((t_n_f) & ~CELL_TYPE_MASK)
+
+/* set the flags into the type_and_flags field t_n_f, without
+ * affecting current type bits. the flags is assumed to be in-range */
+#define SET_CELL_FLAGS(t_n_f, flags)                            \
+    do {                                                        \
+        /* first clear out the flags bits in t_n_f */           \
+        (t_n_f) &= CELL_TYPE_MASK;                              \
+        /* or the flags into the t_n_f */                       \
+        (t_n_f) |= (flags);                                     \
+    } while (0)
 
 
 #define MAYBE_GET_STREAMSTATE(sid, errretval)                           \
@@ -43,29 +136,12 @@ using std::pair;
     } while(0)
 
 
+static void
+_self_test_bit_manipulation();
+
+
 namespace myio { namespace buflo
 {
-
-/*
-  cells are fixed size. each contains a header and a body. the header
-  has 1-byte type field and a 2-byte length field. the length field
-  specifies the number of useful data bytes at the front of the body,
-  and the remaining bytes at the end of the body, if any, are dummy
-  bytes
-
-  XXX/the way we have it right now, we don't really need the DUMMY
-  cell type because we can just have a DATA cell with a zero payload
-  length, which is equivalent to a fully dummy cell. having a separate
-  dummy cell type is useful if, for example, for a dummy cell, we can
-  skip the length field
-
-
-  in defense mode: cell_outbuf_ is to construct one cell to send to
-  socket. now, the socket might accept only a part of the write, then
-  the cell outbuf will still contain some bytes: all of those bytes
-  are part of the cell that has been partially writen and thus have to
-  be fully written
-*/
 
 BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
@@ -83,7 +159,6 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
-    , defense_info_{0}
     , whole_dummy_cell_at_end_outbuf_(false)
 {
     // for now, restrict set of possible sizes
@@ -138,6 +213,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     rv = event_base_once(evbase_, fd_, EV_READ|EV_TIMEOUT,
                          s_read_peer_cell_size, this, &timeout);
     CHECK_EQ(rv, 0);
+
+    _self_test_bit_manipulation();
 }
 
 int
@@ -178,10 +255,15 @@ bool
 BufloMuxChannelImplSpdy::start_defense_session(const uint16_t& frequencyMs,
                                                const uint16_t& durationSec)
 {
-    CHECK(!defense_info_.active) << "currently only support starting session when none is active";
+    CHECK_EQ(defense_info_.state, DefenseState::NONE)
+        << "currently only support starting session when none is active";
+
+    // some sanity checks
+    CHECK_GE(durationSec, 1);
+    CHECK_LE(durationSec, 30);
 
     CHECK((frequencyMs == 10)
-          || (frequencyMs == 20)
+          || (frequencyMs == 25)
           || (frequencyMs == 50)
         ); // TODO: support more
 
@@ -200,14 +282,31 @@ BufloMuxChannelImplSpdy::start_defense_session(const uint16_t& frequencyMs,
 
     buflo_timer_->start(&freq_tv);
 
-    defense_info_.active = true;
+    defense_info_.state = DefenseState::ACTIVE;
+
+    LOG(INFO) << "started defense";
+
     return true;
+}
+
+void
+BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
+{
+    CHECK_EQ(defense_info_.state, DefenseState::NONE);
+    CHECK(is_client_side_);
+
+    // data outbuf and cell_outbuf_must be empty
+    CHECK_EQ(evbuffer_get_length(spdy_outbuf_), 0);
+    CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
+
+    defense_info_.state = DefenseState::PENDING_FIRST_SOCKET_WRITE;
 }
 
 void
 BufloMuxChannelImplSpdy::stop_defense_session()
 {
-    CHECK(defense_info_.active); // for now
+    // for now requires it being active in order to stop
+    CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
 
     buflo_timer_->cancel();
     defense_info_.reset();
@@ -265,8 +364,10 @@ BufloMuxChannelImplSpdy::drain(int sid, size_t len)
     return 0;
 }
 
-uint8_t* BufloMuxChannelImplSpdy::peek(int sid, ssize_t len) 
+uint8_t*
+BufloMuxChannelImplSpdy::peek(int sid, ssize_t len) 
 {
+    logself(FATAL) << "to implement";
     return nullptr;
 }
 
@@ -354,19 +455,26 @@ BufloMuxChannelImplSpdy::close_stream(int sid)
 void
 BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 {
-    CHECK(defense_info_.active);
+    CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
 
     struct timeval current_tv;
     const auto rv = gettimeofday(&current_tv, nullptr);
     CHECK_EQ(rv, 0);
 
     if (evutil_timercmp(&current_tv, &defense_info_.until, >=)) {
-        vlogself(2) << "we're done defending, toggle write monitoring instead";
-        defense_info_.reset();
+        vlogself(2) << "we're done defending! " << defense_info_.num_data_cells_added
+                    << " data cells added during defense";
         buflo_timer_->cancel();
-        // not forcing
-        _maybe_toggle_write_monitoring(false);
-        return;
+        defense_info_.reset();
+
+        // allow to add control cells and pump spdy send
+        _maybe_add_control_cell_to_outbuf();
+
+        /* this will flush data cells and toggle write monitoring
+         * appropriately since we have reset the defense state to none
+         * above */
+        _pump_spdy_send();
+        goto done;
     }
 
     vlogself(2) << "begin";
@@ -375,14 +483,16 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         // there is already one or more cell's worth of bytes waiting
         // to be sent, so we just try to send it and return
         _send_cell_outbuf();
-        return;
+        goto done;
     }
+
+    // need to add another cell to cell outbuf
 
     // control has priority over data
     if (!_maybe_add_control_cell_to_outbuf()) {
         // no control things to add, so we can add spdy data
         _pump_spdy_send();
-        if (!_maybe_add_data_cell_to_outbuf()) {
+        if (!_maybe_add_ONE_data_cell_to_outbuf()) {
             // not even data, so add dummy
             _ensure_a_whole_dummy_cell_at_end_outbuf();
         }
@@ -393,13 +503,15 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 
     _send_cell_outbuf();
 
+done:
     vlogself(2) << "done";
 }
 
 /*
- * after telling spdy to write to its buf, if defense is not active,
- * then will enable write monitoring so we can actually send to peer
- * asap
+ * after telling spdy to write to its buf, if there is defense, then
+ * FLUSH all spdy data to cell outbuf (i.e., call
+ * _maybe_flush_data_to_cell_outbuf()) and will enable write
+ * monitoring so we can actually send to peer asap
  */
 void
 BufloMuxChannelImplSpdy::_pump_spdy_send()
@@ -420,11 +532,20 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
         return;
     }
 
-    if (!defense_info_.active) {
+    if (defense_info_.state == DefenseState::NONE) {
         vlogself(2) << "maybe flush to cell outbuf";
         if (_maybe_flush_data_to_cell_outbuf()) {
-            _maybe_toggle_write_monitoring(true);
+            // there is definitely in out buf so just force enable
+            _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
+    } else if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+        // we want to add only one cell
+        const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
+        // must have added
+        CHECK(rv);
+        _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
+    } else {
+        // defense is active, we don't enable write monitoring
     }
 
     vlogself(2) << "done";
@@ -452,19 +573,22 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
     vlogself(2) << "done";
 }
 
+/* will call _maybe_add_ONE_data_cell_to_outbuf()
+ */
 bool
 BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
 {
-    CHECK(!defense_info_.active);
+    CHECK_EQ(defense_info_.state, DefenseState::NONE);
     bool did_write = false;
     vlogself(2) << "begin, spdy outbuf len: "
                 << evbuffer_get_length(spdy_outbuf_);
+
     while (evbuffer_get_length(spdy_outbuf_)) {
-        const auto rv = _maybe_add_data_cell_to_outbuf();
+        const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
         CHECK(rv);
         did_write = true;
     }
-    vlogself(2) << "returning " << did_write;
+    vlogself(2) << "done, returning " << did_write;
     return did_write;
 }
 
@@ -472,9 +596,9 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
  * possibly add ONE cell of spdy data to the cell outbuf
  */
 bool
-BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
+BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
 {
-    static const uint8_t type_field = CellType::DATA;
+    // static const uint8_t type_field = CellType::DATA;
 
     /* append a data cell if there's data in spdy_outbuf_ */
 
@@ -488,8 +612,20 @@ BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
     }
 
     // add type and length
+    uint8_t type_n_flags = 0;
+    SET_CELL_TYPE(type_n_flags, CellType::DATA);
+
+    // should we set the START flag?
+    if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+        bitset<CELL_FLAGS_WIDTH> flags_bs(0);
+        flags_bs.set(CELL_FLAGS_START_DEFENSE_POSITION, true);
+
+        const auto flags_val = flags_bs.to_ulong();
+        SET_CELL_FLAGS(type_n_flags, flags_val);
+    }
+
     auto rv = evbuffer_add(
-        cell_outbuf_, (const uint8_t*)&type_field, sizeof type_field);
+        cell_outbuf_, (const uint8_t*)&type_n_flags, sizeof type_n_flags);
     CHECK_EQ(rv, 0);
     rv = evbuffer_add(
         cell_outbuf_, (const uint8_t*)&len_field, sizeof len_field);
@@ -519,21 +655,35 @@ BufloMuxChannelImplSpdy::_maybe_add_data_cell_to_outbuf()
         vlogself(2) << "no need for padding";
     }
 
+    if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+        ++defense_info_.num_data_cells_added;
+        CHECK_EQ(defense_info_.num_data_cells_added, 1);
+        // we expect that we are in the pending state only until the
+        // first cell has been written and the the state switches to
+        // acitive.
+    }
     return true;
 }
 
+/* will send the appropriate number of bytes based on whether a
+ * defense is active or not....
+ *
+ * does NOT add cells to cell_outbuf_; only tries to write
+ * cell_outbuf_ to socket
+ */
 void
 BufloMuxChannelImplSpdy::_send_cell_outbuf()
 {
     vlogself(2) << "begin";
 
-    if (defense_info_.active) {
-        // now tell socket to write ONE cell's worth of bytes
-
-        // there must be at least that much data in outbuf
+    if (defense_info_.state == DefenseState::ACTIVE) {
+        // there must be at least one cell in outbuf
         auto curbufsize = evbuffer_get_length(cell_outbuf_);
         CHECK_GE(curbufsize, cell_size_);
+        // but strictly less than two cells
+        CHECK_LT(curbufsize, (2*cell_size_));
 
+        vlogself(2) << "tell socket to write ONE cell's worth of bytes";
         const auto rv = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
         vlogself(2) << "evbuffer_write_atmost() return: " << rv;
 
@@ -550,11 +700,14 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
         } else {
             _handle_failed_socket_io("write", rv, false);
         }
+
     } else {
-        // now tell socket to write as much as possible
+        // not actively defending
+
+        vlogself(2) << "tell socket to write as much as possible";
         const auto rv = evbuffer_write_atmost(cell_outbuf_, fd_, -1);
         vlogself(2) << "evbuffer_write_atmost() return: " << rv;
-        _maybe_toggle_write_monitoring();
+        _maybe_toggle_write_monitoring(ForceToggleMode::NONE);
         if (rv <= 0) {
             _handle_failed_socket_io("write", rv, true);
         }
@@ -564,21 +717,37 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 }
 
 void
-BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(bool force_enable)
+BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(ForceToggleMode forcemode)
 {
-    CHECK(!defense_info_.active);
-    dvlogself(2) << "force= " << force_enable
-                 << ", cell_outbuf_ len= " << evbuffer_get_length(cell_outbuf_);
-    if (force_enable || evbuffer_get_length(cell_outbuf_)) {
-        // there is some output data to write, or we are being forced,
-        // then start monitoring
-        auto rv = event_add(socket_write_ev_.get(), nullptr);
-        CHECK_EQ(rv, 0);
+    // can be either pending or
+    CHECK((defense_info_.state == DefenseState::NONE)
+          || (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE));
+
+    auto rv = 0;
+
+    if (forcemode == ForceToggleMode::FORCE_ENABLE) {
+        goto enable;
+    } else if (forcemode == ForceToggleMode::FORCE_DISABLE) {
+        goto disable;
     } else {
-        // stop monitoring
-        auto rv = event_del(socket_write_ev_.get());
-        CHECK_EQ(rv, 0);
+        CHECK_EQ(forcemode, ForceToggleMode::NONE);
     }
+
+    if (evbuffer_get_length(cell_outbuf_) > 0) {
+        goto enable;
+    } else {
+        goto disable;
+    }
+
+enable:
+    rv = event_add(socket_write_ev_.get(), nullptr);
+    CHECK_EQ(rv, 0);
+    return;
+
+disable:
+    rv = event_del(socket_write_ev_.get());
+    CHECK_EQ(rv, 0);
+    return;
 }
 
 void
@@ -608,7 +777,7 @@ BufloMuxChannelImplSpdy::_handle_failed_socket_io(
 void
 BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
 {
-    CHECK(defense_info_.active);
+    CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
 
     // if there's already one dummy cell at the end of outbuf then we
     // don't want to add more
@@ -619,12 +788,13 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
         return;
     }
 
-    static const uint8_t type_field = CellType::DUMMY;
+    uint8_t type_n_flags = 0;
+    SET_CELL_TYPE(type_n_flags, CellType::DUMMY);
     static const uint16_t len_field = 0;
 
     // add type and length
     auto rv = evbuffer_add(
-        cell_outbuf_, (const uint8_t*)&type_field, sizeof type_field);
+        cell_outbuf_, (const uint8_t*)&type_n_flags, sizeof type_n_flags);
     CHECK_EQ(rv, 0);
     rv = evbuffer_add(
         cell_outbuf_, (const uint8_t*)&len_field, sizeof len_field);
@@ -673,18 +843,22 @@ BufloMuxChannelImplSpdy::_read_cells()
                 auto buf = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE);
                 CHECK_NOTNULL(buf);
 
-                memcpy((uint8_t*)&cell_read_info_.type_,
-                       buf, CELL_TYPE_FIELD_SIZE);
+                memcpy((uint8_t*)&cell_read_info_.type_n_flags_,
+                       buf, CELL_TYPE_AND_FLAGS_FIELD_SIZE);
                 memcpy((uint8_t*)&cell_read_info_.payload_len_,
-                       buf + CELL_TYPE_FIELD_SIZE, CELL_PAYLOAD_LEN_FIELD_SIZE);
+                       buf + CELL_TYPE_AND_FLAGS_FIELD_SIZE,
+                       CELL_PAYLOAD_LEN_FIELD_SIZE);
 
                 // convert to host byte order
-                cell_read_info_.payload_len_ = ntohs(cell_read_info_.payload_len_);
+                cell_read_info_.payload_len_ =
+                    ntohs(cell_read_info_.payload_len_);
 
                 // update state
                 cell_read_info_.state_ = ReadState::READ_BODY;
-                vlogself(2) << "got type= " << unsigned(cell_read_info_.type_)
-                            << ", payload len= " << cell_read_info_.payload_len_;
+                vlogself(2) << "got type= "
+                            << unsigned(cell_read_info_.type_n_flags_)
+                            << ", payload len= "
+                            << cell_read_info_.payload_len_;
 
                 // TODO: optimize: if cell type is dummy, do the
                 // drain/dropread logic here
@@ -698,17 +872,9 @@ BufloMuxChannelImplSpdy::_read_cells()
         case ReadState::READ_BODY:
             if (num_avail_bytes >= peer_cell_size_) {
 
-                if (cell_read_info_.type_ != CellType::DUMMY) {
-                    // TODO/ handle_non_dummy_input_cell will pump
-                    // spdy recv on the cell; maybe we consider
-                    // pumping spdy recv only once we have processed
-                    // all data cells available in the cell inbuf
-                    _handle_non_dummy_input_cell(cell_read_info_.payload_len_);
-                } else {
-                    // drain a whole cell from buf
-                    auto rv = evbuffer_drain(cell_inbuf_, peer_cell_size_);
-                    CHECK_EQ(rv, 0);
-                }
+                // this is responsible for removing the cell from the
+                // cell inbuf
+                _handle_input_cell();
 
                 cell_read_info_.reset();
             } else {
@@ -725,7 +891,7 @@ BufloMuxChannelImplSpdy::_read_cells()
 }
 
 void
-BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
+BufloMuxChannelImplSpdy::_handle_input_cell()
 {
     /*
      * the whole cell, including header, is available at the front of
@@ -735,25 +901,70 @@ BufloMuxChannelImplSpdy::_handle_non_dummy_input_cell(size_t payload_len)
      * responsible for removing the cell from the input buf
      */
 
-    CHECK_GT(payload_len, 0);
+    const auto payload_len = cell_read_info_.payload_len_;
+    CHECK_GE(payload_len, 0);
     CHECK_LE(payload_len, peer_cell_size_);
+
+    vlogself(2) << "begin";
 
     auto ptr = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE + payload_len);
 
-    switch (cell_read_info_.type_) {
+    // handle any flags
+    const auto cell_flags = GET_CELL_FLAGS(cell_read_info_.type_n_flags_);
+    if (cell_flags) {
+        const bitset<CELL_FLAGS_WIDTH> flags_bs(cell_flags);
+        vlogself(2) << "received cell flags: " << flags_bs;
+
+        const auto start_defense = flags_bs.test(CELL_FLAGS_START_DEFENSE_POSITION);
+        const auto stop_defense = flags_bs.test(CELL_FLAGS_STOP_DEFENSE_POSITION);
+
+        // cannot both start and stop
+        CHECK(! (start_defense && stop_defense));
+
+        if (start_defense) {
+            vlogself(2) << "start defending as requested by csp";
+            start_defense_session(25, 1);
+        }
+
+        if (stop_defense) {
+            logself(FATAL) << "to do";
+        }
+    }
+
+    // handle data
+    const auto cell_type = GET_CELL_TYPE(cell_read_info_.type_n_flags_);
+
+    vlogself(2) << "type: " << cell_type << " payload_len: " << payload_len;
+
+    switch (cell_type) {
+
     case CellType::DATA: {
         auto rv = evbuffer_add(spdy_inbuf_, ptr+CELL_HEADER_SIZE, payload_len);
         CHECK_EQ(rv, 0);
         _pump_spdy_recv();
         break;
     }
+
+    case CellType::DUMMY: {
+        // do nothing
+        break;
+    }
+
+    case CellType::CONTROL: {
+        logself(FATAL) << "to do";
+        break;
+    }
+
     default:
         logself(FATAL) << "not reached";
+        break;
     }
 
     // now drain the whole cell
     auto rv = evbuffer_drain(cell_inbuf_, peer_cell_size_);
     CHECK_EQ(rv, 0);
+
+    vlogself(2) << "done";
 
     return;
 }
@@ -801,11 +1012,29 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     // depend on socket events. if activating defense after the write
     // event has been added, then can tell libevent to remove the
     // event so we don't reach here
-    CHECK(!defense_info_.active);
+    CHECK_NE(defense_info_.state, DefenseState::ACTIVE);
 
     vlogself(2) << "begin";
 
     if (what & EV_WRITE) {
+        if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+            // for now, to keep logic simple, we insist that the
+            // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
+            // check that cell_outbuf_ has one cell
+            CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
+
+            /* disable write monitoring because we will start the
+             * defense, which will write when timer fires
+             */
+            _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
+
+            vlogself(2) << "automatically starting the defense";
+            // start_defense_session() will set to ACTIVE
+            defense_info_.state = DefenseState::NONE;
+            start_defense_session(50, 5);
+            // we have only started the timer. we will fall through to
+            // do the first write here
+        }
         _send_cell_outbuf();
     } else {
         CHECK(0) << "invalid events: " << what;
@@ -1307,3 +1536,76 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
 
 } // end namespace buflo
 } // end namespace myio
+
+
+static void
+_self_test_bit_manipulation()
+{
+    VLOG(2) << "begin";
+
+    static bool tested = false;
+    if (tested) {
+        VLOG(2) << "already tested, skipping";
+        return;
+    }
+
+    using std::bitset;
+
+#define TEST_GET(t_n_f_val, exp_t_val, exp_f_val)                       \
+    do {                                                                \
+        const uint8_t type_n_flags = t_n_f_val;                         \
+        const uint8_t type = GET_CELL_TYPE(type_n_flags);               \
+        const uint8_t flags = GET_CELL_FLAGS(type_n_flags);             \
+        VLOG(3) << "t_n_f= " << bitset<8>(type_n_flags);                \
+        VLOG(3) << "type=  " << bitset<CELL_TYPE_WIDTH>(type);          \
+        VLOG(3) << "flags=    " << bitset<CELL_FLAGS_WIDTH>(flags);     \
+        CHECK_EQ(type, exp_t_val);                                      \
+        CHECK_EQ(flags, exp_f_val);                                     \
+        VLOG(3) << "\n";                                                \
+    } while (0)
+
+    TEST_GET(0b00010101, 0b000, 0b10101);
+    TEST_GET(0b00110101, 0b001, 0b10101);
+    TEST_GET(0b01010101, 0b010, 0b10101);
+    TEST_GET(0b01110101, 0b011, 0b10101);
+    TEST_GET(0b10010101, 0b100, 0b10101);
+    TEST_GET(0b10110101, 0b101, 0b10101);
+    TEST_GET(0b11010101, 0b110, 0b10101);
+    TEST_GET(0b11110101, 0b111, 0b10101);
+
+    TEST_GET(0b11100000, 0b111, 0b00000);
+    TEST_GET(0b11110001, 0b111, 0b10001);
+    TEST_GET(0b00011111, 0b000, 0b11111);
+    TEST_GET(0b11100001, 0b111, 0b00001);
+    TEST_GET(0b11110000, 0b111, 0b10000);
+
+    // test setting
+
+#define TEST_SET(orig_t_n_f_val, t_val, f_val)                          \
+    do {                                                                \
+        uint8_t __type_n_flags = orig_t_n_f_val;                        \
+        const uint8_t o_type = GET_CELL_TYPE(__type_n_flags);           \
+        const uint8_t o_flags = GET_CELL_FLAGS(__type_n_flags);         \
+        SET_CELL_TYPE(__type_n_flags, t_val);                           \
+        SET_CELL_FLAGS(__type_n_flags, f_val);                          \
+        const uint8_t n_type = GET_CELL_TYPE(__type_n_flags);           \
+        const uint8_t n_flags = GET_CELL_FLAGS(__type_n_flags);         \
+        VLOG(3) << "o_type=  " << bitset<CELL_TYPE_WIDTH>(o_type);      \
+        VLOG(3) << "n_type=  " << bitset<CELL_TYPE_WIDTH>(n_type);      \
+        VLOG(3) << "o_flags=    " << bitset<CELL_FLAGS_WIDTH>(o_flags); \
+        VLOG(3) << "n_flags=    " << bitset<CELL_FLAGS_WIDTH>(n_flags); \
+        assert(n_type == t_val);                                        \
+        assert(n_flags == f_val);                                       \
+        VLOG(3) << "\n";                                                \
+    } while (0)
+
+    VLOG(3) << "============== test set ==========\n";
+
+    TEST_SET(0b00000000, 0b101, 0b00000);
+    TEST_SET(0b11111111, 0b000, 0b10001);
+    TEST_SET(0b10101010, 0b010, 0b10101);
+
+    tested = true;
+
+    VLOG(2) << "done";
+}
