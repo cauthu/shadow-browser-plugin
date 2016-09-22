@@ -2,6 +2,11 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLUDES})
 
+include_directories(AFTER ${UTILITY_DIR}/angelscript/include)
+add_definitions(-DAS_NO_THREADS)
+# add_definitions(-DAS_USE_NAMESPACE)
+
+
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(RENDER_PROCESS_SOURCES
@@ -16,6 +21,47 @@ set(RENDER_PROCESS_SOURCES
   ${UTILITY_DIR}/tcp_server.cpp
   ${UTILITY_DIR}/generic_message_channel.cpp
   ${UTILITY_DIR}/ipc/generic_ipc_channel.cpp
+)
+
+set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
+  ${UTILITY_DIR}/angelscript/source/as_atomic.cpp
+  ${UTILITY_DIR}/angelscript/source/as_builder.cpp
+  ${UTILITY_DIR}/angelscript/source/as_bytecode.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_arm.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_mips.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_ppc_64.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_ppc.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_sh4.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_x64_gcc.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_x64_mingw.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_x64_msvc.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_x86.cpp
+  ${UTILITY_DIR}/angelscript/source/as_callfunc_xenon.cpp
+  ${UTILITY_DIR}/angelscript/source/as_compiler.cpp
+  ${UTILITY_DIR}/angelscript/source/as_configgroup.cpp
+  ${UTILITY_DIR}/angelscript/source/as_context.cpp
+  ${UTILITY_DIR}/angelscript/source/as_datatype.cpp
+  ${UTILITY_DIR}/angelscript/source/as_gc.cpp
+  ${UTILITY_DIR}/angelscript/source/as_generic.cpp
+  ${UTILITY_DIR}/angelscript/source/as_globalproperty.cpp
+  ${UTILITY_DIR}/angelscript/source/as_memory.cpp
+  ${UTILITY_DIR}/angelscript/source/as_module.cpp
+  ${UTILITY_DIR}/angelscript/source/as_objecttype.cpp
+  ${UTILITY_DIR}/angelscript/source/as_outputbuffer.cpp
+  ${UTILITY_DIR}/angelscript/source/as_parser.cpp
+  ${UTILITY_DIR}/angelscript/source/as_restore.cpp
+  ${UTILITY_DIR}/angelscript/source/as_scriptcode.cpp
+  ${UTILITY_DIR}/angelscript/source/as_scriptengine.cpp
+  ${UTILITY_DIR}/angelscript/source/as_scriptfunction.cpp
+  ${UTILITY_DIR}/angelscript/source/as_scriptnode.cpp
+  ${UTILITY_DIR}/angelscript/source/as_scriptobject.cpp
+  ${UTILITY_DIR}/angelscript/source/as_string.cpp
+  ${UTILITY_DIR}/angelscript/source/as_string_util.cpp
+  ${UTILITY_DIR}/angelscript/source/as_thread.cpp
+  ${UTILITY_DIR}/angelscript/source/as_tokenizer.cpp
+  ${UTILITY_DIR}/angelscript/source/as_typeinfo.cpp
+  ${UTILITY_DIR}/angelscript/source/as_variablescope.cpp
 )
 
 set(LINK_LIBS ${EVENT2_LIBRARIES})
