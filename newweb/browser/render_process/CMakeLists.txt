@@ -2,7 +2,10 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLUDES})
 
+include_directories(AFTER ${UTILITY_DIR})
 include_directories(AFTER ${UTILITY_DIR}/angelscript/include)
+
+# we want single-threaded angelscript
 add_definitions(-DAS_NO_THREADS)
 # add_definitions(-DAS_USE_NAMESPACE)
 
@@ -22,6 +25,17 @@ set(RENDER_PROCESS_SOURCES
   ${UTILITY_DIR}/generic_message_channel.cpp
   ${UTILITY_DIR}/ipc/generic_ipc_channel.cpp
 )
+
+# webengine sources
+set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
+  webengine/webengine.cpp
+  webengine/events/EventTypeNames.cpp
+  webengine/events/EventTarget.cpp
+  webengine/fetch/Resource.cpp
+  webengine/dom/Node.cpp
+  webengine/dom/Element.cpp
+  webengine/html/HTMLImageElement.cpp
+  )
 
 set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
   ${UTILITY_DIR}/angelscript/source/as_atomic.cpp
@@ -62,6 +76,14 @@ set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
   ${UTILITY_DIR}/angelscript/source/as_tokenizer.cpp
   ${UTILITY_DIR}/angelscript/source/as_typeinfo.cpp
   ${UTILITY_DIR}/angelscript/source/as_variablescope.cpp
+)
+
+set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
+  ${UTILITY_DIR}/angelscript/add_on/scriptstdstring/scriptstdstring.cpp
+  ${UTILITY_DIR}/angelscript/add_on/scriptstdstring/scriptstdstring_utils.cpp
+
+  ${UTILITY_DIR}/angelscript/add_on/scriptarray/scriptarray.cpp
+
 )
 
 set(LINK_LIBS ${EVENT2_LIBRARIES})

@@ -5,7 +5,6 @@
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/io_service/gen/combined_headers"
 #include "ipc_io_service.hpp"
-#include "main.hpp"
 
 
 using myio::StreamChannel;
@@ -111,32 +110,26 @@ void
 IOServiceIPCClient::_handle_ReceivedResponse(
     const msgs::ReceivedResponseMsg* msg)
 {
-    vlogself(2) << "begin";
-
-    vlogself(2) << "done";
+    CHECK_NOTNULL(resource_msg_handler_);
+    resource_msg_handler_->handle_ReceivedResponse(msg->req_id());
 }
 
 void
 IOServiceIPCClient::_handle_DataReceived(
     const msgs::DataReceivedMsg* msg)
 {
-    const auto length = msg->length();
-
-    vlogself(2) << "begin, length " << length;
-    vlogself(2) << "done";
+    CHECK_NOTNULL(resource_msg_handler_);
+    resource_msg_handler_->handle_DataReceived(
+        msg->req_id(), msg->length());
 }
 
 void
 IOServiceIPCClient::_handle_RequestComplete(
     const msgs::RequestCompleteMsg* msg)
 {
-    vlogself(2) << "begin";
-
-    vlogself(2) << "YAY!!! request complete!";
-
-    renderer_send_Loaded();
-
-    vlogself(2) << "done";
+    CHECK_NOTNULL(resource_msg_handler_);
+    resource_msg_handler_->handle_RequestComplete(
+        msg->req_id(), msg->success());
 }
 
 void

@@ -7,7 +7,6 @@
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/renderer/gen/combined_headers"
 #include "ipc_renderer.hpp"
-#include "main.hpp"
 
 using myio::StreamChannel;
 using myipc::GenericIpcChannel;
@@ -31,9 +30,11 @@ using msgs::type;
 
 
 IPCServer::IPCServer(struct event_base* evbase,
-                     StreamServer::UniquePtr streamserver)
+                     StreamServer::UniquePtr streamserver,
+                     blink::Webengine* webengine)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
+    , webengine_(webengine)
     , load_call_id_(0)
 {
     stream_server_->set_observer(this);
@@ -90,8 +91,10 @@ IPCServer::_handle_Load(const uint32_t& id,
     CHECK_EQ(load_call_id_, 0) << load_call_id_;
     load_call_id_ = id;
 
-    io_service_send_request_resource(
-        3124, "cnn.com", 80, 123, 234, 63000 + (rand() % 1000));
+    // io_service_send_request_resource(
+    //     3124, "cnn.com", 80, 123, 234, 63000 + (rand() % 1000));
+
+    webengine_->loadPage("/tmp/foo.json");
 
     {
         // send the response for the call

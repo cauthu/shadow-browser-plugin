@@ -4,6 +4,13 @@
 #include <arpa/inet.h>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
+#include <iostream>
+#include <unistd.h>
+#include <time.h>
+
+using std::cout;
+using std::endl;
+
 
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
@@ -11,25 +18,18 @@
 #include "../../utility/tcp_server.hpp"
 #include "ipc_io_service.hpp"
 #include "ipc_renderer.hpp"
-#include "main.hpp"
+
+#include "webengine/webengine.hpp"
 
 
-/*
- * we maintain global pointers to the io service ipc client, and our
- * ipc server.
- *
- * the functions we declare in main.hpp will be defined here and call
- * the corresponding ipc entity
- *
- *
- */
 
 using std::unique_ptr;
 
-INITIALIZE_EASYLOGGINGPP
-
 static IOServiceIPCClient::UniquePtr io_service_ipc_client;
 static IPCServer::UniquePtr ipcserver;
+static blink::Webengine::UniquePtr webengine;
+
+INITIALIZE_EASYLOGGINGPP
 
 static void
 s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
@@ -39,6 +39,10 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
     CHECK_EQ(status, IOServiceIPCClient::ChannelStatus::READY);
 
     VLOG(2) << "ioservice ipc client is ready";
+
+    webengine.reset(
+        new blink::Webengine(io_service_ipc_client.get()));
+
     /// set up my ipc server
     myio::TCPServer::UniquePtr tcpServerForIPC;
 
@@ -49,31 +53,14 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
             renderer_ipcport, nullptr));
     ipcserver.reset(
         new IPCServer(
-            evbase, std::move(tcpServerForIPC)));
+            evbase, std::move(tcpServerForIPC), webengine.get()));
 
     VLOG(2) << "ioservice ip client: " << io_service_ipc_client.get()
             << " , my ipcserver: " <<  ipcserver.get();
 }
 
-void
-io_service_send_request_resource(const int& req_id,
-                                 const char* host,
-                                 const uint16_t& port,
-                                 const size_t& req_total_size,
-                                 const size_t& resp_meta_size,
-                                 const size_t& resp_body_size)
-{
-    io_service_ipc_client->request_resource(
-        req_id, host, port, req_total_size, resp_meta_size, resp_body_size);
-}
-
-void
-renderer_send_Loaded()
-{
-    ipcserver->send_Loaded();
-}
-
 /*==================================================*/
+
 
 int main(int argc, char **argv)
 {
@@ -88,6 +75,8 @@ int main(int argc, char **argv)
         }
     }
 
+
+
     CHECK_GT(renderer_ipcport, 0) << "must specify a positive port to listen on to provide renderer ipc service";
 
     START_EASYLOGGINGPP(argc, argv);
@@ -98,6 +87,7 @@ int main(int argc, char **argv)
         common::init_evbase(), event_base_free);
 
     /* ***************************************** */
+
 
     const uint16_t ioservice_port = common::ports::io_service_ipc;
 

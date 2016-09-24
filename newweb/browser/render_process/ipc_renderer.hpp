@@ -8,6 +8,8 @@
 #include "../../utility/object.hpp"
 #include "utility/ipc/renderer/gen/combined_headers"
 
+#include "webengine/webengine.hpp"
+
 
 /* handles clients of renderer ipc interface */
 class IPCServer : public Object
@@ -17,7 +19,8 @@ public:
     typedef std::unique_ptr<IPCServer, /*folly::*/Destructor> UniquePtr;
 
     explicit IPCServer(struct event_base*,
-                       myio::StreamServer::UniquePtr);
+                       myio::StreamServer::UniquePtr,
+                       blink::Webengine*);
 
     void send_Loaded();
 
@@ -44,6 +47,7 @@ private:
     myio::StreamServer::UniquePtr stream_server_; /* to accept ipc clients */
     /* currently support only one ipc client */
     myipc::GenericIpcChannel::UniquePtr ipc_client_channel_;
+    blink::Webengine* webengine_;
 
     uint32_t load_call_id_;
 };

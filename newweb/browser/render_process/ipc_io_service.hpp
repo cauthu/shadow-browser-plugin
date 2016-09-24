@@ -8,6 +8,8 @@
 // #include "utility/ipc/renderer/gen/combined_headers"
 #include "utility/ipc/io_service/gen/combined_headers"
 
+#include "interfaces.hpp"
+
 
 /* handle io service ipc interface, as a client */
 
@@ -27,12 +29,18 @@ public:
                                 myio::StreamChannel::UniquePtr,
                                 ChannelStatusCb);
 
+    
+    void set_resource_msg_handler(ResourceMsgHandler* handler)
+    {
+        resource_msg_handler_ = handler;
+    }
+
     void request_resource(const int& req_id,
                           const char* host,
-               const uint16_t& port,
-               const size_t& req_total_size,
-               const size_t& resp_meta_size,
-               const size_t& resp_body_size);
+                          const uint16_t& port,
+                          const size_t& req_total_size,
+                          const size_t& resp_meta_size,
+                          const size_t& resp_body_size);
 
 protected:
 
@@ -55,6 +63,8 @@ private:
 
     ChannelStatusCb ch_status_cb_;
     myipc::GenericIpcChannel::UniquePtr gen_ipc_chan_;
+
+    ResourceMsgHandler* resource_msg_handler_;
 };
 
 
