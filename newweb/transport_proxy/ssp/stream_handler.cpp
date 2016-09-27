@@ -44,6 +44,9 @@ StreamHandler::StreamHandler(struct event_base* evbase,
 {
     buflo_channel_->set_stream_observer(sid_, this);
 
+    vlogself(2) << "stream handler will connect to target ["
+                << target_host << "]:" << port;
+
     const auto addr = common::getaddr(target_host);
 
     struct timeval timeout = {0};

@@ -1,6 +1,7 @@
 
 #include <boost/bind.hpp>
 #include <arpa/inet.h>
+#include <string>
 
 #include "client_handler.hpp"
 
@@ -18,6 +19,7 @@
 #define logself(level) loginst(level, this)
 
 
+using std::string;
 
 using myio::StreamChannel;
 using myio::buflo::BufloMuxChannel;
@@ -118,17 +120,15 @@ ClientHandler::onNewReadDataAvailable(StreamChannel* ch) noexcept
 void
 ClientHandler::_write_socks5_connect_request_granted()
 {
-    static const unsigned char resp[] = "\x05\x00\x00\x01";
+    // we can use this same resp whether the client requested to
+    // connect to an ip address or a hostname: the last 6 bytes, i.e.,
+    // the ip address and port, can be 0 --- we observe that ssh
+    // sock5s proxy does this
+    static const unsigned char resp[11] = "\x05\x00\x00\x01\x00\x00\x00\x00\x00\x00";
+    // 11 because of null-terminator
+    static_assert(sizeof (resp) == 11, "resp ARRAY should be 11");
 
-    // TODO/write the proper response
-
-    // for now we just format the first 4 bytes since our client only
-    // checks those bytes. the remaining 6 bytes we just use zero
-
-    auto rv = client_channel_->write(resp, 4);
-    CHECK_EQ(rv, 0);
-
-    rv = client_channel_->write_dummy(6);
+    auto rv = client_channel_->write(resp, 10);
     CHECK_EQ(rv, 0);
 }
 
@@ -171,13 +171,17 @@ ClientHandler::_create_stream(const char* host,
 bool
 ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
 {
-    unsigned char buf[10] = {0};
-    if (num_avail_bytes >= (sizeof buf)) {
+    if (num_avail_bytes >= 4) {
+        unsigned char *buf = client_channel_->peek(num_avail_bytes);
+        CHECK_NOTNULL(buf);
+
         vlogself(2) << "read socks5 connect request from client";
-        auto rv = client_channel_->read(buf, (sizeof buf));
-        CHECK_EQ(rv, (sizeof buf));
 
         if (!memcmp(buf, "\x05\x01\x00\x01", 4)) {
+            CHECK_EQ(num_avail_bytes, 10); // must be exactly 10
+                                           // bytes, with the last 6
+                                           // bytes being the addr and
+                                           // port
 
             // read the addr and port
             in_addr_t target_addr;
@@ -194,6 +198,46 @@ ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
             vlogself(2) << "connect req: [" << str << "]:" << port;
 
             auto rv = buflo_channel_->create_stream2(str, port, this);
+            CHECK_EQ(rv, 0);
+
+            // we can now drain the bytes
+            rv = client_channel_->drain(10);
+            CHECK_EQ(rv, 0);
+
+            state_ = State::CREATE_BUFLO_STREAM;
+
+        } else if (!memcmp(buf, "\x05\x01\x00\x03", 4)) {
+
+            vlogself(2) << "client sent hostname";
+
+            // field 5: 1 byte of name length followed by the name for domain name
+
+            CHECK_GE(num_avail_bytes, 5);
+            uint8_t namelen = 0;
+            memcpy(&namelen, buf + 4, 1);
+
+            vlogself(2) << "hostname len: " << unsigned(namelen);
+
+            /* 4 header + 1 name len field + name + 2 for port */
+            const auto total_req_size = (5 + namelen + 2);
+
+            // + 2 for the port
+            CHECK_EQ(num_avail_bytes, total_req_size);
+
+            const string name((const char*)(buf + 5), namelen);
+            vlogself(2) << "hostname: [" << name << "]";
+
+            uint16_t port = 0;
+            memcpy((uint8_t*)&port, buf + 5 + namelen, 2);
+            port = ntohs(port);
+
+            vlogself(2) << "port: [" << port << "]";
+
+            auto rv = buflo_channel_->create_stream2(name.c_str(), port, this);
+            CHECK_EQ(rv, 0);
+
+            // we can now drain the bytes
+            rv = client_channel_->drain(total_req_size);
             CHECK_EQ(rv, 0);
 
             state_ = State::CREATE_BUFLO_STREAM;

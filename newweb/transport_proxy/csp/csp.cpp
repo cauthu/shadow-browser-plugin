@@ -46,6 +46,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , state_(State::INITIAL)
 {
+    LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
 }
 
 ClientSideProxy::EstablishReturnValue
@@ -216,11 +217,6 @@ ClientSideProxy::_on_connected_to_ssp()
             NULL
             ));
     CHECK_NOTNULL(buflo_ch_.get());
-
-    // now we can start accepting client connections
-    stream_server_->set_observer(this);
-    auto rv = stream_server_->start_accepting();
-    CHECK(rv);
 }
 
 void
@@ -241,6 +237,12 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 {
     if (status == BufloMuxChannel::ChannelStatus::READY) {
         DestructorGuard dg(this);
+
+        // now we can start accepting client connections
+        stream_server_->set_observer(this);
+        auto rv = stream_server_->start_accepting();
+        CHECK(rv);
+
         ready_cb_(this);
     } else {
         LOG(FATAL) << "todo";

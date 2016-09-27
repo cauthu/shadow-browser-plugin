@@ -3,6 +3,7 @@
 
 
 #include <memory>
+#include <string>
 
 #include "object.hpp"
 #include "stream_channel.hpp"
@@ -47,7 +48,9 @@ public:
      * the "port" is in HOST-byte order
      */
     Socks5Connector(StreamChannel::UniquePtr transport,
-                    const in_addr_t target_host, uint16_t port);
+                    const in_addr_t target_host_addr, uint16_t port);
+    Socks5Connector(StreamChannel::UniquePtr transport,
+                    const char* target_host_name, uint16_t port);
 
     int start_connecting(Socks5ConnectorObserver*);
 
@@ -76,7 +79,8 @@ private:
     } state_;
 
     StreamChannel::UniquePtr transport_;
-    const in_addr_t target_host_;
+    const in_addr_t target_host_addr_;
+    const std::string target_host_name_;
     const uint16_t port_;
     Socks5ConnectorObserver* observer_;
 };

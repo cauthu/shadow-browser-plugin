@@ -16,13 +16,25 @@ namespace myio
 {
 
 Socks5Connector::Socks5Connector(StreamChannel::UniquePtr transport,
-                                 const in_addr_t target_host, uint16_t port)
+                                 const in_addr_t target_host_addr, uint16_t port)
     : state_(State::SOCKS5_NONE), transport_(std::move(transport))
-    , target_host_(target_host), port_(port)
+    , target_host_addr_(target_host_addr), port_(port)
     , observer_(nullptr)
 {
     CHECK_EQ(transport_->get_avail_input_length(), 0);
     CHECK_EQ(transport_->get_output_length(), 0);
+}
+
+Socks5Connector::Socks5Connector(StreamChannel::UniquePtr transport,
+                                 const char* target_host_name, uint16_t port)
+    : state_(State::SOCKS5_NONE), transport_(std::move(transport))
+    , target_host_addr_(0), port_(port)
+    , target_host_name_(target_host_name)
+    , observer_(nullptr)
+{
+    CHECK_EQ(transport_->get_avail_input_length(), 0);
+    CHECK_EQ(transport_->get_output_length(), 0);
+    CHECK_LE(target_host_name_.length(), 20);
 }
 
 int
@@ -72,11 +84,21 @@ Socks5Connector::_consume_input()
 
         vlogself(2) << "write the connect request";
 
-        // const char namelen = target_host_.length();
-        const uint16_t port = htons(port_);
+        std::string req("\x05\x01\x00", 3);
 
-        std::string req("\x05\x01\x00\x01", 4);
-        req.append((const char*)&target_host_, 4);
+        if (target_host_addr_) {
+            req.append("\x01", 1);
+            req.append((const char*)&target_host_addr_, 4);
+        } else {
+            CHECK(!target_host_name_.empty());
+            req.append("\x03", 1);
+            const uint8_t namelen = target_host_name_.length();
+
+            req.append((const char*)&namelen, 1);
+            req.append((const char*)target_host_name_.c_str(), namelen);
+        }
+
+        const uint16_t port = htons(port_);
         req.append((const char*)&port, 2);
 
         rv = transport_->write((uint8_t*)req.c_str(), req.size());
@@ -91,7 +113,9 @@ Socks5Connector::_consume_input()
     case State::SOCKS5_READ_RESP_NEXT:
     {
         // assume that proxy response is 10 bytes, i.e., it has
-        // connected to ipv4 address
+        // connected to ipv4 address. we assume this irrespective of
+        // our request was for an ip address or for a hostname --- we
+        // observe that ssh's socks5 proxy responds this way
         unsigned char mem[10] = {0};
         const auto rv = transport_->read(mem, sizeof mem);
         CHECK_EQ(rv, sizeof mem);
