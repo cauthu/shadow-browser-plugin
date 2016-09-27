@@ -82,6 +82,10 @@ protected:
     const int inner_sid_;
 
     InnerOuterHandlerDoneCb handler_done_cb_;
+
+    /* number of bytes written */
+    size_t written_to_outer_bytes_;
+    size_t written_to_inner_bytes_;
 };
 
 #endif /* end COMMON_INNER_OUTER_HANDLER_HPP */

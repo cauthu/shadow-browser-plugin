@@ -80,7 +80,12 @@ StreamHandler::onConnected(StreamChannel*) noexcept
                 target_channel_.get(), sid_, buflo_channel_,
                 boost::bind(&StreamHandler::_on_inner_outer_handler_done,
                             this, _1, _2)));
-        buflo_channel_ = nullptr;
+
+        /* we need to hang on the buflo_channel_ so that if the inner
+         * outer handler tells us the outer stream has closed, then we
+         * can close the inner stream
+         */
+        // buflo_channel_ = nullptr;
     } else {
         // some error
         vlogself(2) << "some error";
@@ -125,8 +130,10 @@ void
 StreamHandler::onStreamClosed(BufloMuxChannel*) noexcept
 {
     // we should only get this stream closed when we're still trying
-    // to connect to the target; after that, the innerouterhandler
-    // should be the one getting called by the stream
+    // to connect to the target (after that, the innerouterhandler
+    // should be the one getting called by the stream), therefore we
+    // can clear buflo_channel_ because we won't need to tell it to
+    // close the stream
     CHECK_EQ(state_, State::CONNECTING_TARGET);
     buflo_channel_ = nullptr;
     _close();

@@ -71,7 +71,12 @@ ClientHandler::onStreamCreateResult(BufloMuxChannel*,
                 client_channel_.get(), sid_, buflo_channel_,
                 boost::bind(&ClientHandler::_on_inner_outer_handler_done,
                             this, _1, _2)));
-        buflo_channel_ = nullptr;
+
+        /* we need to hang on to the buflo_channel_ so that if the
+         * inner outer handler tells us the outer stream has closed,
+         * then we can close the inner stream
+         */
+        // buflo_channel_ = nullptr;
     } else {
         _close();
     }
