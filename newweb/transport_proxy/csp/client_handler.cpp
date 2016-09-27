@@ -369,7 +369,12 @@ ClientHandler::onError(StreamChannel*, int) noexcept
 void
 ClientHandler::_close()
 {
-    vlogself(2) << "begin";
+    /* avoid logging in this function because it can be called by
+     * destructor and we're seeing valgrind report "invalid read" at
+     * the last log statement
+     */
+
+    // vlogself(2) << "begin";
 
     if (state_ != State::CLOSED) {
         state_ = State::CLOSED;
@@ -393,7 +398,7 @@ ClientHandler::_close()
         }
     }
 
-    vlogself(2) << "done";
+    // vlogself(2) << "done";
 }
 
 ClientHandler::~ClientHandler()
