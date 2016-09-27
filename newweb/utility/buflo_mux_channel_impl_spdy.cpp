@@ -1531,6 +1531,10 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
     FREE_EVBUF(cell_inbuf_);
     FREE_EVBUF(cell_outbuf_);
 
+    if (spdysess_) {
+        spdylay_session_del(spdysess_);
+        spdysess_ = nullptr;
+    }
     // TODO: free the stream states
 }
 
