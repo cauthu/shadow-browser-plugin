@@ -100,7 +100,8 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
         state_ = State::CONNECTING;
     }
 
-    const auto rv = peer_channel_->start_connecting(this);
+    struct timeval timeout_tv = {5, 0};
+    const auto rv = peer_channel_->start_connecting(this, &timeout_tv);
     CHECK_EQ(rv, 0);
 
     vlogself(2) << "returning pending";
@@ -222,13 +223,14 @@ ClientSideProxy::_on_connected_to_ssp()
 void
 ClientSideProxy::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
-    LOG(FATAL) << "to be implemented";
+    LOG(FATAL) << "error connecting to SSP: ["
+               << evutil_socket_error_to_string(errorcode) << "]";
 }
 
 void
 ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 {
-    LOG(FATAL) << "to be implemented";
+    LOG(FATAL) << "timed out connecting to SSP";
 }
 
 void
@@ -244,8 +246,10 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
         CHECK(rv);
 
         ready_cb_(this);
+    } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
+        LOG(FATAL) << "buflo channel is closed, so we're exiting";
     } else {
-        LOG(FATAL) << "todo";
+        LOG(FATAL) << "unknown channel status";
     }
 }
 
