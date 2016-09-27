@@ -135,26 +135,52 @@ ClientHandler::_write_socks5_connect_request_granted()
 bool
 ClientHandler::_read_socks5_greeting(size_t num_avail_bytes)
 {
-    static const unsigned char expected_greeting[] = "\x05\x01\x00";
-
-    if (num_avail_bytes >= 3) {
+    if (num_avail_bytes >= 2) {
         vlogself(2) << "read socks5 greeting from client";
 
-        unsigned char buf[3] = {0};
-        auto rv = client_channel_->read(buf, 3);
-        CHECK_EQ(rv, 3);
+        const uint8_t *buf = client_channel_->peek(2);
+        CHECK_NOTNULL(buf);
 
-        if (!memcmp(buf, expected_greeting, 3)) {
-            // valid greeting, so we write the greeting response
-            static const unsigned char greeting_resp[] = "\x05\x00";
-            rv = client_channel_->write(greeting_resp, 2);
-            CHECK_EQ(rv, 0);
-            state_ = State::READ_SOCKS5_CONNECT_REQ;
-            vlogself(2) << "... good -> send reply greeting";
-            return true;
-        } else {
-            _close();
+        CHECK_EQ(buf[0], '\x05');
+
+        // how many authentication methods?
+        const uint8_t nummethods = buf[1];
+
+        vlogself(2) << "num auth methods client supports: " << nummethods;
+
+        const auto total_greeting_size = 2 + nummethods;
+        CHECK_EQ(num_avail_bytes, total_greeting_size);
+
+        buf = client_channel_->peek(total_greeting_size);
+        CHECK_NOTNULL(buf);
+
+        // we support only the "no-authentication" method
+        bool found_no_auth_method = false;
+        for (auto i = 0; i < nummethods; ++i) {
+            auto const method = *(buf + 2 + i);
+            if (method == 0) {
+                found_no_auth_method = true;
+                break;
+            }
         }
+
+        if (!found_no_auth_method) {
+            logself(ERROR) << "we can only do the 'no-authentication' method";
+            _close();
+            return false;
+        }
+
+        // drain the inbuf
+        auto rv = client_channel_->drain(total_greeting_size);
+        CHECK_EQ(rv, 0);
+
+        // valid greeting, so we write the greeting response
+        static const unsigned char greeting_resp[] = "\x05\x00";
+        rv = client_channel_->write(greeting_resp, 2);
+        CHECK_EQ(rv, 0);
+        state_ = State::READ_SOCKS5_CONNECT_REQ;
+        vlogself(2) << "... good -> send reply greeting";
+        return true;
     }
 
     return false;
@@ -348,9 +374,11 @@ ClientHandler::_close()
         if (buflo_channel_) {
             // unregistering ourselves as the stream observer so we won't
             // be called back at onStreamClosed()
-            buflo_channel_->set_stream_observer(sid_, nullptr);
-            buflo_channel_->close_stream(sid_);
-            buflo_channel_ = nullptr;
+            if (sid_ > -1) {
+                buflo_channel_->set_stream_observer(sid_, nullptr);
+                buflo_channel_->close_stream(sid_);
+                buflo_channel_ = nullptr;
+            }
         }
 
         if (handler_done_cb_) {
