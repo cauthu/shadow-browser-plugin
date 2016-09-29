@@ -46,6 +46,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , state_(State::INITIAL)
 {
+    LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
 }
 
 ClientSideProxy::EstablishReturnValue
@@ -99,7 +100,8 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
         state_ = State::CONNECTING;
     }
 
-    const auto rv = peer_channel_->start_connecting(this);
+    struct timeval timeout_tv = {5, 0};
+    const auto rv = peer_channel_->start_connecting(this, &timeout_tv);
     CHECK_EQ(rv, 0);
 
     vlogself(2) << "returning pending";
@@ -216,23 +218,19 @@ ClientSideProxy::_on_connected_to_ssp()
             NULL
             ));
     CHECK_NOTNULL(buflo_ch_.get());
-
-    // now we can start accepting client connections
-    stream_server_->set_observer(this);
-    auto rv = stream_server_->start_accepting();
-    CHECK(rv);
 }
 
 void
 ClientSideProxy::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
-    LOG(FATAL) << "to be implemented";
+    LOG(FATAL) << "error connecting to SSP: ["
+               << evutil_socket_error_to_string(errorcode) << "]";
 }
 
 void
 ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 {
-    LOG(FATAL) << "to be implemented";
+    LOG(FATAL) << "timed out connecting to SSP";
 }
 
 void
@@ -241,9 +239,17 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 {
     if (status == BufloMuxChannel::ChannelStatus::READY) {
         DestructorGuard dg(this);
+
+        // now we can start accepting client connections
+        stream_server_->set_observer(this);
+        auto rv = stream_server_->start_accepting();
+        CHECK(rv);
+
         ready_cb_(this);
+    } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
+        LOG(FATAL) << "buflo channel is closed, so we're exiting";
     } else {
-        LOG(FATAL) << "todo";
+        LOG(FATAL) << "unknown channel status";
     }
 }
 

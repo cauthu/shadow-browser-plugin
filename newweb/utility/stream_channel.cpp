@@ -8,6 +8,8 @@ namespace myio
 StreamChannel::StreamChannel(StreamChannelObserver* observer)
     : observer_(observer)
     , read_size_hint_(-1)
+    , num_total_read_bytes_(0)
+    , num_total_written_bytes_(0)
 {}
 
 void

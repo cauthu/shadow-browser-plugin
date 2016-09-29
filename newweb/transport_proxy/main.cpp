@@ -1,4 +1,7 @@
 
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+
 #include "../utility/tcp_server.hpp"
 #include "../utility/common.hpp"
 #include "../utility/easylogging++.h"
@@ -6,6 +9,29 @@
 #include "ipc.hpp"
 #include "csp/csp.hpp"
 #include "ssp/ssp.hpp"
+
+
+/*
+ *
+ * when run outside shadow, we don't start the ipc server, and we
+ * immediately try to establish the tunnel to the ssp.
+ *
+ * this is more convenient because we just start the process and it
+ * should autoamtically try to get ready, and when we're finished with
+ * a page load we can kill the process and restart it.
+ *
+ * inside shadow we cannot exit processes and launch them again ---
+ * shadow only supports launching once at the beginning --- so we need
+ * the ipc in order to reset the tunnel to the ssp
+ * 
+ */
+
+
+static void
+s_on_csp_ready(csp::ClientSideProxy*)
+{
+    LOG(INFO) << "CSP is ready";
+}
 
 
 INITIALIZE_EASYLOGGINGPP
@@ -17,9 +43,20 @@ int main(int argc, char **argv)
     common::init_easylogging();
 
     std::string ssp_host;
+    uint16_t ssp_port = 0;
+    /* for client or sever, depends on is_client bool below */
+    uint16_t listenport = 0;
+
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--ssp")) {
-            ssp_host = argv[i+1];
+            // should be host:port
+            std::string ssp_host_port = argv[i+1];
+            const auto colon_pos = ssp_host_port.find(':');
+            CHECK_GT(colon_pos, 0);
+            ssp_host = ssp_host_port.substr(0, colon_pos);
+            ssp_port = boost::lexical_cast<uint16_t>(ssp_host_port.substr(colon_pos+1));
+        } else if (!strcmp(argv[i], "--port")) {
+            listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
 
@@ -32,9 +69,11 @@ int main(int argc, char **argv)
     std::unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
         common::init_evbase(), event_base_free);
 
-    const uint16_t listenport = is_client
-                                ? common::ports::client_side_transport_proxy
-                                : common::ports::server_side_transport_proxy;
+    if (listenport == 0) {
+        listenport = is_client
+                     ? common::ports::client_side_transport_proxy
+                     : common::ports::server_side_transport_proxy;
+    }
 
     VLOG(2) << "listen port " << listenport;
 
@@ -53,14 +92,15 @@ int main(int argc, char **argv)
                                 common::getaddr("localhost"),
                                 listenport, nullptr));
 
-        VLOG(2) << "ssp host: [" << ssp_host << "]";
+        VLOG(2) << "ssp: [" << ssp_host << "]:" << ssp_port;
         csp.reset(new csp::ClientSideProxy(
                       evbase.get(),
                       std::move(tcpserver),
                       common::getaddr(ssp_host.c_str()),
-                      common::ports::server_side_transport_proxy,
+                      ssp_port,
                       0, 0));
 
+#ifdef IN_SHADOW
         const uint16_t ipcport = common::ports::transport_proxy_ipc;
         VLOG(2) << "ipc server listens on " << ipcport;
         tcpServerForIPC.reset(
@@ -70,6 +110,12 @@ int main(int argc, char **argv)
         ipcserver.reset(
             new IPCServer(
                 evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
+#else
+        const auto rv = csp->establish_tunnel(
+            boost::bind(s_on_csp_ready, _1),
+            true);
+#endif
+
     } else {
         /* tcpserver to accept connections from CSPs */
         myio::TCPServer::UniquePtr tcpserver(

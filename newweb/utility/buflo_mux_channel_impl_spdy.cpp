@@ -410,6 +410,7 @@ BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf)
     CHECK_EQ(rv, 0);
 
     if (streamstate->inward_deferred_) {
+        vlogself(2) << "inner stream " << sid << " was deferred; resume now";
         rv = spdylay_session_resume_data(spdysess_, sid);
         CHECK_EQ(rv, 0);
         streamstate->inward_deferred_ = false;
@@ -1355,11 +1356,15 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
     spdylay_session *session = nullptr;
 
     // version 3 just adds flow control, compared to version 2
+
+    // we use version 2 to avoid issue #2
+    static const auto proto_ver = SPDYLAY_PROTO_SPDY2;
+
     auto rv = 0;
     if (is_client_side_) {
-        rv = spdylay_session_client_new(&session, 3, &callbacks, this);
+        rv = spdylay_session_client_new(&session, proto_ver, &callbacks, this);
     } else {
-        rv = spdylay_session_server_new(&session, 3, &callbacks, this);
+        rv = spdylay_session_server_new(&session, proto_ver, &callbacks, this);
     }
     CHECK_EQ(rv, 0);
 
@@ -1531,6 +1536,10 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
     FREE_EVBUF(cell_inbuf_);
     FREE_EVBUF(cell_outbuf_);
 
+    if (spdysess_) {
+        spdylay_session_del(spdysess_);
+        spdysess_ = nullptr;
+    }
     // TODO: free the stream states
 }
 

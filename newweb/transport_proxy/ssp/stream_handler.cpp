@@ -42,7 +42,12 @@ StreamHandler::StreamHandler(struct event_base* evbase,
     , sid_(sid)
     , handler_done_cb_(handler_done_cb)
 {
+    CHECK_GT(sid, -1);
+
     buflo_channel_->set_stream_observer(sid_, this);
+
+    vlogself(2) << "stream handler will connect to target ["
+                << target_host << "]:" << port;
 
     const auto addr = common::getaddr(target_host);
 
@@ -75,7 +80,12 @@ StreamHandler::onConnected(StreamChannel*) noexcept
                 target_channel_.get(), sid_, buflo_channel_,
                 boost::bind(&StreamHandler::_on_inner_outer_handler_done,
                             this, _1, _2)));
-        buflo_channel_ = nullptr;
+
+        /* we need to hang on the buflo_channel_ so that if the inner
+         * outer handler tells us the outer stream has closed, then we
+         * can close the inner stream
+         */
+        // buflo_channel_ = nullptr;
     } else {
         // some error
         vlogself(2) << "some error";
@@ -120,8 +130,10 @@ void
 StreamHandler::onStreamClosed(BufloMuxChannel*) noexcept
 {
     // we should only get this stream closed when we're still trying
-    // to connect to the target; after that, the innerouterhandler
-    // should be the one getting called by the stream
+    // to connect to the target (after that, the innerouterhandler
+    // should be the one getting called by the stream), therefore we
+    // can clear buflo_channel_ because we won't need to tell it to
+    // close the stream
     CHECK_EQ(state_, State::CONNECTING_TARGET);
     buflo_channel_ = nullptr;
     _close();
@@ -130,7 +142,12 @@ StreamHandler::onStreamClosed(BufloMuxChannel*) noexcept
 void
 StreamHandler::_close()
 {
-    vlogself(2) << "begin";
+    /* avoid logging in this function because it can be called by
+     * destructor and we're seeing valgrind report "invalid read" at
+     * the last log statement
+     */
+
+    // vlogself(2) << "begin";
 
     if (state_ != State::CLOSED) {
         state_ = State::CLOSED;
@@ -150,7 +167,7 @@ StreamHandler::_close()
         }
     }
 
-    vlogself(2) << "done";
+    // vlogself(2) << "done";
 }
 
 StreamHandler::~StreamHandler()
