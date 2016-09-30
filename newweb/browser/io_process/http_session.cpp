@@ -152,5 +152,7 @@ HttpNetworkSession::_response_done_cb(Request* req, bool success)
     // tell renderer we're done with the request
     ipcserver_->send_RequestComplete(routing_id_, req_res_req_id, success);
 
+    pending_requests_.erase(req_objId);
+
     vlogself(2) << "done";
 }
