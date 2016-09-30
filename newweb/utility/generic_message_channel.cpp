@@ -44,7 +44,7 @@ GenericMessageChannel::_consume_input()
         // loop to process all complete msgs
         switch (state_) {
         case StreamState::READ_HEADER:
-            VLOG(2) << "trying to read msg type and length";
+            VLOG(3) << "trying to read msg type and length";
             CHECK_EQ(msg_len_, 0);
             if (num_avail_bytes >= header_size_) {
                 // we're using a libevent version without
@@ -65,7 +65,7 @@ GenericMessageChannel::_consume_input()
                 buf += MSG_LEN_SIZE;
                 msg_len_ = ntohs(msg_len_);
 
-                VLOG(2) << "got type= " << unsigned(msg_type_)
+                VLOG(3) << "got type= " << unsigned(msg_type_)
                         << " len= " << msg_len_
                         << " id= " << msg_id_;
 
@@ -74,12 +74,12 @@ GenericMessageChannel::_consume_input()
 
                 // not draining input buf here!
             } else {
-                VLOG(2) << "not enough bytes yet";
+                VLOG(3) << "not enough bytes yet";
                 keep_consuming = false; // to break out of loop
             }
             break;
         case StreamState::READ_MSG:
-            VLOG(2) << "trying to read msg of length " << msg_len_;
+            VLOG(3) << "trying to read msg of length " << msg_len_;
             total_len = (header_size_ + msg_len_);
             if (num_avail_bytes >= total_len) {
                 DestructorGuard db(this);
@@ -98,7 +98,7 @@ GenericMessageChannel::_consume_input()
                 auto rv = evbuffer_drain(input_evb, total_len);
                 CHECK_EQ(rv, 0);
             } else {
-                VLOG(2) << "not enough bytes yet";
+                VLOG(3) << "not enough bytes yet";
                 keep_consuming = false; // to break out of loop
             }
             break;
@@ -115,7 +115,7 @@ void
 GenericMessageChannel::sendMsg(uint8_t type, uint16_t len,
                                const uint8_t* data, uint32_t id)
 {
-    VLOG(2) << "sending msg type: " << unsigned(type) << ", len: " << len;
+    VLOG(3) << "sending msg type: " << unsigned(type) << ", len: " << len;
     _send_header(type, id, len);
 
     if (len) {
@@ -169,7 +169,7 @@ GenericMessageChannel::onEOF(StreamChannel* channel) noexcept
     CHECK_EQ(channel_.get(), channel);
     state_ = StreamState::CLOSED;
     DestructorGuard db(this);
-    VLOG(2) << "generic msg stream notified of transport close";
+    VLOG(3) << "generic msg stream notified of transport close";
     observer_->onEOF(this);
 }
 
@@ -178,7 +178,7 @@ GenericMessageChannel::onError(StreamChannel* channel, int errorcode) noexcept
 {
     CHECK_EQ(channel_.get(), channel);
     state_ = StreamState::CLOSED;
-    VLOG(2) << "generic msg stream notified of transport error";
+    VLOG(3) << "generic msg stream notified of transport error";
     DestructorGuard db(this);
     observer_->onError(this, errorcode);
 }
