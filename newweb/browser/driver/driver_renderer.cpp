@@ -113,10 +113,13 @@ Driver::_renderer_load()
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
+        auto model_fpath = bufbuilder.CreateString("/home/me/page_model.json");
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             Load, bufbuilder,
             boost::bind(&Driver::_renderer_on_load_resp, this, _2, _3, _4));
+
+        msgbuilder.add_model_fpath(model_fpath);
     }
 }
 

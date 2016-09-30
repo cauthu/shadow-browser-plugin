@@ -4,10 +4,12 @@
 #include <set>
 
 #include "../../../../utility/object.hpp"
+#include "../page_model.hpp"
 
 namespace blink {
 
 class Resource;
+class Webengine;
 
 class ResourceClient
 {
@@ -28,16 +30,9 @@ class Resource : public Object
 public:
     typedef std::unique_ptr<Resource, Destructor> UniquePtr;
 
-    enum class Status {
-        Unknown, // let cache decide what to do with it
-        Pending, // only partially loaded
-        Cached, // regular case
-        LoadError,
-        // DecodeError
-    };
 
-
-    Resource(const uint32_t& instNum);
+    Resource(const PageModel::ResourceInfo&,
+             Webengine*);
 
     /* start loading the resource */
     void load();
@@ -59,8 +54,10 @@ public:
      * (technically the frame loader --- see FrameLoader.cpp in webkit
      * -- which checks the fetcher's "requestCount" when determing
      * whether the frameloader is completed) is considered loaded */
-    bool counted_for_doc_load_event;
+    bool part_of_page_loaded_check() const { return res_info_.part_of_page_loaded_check; }
 
+    const uint32_t& instNum() const;
+        
 protected:
 
     virtual ~Resource() = default;
@@ -71,8 +68,9 @@ protected:
     void _notify_new_data(const size_t&);
     void _notify_finished(bool);
 
+    void _load_next_chain_entry();
 
-    const uint32_t instNum_;
+    const PageModel::ResourceInfo res_info_;
 
     /* "finished" means it's not actively loading, but the load could
      * be successful or failure
@@ -81,8 +79,10 @@ protected:
         INITIAL, LOADING, FINISHED
             } load_state_;
 
-    /* number of bytes of this resource that has been received */
-    size_t numBytesRecv_;
+    /* total number of BODY bytes we have received, across all the
+     * requests in the chain
+     */
+    size_t cumulative_resp_body_bytes_;
 
     /* whether an error occurred */
     bool errored_;
@@ -99,6 +99,14 @@ protected:
     // we're not yet at the end of redirect chain, and keep doing that
     // until we are at the end of the redirect chain, then we can
     // notify clients when data is received and when it's finished
+
+    // init to -1
+    int current_req_chain_idx_;
+
+    /* number of body bytes received for ONLY the current request */
+    size_t current_req_body_bytes_recv_;
+
+    Webengine* webengine_;
 };
 
 }

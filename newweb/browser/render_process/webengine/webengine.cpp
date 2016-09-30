@@ -7,13 +7,13 @@
 #include <angelscript/add_on/scriptstdstring/scriptstdstring.h>
 
 #include "../../../utility/easylogging++.h"
+#include "../../../utility/common.hpp"
 
 #include "webengine.hpp"
 
 
 using std::string;
-using std::cout;
-using std::endl;
+using std::make_pair;
 
 
 static asIScriptEngine* s_as_script_engine = nullptr;
@@ -184,26 +184,67 @@ Webengine::_init_angelscript_engine()
 void
 Webengine::loadPage(const char* model_fpath)
 {
+    page_model_.reset(new PageModel(model_fpath, this));
+
+    _load_main_resource();
+}
+
+void
+Webengine::request_resource(const PageModel::RequestInfo& req_info,
+                            Resource* res)
+{
     const auto req_id = MakeRequestID();
     ioservice_ipcclient_->request_resource(
-        3124, "cnn.com", 80, 123, 234, 63000 + (rand() % 1000));
+        req_id,
+        req_info.host.c_str(),
+        req_info.port,
+        req_info.req_total_size,
+        req_info.resp_meta_size,
+        req_info.resp_body_size);
+    const auto ret = pending_requests_.insert(make_pair(req_id, res));
+    CHECK(ret.second);
+}
+
+void
+Webengine::_load_main_resource()
+{
+    PageModel::ResourceInfo res_info;
+    auto rv = page_model_->get_main_resource_info(res_info);
+    CHECK(rv);
+    main_resource_.reset(new Resource(res_info, this));
+    main_resource_->load();
 }
 
 void
 Webengine::handle_ReceivedResponse(const int& req_id)
 {
+    CHECK(inMap(pending_requests_, req_id))
+        << "we don't know about req_id= " << req_id;
+    Resource* resource = pending_requests_[req_id];
+    CHECK_NOTNULL(resource);
+    // nothing to do
 }
 
 void
 Webengine::handle_DataReceived(const int& req_id, const size_t& length)
 {
+    CHECK(inMap(pending_requests_, req_id))
+        << "we don't know about req_id= " << req_id;
+    Resource* resource = pending_requests_[req_id];
+    CHECK_NOTNULL(resource);
 
+    resource->appendData(length);
 }
 
 void
 Webengine::handle_RequestComplete(const int& req_id, const bool success)
 {
-    CHECK(0);
+    CHECK(inMap(pending_requests_, req_id))
+        << "we don't know about req_id= " << req_id;
+    Resource* resource = pending_requests_[req_id];
+    CHECK_NOTNULL(resource);
+
+    resource->finish(success);
 }
 
 } // end namespace blink

@@ -29,12 +29,14 @@ set(RENDER_PROCESS_SOURCES
 # webengine sources
 set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
   webengine/webengine.cpp
+  webengine/page_model.cpp
   webengine/events/EventTypeNames.cpp
   webengine/events/EventTarget.cpp
   webengine/fetch/Resource.cpp
   webengine/dom/Node.cpp
   webengine/dom/Element.cpp
   webengine/html/HTMLImageElement.cpp
+  webengine/html/parser/HTMLDocumentParser.cpp
   )
 
 set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"

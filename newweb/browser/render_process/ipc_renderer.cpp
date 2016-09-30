@@ -94,7 +94,7 @@ IPCServer::_handle_Load(const uint32_t& id,
     // io_service_send_request_resource(
     //     3124, "cnn.com", 80, 123, 234, 63000 + (rand() % 1000));
 
-    webengine_->loadPage("/tmp/foo.json");
+    webengine_->loadPage(msg->model_fpath()->c_str());
 
     {
         // send the response for the call

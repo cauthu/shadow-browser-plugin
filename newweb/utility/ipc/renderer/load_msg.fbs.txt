@@ -3,7 +3,7 @@ namespace myipc.renderer.messages;
 
 table LoadMsg
 {
-    
+    model_fpath: string;
 }
 
 root_type LoadMsg;
