@@ -380,10 +380,11 @@ TCPChannel::_maybe_dropread()
         vlogself(3) << dropped_this_time << " bytes dropped this time around"
                     << " (" << input_drop_.num_remaining() << " remaining)";
         if (input_drop_.interested_in_progress()) {
-            // notify of any new progress
+            vlogself(3) << "notify of any new progress";
             input_drop_.observer()->onInputBytesDropped(this, dropped_this_time);
-        } else if (input_drop_.num_remaining()) {
+        } else if (input_drop_.num_remaining() == 0) {
             // notify just once, when have dropped all requested amount
+            vlogself(3) << "notify once since we're done";
 
             /* notify first before resetting, to prevent user from
              * immediately submitting another drop req. not that we
