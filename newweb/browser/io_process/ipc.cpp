@@ -115,6 +115,8 @@ IPCServer::send_RequestComplete(const int& routing_id,
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestComplete, bufbuilder, ipc_ch);
+
+        msgbuilder.add_success(success);
     }
 
     vlogself(2) << "done";
