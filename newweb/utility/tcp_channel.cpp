@@ -377,12 +377,18 @@ TCPChannel::_maybe_dropread()
     }
 
     if (dropped_this_time) {
+        const auto remaining = input_drop_.num_remaining();
         vlogself(3) << dropped_this_time << " bytes dropped this time around"
-                    << " (" << input_drop_.num_remaining() << " remaining)";
+                    << " (" << remaining << " remaining)";
         if (input_drop_.interested_in_progress()) {
             vlogself(3) << "notify of any new progress";
             input_drop_.observer()->onInputBytesDropped(this, dropped_this_time);
-        } else if (input_drop_.num_remaining() == 0) {
+
+            if (remaining == 0) {
+                // also have to reset here
+                input_drop_.reset();
+            }
+        } else if (remaining == 0) {
             // notify just once, when have dropped all requested amount
             vlogself(3) << "notify once since we're done";
 
