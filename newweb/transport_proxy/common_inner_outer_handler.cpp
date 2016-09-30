@@ -46,8 +46,9 @@ InnerOuterHandler::InnerOuterHandler(StreamChannel* outer_channel,
 void
 InnerOuterHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept
 {
-    vlogself(2) << "copy data inner --> outer";
     auto buf = buflo_channel_->get_input_evbuf(inner_sid_);
+    vlogself(2) << "copy data inner --> outer "
+                << evbuffer_get_length(buf) << " bytes";
     auto rv = outer_channel_->write_buffer(buf);
     CHECK_EQ(rv, 0);
     vlogself(2) << "done";
@@ -62,8 +63,9 @@ InnerOuterHandler::onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept
 void
 InnerOuterHandler::onNewReadDataAvailable(myio::StreamChannel*) noexcept
 {
-    vlogself(2) << "copy data inner <-- outer";
     auto buf = outer_channel_->get_input_evbuf();
+    vlogself(2) << "copy data inner <-- outer "
+                << evbuffer_get_length(buf) << " bytes";
     auto rv = buflo_channel_->write_buffer(inner_sid_, buf);
     CHECK_EQ(rv, 0);
     vlogself(2) << "done";

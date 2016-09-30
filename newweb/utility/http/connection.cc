@@ -113,7 +113,7 @@ Connection::_maybe_http_write_to_transport()
         return;
     }
 
-    vlogself(2) << "writing a req to transport";
+    vlogself(2) << "let's write a pending req";
 
     auto req = submitted_req_queue_.front();
     CHECK_NOTNULL(req);
@@ -523,6 +523,8 @@ Connection::_got_a_chunk_of_resp_body(size_t len)
 void
 Connection::_done_with_resp()
 {
+    vlogself(2) << "begin";
+
     CHECK_EQ(remaining_resp_body_len_, 0);
 
     Request *req = active_req_queue_.front();
@@ -542,6 +544,8 @@ Connection::_done_with_resp()
      * cleared some space in the active queue
      */
     _maybe_http_write_to_transport();
+
+    vlogself(2) << "done";
 }
 
 void
