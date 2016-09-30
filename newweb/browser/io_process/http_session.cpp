@@ -41,7 +41,8 @@ HttpNetworkSession::HttpNetworkSession(struct event_base* evbase,
             evbase_,
             netconf->socks5_addr(), netconf->socks5_port(),
             boost::bind(&HttpNetworkSession::_response_done_cb, this,
-                        _1, false)));
+                        _1, false),
+            8, 0));
     CHECK_NOTNULL(connman_.get());
 }
 
@@ -145,10 +146,10 @@ HttpNetworkSession::_response_done_cb(Request* req, bool success)
     const auto req_res_req_id = pending_requests_[req_objId].req_res_req_id;
 
     if (!success) {
-        logself(WARNING) << "request objId " << req_objId << "failed";
+        logself(WARNING) << "request objId " << req_objId << " failed";
     }
 
-    // tell renderer about the body data chunk (just its size)
+    // tell renderer we're done with the request
     ipcserver_->send_RequestComplete(routing_id_, req_res_req_id, success);
 
     vlogself(2) << "done";

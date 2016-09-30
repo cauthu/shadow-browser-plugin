@@ -57,6 +57,9 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
     CHECK(evbase_);
     CHECK(request_error_cb);
     CHECK(max_persist_cnx_per_srv > 0);
+
+    CHECK_EQ(max_retries_per_resource_, 0)
+        << "don't use retries for this project";
 }
 
 /***************************************************/
@@ -226,8 +229,9 @@ ConnectionManager::handle_unusable_conn(Connection *conn,
     /* release_conn() only removes the conn from the list. it does not
      * yet delete the conn object. so we can still get its request
      * queues.
+     *
+     * retry_requests() honors the max_retries_per_resource_
      */
-    CHECK(conn->get_pending_request_queue().empty());
     retry_requests(conn->get_active_request_queue());
 
     vlogself(2) << "done";
@@ -238,15 +242,16 @@ ConnectionManager::handle_unusable_conn(Connection *conn,
 bool
 ConnectionManager::retry_requests(queue<Request*> requests)
 {
-    vlogself(2) << "begin";
+    vlogself(2) << "begin, num reqs= " << requests.size();
 
     while (!requests.empty()) {
         auto req = requests.front();
         CHECK(req);
+        vlogself(2) << "req objid " << req->objId();
         requests.pop();
         if (req->get_num_retries() == max_retries_per_resource_) {
             logself(WARNING) << "resource [" << req->objId() << "] has exhausted "
-                             <<  max_retries_per_resource_ << " retries";
+                             <<  unsigned(max_retries_per_resource_) << " retries";
             notify_req_error_(req);
             continue;
         }

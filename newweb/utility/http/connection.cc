@@ -642,6 +642,7 @@ Connection::onSocksTargetConnectResult(
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL:
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL_TRANSPORT_EOF:
     case Socks5ConnectorObserver::ConnectResult::ERR_FAIL_TRANSPORT_ERROR: {
+        logself(WARNING) << "could not connect target (through socks proxy)";
         DestructorGuard dg(this);
         cnx_error_cb_(this);
         break;

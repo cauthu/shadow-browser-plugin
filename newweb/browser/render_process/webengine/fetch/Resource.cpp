@@ -105,7 +105,7 @@ Resource::finish(bool success)
             _load_next_chain_entry();
         }
     } else {
-        logself(WARNING) << "request did not succeed";
+        logself(WARNING) << "request failed";
         errored_ = !success;
         _notify_finished(success);
     }
