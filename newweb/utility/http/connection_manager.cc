@@ -233,6 +233,7 @@ ConnectionManager::handle_unusable_conn(Connection *conn,
      * retry_requests() honors the max_retries_per_resource_
      */
     retry_requests(conn->get_active_request_queue());
+    retry_requests(conn->get_pending_request_queue());
 
     vlogself(2) << "done";
 }
@@ -335,7 +336,11 @@ ConnectionManager::release_conn(Connection *conn,
     CHECK(finditer != conns.end());
     conns.erase(finditer);
     if (conns.size() == 0) {
-        vlogself(2) << "list is now empty --> remove this list from map";
+        vlogself(2) << "list is now empty --> remove this list from map"
+                    << " " << servers_[netloc]->requests_.size();
+        for (auto req : servers_[netloc]->requests_) {
+            notify_req_error_(req);
+        }
         servers_.erase(netloc);
     }
 

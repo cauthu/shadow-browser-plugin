@@ -117,7 +117,7 @@ Connection::_maybe_http_write_to_transport()
 
     auto req = submitted_req_queue_.front();
     CHECK_NOTNULL(req);
-    submitted_req_queue_.pop_front();
+    submitted_req_queue_.pop();
 
     std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> buf(
         evbuffer_new(), evbuffer_free);
@@ -212,7 +212,7 @@ Connection::submit_request(Request* req)
         CHECK_EQ(rv, 0);
         free(nv);
     } else {
-        submitted_req_queue_.push_back(req);
+        submitted_req_queue_.push(req);
     }
 
     if (state_ == State::CONNECTED) {
@@ -239,7 +239,7 @@ Connection::get_active_request_queue() const
     return active_req_queue_;
 }
 
-std::deque<Request*>
+std::queue<Request*>
 Connection::get_pending_request_queue() const
 {
     return submitted_req_queue_;

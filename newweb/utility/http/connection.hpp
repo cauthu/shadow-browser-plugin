@@ -125,7 +125,7 @@ public:
     }
 
     std::queue<Request*> get_active_request_queue() const;
-    std::deque<Request*> get_pending_request_queue() const;
+    std::queue<Request*> get_pending_request_queue() const;
 
     void set_request_done_cb(ConnectionRequestDoneCb cb);
 
@@ -277,7 +277,7 @@ private:
      * submitted_req_queue_. when a request is written into the
      * outbuf_, it is moved to active_req_queue_.
      */
-    std::deque<Request* > submitted_req_queue_; // dont free these ptrs
+    std::queue<Request* > submitted_req_queue_; // dont free these ptrs
     std::queue<Request* > active_req_queue_; // dont free these ptrs
 
     enum class HTTPRespState {
