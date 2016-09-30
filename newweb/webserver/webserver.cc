@@ -60,12 +60,17 @@ int main(int argc, char **argv)
 
     common::init_easylogging();
 
-    uint16_t listenport = 80;
+    std::set<uint16_t> listenports;
 
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--port")) {
-            listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
+            uint16_t listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
+            listenports.insert(listenport);
         }
+    }
+
+    if (listenports.empty()) {
+        listenports.insert(80);
     }
 
     START_EASYLOGGINGPP(argc, argv);
@@ -75,13 +80,17 @@ int main(int argc, char **argv)
     std::unique_ptr<struct event_base, void(*)(struct event_base*)> evbase(
         common::init_evbase(), event_base_free);
 
-    VLOG(2) << "listen port " << listenport;
-
     /* ***************************************** */
 
-    myio::TCPServer::UniquePtr tcpserver(
-        new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
-    Webserver::UniquePtr webserver(new Webserver(std::move(tcpserver)));
+    std::vector<Webserver::UniquePtr> webservers;
+
+    for (const auto& listenport : listenports) {
+        VLOG(2) << "listen port " << listenport;
+        myio::TCPServer::UniquePtr tcpserver(
+            new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
+        Webserver::UniquePtr webserver(new Webserver(std::move(tcpserver)));
+        webservers.push_back(std::move(webserver));
+    }
 
     /* ***************************************** */
 
