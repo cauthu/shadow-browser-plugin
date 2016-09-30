@@ -176,7 +176,13 @@ public:
     virtual int write_dummy(size_t len) = 0;
 
     /* close/disconnect the channel, dropping pending/buffered data if
-     * any */
+     * any
+     *
+     * be careful when calling close() while being called back. e.g.,
+     * if you close while handling onNewReadDataAvailable(), you can
+     * cause crash because close() might free stuff that the channel
+     * might try to use after you return from onNewReadDataAvailable()
+     */
     virtual void close() = 0;
 
     virtual bool is_closed() const = 0;
