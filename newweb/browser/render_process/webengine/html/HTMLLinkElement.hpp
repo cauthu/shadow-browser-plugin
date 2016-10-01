@@ -6,23 +6,31 @@
 
 namespace blink {
 
-class HTMLLinkElement : /* public HTMLElement, */ public Element
+    class Document;
+    class Resource;
+
+class HTMLLinkElement : public Element
 {
 public:
 
     typedef std::unique_ptr<HTMLLinkElement, Destructor> UniquePtr;
 
-    HTMLLinkElement(const uint32_t& instNum)
-        : Element(instNum)
-        , is_block_stylesheet(false)
-    {}
+    explicit HTMLLinkElement(const uint32_t& instNum,
+                             Document*,
+                             const std::string rel,
+                             bool is_blocking_stylesheet);
 
-    bool is_block_stylesheet;
-
+    const bool& is_blocking_stylesheet() const { return is_blocking_stylesheet_; }
+    const std::string& rel() const { return rel_; }
 
 protected:
 
     virtual ~HTMLLinkElement() = default;
+
+    virtual void notifyFinished(Resource*, bool success) override;
+
+    const std::string rel_;
+    const bool is_blocking_stylesheet_;
 
 };
 

@@ -5,8 +5,7 @@
 #include "../webengine.hpp"
 
 
-#define _LOG_PREFIX(inst) << "res:" << instNum() \
-    << " (objId= " << objId() << "): "
+#define _LOG_PREFIX(inst) << "res:" << instNum() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -161,13 +160,13 @@ Resource::_notify_new_data(const size_t& length)
 {
     DestructorGuard dg(this);
 
-    vlogself(2) << "begin, num clients= " << m_clients.size();
+    vlogself(3) << "begin, num clients= " << m_clients.size();
 
     for (auto client : m_clients) {
         client->dataReceived(this, length);
     }
 
-    vlogself(2) << "done";
+    vlogself(3) << "done";
 }
 
 inline const uint32_t&

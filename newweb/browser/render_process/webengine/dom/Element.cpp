@@ -7,8 +7,7 @@
 
 
 
-#define _LOG_PREFIX(inst) << "elem:" << instNum() \
-    << " (objId= " << objId() << "): "
+#define _LOG_PREFIX(inst) << "elem:" << instNum() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -28,7 +27,7 @@ Element::Element(
     const uint32_t& instNum,
     const std::string tag,
     Document* document)
-    : Node(instNum)
+    : Node(instNum, document)
     , resInstNum_(0)
     , tag_(tag)
 {}
@@ -36,7 +35,7 @@ Element::Element(
 void
 Element::setResInstNum(const uint32_t& resInstNum)
 {
-    vlogself(2) << "begin, resInstNum= " << resInstNum;
+    vlogself(2) << "begin, res:" << resInstNum;
 
     auto fetcher = document()->fetcher();
 

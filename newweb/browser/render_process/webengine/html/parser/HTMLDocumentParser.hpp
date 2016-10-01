@@ -36,7 +36,13 @@ public:
     /* there will be no more html data after this */
     void finish_receive();
 
+    void set_parser_blocking_script(HTMLScriptElement* elem);
+
     bool hasParserBlockingScript() const;
+
+    void executeScriptsWaitingForResources();
+
+    bool hasScriptsWaitingForResources() const;
 
 protected:
 
@@ -46,6 +52,11 @@ protected:
     int _find_element_idx_to_begin_preload_scanning();
 
     void _add_element_to_doc(const uint32_t& elemInstNum);
+
+    bool isPendingScriptReady(const HTMLScriptElement*);
+
+    void executeParsingBlockingScript();
+    void executeParsingBlockingScripts();
 
     ///////////
 
@@ -80,6 +91,7 @@ protected:
      * bytes are available */
     size_t element_loc_idx_;
 
+    bool m_hasScriptsWaitingForResources;
 };
 
 } // end namespace blink

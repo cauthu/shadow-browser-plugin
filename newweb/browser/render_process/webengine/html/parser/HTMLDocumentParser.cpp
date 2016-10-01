@@ -1,5 +1,6 @@
 
 #include <vector>
+#include <memory>
 
 #include "HTMLDocumentParser.hpp"
 #include "../HTMLScriptElement.hpp"
@@ -10,6 +11,7 @@
 
 
 using std::vector;
+using std::shared_ptr;
 
 
 #define _LOG_PREFIX(inst) << "htmlparser= " << (inst)->objId() << ": "
@@ -44,7 +46,12 @@ HTMLDocumentParser::HTMLDocumentParser(const PageModel* page_model,
     , num_preload_scanned_bytes_(0)
     , no_more_preload_scanning_necessary_(false)
     , element_loc_idx_(0)
+    , m_hasScriptsWaitingForResources(false)
 {
+    CHECK_NOTNULL(document_);
+    CHECK_NOTNULL(webengine_);
+    CHECK_NOTNULL(page_model_);
+
     CHECK(element_locations_.empty());
     page_model_->get_main_html_element_byte_offsets(element_locations_);
     CHECK(!element_locations_.empty());
@@ -71,6 +78,41 @@ bool
 HTMLDocumentParser::hasParserBlockingScript() const
 {
     return (parser_blocking_script_ != nullptr);
+}
+
+void
+HTMLDocumentParser::executeScriptsWaitingForResources()
+{
+    vlogself(2) << "begin";
+
+    CHECK(hasScriptsWaitingForResources());
+    CHECK(document_->isScriptExecutionReady());
+
+    // if (_is_script_ready(parser_blocking_script_)) {
+        
+    // }
+
+    vlogself(2) << "done";
+}
+
+void
+HTMLDocumentParser::executeParsingBlockingScripts()
+{
+    vlogself(2) << "begin";
+
+    while (hasParserBlockingScript()
+           && isPendingScriptReady(parser_blocking_script_))
+    {
+        executeParsingBlockingScript();
+    }
+
+    vlogself(2) << "done";
+}
+
+bool
+HTMLDocumentParser::hasScriptsWaitingForResources() const
+{
+    return m_hasScriptsWaitingForResources;
 }
 
 void
@@ -140,39 +182,72 @@ HTMLDocumentParser::pump_parser()
 }
 
 void
-HTMLDocumentParser::_add_element_to_doc(const uint32_t& elemInstNum)
+HTMLDocumentParser::set_parser_blocking_script(HTMLScriptElement* elem)
 {
-    PageModel::ElementInfo elem_info;
+    CHECK(!parser_blocking_script_);
+    parser_blocking_script_ = elem;
+    vlogself(2) << "elem:" << elem->instNum() << " now blocks parser";
 
-    vlogself(2) << "begin, elemInstNum= " << elemInstNum;
+    CHECK(parser_blocking_script_->is_parser_blocking());
 
-    const auto rv = page_model_->get_element_info(elemInstNum, elem_info);
-    CHECK(rv);
+    if (parser_blocking_script_->exec_immediately()) {
+        // this means absolutely execute it now, irrespective of any
+        // blocking css stylesheets
 
-    std::shared_ptr<Element> element;
+        vlogself(2) << "go execute it immediately!";
 
-    if (elem_info.tag == "script") {
-        element.reset(
-            new HTMLScriptElement(elemInstNum, document_,
-                                  elem_info.is_parser_blocking,
-                                  elem_info.exec_immediately,
-                                  elem_info.exec_async,
-                                  elem_info.run_scope_id),
-            [](HTMLScriptElement* e) { e->destroy(); }
-            );
-        HTMLScriptElement* script_elem = (HTMLScriptElement*)element.get();
-        if (script_elem->is_parser_blocking()) {
-            CHECK(!parser_blocking_script_);
-            parser_blocking_script_ = script_elem;
-        }
-        if (script_elem->exec_immediately()) {
-            CHECK_EQ(script_elem->resInstNum(), 0);
-            vlogself(2) << "go execute!";
+        // it should not refer to any resource, i.e., it should be
+        // inline script
+        CHECK_EQ(parser_blocking_script_->resInstNum(), 0);
+
+        HTMLScriptElement* script_elem = parser_blocking_script_;
+
+        // clear the ptr before executing it
+        parser_blocking_script_ = nullptr;
+        webengine_->execute_scope(script_elem->run_scope_id());
+    } else {
+        if (isPendingScriptReady(parser_blocking_script_)) {
+            vlogself(2) << "can go execute now because it's ready";
+            HTMLScriptElement* script_elem = parser_blocking_script_;
+            // clear the ptr before executing it
+            parser_blocking_script_ = nullptr;
             webengine_->execute_scope(script_elem->run_scope_id());
         }
     }
+}
 
-    vlogself(2) << "done";
+bool
+HTMLDocumentParser::isPendingScriptReady(const HTMLScriptElement* script_elem)
+{
+    m_hasScriptsWaitingForResources = !document_->isScriptExecutionReady();
+    if (m_hasScriptsWaitingForResources)
+        return false;
+
+    // document allowing script execution, but is the script itself
+    // ready?
+
+    const auto resInstNum = script_elem->resInstNum();
+    if (resInstNum) {
+        shared_ptr<Resource> resource =
+            resource_fetcher_->getResource(resInstNum);
+        CHECK_NOTNULL(resource.get());
+
+        // todo: what to do when the script finished BUT failed to
+        // load?
+        if (!resource->isFinished()) {
+            vlogself(2) << "script is NOT ready";
+            return false;
+        }
+    }
+
+    vlogself(2) << "script IS ready";
+    return true;
+}
+
+void
+HTMLDocumentParser::_add_element_to_doc(const uint32_t& elemInstNum)
+{
+    document_->add_elem(elemInstNum);
 }
 
 void
@@ -268,7 +343,7 @@ HTMLDocumentParser::_do_preload_scanning()
                 const auto resInstNum =
                     page_model_->get_element_initial_resInstNum(elemInstNum);
                 if (resInstNum > 0) {
-                    vlogself(2) << "it has initial_resInstNum= "
+                    vlogself(2) << "it has initial res:"
                                 << resInstNum;
                     resInstNums.push_back(resInstNum);
                 }

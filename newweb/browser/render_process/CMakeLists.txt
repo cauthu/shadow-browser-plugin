@@ -38,8 +38,10 @@ set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
   webengine/dom/Node.cpp
   webengine/dom/Document.cpp
   webengine/dom/Element.cpp
+  webengine/frame/DOMTimer.cpp
   webengine/html/HTMLImageElement.cpp
   webengine/html/HTMLScriptElement.cpp
+  webengine/html/HTMLLinkElement.cpp
   webengine/html/parser/HTMLDocumentParser.cpp
   )
 

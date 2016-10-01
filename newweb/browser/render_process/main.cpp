@@ -41,7 +41,7 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
     VLOG(2) << "ioservice ipc client is ready";
 
     webengine.reset(
-        new blink::Webengine(io_service_ipc_client.get()));
+        new blink::Webengine(evbase, io_service_ipc_client.get()));
 
     /// set up my ipc server
     myio::TCPServer::UniquePtr tcpServerForIPC;

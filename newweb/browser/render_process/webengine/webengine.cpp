@@ -9,15 +9,15 @@
 
 #include "../../../utility/easylogging++.h"
 #include "../../../utility/common.hpp"
+#include "../../../utility/folly/ScopeGuard.h"
 
 #include "webengine.hpp"
 
 
 using std::string;
 using std::make_pair;
+using std::shared_ptr;
 
-
-static asIScriptEngine* s_as_script_engine = nullptr;
 
 
 static int
@@ -46,38 +46,14 @@ s_as_MessageCallback(const asSMessageInfo *msg, void *param)
               << "): " << type << " : " << msg->message;
 }
 
-/* sleep milliseconds */
-static void
-s_as_msleep(uint32_t msec)
-{
-    VLOG(3) << "about to sleep for " << msec << " ms";
-    usleep(msec * 1000);
-}
-
-static void
-s_as_addElement(uint32_t instNum)
-{
-    CHECK(0) << "todo";
-}
-
-static void
-s_as_print(const string& s)
-{
-    LOG(INFO) << "script is printing [" << s << "]";
-}
-
-double mymulti(int i, double j)
-{
-  return i * j;
-}
-
-double myadd(int i, double j)
-{
-  return i + j;
-}
-
-Webengine::Webengine(IOServiceIPCClient* ioservice_ipcclient)
-    : ioservice_ipcclient_(ioservice_ipcclient)
+Webengine::Webengine(
+    struct ::event_base* evbase,
+    IOServiceIPCClient* ioservice_ipcclient
+    )
+    : evbase_(evbase)
+    , ioservice_ipcclient_(ioservice_ipcclient)
+    , as_script_engine_(nullptr)
+    , as_script_ctx_(nullptr)
 {
     static bool initialized = false;
 
@@ -93,33 +69,56 @@ Webengine::Webengine(IOServiceIPCClient* ioservice_ipcclient)
     initialized = true;
 }
 
+Webengine::~Webengine()
+{
+    CHECK(as_script_engine_);
+    CHECK(as_script_ctx_);
+
+    as_script_ctx_->Release();
+    as_script_ctx_ = nullptr;
+}
+
 void
 Webengine::_init_angelscript_engine()
 {
-    CHECK_EQ(s_as_script_engine, nullptr);
-    s_as_script_engine = asCreateScriptEngine();
-    CHECK_NOTNULL(s_as_script_engine);
+    CHECK(!as_script_engine_);
+    as_script_engine_ = asCreateScriptEngine();
+    CHECK_NOTNULL(as_script_engine_);
 
-    LOG(INFO) << "angelscript engine= " << s_as_script_engine;
+    as_script_ctx_ = as_script_engine_->CreateContext();
+    CHECK_NOTNULL(as_script_ctx_);
 
-    asIScriptEngine* engine = s_as_script_engine;
+    LOG(INFO) << "angelscript engine= " << as_script_engine_;
 
-    engine->SetMessageCallback(
+    as_script_engine_->SetMessageCallback(
         asFUNCTION(s_as_MessageCallback), 0, asCALL_CDECL);
 
-    RegisterStdString(engine);
+    RegisterStdString(as_script_engine_);
 
     auto rv = 0;
 
-#define REGISTER_GLOBAL_AS_FUNC(signature_str, our_impl_func)           \
+#define REGISTER_MY_METHOD_AS_GLOBAL_FUNC(signature_str, my_impl_func)  \
     do {                                                                \
-        rv = engine->RegisterGlobalFunction(                            \
-            signature_str, asFUNCTION(our_impl_func), asCALL_CDECL);    \
+        rv = as_script_engine_->RegisterGlobalFunction(                 \
+                signature_str, asMETHOD(Webengine, my_impl_func),       \
+                asCALL_THISCALL_ASGLOBAL, this);                        \
         CHECK_GE(rv, 0);                                                \
     } while (0)
 
-    REGISTER_GLOBAL_AS_FUNC(
-        "void msleep(uint msec)", s_as_msleep);
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void __msleep(double)", msleep);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void add_elem(uint)", add_elem_to_doc);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void start_timer(uint)", start_timer);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void set_elem_res(uint, uint)", set_elem_res);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void send_xhr(uint)", send_xhr);
 }
 
 void
@@ -136,7 +135,7 @@ Webengine::loadPage(const char* model_fpath)
     static const uint32_t main_doc_instNum = 7;
 
     document_.reset(
-        new Document(main_doc_instNum,
+        new Document(evbase_, main_doc_instNum,
                      this, page_model_.get(), resource_fetcher_.get()));
     document_->load();
 }
@@ -159,26 +158,73 @@ Webengine::request_resource(const PageModel::RequestInfo& req_info,
 }
 
 void
-Webengine::msleep(const uint32_t ms)
+Webengine::msleep(const double msec)
 {
-    s_as_msleep(ms);
+    VLOG(2) << "about to sleep for " << msec << " ms";
+    usleep(msec * 1000);
+}
+
+void
+Webengine::add_elem_to_doc(const uint32_t elemInstNum)
+{
+    VLOG(2) << "begin, elem:" << elemInstNum;
+    CHECK(document_);
+
+    document_->add_elem(elemInstNum);
+}
+
+void
+Webengine::start_timer(const uint32_t timerID)
+{
+    VLOG(2) << "begin, timer:" << timerID;
+
+    PageModel::DOMTimerInfo info;
+    const auto rv = page_model_->get_dom_timer_info(timerID, info);
+    CHECK(rv);
+
+    DOMTimer::UniquePtr timer(
+        new DOMTimer(evbase_, this, info));
+
+    const auto ret = dom_timers_.insert(make_pair(timerID, std::move(timer)));
+    CHECK(ret.second);
+
+    VLOG(2) << "done";
+}
+
+void
+Webengine::set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum)
+{
+    VLOG(2) << "begin, elem:" << elemInstNum << " res:" << resInstNum;
+    document_->set_elem_res(elemInstNum, resInstNum);
+    VLOG(2) << "done";
+}
+
+void
+Webengine::send_xhr(const uint32_t instNum)
+{
+    VLOG(2) << "begin, xhr:" << instNum;
+    CHECK(0) << "todo";
 }
 
 void
 Webengine::execute_scope(const uint32_t scope_id)
 {
-    VLOG(2) << "begin, scope_id= " << scope_id;
+    VLOG(2) << "begin, scope:" << scope_id;
 
     CHECK(!inSet(executed_scope_ids_, scope_id));
 
     executed_scope_ids_.insert(scope_id);
 
     std::vector<string> statements;
-    page_model_->get_execution_scope_statements(scope_id, statements);
+    const auto found =
+        page_model_->get_execution_scope_statements(scope_id, statements);
+    CHECK(found);
 
     VLOG(2) << "scope has " << statements.size() << " statements";
 
-    static const string header("void __main() {");
+#define __MAIN_FUNC_PROTO "void __main()"
+
+    static const string header(__MAIN_FUNC_PROTO " {");
     static const string footer("}");
 
     statements.insert(statements.begin(), header);
@@ -186,40 +232,46 @@ Webengine::execute_scope(const uint32_t scope_id)
 
     const auto codeStr = boost::algorithm::join(statements, "\n");
 
-    /// now the code string is ready
+    // now the source code string is ready
 
-    asIScriptEngine* engine = s_as_script_engine;
-    CHECK_NOTNULL(engine);
 
-    asIScriptModule *mod = engine->GetModule(0, asGM_ALWAYS_CREATE);
+    // Create a new script module
+    asIScriptModule *mod = as_script_engine_->GetModule(0, asGM_ALWAYS_CREATE);
     CHECK_NOTNULL(mod);
 
-    auto r = mod->AddScriptSection("script", codeStr.c_str());
-    CHECK_GE(r, 0);
+    SCOPE_EXIT {
+        mod->Discard();
+        mod = nullptr;
+    };
 
-    r = mod->Build();
-    CHECK_GE(r, 0);
+    auto rv = mod->AddScriptSection("script", codeStr.c_str());
+    CHECK_GE(rv, 0);
 
-    // Create a context that will execute the script.
-    asIScriptContext *ctx = engine->CreateContext();
-    CHECK_NOTNULL(ctx);
+    rv = mod->Build();
+    CHECK_GE(rv, 0);
+
+    // we have now compiled the script
+
+    // // Create a context that will execute the script.
+    // asIScriptContext *ctx = engine->CreateContext();
+    // CHECK_NOTNULL(ctx);
 
     asIScriptFunction *func =
-        engine->GetModule(0)->GetFunctionByDecl("void __main()");
+        as_script_engine_->GetModule(0)->GetFunctionByDecl(__MAIN_FUNC_PROTO);
     CHECK_NOTNULL(func);
 
-    r = ctx->Prepare(func);
-    CHECK_GE(r, 0);
+    rv = as_script_ctx_->Prepare(func);
+    CHECK_GE(rv, 0);
 
-    r = ctx->Execute();
-    if (r == asEXECUTION_FINISHED ) {
-        VLOG(2) << "scope finished executing";
+    rv = as_script_ctx_->Execute();
+    if (rv == asEXECUTION_FINISHED ) {
+        VLOG(2) << "scope:" << scope_id << " finished executing";
     } else {
         // The execution didn't finish as we had planned. Determine why.
-        if( r == asEXECUTION_ABORTED ) {
+        if( rv == asEXECUTION_ABORTED ) {
             LOG(FATAL) << "The script was aborted before it could finish";
         }
-        else if( r == asEXECUTION_EXCEPTION ) {
+        else if( rv == asEXECUTION_EXCEPTION ) {
             LOG(FATAL) << "The script ended with an exception.";
         }
     }

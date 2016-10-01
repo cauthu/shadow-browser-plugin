@@ -42,8 +42,8 @@ public:
     {
         uint32_t instNum;
         std::string tag;
-        uint32_t initial_resInstNum;
         std::vector<std::pair<std::string, uint32_t> > event_handling_scopes;
+        uint32_t initial_resInstNum;
 
         // for script elements
         bool exec_async;
@@ -54,6 +54,16 @@ public:
         // for link elements
         std::string rel;
         bool is_blocking_css;
+
+        // we don't have any specific to <img> and <body> elements
+    };
+
+    struct DOMTimerInfo
+    {
+        uint32_t timerID;
+        uint32_t interval_ms;
+        bool singleShot;
+        std::vector<uint32_t> fired_scope_ids;
     };
 
     explicit PageModel(const char* json_fpath);
@@ -76,8 +86,12 @@ public:
 
     uint32_t get_element_initial_resInstNum(const uint32_t& elemInstNum) const;
 
-    void get_execution_scope_statements(uint32_t scope_id,
+    /* return true if the scope is found, false otherwise */
+    bool get_execution_scope_statements(uint32_t scope_id,
                                         std::vector<std::string>& statements) const;
+
+    bool get_dom_timer_info(uint32_t timerID,
+                            DOMTimerInfo& timer_info) const;
 
 private:
 

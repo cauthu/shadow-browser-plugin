@@ -19,9 +19,12 @@ protected:
 
     Document* document() { return document_; }
 
-    explicit Node(const uint32_t& instNum);
+    explicit Node(const uint32_t& instNum,
+                  Document*);
 
     virtual ~Node() = default;
+
+private:
 
     Document* document_;
 

@@ -2,6 +2,7 @@
 #define webengine_hpp
 
 #include <memory>
+#include <angelscript.h>
 
 #include "../../../utility/object.hpp"
 
@@ -13,7 +14,7 @@
 #include "dom/Document.hpp"
 #include "fetch/Resource.hpp"
 #include "fetch/ResourceFetcher.hpp"
-
+#include "frame/DOMTimer.hpp"
 
 
 namespace blink
@@ -25,7 +26,9 @@ class Webengine : public Object
 public:
     typedef std::unique_ptr<Webengine, /*folly::*/Destructor> UniquePtr;
 
-    explicit Webengine(IOServiceIPCClient*);
+    explicit Webengine(struct ::event_base*,
+                       IOServiceIPCClient*
+        );
 
     /* takes a file path to the page model */
     void loadPage(const char* model_fpath);
@@ -41,21 +44,31 @@ public:
     virtual void handle_DataReceived(const int& req_id, const size_t& length) override;
     virtual void handle_RequestComplete(const int& req_id, const bool success) override;
 
-    void msleep(const uint32_t ms);
+    void msleep(const double ms);
 
     void execute_scope(const uint32_t scope_id);
 
 protected:
 
-    virtual ~Webengine() = default;
+    virtual ~Webengine();
 
     //////
 
     void _init_angelscript_engine();
 
+    // these methods are for execution code to call
+    void add_elem_to_doc(const uint32_t elemInstNum);
+    void start_timer(const uint32_t timerID);
+    void set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum);
+    void send_xhr(const uint32_t xhrInstNum);
+
     /////
 
+    struct ::event_base* evbase_;
     IOServiceIPCClient* ioservice_ipcclient_;
+
+    asIScriptEngine* as_script_engine_;
+    asIScriptContext* as_script_ctx_;
 
     /* map from the request id (for IPC!! not the resInstNum) that we
      * generate to the resource for which we're requesting. this is
@@ -72,6 +85,8 @@ protected:
      * attempt
      */
     std::set<uint32_t> executed_scope_ids_;
+
+    std::map<uint32_t, DOMTimer::UniquePtr> dom_timers_;
 };
 
 }

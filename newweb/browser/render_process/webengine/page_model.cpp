@@ -272,7 +272,7 @@ PageModel::get_element_initial_resInstNum(const uint32_t& elemInstNum) const
     return resInstNum;
 }
 
-void
+bool
 PageModel::get_execution_scope_statements(uint32_t scope_id,
                                           std::vector<std::string>& statements) const
 {
@@ -282,7 +282,8 @@ PageModel::get_execution_scope_statements(uint32_t scope_id,
 
     json::Value::ConstMemberIterator itr =
         model_json["exec_scopes"].FindMember(scopeIdStr.c_str());
-    CHECK(itr != model_json["exec_scopes"].MemberEnd());
+    CHECK(itr != model_json["exec_scopes"].MemberEnd())
+        << "page model doesn't contain scope: " << scope_id;
 
     const json::Value& statement_array = itr->value;
     CHECK(statement_array.IsArray());
@@ -296,8 +297,54 @@ PageModel::get_execution_scope_statements(uint32_t scope_id,
         statements.push_back(statement.GetString());
     }
 
-
     vlogself(2) << "done";
+    return true;
+}
+
+bool
+PageModel::get_dom_timer_info(uint32_t timerID,
+                              DOMTimerInfo& info) const
+{
+    VLOG(2) << "begin, timer:" << timerID;
+
+    const string timerIDStr = lexical_cast<string>(timerID);
+
+    json::Value::ConstMemberIterator itr =
+        model_json["timers"].FindMember(timerIDStr.c_str());
+    CHECK(itr != model_json["timers"].MemberEnd());
+
+    const json::Value& timer = itr->value;
+    CHECK(timer.IsObject());
+
+    info.timerID = timerID;
+
+    GET_OBJECT_MEMBER(info.singleShot,
+                      timer, "singleShot", true, Bool);
+
+    GET_OBJECT_MEMBER(info.interval_ms,
+                      timer, "interval_ms", true, Uint);
+
+    {
+        vlogself(2) << "get the timer fired scopes";
+
+        json::Value::ConstMemberIterator itr =
+            timer.FindMember("fired_scope_ids");
+        CHECK_NE(itr, timer.MemberEnd());
+
+        const json::Value& scope_id_array = itr->value;
+        CHECK(scope_id_array.IsArray());
+
+        for (json::Value::ConstValueIterator it2 = scope_id_array.Begin();
+             it2 != scope_id_array.End(); ++it2)
+        {
+            const json::Value& scope_id = *it2;
+            CHECK(scope_id.IsUint());
+
+            info.fired_scope_ids.push_back(scope_id.GetUint());
+        }
+    }
+
+    return true;
 }
 
 } // end namespace blink

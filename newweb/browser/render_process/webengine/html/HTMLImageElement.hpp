@@ -4,14 +4,19 @@
 
 #include "../dom/Element.hpp"
 
+
 namespace blink {
 
-class HTMLImageElement : /* public HTMLElement, */ public Element
+    class Document;
+
+class HTMLImageElement : public Element
 {
 public:
 
     typedef std::unique_ptr<HTMLImageElement, Destructor> UniquePtr;
 
+    explicit HTMLImageElement(const uint32_t& instNum,
+                              Document*);
 
 protected:
 
