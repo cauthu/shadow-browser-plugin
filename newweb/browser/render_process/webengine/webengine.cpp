@@ -22,7 +22,10 @@ static asIScriptEngine* s_as_script_engine = nullptr;
 
 static int
 MakeRequestID() {
-    static int next_request_id = 0;
+    // start at 1, to help catch bugs where the io process forgot to
+    // set the req_id field in its ipc messages sent to us, and thus
+    // the field will be zero, and we will not know about it
+    static int next_request_id = 1;
     return next_request_id++;
 }
 
@@ -253,6 +256,9 @@ Webengine::handle_RequestComplete(const int& req_id, const bool success)
     CHECK_NOTNULL(resource);
 
     resource->finish(success);
+
+    // remove the pending request since it's now complete
+    pending_requests_.erase(req_id);
 }
 
 } // end namespace blink

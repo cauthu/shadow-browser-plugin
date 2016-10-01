@@ -95,6 +95,7 @@ IPCServer::send_DataReceived(const int& routing_id,
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(DataReceived, bufbuilder, ipc_ch);
 
+        msgbuilder.add_req_id(req_id);
         msgbuilder.add_length(len);
     }
 
@@ -116,6 +117,7 @@ IPCServer::send_RequestComplete(const int& routing_id,
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestComplete, bufbuilder, ipc_ch);
 
+        msgbuilder.add_req_id(req_id);
         msgbuilder.add_success(success);
     }
 
