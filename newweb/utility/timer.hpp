@@ -42,6 +42,7 @@ public:
      * cancel() and restart() can be called anytime.
      */
     void start(const struct timeval *tv);
+    void start(const uint32_t msec);
     void cancel();
     void restart(const struct timeval *tv);
 
@@ -51,11 +52,11 @@ public:
      */
     bool is_running() const;
 
-private:
+protected:
 
     virtual ~Timer();
 
-    void _on_event_cb();
+    virtual void _on_event_cb();
     static void s_event_cb(int, short, void*);
 
     //////

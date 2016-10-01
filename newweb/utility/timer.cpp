@@ -50,6 +50,18 @@ Timer::start(const struct timeval *tv)
 }
 
 void
+Timer::start(const uint32_t msec)
+{
+    struct timeval tv;
+    // get the whole seconds
+    tv.tv_sec = (msec) / 1000;
+    // mod-1000 to get the sub-second in millisecond, then multiply
+    // 1000 to get microseconds
+    tv.tv_usec = (msec % 1000) * 1000;
+    start(&tv);
+}
+
+void
 Timer::cancel()
 {
     auto rv = event_del(&ev_);
