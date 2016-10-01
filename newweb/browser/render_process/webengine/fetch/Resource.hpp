@@ -9,6 +9,7 @@
 namespace blink {
 
 class Resource;
+class ResourceFetcher;
 class Webengine;
 
 class ResourceClient
@@ -21,9 +22,22 @@ public:
      */
     virtual void responseReceived(Resource* /*, const ResourceResponse*/) {}
     virtual void dataReceived(Resource*, size_t length) {}
-    virtual void redirectReceived(Resource* /*, ResourceRequest&, const ResourceResponse&*/) { }
+    // virtual void redirectReceived(Resource* /*, ResourceRequest&, const ResourceResponse&*/) { }
 
 };
+
+    // handle redirects: (1) one way is to actually instruct the
+    // server to respond with "redirect" status code, and the io
+    // service must be updated to understand and handle such
+    // responses. (2) alternative is to just issue "normal" requests
+    // to io service, and when it tells us about "datareceived" and
+    // "finish" we handle specially---i.e., don't notify clients---if
+    // we're not yet at the end of redirect chain, and keep doing that
+    // until we are at the end of the redirect chain, then we can
+    // notify clients when data is received and when it's finished
+    //
+    // we have gone with (2): the request chain info is in
+    // ResourceInfo
 
 class Resource : public Object
 {
@@ -32,7 +46,7 @@ public:
 
 
     Resource(const PageModel::ResourceInfo&,
-             Webengine*);
+             Webengine*, ResourceFetcher*);
 
     /* start loading the resource */
     void load();
@@ -41,7 +55,7 @@ public:
     void appendData(size_t length);
 
     /* tell the resource it has now finished receiving the response */
-    void finish(bool success);
+    virtual void finish(bool success);
 
     void addClient(ResourceClient*);
 
@@ -68,6 +82,17 @@ protected:
     void _notify_new_data(const size_t&);
     void _notify_finished(bool);
 
+    // returns true we are receiving the real resource, i.e., the last
+    // entry in the request chain
+    bool _receiving_real_resource() const;
+
+    // this means we have really succeeded loading the resource, i.e.,
+    // followed through all the request/redirect chain
+    //
+    // allows derived resources to do custom things, e.g., css style
+    // sheet resource parses the style sheet
+    virtual void _really_did_succeed();
+
     void _load_next_chain_entry();
 
     const PageModel::ResourceInfo res_info_;
@@ -90,16 +115,6 @@ protected:
     std::set<ResourceClient*> m_clients;
 
 
-    // TODO: handle redirects: (1) one way is to actually instruct the
-    // server to respond with "redirect" status code, and the io
-    // service must be updated to understand and handle such
-    // responses. (2) alternative is to just issue "normal" requests
-    // to io service, and when it tells us about "datareceived" and
-    // "finish" we handle specially---i.e., don't notify clients---if
-    // we're not yet at the end of redirect chain, and keep doing that
-    // until we are at the end of the redirect chain, then we can
-    // notify clients when data is received and when it's finished
-
     // init to -1
     int current_req_chain_idx_;
 
@@ -107,6 +122,7 @@ protected:
     size_t current_req_body_bytes_recv_;
 
     Webengine* webengine_;
+    ResourceFetcher* resource_fetcher_;
 };
 
 }

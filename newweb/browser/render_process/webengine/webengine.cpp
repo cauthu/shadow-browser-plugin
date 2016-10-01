@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <boost/algorithm/string/join.hpp>
 
 #include <angelscript.h>
 #include <angelscript/add_on/scriptstdstring/scriptstdstring.h>
@@ -44,8 +45,9 @@ s_as_MessageCallback(const asSMessageInfo *msg, void *param)
 
 /* sleep milliseconds */
 static void
-s_as_msleep(int msec)
+s_as_msleep(uint32_t msec)
 {
+    VLOG(3) << "about to sleep for " << msec << " ms";
     usleep(msec * 1000);
 }
 
@@ -114,79 +116,26 @@ Webengine::_init_angelscript_engine()
     } while (0)
 
     REGISTER_GLOBAL_AS_FUNC(
-        "void msleep(int msec)", s_as_msleep);
-
-    REGISTER_GLOBAL_AS_FUNC(
-        "void print(const string& in)", s_as_print);
-
-    REGISTER_GLOBAL_AS_FUNC(
-        "double func1(int i, double d)", myadd);
-    REGISTER_GLOBAL_AS_FUNC(
-        "double func2(int i, double d)", mymulti);
-
-
-    asIScriptModule *mod = engine->GetModule(0, asGM_ALWAYS_CREATE);
-    CHECK_NOTNULL(mod);
-
-    static const char script[] = "double calc(int a, double b) {"
-                                 "print(\"i am about to sleep!!\");"
-                                 "msleep(10000);"
-                                 "return func1(a, b);"
-                                 "}";
-
-    auto r = mod->AddScriptSection("script", &script[0]);
-    CHECK_GE(r, 0);
-
-    r = mod->Build();
-    CHECK_GE(r, 0);
-
-    // Create a context that will execute the script.
-    asIScriptContext *ctx = engine->CreateContext();
-    CHECK_NOTNULL(ctx);
-
-    asIScriptFunction *func = engine->GetModule(0)->GetFunctionByDecl("double calc(int, double)");
-    CHECK_NOTNULL(func) << "execution scope must ";
-
-    r = ctx->Prepare(func);
-    CHECK_GE(r, 0);
-
-	// Now we need to pass the parameters to the script function. 
-    // ctx->SetArgDWord(0, 4);
-    // ctx->SetArgDouble(1, 5.5);
-
-    // r = ctx->Execute();
-    // if( r != asEXECUTION_FINISHED ) {
-    // // The execution didn't finish as we had planned. Determine why.
-    // if( r == asEXECUTION_ABORTED )
-    // 	cout << "The script was aborted before it could finish. Probably it timed out." << endl;
-    // else if( r == asEXECUTION_EXCEPTION )
-    // {
-    // 	cout << "The script ended with an exception." << endl;
-
-    // 	// Write some information about the script exception
-    // 	asIScriptFunction *func = ctx->GetExceptionFunction();
-    // 	cout << "func: " << func->GetDeclaration() << endl;
-    // 	cout << "modl: " << func->GetModuleName() << endl;
-    // 	cout << "sect: " << func->GetScriptSectionName() << endl;
-    // 	cout << "line: " << ctx->GetExceptionLineNumber() << endl;
-    // 	cout << "desc: " << ctx->GetExceptionString() << endl;
-    // }
-    // else
-    // 	cout << "The script ended for some unforeseen reason (" << r << ")." << endl;
-
-    // }
-
-    // // Retrieve the return value from the context
-    // double returnValue = ctx->GetReturnDouble();
-    // LOG(INFO) << "return value: " << returnValue;
+        "void msleep(uint msec)", s_as_msleep);
 }
 
 void
 Webengine::loadPage(const char* model_fpath)
 {
-    page_model_.reset(new PageModel(model_fpath, this));
+    // we are probably doing some of what DocumentLoader does
 
-    _load_main_resource();
+    page_model_.reset(new PageModel(model_fpath));
+
+    resource_fetcher_.reset(
+        new ResourceFetcher(this, page_model_.get()));
+
+    // TODO: might want to get this from the page model
+    static const uint32_t main_doc_instNum = 7;
+
+    document_.reset(
+        new Document(main_doc_instNum,
+                     this, page_model_.get(), resource_fetcher_.get()));
+    document_->load();
 }
 
 void
@@ -206,13 +155,72 @@ Webengine::request_resource(const PageModel::RequestInfo& req_info,
 }
 
 void
-Webengine::_load_main_resource()
+Webengine::msleep(const uint32_t ms)
 {
-    PageModel::ResourceInfo res_info;
-    auto rv = page_model_->get_main_resource_info(res_info);
-    CHECK(rv);
-    main_resource_.reset(new Resource(res_info, this));
-    main_resource_->load();
+    s_as_msleep(ms);
+}
+
+void
+Webengine::execute_scope(const uint32_t scope_id)
+{
+    VLOG(2) << "begin, scope_id= " << scope_id;
+
+    CHECK(!inSet(executed_scope_ids_, scope_id));
+
+    executed_scope_ids_.insert(scope_id);
+
+    std::vector<string> statements;
+    page_model_->get_execution_scope_statements(scope_id, statements);
+
+    VLOG(2) << "scope has " << statements.size() << " statements";
+
+    static const string header("void __main() {");
+    static const string footer("}");
+
+    statements.insert(statements.begin(), header);
+    statements.push_back(footer);
+
+    const auto codeStr = boost::algorithm::join(statements, "\n");
+
+    /// now the code string is ready
+
+    asIScriptEngine* engine = s_as_script_engine;
+    CHECK_NOTNULL(engine);
+
+    asIScriptModule *mod = engine->GetModule(0, asGM_ALWAYS_CREATE);
+    CHECK_NOTNULL(mod);
+
+    auto r = mod->AddScriptSection("script", codeStr.c_str());
+    CHECK_GE(r, 0);
+
+    r = mod->Build();
+    CHECK_GE(r, 0);
+
+    // Create a context that will execute the script.
+    asIScriptContext *ctx = engine->CreateContext();
+    CHECK_NOTNULL(ctx);
+
+    asIScriptFunction *func =
+        engine->GetModule(0)->GetFunctionByDecl("void __main()");
+    CHECK_NOTNULL(func);
+
+    r = ctx->Prepare(func);
+    CHECK_GE(r, 0);
+
+    r = ctx->Execute();
+    if (r == asEXECUTION_FINISHED ) {
+        VLOG(2) << "scope finished executing";
+    } else {
+        // The execution didn't finish as we had planned. Determine why.
+        if( r == asEXECUTION_ABORTED ) {
+            LOG(FATAL) << "The script was aborted before it could finish";
+        }
+        else if( r == asEXECUTION_EXCEPTION ) {
+            LOG(FATAL) << "The script ended with an exception.";
+        }
+    }
+
+    VLOG(2) << "done";
 }
 
 void
@@ -222,7 +230,7 @@ Webengine::handle_ReceivedResponse(const int& req_id)
         << "we don't know about req_id= " << req_id;
     Resource* resource = pending_requests_[req_id];
     CHECK_NOTNULL(resource);
-    // nothing to do
+    // nothing to do: we don't care about response meta data
 }
 
 void

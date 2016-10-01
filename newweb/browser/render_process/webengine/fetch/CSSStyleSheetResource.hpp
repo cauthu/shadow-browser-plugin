@@ -12,19 +12,21 @@ public:
     typedef std::unique_ptr<CSSStyleSheetResource, Destructor> UniquePtr;
 
 
-    CSSStyleSheetResource(const uint32_t& instNum,
-                          const uint32_t& parse_duration_ms)
-        : Resource(instNum)
-        , parse_duration_ms_(parse_duration_ms)
-    {}
+    CSSStyleSheetResource(const PageModel::ResourceInfo& res_info,
+                          Webengine* webengine, ResourceFetcher*,
+                          const uint32_t& parse_dur_ms);
 
-    const uint32_t& parse_duration_ms() const { return parse_duration_ms_; }
+    // const uint32_t& parse_duration_ms() const { return parse_duration_ms_; }
 
 protected:
 
     virtual ~CSSStyleSheetResource() = default;
 
-    const uint32_t parse_duration_ms_;
+    virtual void _really_did_succeed();
+
+    /////////////
+
+    const uint32_t parse_dur_ms_;
 };
 
 }

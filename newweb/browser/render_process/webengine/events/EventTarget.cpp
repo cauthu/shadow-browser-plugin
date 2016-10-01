@@ -13,19 +13,27 @@ using std::string;
 namespace blink
 {
 
-    static const std::set<std::string> s_all_type_names {
-        EventTypeNames::load,
-            EventTypeNames::DOMContentLoaded};
+static const std::set<std::string> s_all_type_names {
+    EventTypeNames::load,
+    EventTypeNames::DOMContentLoaded
+        };
 
-
-void
-EventTarget::add_event_listener(const std::string& event_name,
-                                const uint32_t& handler_scope_id)
+EventTarget::EventTarget(const uint32_t& instNum)
+    : instNum_(instNum)
 {
-    CHECK(inSet(s_all_type_names, event_name));
-
-
+    // must be strictly greater 0, for 0 is "null" instnum
+    CHECK_GT(instNum_, 0);
 }
+
+
+// void
+// EventTarget::add_event_listener(const std::string& event_name,
+//                                 const uint32_t& handler_scope_id)
+// {
+//     CHECK(inSet(s_all_type_names, event_name));
+
+
+// }
                                 
 
 

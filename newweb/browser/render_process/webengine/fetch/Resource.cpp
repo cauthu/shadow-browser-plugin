@@ -5,7 +5,8 @@
 #include "../webengine.hpp"
 
 
-#define _LOG_PREFIX(inst) << "resource= " << (inst)->objId() << ": instNum= " << instNum() << ": "
+#define _LOG_PREFIX(inst) << "res:" << instNum() \
+    << " (objId= " << objId() << "): "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -23,9 +24,11 @@ namespace blink
 
 
 Resource::Resource(const PageModel::ResourceInfo& res_info,
-                   Webengine* webengine)
+                   Webengine* webengine,
+                   ResourceFetcher* fetcher)
     : res_info_(res_info)
     , webengine_(webengine)
+    , resource_fetcher_(fetcher)
     , load_state_(LoadState::INITIAL)
     , cumulative_resp_body_bytes_(0)
     , errored_(false)
@@ -39,9 +42,14 @@ Resource::Resource(const PageModel::ResourceInfo& res_info,
 void
 Resource::load()
 {
-    vlogself(2) << "starting loading resource";
+    vlogself(2) << "really starts loading resource";
     CHECK_EQ(load_state_, LoadState::INITIAL);
     load_state_ = LoadState::LOADING;
+
+    if (part_of_page_loaded_check()) {
+        resource_fetcher_->incrementRequestCount(this);
+    }
+
     _load_next_chain_entry();
 }
 
@@ -61,6 +69,12 @@ Resource::_load_next_chain_entry()
         res_info_.req_chain[current_req_chain_idx_], this);
 }
 
+bool
+Resource::_receiving_real_resource() const
+{
+    return current_req_chain_idx_ == (res_info_.req_chain.size() - 1);
+}
+
 void
 Resource::appendData(size_t length)
 {
@@ -71,7 +85,9 @@ Resource::appendData(size_t length)
     // check that we're not receiving more data than we asked for
     CHECK_LE(current_req_body_bytes_recv_,
              res_info_.req_chain[current_req_chain_idx_].resp_body_size);
-    _notify_new_data(length);
+    if (_receiving_real_resource()) {
+        _notify_new_data(length);
+    }
 }
 
 void
@@ -96,11 +112,11 @@ Resource::finish(bool success)
             << res_info_.req_chain[current_req_chain_idx_].resp_body_size
             << " actual= " << current_req_body_bytes_recv_;
         current_req_body_bytes_recv_ = 0;
-        if (current_req_chain_idx_ == (res_info_.req_chain.size() - 1)) {
+        if (_receiving_real_resource()) {
             // we are really finished
             load_state_ = LoadState::FINISHED;
             errored_ = !success;
-            _notify_finished(success);
+            _really_did_succeed();
         } else {
             _load_next_chain_entry();
         }
@@ -113,14 +129,12 @@ Resource::finish(bool success)
     vlogself(2) << "done";
 }
 
-// void
-// Resource::error()
-// {
-//     CHECK_EQ(load_state_, LoadState::LOADING);
-//     load_state_ = LoadState::FINISHED;
-//     errored_ = true;
-//     _notify_finished(false);
-// }
+void
+Resource::_really_did_succeed()
+{
+    DestructorGuard dg(this);
+    _notify_finished(true);
+}
 
 void
 Resource::_notify_finished(bool success)
@@ -129,6 +143,10 @@ Resource::_notify_finished(bool success)
 
     vlogself(2) << "begin, success= " << success;
     DestructorGuard dg(this);
+
+    if (part_of_page_loaded_check()) {
+        resource_fetcher_->decrementRequestCount(this);
+    }
 
     for (auto client : m_clients) {
         client->notifyFinished(this, success);

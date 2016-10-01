@@ -20,20 +20,15 @@ public:
 
     const uint32_t& instNum() const { return instNum_; }
 
-    /* event name like "load" or "DOMContentLoaded" */
-    virtual void add_event_listener(const std::string& event_name,
-                                    const uint32_t& handler_scope_id);
+    // /* event name like "load" or "DOMContentLoaded" */
+    // virtual void add_event_listener(const std::string& event_name,
+    //                                 const uint32_t& handler_scope_id);
 
 protected:
 
-    EventTarget(const uint32_t& instNum)
-        : instNum_(instNum)
-    {
-        // must be strictly greater 0, for 0 is "null" instnum
-        CHECK_GT(instNum_, 0);
-    }
+    explicit EventTarget(const uint32_t& instNum);
 
-    virtual ~EventTarget() = 0;
+    virtual ~EventTarget() = default;
 
     ////////
 

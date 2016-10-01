@@ -6,6 +6,8 @@
 
 namespace blink {
 
+    class Document;
+
 class Node : public EventTarget
 {
 public:
@@ -13,11 +15,15 @@ public:
     typedef std::unique_ptr<Node, Destructor> UniquePtr;
 
 
-
 protected:
+
+    Document* document() { return document_; }
+
+    explicit Node(const uint32_t& instNum);
 
     virtual ~Node() = default;
 
+    Document* document_;
 
 };
 

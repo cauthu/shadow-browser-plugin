@@ -5,8 +5,11 @@
 #include "Node.hpp"
 #include "../fetch/Resource.hpp"
 
+#include <string>
 
 namespace blink {
+
+    class Document;
 
 class Element : public Node
               , public ResourceClient
@@ -14,6 +17,9 @@ class Element : public Node
 public:
     typedef std::unique_ptr<Element, Destructor> UniquePtr;
 
+    explicit Element(const uint32_t& instNum,
+                     const std::string tag,
+                     Document*);
 
     const uint32_t& resInstNum() const { return resInstNum_; }
     void setResInstNum(const uint32_t& resInstNum);
@@ -26,7 +32,7 @@ protected:
     virtual void notifyFinished(Resource*, bool success) {};
     virtual void responseReceived(Resource* /*, const ResourceResponse*/) {}
     virtual void dataReceived(Resource*, size_t length) {}
-    virtual void redirectReceived(Resource* /*, ResourceRequest&, const ResourceResponse&*/) { }
+    // virtual void redirectReceived(Resource* /*, ResourceRequest&, const ResourceResponse&*/) { }
 
 
 
@@ -40,7 +46,7 @@ protected:
      */
     uint32_t resInstNum_;
 
-
+    const std::string tag_;
 };
 
 } // end namespace blink
