@@ -15,7 +15,7 @@ namespace msgs = myipc::ioservice::messages;
 using msgs::type;
 
 
-#define _LOG_PREFIX(inst) << "io_ipc_cli= " << (inst)->objId() << ": "
+#define _LOG_PREFIX(inst)
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -121,8 +121,8 @@ IOServiceIPCClient::_handle_DataReceived(
     const msgs::DataReceivedMsg* msg)
 {
     CHECK_NOTNULL(resource_msg_handler_);
-    vlogself(2) << "req_id= " << msg->req_id()
-                << " len= " << msg->length();
+    // vlogself(2) << "req_id= " << msg->req_id()
+    //             << " len= " << msg->length();
     resource_msg_handler_->handle_DataReceived(
         msg->req_id(), msg->length());
 }
