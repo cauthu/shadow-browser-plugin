@@ -64,6 +64,7 @@ IOServiceIPCClient::IOServiceIPCClient(struct event_base* evbase,
 
 void
 IOServiceIPCClient::request_resource(const int& req_id,
+                                     const uint32_t& resInstNum,
                                      const char* host,
                           const uint16_t& port,
                           const size_t& req_total_size,
@@ -79,6 +80,7 @@ IOServiceIPCClient::request_resource(const int& req_id,
         BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestResource, bufbuilder);
 
         msgbuilder.add_req_id(req_id);
+        msgbuilder.add_webkit_resInstNum(resInstNum);
         msgbuilder.add_host(hoststr);
         msgbuilder.add_port(port);
         msgbuilder.add_req_total_size(req_total_size);
@@ -119,6 +121,8 @@ IOServiceIPCClient::_handle_DataReceived(
     const msgs::DataReceivedMsg* msg)
 {
     CHECK_NOTNULL(resource_msg_handler_);
+    vlogself(2) << "req_id= " << msg->req_id()
+                << " len= " << msg->length();
     resource_msg_handler_->handle_DataReceived(
         msg->req_id(), msg->length());
 }

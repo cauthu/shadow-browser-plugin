@@ -19,6 +19,7 @@ namespace http
 {
 
 Request::Request(
+    const uint32_t& webkit_resInstNum,
     const string& host, const uint16_t& port,
     const size_t& req_total_size,
     const size_t& resp_meta_size, const size_t& resp_body_size,
@@ -26,7 +27,8 @@ Request::Request(
     ResponseMetaCb rsp_meta_cb, ResponseBodyDataCb rsp_body_data_cb,
     ResponseDoneCb rsp_done_cb
     )
-    : host_(host), port_(port)
+    : webkit_resInstNum_(webkit_resInstNum)
+    , host_(host), port_(port)
     , req_total_size_(req_total_size)
     , exp_resp_meta_size_(resp_meta_size), exp_resp_body_size_(resp_body_size)
     , req_about_to_send_cb_(req_about_to_send_cb)

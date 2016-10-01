@@ -148,6 +148,7 @@ Webengine::request_resource(const PageModel::RequestInfo& req_info,
     const auto req_id = MakeRequestID();
     ioservice_ipcclient_->request_resource(
         req_id,
+        res->instNum(),
         req_info.host.c_str(),
         req_info.port,
         req_info.req_total_size,

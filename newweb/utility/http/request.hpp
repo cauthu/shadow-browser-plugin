@@ -41,7 +41,8 @@ public:
     typedef boost::function<void(Request *req)> RequestAboutToSendCb;
 
 
-    Request(const std::string& host, const uint16_t& port,
+    Request(const uint32_t& webkit_resInstNum,
+            const std::string& host, const uint16_t& port,
             /* how much to send to server, counting both header and
              * body */
             const size_t& req_total_size,
@@ -93,6 +94,7 @@ public:
     const size_t& exp_resp_body_size() const { return exp_resp_body_size_; }
 
     // these are const, so ok to expose
+    const uint32_t webkit_resInstNum_;
     const std::string host_; /* for host header */
     const uint16_t port_;
     /* the cnx handling this req. currently Request class is not doing

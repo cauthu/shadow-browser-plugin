@@ -36,6 +36,7 @@ public:
     }
 
     void request_resource(const int& req_id,
+                          const uint32_t& resInstNum,
                           const char* host,
                           const uint16_t& port,
                           const size_t& req_total_size,

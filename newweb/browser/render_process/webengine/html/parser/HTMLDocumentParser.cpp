@@ -53,6 +53,8 @@ HTMLDocumentParser::HTMLDocumentParser(const PageModel* page_model,
 void
 HTMLDocumentParser::appendBytes(size_t len)
 {
+    vlogself(2) << "received so far= " << num_bytes_received_
+                << " new bytes= " << len;
     CHECK(!done_received_);
     num_bytes_received_ += len;
 }

@@ -141,7 +141,8 @@ Resource::_notify_finished(bool success)
 {
     /* notify clients that we're finished */
 
-    vlogself(2) << "begin, success= " << success;
+    vlogself(2) << "begin, success= " << success
+                << " num clients= " << m_clients.size();
     DestructorGuard dg(this);
 
     if (part_of_page_loaded_check()) {
@@ -160,10 +161,13 @@ Resource::_notify_new_data(const size_t& length)
 {
     DestructorGuard dg(this);
 
+    vlogself(2) << "begin, num clients= " << m_clients.size();
+
     for (auto client : m_clients) {
         client->dataReceived(this, length);
     }
 
+    vlogself(2) << "done";
 }
 
 inline const uint32_t&

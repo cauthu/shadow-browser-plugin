@@ -48,6 +48,7 @@ HttpNetworkSession::HttpNetworkSession(struct event_base* evbase,
 
 void
 HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
+                                           const uint32_t webkit_resInstNum,
                                            const char* host,
                                            const uint16_t port,
                                            const size_t req_total_size,
@@ -64,6 +65,7 @@ HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
 
     shared_ptr<Request> req(
         new Request(
+            webkit_resInstNum,
             hostname, port, req_total_size,
             resp_meta_size, resp_body_size,
             NULL,
@@ -80,11 +82,13 @@ HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
 
     PendingRequestInfo pri;
     pri.req_res_req_id = req_res_req_id;
+    pri.webkit_resInstNum = webkit_resInstNum;
     pri.req = req;
     const auto ret = pending_requests_.insert(make_pair(req->objId(), pri));
     CHECK(ret.second);
 
-    vlogself(2) << "res req id: " << req_res_req_id
+    vlogself(2) << "req id: " << req_res_req_id
+                << " res:" << webkit_resInstNum
                 << " linked up with request objId: " << req->objId();
 }
 
@@ -94,7 +98,7 @@ HttpNetworkSession::_response_meta_cb(const int& status,
                                       Request* req)
 {
     const auto req_objId = req->objId();
-    vlogself(2) << "begin, req objId: " << req_objId;
+    vlogself(2) << "begin, res:" << req->webkit_resInstNum_;
 
     CHECK_EQ(status, 200);
 
@@ -115,7 +119,7 @@ HttpNetworkSession::_response_body_data_cb(
     const uint8_t *data, const size_t& len, Request* req)
 {
     const auto req_objId = req->objId();
-    vlogself(2) << "begin, req objId: " << req_objId
+    vlogself(2) << "begin, res:" << req->webkit_resInstNum_
                 << " len: " << len;
 
     CHECK_GT(len, 0);
@@ -137,7 +141,7 @@ void
 HttpNetworkSession::_response_done_cb(Request* req, bool success)
 {
     const auto req_objId = req->objId();
-    vlogself(2) << "begin, req objId: " << req_objId;
+    vlogself(2) << "begin, res:" << req->webkit_resInstNum_;
 
     if (!inMap(pending_requests_, req_objId)) {
         logself(FATAL) << "unknown request objId " << req_objId;

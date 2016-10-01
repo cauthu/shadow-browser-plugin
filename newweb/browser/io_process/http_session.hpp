@@ -44,6 +44,7 @@ public:
                                 const NetConfig*);
 
     void handle_RequestResource(const int req_res_req_id,
+                                const uint32_t webkit_resInstNum,
                                            const char* host,
                                            const uint16_t port,
                                            const size_t req_total_size,
@@ -75,6 +76,7 @@ private:
     struct PendingRequestInfo
     {
         int req_res_req_id; /* from the requestresource msg */
+        uint32_t webkit_resInstNum;
         std::shared_ptr<http::Request> req;
     };
     std::map<uint32_t, PendingRequestInfo > pending_requests_;

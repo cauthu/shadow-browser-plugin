@@ -131,7 +131,8 @@ IPCServer::_handle_RequestResource(const int& routing_id,
     vlogself(2) << "begin handling FetchMsg";
 
     hsessions_[routing_id]->handle_RequestResource(
-        msg->req_id(), msg->host()->c_str(), msg->port(),
+        msg->req_id(), msg->webkit_resInstNum(),
+        msg->host()->c_str(), msg->port(),
         msg->req_total_size(), msg->resp_meta_size(), msg->resp_body_size());
 }
 

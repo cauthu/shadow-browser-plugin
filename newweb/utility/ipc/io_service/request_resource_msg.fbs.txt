@@ -9,6 +9,9 @@ table RequestResourceMsg
        messages so renderer can link with the correct request */
     req_id: int;
 
+    /* just so it's easy to trace a resource between webkit and io service */
+    webkit_resInstNum: uint;
+
     host: string;
     port: ushort = 80;
 
