@@ -83,4 +83,9 @@ EventTarget::fireEventHandlingScopes(const std::string event_name)
     VLOG(2) << "done";
 }
 
+EventTarget::~EventTarget()
+{
+    VLOG(2) << "destructing";
+}
+
 }

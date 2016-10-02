@@ -51,6 +51,8 @@ public:
     /* start loading the resource */
     void load();
 
+    void receivedResponseMeta(const uint64_t first_byte_time_ms);
+
     /* tell the resource more data has been received */
     void appendData(size_t length);
 
@@ -75,7 +77,7 @@ public:
         
 protected:
 
-    virtual ~Resource() = default;
+    virtual ~Resource();
 
 
     /////////
@@ -124,6 +126,9 @@ protected:
 
     Webengine* webengine_;
     ResourceFetcher* resource_fetcher_;
+
+    /* time we receive the first response byte */
+    uint64_t first_byte_time_ms_;
 };
 
 }

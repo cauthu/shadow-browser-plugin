@@ -7,7 +7,7 @@
 #include "../events/EventTypeNames.hpp"
 
 
-#define _LOG_PREFIX(inst) << "elem:" << instNum() << ": "
+#define _LOG_PREFIX(inst) << "elem:" << (inst)->instNum() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -26,12 +26,22 @@ namespace blink {
 Element::Element(
     const uint32_t& instNum,
     const std::string tag,
-    Document* document)
+    Document* document,
+    const PageModel::ElementInfo& info)
     : EventTarget(instNum, document->webengine())
     , document_(document)
     , resInstNum_(0)
     , tag_(tag)
-{}
+{
+    vlogself(2) << "begin constructing";
+
+    if (info.initial_resInstNum) {
+        setResInstNum(info.initial_resInstNum);
+    }
+    add_event_handling_scopes(info.event_handling_scopes);
+
+    vlogself(2) << "done constructing";
+}
 
 void
 Element::setResInstNum(const uint32_t& resInstNum)

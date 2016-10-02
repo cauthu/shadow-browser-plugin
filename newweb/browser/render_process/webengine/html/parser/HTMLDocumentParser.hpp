@@ -21,8 +21,11 @@ class Document;
 /*
  * this parser also does some of the things that webkit's
  * HTMLScriptRunner does
+ *
+ * i am a ResourceClient so i can watch for script resources loading
  */
 class HTMLDocumentParser : public Object
+                         , public ResourceClient
 {
 public:
     typedef std::unique_ptr<HTMLDocumentParser, Destructor> UniquePtr;
@@ -53,6 +56,11 @@ protected:
 
     virtual ~HTMLDocumentParser() = default;
 
+    /* ResourceClient interface, to know about main resource */
+    virtual void notifyFinished(Resource*, bool success) override;
+    virtual void responseReceived(Resource*) override {};
+    virtual void dataReceived(Resource*, size_t length) override {};
+
     void _do_preload_scanning();
     int _find_element_idx_to_begin_preload_scanning();
 
@@ -72,6 +80,7 @@ protected:
     void end();
     void endIfDelayed();
     void resumeParsingAfterScriptExecution();
+    void executeScriptsWaitingForLoad();
 
     bool inPumpSession() const { return m_pumpSessionNestingLevel > 0; }
 

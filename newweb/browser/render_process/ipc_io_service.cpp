@@ -113,7 +113,9 @@ IOServiceIPCClient::_handle_ReceivedResponse(
     const msgs::ReceivedResponseMsg* msg)
 {
     CHECK_NOTNULL(resource_msg_handler_);
-    resource_msg_handler_->handle_ReceivedResponse(msg->req_id());
+    resource_msg_handler_->handle_ReceivedResponse(
+        msg->req_id(),
+        msg->first_byte_time_ms());
 }
 
 void

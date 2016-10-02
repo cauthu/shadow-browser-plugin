@@ -3,6 +3,7 @@
 
 
 #include "../dom/Element.hpp"
+#include "../page_model.hpp"
 
 
 namespace blink {
@@ -16,7 +17,8 @@ public:
     typedef std::unique_ptr<HTMLImageElement, Destructor> UniquePtr;
 
     explicit HTMLImageElement(const uint32_t& instNum,
-                              Document*);
+                              Document*,
+                              const PageModel::ElementInfo& info);
 
 protected:
 

@@ -109,7 +109,8 @@ HttpNetworkSession::_response_meta_cb(const int& status,
     const auto req_res_req_id = pending_requests_[req_objId].req_res_req_id;
 
     // tell renderer
-    ipcserver_->send_ReceivedResponse(routing_id_, req_res_req_id);
+    ipcserver_->send_ReceivedResponse(routing_id_, req_res_req_id,
+                                      req->first_byte_time_ms());
 
     vlogself(2) << "done";
 }

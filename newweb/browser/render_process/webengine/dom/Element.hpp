@@ -4,6 +4,7 @@
 
 #include "../events/EventTarget.hpp"
 #include "../fetch/Resource.hpp"
+#include "../page_model.hpp"
 
 #include <string>
 
@@ -19,10 +20,11 @@ public:
 
     explicit Element(const uint32_t& instNum,
                      const std::string tag,
-                     Document*);
+                     Document*,
+                     const PageModel::ElementInfo&);
 
     const uint32_t& resInstNum() const { return resInstNum_; }
-    void setResInstNum(const uint32_t& resInstNum);
+    virtual void setResInstNum(const uint32_t& resInstNum);
 
 protected:
     

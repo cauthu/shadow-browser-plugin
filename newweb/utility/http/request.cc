@@ -41,6 +41,7 @@ Request::Request(
     , rsp_done_cb_(rsp_done_cb)
     , conn(NULL), num_retries_(0)
     , actual_resp_body_size_(0)
+    , first_byte_recv_time_(0)
 {
     vlogself(2) << "a new request, res:" << webkit_resInstNum;
     CHECK_GT(host_.length(), 0);

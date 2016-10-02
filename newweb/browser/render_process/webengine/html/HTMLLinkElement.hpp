@@ -3,6 +3,7 @@
 
 
 #include "../dom/Element.hpp"
+#include "../page_model.hpp"
 
 namespace blink {
 
@@ -17,8 +18,7 @@ public:
 
     explicit HTMLLinkElement(const uint32_t& instNum,
                              Document*,
-                             const std::string rel,
-                             bool is_blocking_stylesheet);
+                             const PageModel::ElementInfo& info);
 
     const bool& is_blocking_stylesheet() const { return is_blocking_stylesheet_; }
     const std::string& rel() const { return rel_; }

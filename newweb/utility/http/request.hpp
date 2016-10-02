@@ -7,6 +7,7 @@
 #include <boost/function.hpp>
 
 #include "../object.hpp"
+#include "../common.hpp"
 #include "../easylogging++.h"
 
 namespace http
@@ -56,6 +57,13 @@ public:
             ResponseDoneCb rsp_done_cb
         );
 
+    void notify_rsp_meta_bytes_recv()
+    {
+        if (!first_byte_recv_time_) {
+            first_byte_recv_time_ = common::gettimeofdayMs(nullptr);
+        }
+    }
+
     // for response
     void notify_rsp_meta(const int status, char ** headers) {
         DestructorGuard dg(this);
@@ -92,6 +100,7 @@ public:
     const size_t& req_total_size() const { return req_total_size_; }
     const size_t& exp_resp_meta_size() const { return exp_resp_meta_size_; }
     const size_t& exp_resp_body_size() const { return exp_resp_body_size_; }
+    const uint64_t& first_byte_time_ms() const { return first_byte_recv_time_; }
 
     // these are const, so ok to expose
     const uint32_t webkit_resInstNum_;
@@ -125,6 +134,10 @@ private:
 
     // this is what we see
     size_t actual_resp_body_size_;
+
+    // time when we have the first byte for the response (NOT BODY but
+    // any byte, i.e., the response status line)
+    uint64_t first_byte_recv_time_;
 };
 
 

@@ -7,16 +7,15 @@ namespace blink {
 HTMLLinkElement::HTMLLinkElement(
     const uint32_t& instNum,
     Document* document,
-    const std::string rel,
-    bool is_blocking_stylesheet)
-    : Element(instNum, "link", document)
-    , rel_(rel)
-    , is_blocking_stylesheet_(is_blocking_stylesheet)
+    const PageModel::ElementInfo& info)
+    : Element(instNum, "link", document, info)
+    , rel_(info.rel)
+    , is_blocking_stylesheet_(info.is_blocking_css)
 {
     CHECK_NOTNULL(document);
 
     // right now we support only css stylesheet rel
-    CHECK_EQ(rel, "stylesheet") << "rel \"" << rel << "\" not yet supported";
+    CHECK_EQ(rel_, "stylesheet") << "rel \"" << rel_ << "\" not yet supported";
 
     if (is_blocking_stylesheet_) {
         document->addPendingSheet(this);

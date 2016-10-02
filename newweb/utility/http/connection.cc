@@ -336,6 +336,13 @@ Connection::_maybe_http_consume_input()
         case HTTPRespState::HTTP_RSP_STATE_STATUS_LINE: {
             /* readln() DOES drain the buffer if it returns a line */
 
+            Request *req = active_req_queue_.front();
+            CHECK_NOTNULL(req);
+
+            if (evbuffer_get_length(inbuf) > 0) {
+                req->notify_rsp_meta_bytes_recv();
+            }
+
             size_t line_len = 0;
             line = evbuffer_readln(
                 inbuf, &line_len, EVBUFFER_EOL_CRLF_STRICT);

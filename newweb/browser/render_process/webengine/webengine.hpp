@@ -41,7 +41,8 @@ public:
                           Resource* res);
 
     /* implement ResourceMsgHandler interface */
-    virtual void handle_ReceivedResponse(const int& req_id) override;
+    virtual void handle_ReceivedResponse(const int& req_id,
+                                         const uint64_t& first_byte_time_ms) override;
     virtual void handle_DataReceived(const int& req_id, const size_t& length) override;
     virtual void handle_RequestComplete(const int& req_id, const bool success) override;
 

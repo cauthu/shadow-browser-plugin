@@ -31,6 +31,8 @@ public:
 
 private:
 
+    virtual ~ResourceFetcher();
+
     Webengine* webengine_;
     const PageModel* page_model_;
 

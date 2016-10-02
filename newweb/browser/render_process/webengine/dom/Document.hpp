@@ -92,6 +92,8 @@ protected:
     // have seen scripts on cnn.com add and remove body elements, but
     // for now we don't support removing body element
     bool has_body_element_;
+
+    bool finished_parsing_;
 };
 
 } //namespace

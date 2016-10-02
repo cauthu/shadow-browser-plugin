@@ -6,8 +6,9 @@ namespace blink {
 
 HTMLImageElement::HTMLImageElement(
     const uint32_t& instNum,
-    Document* document)
-    : Element(instNum, "img", document)
+    Document* document,
+    const PageModel::ElementInfo& info)
+    : Element(instNum, "img", document, info)
 {
 }
 

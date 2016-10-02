@@ -33,6 +33,7 @@ Resource::Resource(const PageModel::ResourceInfo& res_info,
     , errored_(false)
     , current_req_chain_idx_(-1)
     , current_req_body_bytes_recv_(0)
+    , first_byte_time_ms_(0)
 {
     CHECK_NOTNULL(webengine_);
 }
@@ -72,6 +73,15 @@ bool
 Resource::_receiving_real_resource() const
 {
     return current_req_chain_idx_ == (res_info_.req_chain.size() - 1);
+}
+
+void
+Resource::receivedResponseMeta(const uint64_t first_byte_time_ms)
+{
+    if (!current_req_chain_idx_) {
+        CHECK_EQ(first_byte_time_ms_, 0);
+        first_byte_time_ms_ = first_byte_time_ms;
+    }
 }
 
 void
@@ -173,6 +183,11 @@ Resource::_notify_new_data(const size_t& length)
     }
 
     vlogself(3) << "done";
+}
+
+Resource::~Resource()
+{
+    vlogself(2) << "destructing";
 }
 
 inline const uint32_t&

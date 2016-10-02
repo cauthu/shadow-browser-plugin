@@ -140,4 +140,9 @@ ResourceFetcher::decrementRequestCount(const Resource* resource)
     CHECK_GE(requestCount_, 0);
 }
 
+ResourceFetcher::~ResourceFetcher()
+{
+    vlogself(2) << "destructing";
+}
+
 } // end namespace blink

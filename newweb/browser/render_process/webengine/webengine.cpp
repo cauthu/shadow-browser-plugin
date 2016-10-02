@@ -130,6 +130,8 @@ Webengine::loadPage(const char* model_fpath)
 {
     // we are probably doing some of what DocumentLoader does
 
+    LOG(INFO) << "start loading page";
+
     page_model_.reset(new PageModel(model_fpath));
 
     resource_fetcher_.reset(
@@ -300,9 +302,8 @@ Webengine::execute_scope(const uint32_t scope_id)
     rv = as_script_ctx_->Prepare(func);
     CHECK_GE(rv, 0);
 
-    struct timeval begin_tv;
-    auto rv2 = gettimeofday(&begin_tv, nullptr);
-    CHECK_EQ(rv2, 0);
+    const auto begin_time_ms = common::gettimeofdayMs(nullptr);
+    CHECK_GT(begin_time_ms, 0);
 
     rv = as_script_ctx_->Execute();
     if (rv == asEXECUTION_FINISHED ) {
@@ -317,13 +318,10 @@ Webengine::execute_scope(const uint32_t scope_id)
         }
     }
 
-    struct timeval done_tv;
-    rv2 = gettimeofday(&done_tv, nullptr);
-    CHECK_EQ(rv2, 0);
+    const auto done_time_ms = common::gettimeofdayMs(nullptr);
+    CHECK_GE(done_time_ms, begin_time_ms);
 
-    struct timeval elapsed_tv;
-    evutil_timersub(&done_tv, &begin_tv, &elapsed_tv);
-    VLOG(2) << "elapsed: " << ((elapsed_tv.tv_sec * 1000) + (int)(((double)elapsed_tv.tv_usec) / 1000)) << " ms";
+    VLOG(2) << "elapsed: " << (done_time_ms - begin_time_ms) << " ms";
 
 #undef __MAIN_FUNC_PROTO
 
@@ -331,13 +329,15 @@ Webengine::execute_scope(const uint32_t scope_id)
 }
 
 void
-Webengine::handle_ReceivedResponse(const int& req_id)
+Webengine::handle_ReceivedResponse(const int& req_id,
+                                   const uint64_t& first_byte_time_ms)
 {
     CHECK(inMap(pending_requests_, req_id))
         << "we don't know about req_id= " << req_id;
     Resource* resource = pending_requests_[req_id];
     CHECK_NOTNULL(resource);
-    // nothing to do: we don't care about response meta data
+
+    resource->receivedResponseMeta(first_byte_time_ms);
 }
 
 void

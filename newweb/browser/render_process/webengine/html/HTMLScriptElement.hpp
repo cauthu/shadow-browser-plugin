@@ -3,6 +3,7 @@
 
 
 #include "../dom/Element.hpp"
+#include "../page_model.hpp"
 
 namespace blink {
 
@@ -14,16 +15,15 @@ public:
 
     explicit HTMLScriptElement(const uint32_t instNum,
                                Document*,
-                               bool blocks_parser,
-                               bool exec_immediately,
-                               bool exec_async,
-                               const uint32_t run_scope_id);
+                               const PageModel::ElementInfo& info);
 
     const bool& is_parser_blocking() const { return blocks_parser_; }
     const bool& exec_immediately() const { return exec_immediately_; }
     const bool& exec_async() const { return exec_async_; }
 
     const uint32_t run_scope_id() const { return run_scope_id_; }
+
+    virtual void setResInstNum(const uint32_t& resInstNum) override;
 
 protected:
 

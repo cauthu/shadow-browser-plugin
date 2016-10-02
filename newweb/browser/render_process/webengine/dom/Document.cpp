@@ -52,6 +52,7 @@ Document::Document(struct ::event_base* evbase,
         new Timer(evbase, true,
                   boost::bind(&Document::_executeScriptsWaitingForResourcesTimerFired, this, _1)))
     , has_body_element_(false)
+    , finished_parsing_(false)
 {
     CHECK_NOTNULL(evbase_);
 
@@ -95,12 +96,8 @@ Document::add_elem(const uint32_t& elemInstNum)
     };
 
     if (elem_info.tag == "script") {
-        element = 
-            new HTMLScriptElement(elemInstNum, this,
-                                  elem_info.is_parser_blocking,
-                                  elem_info.exec_immediately,
-                                  elem_info.exec_async,
-                                  elem_info.run_scope_id);
+        element = new HTMLScriptElement(elemInstNum, this, elem_info);
+
         HTMLScriptElement* script_elem = (HTMLScriptElement*)element;
         if (script_elem->is_parser_blocking()) {
             vlogself(2) << "this script blocks parser";
@@ -109,15 +106,11 @@ Document::add_elem(const uint32_t& elemInstNum)
     }
 
     else if (elem_info.tag == "link") {
-        element = 
-            new HTMLLinkElement(elemInstNum, this,
-                                elem_info.rel,
-                                elem_info.is_blocking_css);
+        element = new HTMLLinkElement(elemInstNum, this, elem_info);
     }
 
     else if (elem_info.tag == "img") {
-        element =
-            new HTMLImageElement(elemInstNum, this);
+        element = new HTMLImageElement(elemInstNum, this, elem_info);
     }
 
     else if (elem_info.tag == "body") {
@@ -131,14 +124,6 @@ Document::add_elem(const uint32_t& elemInstNum)
     }
 
     CHECK_NOTNULL(element);
-
-    element->add_event_handling_scopes(elem_info.event_handling_scopes);
-
-    if (elem_info.initial_resInstNum) {
-        vlogself(2) << "set its initial resource to res:"
-                    << elem_info.initial_resInstNum;
-        element->setResInstNum(elem_info.initial_resInstNum);
-    }
 
     std::shared_ptr<Element> elem_shptr(
         element,
@@ -204,6 +189,7 @@ void
 Document::finishedParsing()
 {
     logself(INFO) << "has finished parsing";
+    finished_parsing_ = true;
     fireEventHandlingScopes(EventTypeNames::DOMContentLoaded);
 }
 
@@ -249,10 +235,10 @@ Document::notifyFinished(Resource* resource, bool success)
 
     CHECK(success) << "TODO: deal with failure of main resource";
 
-    vlogself(2) << "pump the parser";
-
     parser_->finish_receive();
-    parser_->pump_parser();
+
+    // i don't think we should pump the parser
+    // parser_->pump_parser();
 
     vlogself(2) << "done";
 }

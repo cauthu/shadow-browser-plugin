@@ -81,6 +81,33 @@ HTMLDocumentParser::finish_receive()
 }
 
 void
+HTMLDocumentParser::notifyFinished(Resource* resource, bool success)
+{
+    CHECK(hasParserBlockingScript());
+
+    vlogself(2) << "begin, res:" << resource->instNum() << ": success= " << success;
+
+    if (success) {
+        executeScriptsWaitingForLoad();
+        if (!isWaitingForScripts()) {
+            resumeParsingAfterScriptExecution();
+        } else {
+            CHECK(0) << "todo";
+        }
+    } else {
+        CHECK(0) << "todo";
+    }
+
+    vlogself(2) << "done";
+}
+
+void
+HTMLDocumentParser::executeScriptsWaitingForLoad()
+{
+    executeParsingBlockingScripts();
+}
+
+void
 HTMLDocumentParser::attemptToEnd()
 {
     vlogself(2) << "begin";
@@ -115,6 +142,7 @@ HTMLDocumentParser::executeScriptsWaitingForResources()
     executeParsingBlockingScripts();
 
     if (!isWaitingForScripts()) {
+        vlogself(2) << "now resume parsing after executing script";
         resumeParsingAfterScriptExecution();
     }
 
@@ -124,22 +152,31 @@ HTMLDocumentParser::executeScriptsWaitingForResources()
 void
 HTMLDocumentParser::resumeParsingAfterScriptExecution()
 {
+    vlogself(2) << "begin";
+
     CHECK(!isExecutingScript());
     CHECK(!isWaitingForScripts());
 
     pump_parser();
     endIfDelayed();
+
+    vlogself(2) << "done";
 }
 
 void
 HTMLDocumentParser::endIfDelayed()
 {
+    vlogself(2) << "begin";
+
     if (!m_endWasDelayed || shouldDelayEnd()) {
+        vlogself(2) << "... delaying";
         return;
     }
 
     m_endWasDelayed = false;
     prepareToStopParsing();
+
+    vlogself(2) << "done";
 }
 
 void
@@ -232,8 +269,6 @@ HTMLDocumentParser::pump_parser()
         CHECK(!hasParserBlockingScript());
 
         attemptToEnd();
-
-        // proly here is where we fire the DOMContentLoaded event
     }
 
     if (hasParserBlockingScript()) {
@@ -266,6 +301,30 @@ HTMLDocumentParser::set_parser_blocking_script(HTMLScriptElement* elem)
         if (isPendingScriptReady(parser_blocking_script_)) {
             vlogself(2) << "can go execute now because it's ready";
             executeParsingBlockingScript();
+        } else {
+            // not ready, if the script resource fails to load then we
+            // move on. if it's loading then we watch it
+            const auto resInstNum = parser_blocking_script_->resInstNum();
+            if (resInstNum) {
+                shared_ptr<Resource> resource =
+                    resource_fetcher_->getResource(resInstNum);
+                CHECK_NOTNULL(resource.get());
+
+                if (!resource->isFinished()) {
+                    // must be loading
+                    CHECK(resource->isLoading());
+                    resource->addClient(this);
+                } else {
+                    if (resource->errorOccurred()) {
+                        // if it errored then we move on
+                        logself(WARNING) << "parser blocking script elem:"
+                                         << parser_blocking_script_->instNum()
+                                         << " failed to load";
+                        parser_blocking_script_ = nullptr;
+                        // resumeParsingAfterScriptExecution(); // is this right?
+                    }
+                }
+            }
         }
     }
 }
@@ -375,6 +434,7 @@ bool
 HTMLDocumentParser::isPendingScriptReady(const HTMLScriptElement* script_elem)
 {
     if (!document_->isScriptExecutionReady()) {
+        vlogself(2) << "document is NOT ready for script execution";
         return false;
     }
 

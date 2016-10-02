@@ -63,9 +63,11 @@ IPCServer::IPCServer(struct event_base* evbase,
 
 void
 IPCServer::send_ReceivedResponse(const int& routing_id,
-                                 const int& req_id)
+                                 const int& req_id,
+                                 const uint64_t& first_byte_time_ms)
 {
-    vlogself(2) << "begin, req_id: " << req_id;
+    vlogself(2) << "begin, req_id: " << req_id
+                << " first_byte_time_ms: " << first_byte_time_ms;
 
     CHECK(inMap(client_ipc_channels_, routing_id));
     auto ipc_ch = client_ipc_channels_[routing_id].get();
@@ -75,6 +77,7 @@ IPCServer::send_ReceivedResponse(const int& routing_id,
         BEGIN_BUILD_MSG_AND_SEND_AT_END(ReceivedResponse, bufbuilder, ipc_ch);
 
         msgbuilder.add_req_id(req_id);
+        msgbuilder.add_first_byte_time_ms(first_byte_time_ms);
     }
 
     vlogself(2) << "done";

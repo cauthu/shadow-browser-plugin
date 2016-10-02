@@ -8,7 +8,8 @@ class ResourceMsgHandler
      * loading */
 public:
 
-    virtual void handle_ReceivedResponse(const int& req_id) = 0;
+    virtual void handle_ReceivedResponse(const int& req_id,
+                                         const uint64_t& first_byte_time_ms) = 0;
     virtual void handle_DataReceived(const int& req_id, const size_t& length) = 0;
     virtual void handle_RequestComplete(const int& req_id, const bool success) = 0;
 };

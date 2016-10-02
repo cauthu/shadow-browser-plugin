@@ -36,7 +36,7 @@ protected:
     explicit EventTarget(const uint32_t& instNum,
                          Webengine*);
 
-    virtual ~EventTarget() = default;
+    virtual ~EventTarget();
 
     void fireEventHandlingScopes(const std::string event_name);
 

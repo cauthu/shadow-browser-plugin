@@ -32,7 +32,8 @@ public:
     /* notify the renderer that the response META information (status
      * line and headers) for the request has been received */
     void send_ReceivedResponse(const int& routing_id,
-                               const int& req_id);
+                               const int& req_id,
+                               const uint64_t& first_byte_time_ms);
 
     /* notify renderer a chunk of response body is received */
     void send_DataReceived(const int& routing_id,
