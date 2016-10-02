@@ -116,6 +116,9 @@ Webengine::_init_angelscript_engine()
         "void start_timer(uint)", start_timer);
 
     REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void cancel_timer(uint)", cancel_timer);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
         "void set_elem_res(uint, uint)", set_elem_res);
 
     REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
@@ -190,6 +193,24 @@ Webengine::start_timer(const uint32_t timerID)
 
     const auto ret = dom_timers_.insert(make_pair(timerID, std::move(timer)));
     CHECK(ret.second);
+
+    VLOG(2) << "done";
+}
+
+void
+Webengine::cancel_timer(const uint32_t timerID)
+{
+    VLOG(2) << "begin, timer:" << timerID;
+
+    std::map<uint32_t, DOMTimer::UniquePtr>::iterator it =
+        dom_timers_.find(timerID);
+    if (it != dom_timers_.end()) {
+        DOMTimer::UniquePtr timer = std::move(it->second);
+        CHECK_NOTNULL(timer.get());
+        timer->cancel();
+    } else {
+        LOG(WARNING) << "timer:" << timerID << " does not (yet) exist";
+    }
 
     VLOG(2) << "done";
 }

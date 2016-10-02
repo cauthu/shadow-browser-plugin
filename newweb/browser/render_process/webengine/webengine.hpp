@@ -60,6 +60,7 @@ protected:
     // these methods are for execution code to call
     void add_elem_to_doc(const uint32_t elemInstNum);
     void start_timer(const uint32_t timerID);
+    void cancel_timer(const uint32_t timerID);
     void set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum);
     void send_xhr(const uint32_t xhrInstNum);
 

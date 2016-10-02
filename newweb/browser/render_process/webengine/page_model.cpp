@@ -125,14 +125,26 @@ PageModel::get_resource_info(const uint32_t& resInstNum,
                           req_chain_array_entry, "host", true, String);
         GET_OBJECT_MEMBER(req_info.port,
                           req_chain_array_entry, "port", true, Uint);
-        GET_OBJECT_MEMBER(req_info.priority,
-                          req_chain_array_entry, "priority", true, Uint);
         GET_OBJECT_MEMBER(req_info.req_total_size,
                           req_chain_array_entry, "req_total_size", true, Uint);
         GET_OBJECT_MEMBER(req_info.resp_meta_size,
                           req_chain_array_entry, "resp_meta_size", true, Uint);
         GET_OBJECT_MEMBER(req_info.resp_body_size,
                           req_chain_array_entry, "resp_body_size", true, Uint);
+
+        auto priority = -1;
+        GET_OBJECT_MEMBER(priority,
+                          req_chain_array_entry, "priority", false, Uint);
+        CHECK_GE(priority,
+                 ResourceLoadPriority::ResourceLoadPriorityUnresolved);
+        CHECK_LE(priority,
+                 ResourceLoadPriority::ResourceLoadPriorityHighest);
+        if (priority == -1) {
+            req_info.priority =
+                ResourceLoadPriority::ResourceLoadPriorityMedium;
+        } else {
+            req_info.priority = static_cast<ResourceLoadPriority>(priority);
+        }
 
         info.req_chain.push_back(req_info);
     }
@@ -191,7 +203,7 @@ PageModel::get_element_info(const uint32_t& elemInstNum,
     return true;
 }
 
-void
+bool
 PageModel::get_main_html_element_byte_offsets(std::vector<std::pair<size_t, uint32_t> >& elem_locs) const
 {
     json::Value::ConstMemberIterator itr =
@@ -216,6 +228,8 @@ PageModel::get_main_html_element_byte_offsets(std::vector<std::pair<size_t, uint
 
         elem_locs.push_back(make_pair(byte_offset, elemInstNum));
     }
+
+    return true;
 }
 
 uint32_t
@@ -414,6 +428,24 @@ PageModel::_get_event_handling_scopes(
     } else {
         vlogself(3) << "it has none";
     }
+
+    vlogself(3) << "done";
+
+    return true;
+}
+
+bool
+PageModel::get_main_doc_info(DocumentInfo& info) const
+{
+    vlogself(3) << "begin";
+
+    auto rv =
+        get_main_html_element_byte_offsets(info.html_element_byte_offsets);
+    CHECK(rv);
+
+    rv = _get_event_handling_scopes(model_json["main_html"],
+                                    info.event_handling_scopes);
+    CHECK(rv);
 
     vlogself(3) << "done";
 

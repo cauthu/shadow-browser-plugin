@@ -9,6 +9,7 @@
 
 #include "Document.hpp"
 #include "../webengine.hpp"
+#include "../events/EventTypeNames.hpp"
 #include "../html/HTMLScriptElement.hpp"
 #include "../html/HTMLLinkElement.hpp"
 #include "../html/HTMLImageElement.hpp"
@@ -53,6 +54,16 @@ Document::Document(struct ::event_base* evbase,
     , has_body_element_(false)
 {
     CHECK_NOTNULL(evbase_);
+
+    PageModel::DocumentInfo doc_info;
+    auto rv = page_model_->get_main_doc_info(doc_info);
+    CHECK(rv);
+
+    add_event_handling_scopes(doc_info.event_handling_scopes);
+
+    vlogself(2) << "number of event handling scopes: "
+                << doc_info.event_handling_scopes.size();
+
     parser_.reset(
         new HTMLDocumentParser(page_model, this, webengine_, resource_fetcher_));
 }
@@ -192,17 +203,16 @@ Document::removePendingSheet(Element* element)
 void
 Document::finishedParsing()
 {
-    logself(INFO) << "finished parsing";
-    fireEventHandlingScopes("DOMContentLoaded");
+    logself(INFO) << "has finished parsing";
+    fireEventHandlingScopes(EventTypeNames::DOMContentLoaded);
 }
 
 void
 Document::_didLoadAllScriptBlockingResources()
 {
-    struct timeval tv;
     // fire asap
-    bzero(&tv, sizeof tv);
-    executeScriptsWaitingForResourcesTimer_->start(&tv);
+    static const uint32_t delayMs = 0;
+    executeScriptsWaitingForResourcesTimer_->start(delayMs);
 }
 
 void

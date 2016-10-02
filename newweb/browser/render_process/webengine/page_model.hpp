@@ -8,6 +8,7 @@
 
 #include "../../../utility/object.hpp"
 
+#include "fetch/ResourceLoadPriority.hpp"
 
 namespace blink {
 
@@ -21,7 +22,7 @@ public:
         std::string host;
         std::string method;
         uint16_t port;
-        uint16_t priority;
+        ResourceLoadPriority priority;
         size_t req_total_size;
         size_t resp_meta_size;
         size_t resp_body_size;
@@ -73,6 +74,13 @@ public:
         std::vector<std::pair<std::string, uint32_t> > event_handling_scopes;
     };
 
+    struct DocumentInfo
+    {
+        // for the main html
+        std::vector<std::pair<size_t, uint32_t> > html_element_byte_offsets;
+        std::vector<std::pair<std::string, uint32_t> > event_handling_scopes;
+    };
+
     explicit PageModel(const char* json_fpath);
 
     bool get_main_resource_info(ResourceInfo&) const;
@@ -89,7 +97,9 @@ public:
 
     /* each pair is element's closing byte OFFSET-within-HTML, to
      * element's instNum */
-    void get_main_html_element_byte_offsets(std::vector<std::pair<size_t, uint32_t> >&) const;
+    bool get_main_html_element_byte_offsets(std::vector<std::pair<size_t, uint32_t> >&) const;
+
+    bool get_main_doc_info(DocumentInfo&) const;
 
     uint32_t get_element_initial_resInstNum(const uint32_t& elemInstNum) const;
 
