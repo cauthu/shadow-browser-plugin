@@ -67,7 +67,7 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
 void
 ConnectionManager::submit_request(Request *req)
 {
-    vlogself(2) << "begin, req= " << req->objId();
+    vlogself(2) << "begin, req= " << req->objId() << ", res:" << req->webkit_resInstNum_;
 
     const NetLoc netloc(req->host_, req->port_);
 
@@ -88,7 +88,7 @@ ConnectionManager::submit_request(Request *req)
     for (auto& c : conns) {
         if (c->get_queue_size() == 0) {
             conn = c;
-            vlogself(2) << "conn " << c->objId() << " has empty queue -> use it";
+            vlogself(2) << "conn= " << c->objId() << " has empty queue -> use it";
             goto done;
         }
     }
@@ -130,8 +130,8 @@ done:
         CHECK(server->requests_.size() > 0);
 
         auto reqtosubmit = server->requests_.front();
-        vlogself(2) << "submit request [" << reqtosubmit->objId() << "] on conn objId() "
-                    << conn->objId();
+        vlogself(2) << "submit req= " << reqtosubmit->objId() << ", res:" << req->webkit_resInstNum_
+                    << ": on conn= " << conn->objId();
         conn->submit_request(reqtosubmit);
         server->requests_.pop_front();
     }
@@ -163,7 +163,7 @@ ConnectionManager::cnx_request_done_cb(Connection* conn,
                                        const Request* req,
                                        const NetLoc& netloc)
 {
-    vlogself(2) << "begin, req " <<  req->objId();
+    vlogself(2) << "begin, req= " <<  req->objId() << ", res:" << req->webkit_resInstNum_;
 
     // we don't free anything in here
 
@@ -183,8 +183,8 @@ ConnectionManager::cnx_request_done_cb(Connection* conn,
     }
 
     reqtosubmit = requests.front();
-    vlogself(2) << "submit request [" << reqtosubmit->objId()
-                << "] on conn objId() " << conn->objId();
+    vlogself(2) << "submit req= " << reqtosubmit->objId() << ", res:" << req->webkit_resInstNum_
+                << " on conn= " << conn->objId();
     conn->submit_request(reqtosubmit);
     requests.pop_front();
 
@@ -219,7 +219,7 @@ void
 ConnectionManager::handle_unusable_conn(Connection *conn,
                                         const NetLoc& netloc)
 {
-    vlogself(2) << "begin, cnx: "<< conn->objId();
+    vlogself(2) << "begin, conn= "<< conn->objId();
 
     // we should mark any requests being handled by this connection as
     // error. for now, we don't attempt to request elsewhere.
@@ -248,17 +248,17 @@ ConnectionManager::retry_requests(queue<Request*> requests)
     while (!requests.empty()) {
         auto req = requests.front();
         CHECK(req);
-        vlogself(2) << "req objid " << req->objId();
+        vlogself(2) << "req= " << req->objId();
         requests.pop();
         if (req->get_num_retries() == max_retries_per_resource_) {
-            logself(WARNING) << "resource [" << req->objId() << "] has exhausted "
+            logself(WARNING) << "req= " << req->objId() << "] has exhausted "
                              <<  unsigned(max_retries_per_resource_) << " retries";
             notify_req_error_(req);
             continue;
         }
         req->increment_num_retries();
         logself(INFO) <<
-            "re-requesting resource ["<<req->objId()<<"] for the "<<req->get_num_retries()<<" time";
+            "re-requesting req= "<<req->objId()<<" for the "<<req->get_num_retries()<<" time";
         if (req->actual_resp_body_size() > 0) {
             /* the request "body_size()" represents number of
              * contiguous bytes from 0 that we have received. so, we
@@ -324,7 +324,7 @@ void
 ConnectionManager::release_conn(Connection *conn,
                                 const NetLoc& netloc)
 {
-    vlogself(2) << "begin, releasing cnx "<< conn->objId();
+    vlogself(2) << "begin, releasing conn= "<< conn->objId();
 
     // remove it from active connections
     CHECK(inMap(servers_, netloc));

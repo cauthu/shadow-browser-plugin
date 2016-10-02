@@ -15,6 +15,7 @@
 #include "fetch/Resource.hpp"
 #include "fetch/ResourceFetcher.hpp"
 #include "frame/DOMTimer.hpp"
+#include "xml/XMLHttpRequest.hpp"
 
 
 namespace blink
@@ -87,6 +88,7 @@ protected:
     std::set<uint32_t> executed_scope_ids_;
 
     std::map<uint32_t, DOMTimer::UniquePtr> dom_timers_;
+    std::map<uint32_t, XMLHttpRequest::UniquePtr> xhrs_;
 };
 
 }

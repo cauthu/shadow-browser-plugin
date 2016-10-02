@@ -40,7 +40,7 @@ Document::Document(struct ::event_base* evbase,
                    Webengine* webengine,
                    const PageModel* page_model,
                    ResourceFetcher* resource_fetcher)
-    : EventTarget(instNum)
+    : EventTarget(instNum, webengine)
     , evbase_(evbase)
     , webengine_(webengine)
     , page_model_(page_model)
@@ -121,6 +121,8 @@ Document::add_elem(const uint32_t& elemInstNum)
 
     CHECK_NOTNULL(element);
 
+    element->add_event_handling_scopes(elem_info.event_handling_scopes);
+
     if (elem_info.initial_resInstNum) {
         vlogself(2) << "set its initial resource to res:"
                     << elem_info.initial_resInstNum;
@@ -144,10 +146,16 @@ Document::set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum)
 {
     VLOG(2) << "begin, elem:" << elemInstNum << " res:" << resInstNum;
 
-    shared_ptr<Element> element = elements_[elemInstNum];
-    CHECK_NOTNULL(element.get());
-
-    element->setResInstNum(resInstNum);
+    if (inMap(elements_, elemInstNum)) {
+        shared_ptr<Element> element = elements_[elemInstNum];
+        CHECK_NOTNULL(element.get());
+        element->setResInstNum(resInstNum);
+    } else {
+        // this can happen because scripts can set diff elems
+        // depending on their existence. but that is something we
+        // cannot model yet
+        LOG(WARNING) << "elem:" << elemInstNum << " does not (yet) exist";
+    }
 
     VLOG(2) << "done";
 }
@@ -155,7 +163,7 @@ Document::set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum)
 bool
 Document::isScriptExecutionReady() const
 {
-    return pendingStylesheets_ > 0;
+    return pendingStylesheets_ == 0;
 }
 
 void
@@ -179,6 +187,13 @@ Document::removePendingSheet(Element* element)
     }
 
     _didLoadAllScriptBlockingResources();
+}
+
+void
+Document::finishedParsing()
+{
+    logself(INFO) << "finished parsing";
+    fireEventHandlingScopes("DOMContentLoaded");
 }
 
 void

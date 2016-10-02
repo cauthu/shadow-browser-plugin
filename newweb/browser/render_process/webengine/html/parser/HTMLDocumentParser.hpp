@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility> // for pair
 #include <string>
+#include <queue>
 
 #include "../../../../../utility/object.hpp"
 #include "../../page_model.hpp"
@@ -17,6 +18,10 @@ class Document;
     class HTMLScriptElement;
     class Webengine;
 
+/*
+ * this parser also does some of the things that webkit's
+ * HTMLScriptRunner does
+ */
 class HTMLDocumentParser : public Object
 {
 public:
@@ -52,11 +57,23 @@ protected:
     int _find_element_idx_to_begin_preload_scanning();
 
     void _add_element_to_doc(const uint32_t& elemInstNum);
+    void _execute_script(uint32_t scope_id);
 
+    bool isWaitingForScripts() const;
     bool isPendingScriptReady(const HTMLScriptElement*);
-
+    bool shouldDelayEnd() const;
+    bool isExecutingScript() const;
+    void attemptToRunDeferredScriptsAndEnd();
+    bool executeScriptsWaitingForParsing();
     void executeParsingBlockingScript();
     void executeParsingBlockingScripts();
+    void prepareToStopParsing();
+    void attemptToEnd();
+    void end();
+    void endIfDelayed();
+    void resumeParsingAfterScriptExecution();
+
+    bool inPumpSession() const { return m_pumpSessionNestingLevel > 0; }
 
     ///////////
 
@@ -91,7 +108,12 @@ protected:
      * bytes are available */
     size_t element_loc_idx_;
 
-    bool m_hasScriptsWaitingForResources;
+    bool is_executing_script_;
+    bool m_endWasDelayed;
+
+    unsigned m_pumpSessionNestingLevel;
+
+    std::queue<HTMLScriptElement*> m_scriptsToExecuteAfterParsing;
 };
 
 } // end namespace blink

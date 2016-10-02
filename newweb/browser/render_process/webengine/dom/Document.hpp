@@ -17,7 +17,7 @@
 namespace blink {
 
 class Webengine;
-    class Element;
+class Element;
 
 class Document : public EventTarget
                , public ResourceClient
@@ -47,7 +47,11 @@ public:
 
     void addPendingSheet(Element* element);
     void removePendingSheet(Element* element);
-    
+
+    void finishedParsing();
+
+    Webengine* webengine() { return webengine_; }
+
 protected:
 
     virtual ~Document() = default;

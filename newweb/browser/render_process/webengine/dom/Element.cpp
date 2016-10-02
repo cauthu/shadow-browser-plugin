@@ -4,7 +4,7 @@
 #include "Element.hpp"
 
 #include "Document.hpp"
-
+#include "../events/EventTypeNames.hpp"
 
 
 #define _LOG_PREFIX(inst) << "elem:" << instNum() << ": "
@@ -27,7 +27,8 @@ Element::Element(
     const uint32_t& instNum,
     const std::string tag,
     Document* document)
-    : Node(instNum, document)
+    : EventTarget(instNum, document->webengine())
+    , document_(document)
     , resInstNum_(0)
     , tag_(tag)
 {}
@@ -39,6 +40,16 @@ Element::setResInstNum(const uint32_t& resInstNum)
 
     auto fetcher = document()->fetcher();
 
+    if ((resInstNum_ != 0) && (resInstNum != resInstNum_)) {
+        vlogself(2) << "remove ourselves as client of current resource";
+        auto resource = fetcher->getResource(resInstNum_);
+        CHECK_NOTNULL(resource.get());
+
+        resource->removeClient(this);
+    }
+
+    resInstNum_ = resInstNum;
+
     auto resource = fetcher->getResource(resInstNum);
     CHECK_NOTNULL(resource.get());
 
@@ -46,7 +57,7 @@ Element::setResInstNum(const uint32_t& resInstNum)
         vlogself(2) << "resource has finished, but did it succeed?";
         if (!resource->errorOccurred()) {
             // great! fire our "load" event if any
-            CHECK(0) << "todo";
+            fireEventHandlingScopes(EventTypeNames::load);
         } else {
             logself(WARNING) << "resource failed to load";
         }

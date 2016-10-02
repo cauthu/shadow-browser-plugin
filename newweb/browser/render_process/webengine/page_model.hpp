@@ -66,6 +66,13 @@ public:
         std::vector<uint32_t> fired_scope_ids;
     };
 
+    struct XMLHttpRequestInfo
+    {
+        uint32_t instNum;
+        std::vector<uint32_t> res_chain;
+        std::vector<std::pair<std::string, uint32_t> > event_handling_scopes;
+    };
+
     explicit PageModel(const char* json_fpath);
 
     bool get_main_resource_info(ResourceInfo&) const;
@@ -93,13 +100,19 @@ public:
     bool get_dom_timer_info(uint32_t timerID,
                             DOMTimerInfo& timer_info) const;
 
+    bool get_xhr_info(uint32_t xhrInstNum,
+                      XMLHttpRequestInfo& xhr_info) const;
+
 private:
 
     virtual ~PageModel() = default;
 
+    bool _get_event_handling_scopes(
+        const rapidjson::Value& object,
+        std::vector<std::pair<std::string, uint32_t> >&) const;
 
-    // bool _get_element_json_obj(const uint32_t elemInstNum,
-    //                            const rapidjson::Value& element) const;
+    bool _get_uint_array(const rapidjson::Value& array,
+                         std::vector<uint32_t>& uints) const;
 
     ///////////////
 

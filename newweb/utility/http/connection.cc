@@ -30,7 +30,7 @@ using myio::TCPChannel;
 using boost::lexical_cast;
 
 
-#define _LOG_PREFIX(inst) << "cnx= " << (inst)->objId() << ": "
+#define _LOG_PREFIX(inst) << "conn= " << (inst)->objId() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)

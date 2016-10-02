@@ -30,14 +30,13 @@ set(RENDER_PROCESS_SOURCES
 set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
   webengine/webengine.cpp
   webengine/page_model.cpp
-  webengine/events/EventTypeNames.cpp
   webengine/events/EventTarget.cpp
   webengine/fetch/Resource.cpp
   webengine/fetch/CSSStyleSheetResource.cpp
   webengine/fetch/ResourceFetcher.cpp
-  webengine/dom/Node.cpp
   webengine/dom/Document.cpp
   webengine/dom/Element.cpp
+  webengine/xml/XMLHttpRequest.cpp
   webengine/frame/DOMTimer.cpp
   webengine/html/HTMLImageElement.cpp
   webengine/html/HTMLScriptElement.cpp

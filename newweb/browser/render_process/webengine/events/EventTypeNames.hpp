@@ -7,11 +7,10 @@ namespace blink {
 
 namespace EventTypeNames {
 
-extern const std::string load;
-extern const std::string DOMContentLoaded;
-
-
-    bool is_valid(const std::string& name);
+static const char load[] = "load";
+static const char DOMContentLoaded[] = "DOMContentLoaded";
+static const char readystatechange_DONE[] = "readystatechange_DONE";
+static const char readystatechange_complete[] = "readystatechange_complete";
 
 }
 

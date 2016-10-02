@@ -7,11 +7,16 @@ using std::pair;
 using std::string;
 
 
+#define _LOG_PREFIX(inst) << "req= " << (inst)->objId() << ", res:" << (inst)->webkit_resInstNum_ << ": "
+
 /* "inst" stands for instance, as in, instance of a class */
-#define vloginst(level, inst) VLOG(level) << "req= " << (inst)->objId() << " "
+#define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
 #define vlogself(level) vloginst(level, this)
 
-#define loginst(level, inst) LOG(level) << "req= " << (inst)->objId() << " "
+#define dvloginst(level, inst) DVLOG(level) _LOG_PREFIX(inst)
+#define dvlogself(level) dvloginst(level, this)
+
+#define loginst(level, inst) LOG(level) _LOG_PREFIX(inst)
 #define logself(level) loginst(level, this)
 
 
@@ -37,7 +42,7 @@ Request::Request(
     , conn(NULL), num_retries_(0)
     , actual_resp_body_size_(0)
 {
-    vlogself(2) << "a new request ";
+    vlogself(2) << "a new request, res:" << webkit_resInstNum;
     CHECK_GT(host_.length(), 0);
 }
 

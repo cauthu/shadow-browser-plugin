@@ -13,6 +13,7 @@
 
 #include "webengine.hpp"
 
+#include "xml/XMLHttpRequest.hpp"
 
 using std::string;
 using std::make_pair;
@@ -137,6 +138,7 @@ Webengine::loadPage(const char* model_fpath)
     document_.reset(
         new Document(evbase_, main_doc_instNum,
                      this, page_model_.get(), resource_fetcher_.get()));
+
     document_->load();
 }
 
@@ -160,7 +162,7 @@ Webengine::request_resource(const PageModel::RequestInfo& req_info,
 void
 Webengine::msleep(const double msec)
 {
-    VLOG(2) << "about to sleep for " << msec << " ms";
+    VLOG(2) << "sleep for " << msec << " ms";
     usleep(msec * 1000);
 }
 
@@ -171,6 +173,8 @@ Webengine::add_elem_to_doc(const uint32_t elemInstNum)
     CHECK(document_);
 
     document_->add_elem(elemInstNum);
+
+    VLOG(2) << "done";
 }
 
 void
@@ -182,8 +186,7 @@ Webengine::start_timer(const uint32_t timerID)
     const auto rv = page_model_->get_dom_timer_info(timerID, info);
     CHECK(rv);
 
-    DOMTimer::UniquePtr timer(
-        new DOMTimer(evbase_, this, info));
+    DOMTimer::UniquePtr timer(new DOMTimer(evbase_, this, info));
 
     const auto ret = dom_timers_.insert(make_pair(timerID, std::move(timer)));
     CHECK(ret.second);
@@ -203,7 +206,20 @@ void
 Webengine::send_xhr(const uint32_t instNum)
 {
     VLOG(2) << "begin, xhr:" << instNum;
-    CHECK(0) << "todo";
+
+    PageModel::XMLHttpRequestInfo info;
+    const auto rv = page_model_->get_xhr_info(instNum, info);
+    CHECK(rv);
+
+    XMLHttpRequest::UniquePtr xhr(
+        new XMLHttpRequest(this, resource_fetcher_.get(), info));
+
+    xhr->send();
+
+    const auto ret = xhrs_.insert(make_pair(instNum, std::move(xhr)));
+    CHECK(ret.second);
+
+    VLOG(2) << "done";
 }
 
 void
@@ -263,6 +279,10 @@ Webengine::execute_scope(const uint32_t scope_id)
     rv = as_script_ctx_->Prepare(func);
     CHECK_GE(rv, 0);
 
+    struct timeval begin_tv;
+    auto rv2 = gettimeofday(&begin_tv, nullptr);
+    CHECK_EQ(rv2, 0);
+
     rv = as_script_ctx_->Execute();
     if (rv == asEXECUTION_FINISHED ) {
         VLOG(2) << "scope:" << scope_id << " finished executing";
@@ -275,6 +295,16 @@ Webengine::execute_scope(const uint32_t scope_id)
             LOG(FATAL) << "The script ended with an exception.";
         }
     }
+
+    struct timeval done_tv;
+    rv2 = gettimeofday(&done_tv, nullptr);
+    CHECK_EQ(rv2, 0);
+
+    struct timeval elapsed_tv;
+    evutil_timersub(&done_tv, &begin_tv, &elapsed_tv);
+    VLOG(2) << "elapsed: " << ((elapsed_tv.tv_sec * 1000) + (int)(((double)elapsed_tv.tv_usec) / 1000)) << " ms";
+
+#undef __MAIN_FUNC_PROTO
 
     VLOG(2) << "done";
 }

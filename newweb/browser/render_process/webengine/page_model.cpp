@@ -63,7 +63,7 @@ PageModel::PageModel(const char* json_fpath)
     const std::string file_contents = ss.str();
     model_json.Parse(file_contents.c_str());
 
-    vlogself(2) << "model_fpath= " << json_fpath;
+    logself(INFO) << "model_fpath= " << json_fpath;
     CHECK(model_json.IsObject());
 }
 
@@ -92,7 +92,7 @@ PageModel::get_resource_info(const uint32_t& resInstNum,
 
     GET_OBJECT_MEMBER(info.type,
                       resource, "type", true, String);
-    VLOG(2) << "type= [" << info.type << "]";
+    vlogself(3) << "type= [" << info.type << "]";
 
     GET_OBJECT_MEMBER(info.part_of_page_loaded_check,
                       resource, "part_of_page_loaded_check", true, Bool);
@@ -145,7 +145,7 @@ bool
 PageModel::get_element_info(const uint32_t& elemInstNum,
                             ElementInfo& info) const
 {
-    VLOG(2) << "begin, " << elemInstNum;
+    vlogself(3) << "begin, " << elemInstNum;
 
     const string elemInstNumStr = lexical_cast<string>(elemInstNum);
 
@@ -160,7 +160,7 @@ PageModel::get_element_info(const uint32_t& elemInstNum,
 
     GET_OBJECT_MEMBER(info.tag,
                       element, "tag", true, String);
-    VLOG(2) << "tag= [" << info.tag << "]";
+    vlogself(3) << "tag= [" << info.tag << "]";
 
     info.initial_resInstNum = 0;
     GET_OBJECT_MEMBER(info.initial_resInstNum,
@@ -184,40 +184,9 @@ PageModel::get_element_info(const uint32_t& elemInstNum,
                           element, "is_blocking_css", true, Bool);
     }
 
-    {
-        vlogself(2) << "get the event_handling_scopes";
+    _get_event_handling_scopes(element, info.event_handling_scopes);
 
-        json::Value::ConstMemberIterator itr =
-            element.FindMember("event_handling_scopes");
-        if (itr != element.MemberEnd()) {
-            const json::Value& pair_array = itr->value;
-            CHECK(pair_array.IsArray());
-
-            for (json::Value::ConstValueIterator it2 = pair_array.Begin();
-                 it2 != pair_array.End(); ++it2)
-            {
-                const json::Value& pair = *it2;
-                CHECK(pair.IsArray());
-                CHECK_EQ(pair.Size(), 2);
-
-                CHECK(pair[0].IsString());
-                const auto event_name = pair[0].GetString();
-
-                CHECK(pair[1].IsUint());
-                const auto scope_id = pair[1].GetUint();
-
-                vlogself(2) << "event name= " << event_name
-                            << " scope id= " << scope_id;
-
-                info.event_handling_scopes.push_back(
-                    make_pair(event_name, scope_id));
-            }
-        } else {
-            vlogself(2) << "it has none";
-        }
-    }
-
-    VLOG(2) << "done";
+    vlogself(3) << "done";
 
     return true;
 }
@@ -252,7 +221,7 @@ PageModel::get_main_html_element_byte_offsets(std::vector<std::pair<size_t, uint
 uint32_t
 PageModel::get_element_initial_resInstNum(const uint32_t& elemInstNum) const
 {
-    vlogself(2) << "begin, elemInstNum= " << elemInstNum;
+    vlogself(3) << "begin, elem:" << elemInstNum;
 
     const string elemInstNumStr = lexical_cast<string>(elemInstNum);
 
@@ -267,7 +236,7 @@ PageModel::get_element_initial_resInstNum(const uint32_t& elemInstNum) const
     GET_OBJECT_MEMBER(resInstNum,
                       element, "initial_resInstNum", false, Uint);
 
-    vlogself(2) << "done";
+    vlogself(3) << "done";
 
     return resInstNum;
 }
@@ -276,7 +245,7 @@ bool
 PageModel::get_execution_scope_statements(uint32_t scope_id,
                                           std::vector<std::string>& statements) const
 {
-    vlogself(2) << "begin, scope id= " << scope_id;
+    vlogself(3) << "begin, scope:" << scope_id;
 
     const string scopeIdStr = lexical_cast<string>(scope_id);
 
@@ -297,7 +266,7 @@ PageModel::get_execution_scope_statements(uint32_t scope_id,
         statements.push_back(statement.GetString());
     }
 
-    vlogself(2) << "done";
+    vlogself(3) << "done";
     return true;
 }
 
@@ -305,7 +274,7 @@ bool
 PageModel::get_dom_timer_info(uint32_t timerID,
                               DOMTimerInfo& info) const
 {
-    VLOG(2) << "begin, timer:" << timerID;
+    vlogself(3) << "begin, timer:" << timerID;
 
     const string timerIDStr = lexical_cast<string>(timerID);
 
@@ -325,7 +294,7 @@ PageModel::get_dom_timer_info(uint32_t timerID,
                       timer, "interval_ms", true, Uint);
 
     {
-        vlogself(2) << "get the timer fired scopes";
+        vlogself(3) << "get the timer fired scopes";
 
         json::Value::ConstMemberIterator itr =
             timer.FindMember("fired_scope_ids");
@@ -334,15 +303,119 @@ PageModel::get_dom_timer_info(uint32_t timerID,
         const json::Value& scope_id_array = itr->value;
         CHECK(scope_id_array.IsArray());
 
-        for (json::Value::ConstValueIterator it2 = scope_id_array.Begin();
-             it2 != scope_id_array.End(); ++it2)
-        {
-            const json::Value& scope_id = *it2;
-            CHECK(scope_id.IsUint());
+        _get_uint_array(scope_id_array, info.fired_scope_ids);
 
-            info.fired_scope_ids.push_back(scope_id.GetUint());
-        }
+        CHECK_GT(info.fired_scope_ids.size(), 0);
     }
+
+    vlogself(3) << "done";
+
+    return true;
+}
+
+bool
+PageModel::get_xhr_info(uint32_t xhrInstNum,
+                        XMLHttpRequestInfo& info) const
+
+{
+    vlogself(3) << "begin, xhr:" << xhrInstNum;
+
+    const string xhrInstNumStr = lexical_cast<string>(xhrInstNum);
+
+    json::Value::ConstMemberIterator itr =
+        model_json["xhrs"].FindMember(xhrInstNumStr.c_str());
+    CHECK(itr != model_json["xhrs"].MemberEnd());
+
+    const json::Value& xhr = itr->value;
+    CHECK(xhr.IsObject());
+
+    info.instNum = xhrInstNum;
+
+    _get_event_handling_scopes(xhr, info.event_handling_scopes);
+
+    {
+        vlogself(3) << "get the resource chain";
+
+        json::Value::ConstMemberIterator itr =
+            xhr.FindMember("res_chain");
+        CHECK_NE(itr, xhr.MemberEnd());
+
+        const json::Value& res_chain_array = itr->value;
+        CHECK(res_chain_array.IsArray());
+
+        _get_uint_array(res_chain_array, info.res_chain);
+
+        CHECK_GT(info.res_chain.size(), 0);
+    }
+
+    vlogself(3) << "done";
+
+    return true;
+}
+
+bool
+PageModel::_get_uint_array(const json::Value& array,
+                           std::vector<uint32_t>& uints) const
+{
+    vlogself(3) << "begin";
+
+    CHECK(array.IsArray());
+
+    for (json::Value::ConstValueIterator it2 = array.Begin();
+         it2 != array.End(); ++it2)
+    {
+        const json::Value& uint_obj = *it2;
+        CHECK(uint_obj.IsUint());
+
+        const uint32_t uint = uint_obj.GetUint();
+
+        vlogself(3) << "uint= " << uint;
+
+        uints.push_back(uint);
+    }
+
+    vlogself(3) << "done";
+
+    return true;
+}
+
+bool
+PageModel::_get_event_handling_scopes(
+    const json::Value& object,
+    std::vector<std::pair<std::string, uint32_t> >& event_handling_scopes) const
+{
+    vlogself(3) << "begin";
+
+    json::Value::ConstMemberIterator itr =
+        object.FindMember("event_handling_scopes");
+    if (itr != object.MemberEnd()) {
+        const json::Value& pair_array = itr->value;
+        CHECK(pair_array.IsArray());
+
+        for (json::Value::ConstValueIterator it2 = pair_array.Begin();
+             it2 != pair_array.End(); ++it2)
+        {
+            const json::Value& pair = *it2;
+            CHECK(pair.IsArray());
+            CHECK_EQ(pair.Size(), 2);
+
+            CHECK(pair[0].IsString());
+            const auto event_name = pair[0].GetString();
+
+            CHECK(pair[1].IsUint());
+            const auto scope_id = pair[1].GetUint();
+
+            vlogself(3) << "event name= " << event_name
+                        << " scope:" << scope_id;
+
+            event_handling_scopes.push_back(
+                make_pair(event_name, scope_id));
+        }
+    } else {
+        vlogself(3) << "it has none";
+    }
+
+    vlogself(3) << "done";
 
     return true;
 }

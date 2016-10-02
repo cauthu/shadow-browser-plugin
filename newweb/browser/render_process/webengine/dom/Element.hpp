@@ -2,7 +2,7 @@
 #ifndef Element_hpp
 #define Element_hpp
 
-#include "Node.hpp"
+#include "../events/EventTarget.hpp"
 #include "../fetch/Resource.hpp"
 
 #include <string>
@@ -11,7 +11,7 @@ namespace blink {
 
     class Document;
 
-class Element : public Node
+class Element : public EventTarget
               , public ResourceClient
 {
 public:
@@ -29,12 +29,16 @@ protected:
     virtual ~Element() = default;
 
     /* implement ResourceClient interface */
-    virtual void notifyFinished(Resource*, bool success) {};
-    virtual void responseReceived(Resource* /*, const ResourceResponse*/) {}
+    virtual void notifyFinished(Resource*, bool success) {}
+    virtual void responseReceived(Resource*) {}
     virtual void dataReceived(Resource*, size_t length) {}
-    // virtual void redirectReceived(Resource* /*, ResourceRequest&, const ResourceResponse&*/) { }
+
+    Document* document() { return document_; }
 
 
+    ///////
+
+    Document* document_;
 
     /* the resource this element refers to, e.g., via the "src"
      * attribute of an img or script.

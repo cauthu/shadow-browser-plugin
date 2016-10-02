@@ -58,6 +58,7 @@ public:
     virtual void finish(bool success);
 
     void addClient(ResourceClient*);
+    void removeClient(ResourceClient*);
 
     bool isLoading() const { return load_state_ == LoadState::LOADING; }
     bool isFinished() const { return load_state_ == LoadState::FINISHED; }

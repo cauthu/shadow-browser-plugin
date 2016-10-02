@@ -98,6 +98,12 @@ Resource::addClient(ResourceClient* client)
 }
 
 void
+Resource::removeClient(ResourceClient* client)
+{
+    m_clients.erase(client);
+}
+
+void
 Resource::finish(bool success)
 {
     vlogself(2) << "begin, success= " << success;
