@@ -4,6 +4,8 @@ namespace myipc.renderer.messages;
 
 enum type:ubyte
 {
+    Reset,
+    ResetResp,
     LoadPage,
     LoadPageResp,
     PageLoaded,

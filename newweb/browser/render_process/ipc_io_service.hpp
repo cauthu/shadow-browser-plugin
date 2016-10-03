@@ -43,6 +43,8 @@ public:
                           const size_t& resp_meta_size,
                           const size_t& resp_body_size);
 
+    void send_ResetSession();
+
 protected:
 
 

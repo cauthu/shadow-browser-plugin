@@ -19,6 +19,26 @@
 #include "frame/DOMTimer.hpp"
 #include "xml/XMLHttpRequest.hpp"
 
+/*
+ * from the html processing model
+ * https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model,
+ * the event loop deals with "tasks"
+ *
+ * the browser has one or more task queue, where tasks can be to
+ * handle ipc messages from io service (e.g., "DataReceived",
+ * "RequestComplete", etc.) as well as handle timeout callbacks
+ * (including DOMTimer timeouts).
+ *
+ * after each task is run, the browser should run the "Update the
+ * rendering" step
+ *
+ * we are not exactly implementing that processing model; we will
+ * approximate this by trying to run a render update scope in
+ * _do_end_of_task_work(), which we will call after: (1) handling ipc
+ * messages, and (2) after each DOMTimer fires (make DOMTimer a friend
+ * class so it can call our _do_end_of_task_work())
+ *
+ */
 
 namespace blink
 {
@@ -49,6 +69,7 @@ public:
 
     /* DriverMsgHandler interface */
     void handle_LoadPage(const char* model_fpath) override;
+    void handle_Reset() override;
 
     void msleep(const double ms);
 
@@ -65,12 +86,20 @@ protected:
     void _init_angelscript_engine();
     void checkCompleted_timer_fired(Timer*);
 
+    friend class DOMTimer;
+    friend class Document;
+
+    void _do_end_of_task_work();
+
     // reset to prepare for new page load, including clearing any
     // state that might be existing from the last page load
     void _reset_loading_state();
 
+    void maybe_sched_INITIAL_render_update_scope();
+
     // these methods are for execution code to call
     void add_elem_to_doc(const uint32_t elemInstNum);
+    void sched_render_update_scope(const uint32_t scope_id);
     void start_timer(const uint32_t timerID);
     void cancel_timer(const uint32_t timerID);
     void set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum);
@@ -98,6 +127,8 @@ protected:
     /* map from the request id (for IPC!! not the resInstNum) that we
      * generate to the resource for which we're requesting. this is
      * like chrome's resource_disptacher's "pending_requests_"
+     *
+     * the resource pointers are only shallow pointers
      */
     std::map<int, Resource*> pending_requests_;
 
@@ -109,6 +140,8 @@ protected:
      * being called back by some resource finish for example
      */
     Timer::UniquePtr checkCompleted_timer_;
+
+    uint32_t scheduled_render_tree_update_scope_id_;
 
     /* these are ids of the execution scopes that have executed, and
      * therefore cannot be executed again. we will crash on such

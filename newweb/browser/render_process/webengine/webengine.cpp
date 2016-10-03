@@ -61,6 +61,7 @@ Webengine::Webengine(
     , as_script_ctx_(nullptr)
     , start_load_time_ms_(0)
     , state_(State::IDLE)
+    , scheduled_render_tree_update_scope_id_(0)
     , checkCompleted_timer_(
         new Timer(evbase_, true,
                   boost::bind(&Webengine::checkCompleted_timer_fired, this, _1)))
@@ -123,6 +124,9 @@ Webengine::_init_angelscript_engine()
         "void add_elem(uint)", add_elem_to_doc);
 
     REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void sched_render_update_scope(uint)", sched_render_update_scope);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
         "void start_timer(uint)", start_timer);
 
     REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
@@ -136,11 +140,21 @@ Webengine::_init_angelscript_engine()
 }
 
 void
+Webengine::handle_Reset()
+{
+    VLOG(2) << "begin";
+    ioservice_ipcclient_->send_ResetSession();
+    _reset_loading_state();
+    VLOG(2) << "done";
+}
+
+void
 Webengine::handle_LoadPage(const char* model_fpath)
 {
     // we are probably doing some of what DocumentLoader does
 
-    _reset_loading_state();
+    // tell io service to drop whatever connections, requests, etc. it
+    // might have currently
 
     LOG(INFO) << "start loading page";
 
@@ -174,6 +188,7 @@ Webengine::_reset_loading_state()
     executed_scope_ids_.clear();
     pending_requests_.clear();
     checkCompleted_timer_->cancel();
+    scheduled_render_tree_update_scope_id_ = 0;
 }
 
 void
@@ -229,6 +244,19 @@ Webengine::start_timer(const uint32_t timerID)
 }
 
 void
+Webengine::sched_render_update_scope(const uint32_t scope_id)
+{
+    VLOG(2) << "begin, scope:" << scope_id;
+
+    CHECK_GT(scope_id, 0);
+    CHECK_EQ(scheduled_render_tree_update_scope_id_, 0);
+
+    scheduled_render_tree_update_scope_id_ = scope_id;
+
+    VLOG(2) << "done";
+}
+
+void
 Webengine::cancel_timer(const uint32_t timerID)
 {
     VLOG(2) << "begin, timer:" << timerID;
@@ -277,7 +305,7 @@ Webengine::send_xhr(const uint32_t instNum)
 void
 Webengine::execute_scope(const uint32_t scope_id)
 {
-    VLOG(2) << "begin, scope:" << scope_id;
+    VLOG(2) << "begin, scope:" << scope_id << ":";
 
     CHECK(!inSet(executed_scope_ids_, scope_id));
 
@@ -361,37 +389,64 @@ void
 Webengine::handle_ReceivedResponse(const int& req_id,
                                    const uint64_t& first_byte_time_ms)
 {
-    CHECK(inMap(pending_requests_, req_id))
-        << "we don't know about req_id= " << req_id;
+    auto it = pending_requests_.find(req_id);
+    if (it == pending_requests_.end()) {
+        // this can happen because there's a race between our
+        // clearing/cancelling of pending request and io service's
+        // notifying us about the request
+        return;
+    }
+
     Resource* resource = pending_requests_[req_id];
     CHECK_NOTNULL(resource);
 
     resource->receivedResponseMeta(first_byte_time_ms);
+
+    //////
+    _do_end_of_task_work();
 }
 
 void
 Webengine::handle_DataReceived(const int& req_id, const size_t& length)
 {
-    CHECK(inMap(pending_requests_, req_id))
-        << "we don't know about req_id= " << req_id;
-    Resource* resource = pending_requests_[req_id];
+    auto it = pending_requests_.find(req_id);
+    if (it == pending_requests_.end()) {
+        // this can happen because there's a race between our
+        // clearing/cancelling of pending request and io service's
+        // notifying us about the request
+        return;
+    }
+
+    Resource* resource = it->second;
     CHECK_NOTNULL(resource);
 
     resource->appendData(length);
+
+    //////
+    _do_end_of_task_work();
 }
 
 void
 Webengine::handle_RequestComplete(const int& req_id, const bool success)
 {
-    CHECK(inMap(pending_requests_, req_id))
-        << "we don't know about req_id= " << req_id;
+    auto it = pending_requests_.find(req_id);
+    if (it == pending_requests_.end()) {
+        // this can happen because there's a race between our
+        // clearing/cancelling of pending request and io service's
+        // notifying us about the request
+        return;
+    }
+
     Resource* resource = pending_requests_[req_id];
     CHECK_NOTNULL(resource);
 
     resource->finish(success);
 
     // remove the pending request since it's now complete
-    pending_requests_.erase(req_id);
+    pending_requests_.erase(it);
+
+    //////
+    _do_end_of_task_work();
 }
 
 void
@@ -450,6 +505,34 @@ Webengine::checkCompleted_timer_fired(Timer*)
     renderer_ipcserver_->send_PageLoaded(ttfb_ms);
 
     VLOG(2) << "done";
+}
+
+void
+Webengine::_do_end_of_task_work()
+{
+    if (scheduled_render_tree_update_scope_id_) {
+        const auto scope_id = scheduled_render_tree_update_scope_id_;
+        // clear the scheduled scope id before executing
+        scheduled_render_tree_update_scope_id_ = 0;
+        VLOG(2) << "execute render tree update scope:" << scope_id;
+        execute_scope(scope_id);
+    }
+}
+
+void
+Webengine::maybe_sched_INITIAL_render_update_scope()
+{
+    VLOG(2) << "begin";
+
+    CHECK_EQ(scheduled_render_tree_update_scope_id_, 0);
+
+    scheduled_render_tree_update_scope_id_ =
+        page_model_->get_initial_render_tree_update_scope_id();
+
+    // it's ok for the initial scope id to be zero, e.g., because it's
+    // part (inner scope) of another scope
+
+    VLOG(2) << "done, scheduled scope:" << scheduled_render_tree_update_scope_id_;
 }
 
 } // end namespace blink

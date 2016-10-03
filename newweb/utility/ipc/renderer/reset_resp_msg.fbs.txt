@@ -1,0 +1,8 @@
+
+namespace myipc.renderer.messages;
+
+table ResetRespMsg
+{
+}
+
+root_type ResetRespMsg;

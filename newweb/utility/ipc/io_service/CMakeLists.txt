@@ -4,6 +4,7 @@ set(IO_SERVICE_FBS
   received_response_msg.fbs.txt
   data_received_msg.fbs.txt
   request_complete_msg.fbs.txt
+  reset_session_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")

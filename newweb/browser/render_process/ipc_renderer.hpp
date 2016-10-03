@@ -45,6 +45,8 @@ private:
 
     void _handle_LoadPage(const uint32_t& id,
                       const myipc::renderer::messages::LoadPageMsg*);
+    void _handle_Reset(const uint32_t& id,
+                      const myipc::renderer::messages::ResetMsg*);
 
 
     struct event_base* evbase_; // don't free
@@ -55,6 +57,7 @@ private:
     DriverMsgHandler* driver_msg_handler_;
 
     uint32_t load_call_id_;
+    uint32_t reset_call_id_;
 };
 
 #endif /* ipc_renderer_hpp */

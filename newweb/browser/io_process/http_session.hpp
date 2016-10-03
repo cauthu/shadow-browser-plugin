@@ -51,6 +51,8 @@ public:
                                            const size_t resp_meta_size,
                                 const size_t resp_body_size);
 
+    void handle_ResetSession();
+
 private:
 
     virtual ~HttpNetworkSession() = default;
@@ -76,7 +78,6 @@ private:
     struct PendingRequestInfo
     {
         int req_res_req_id; /* from the requestresource msg */
-        uint32_t webkit_resInstNum;
         std::shared_ptr<http::Request> req;
     };
     std::map<uint32_t, PendingRequestInfo > pending_requests_;

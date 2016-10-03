@@ -65,6 +65,8 @@ DOMTimer::_on_event_cb()
     ++next_fired_scope_idx_;
 
     vlogself(2) << "done";
+
+    webengine_->_do_end_of_task_work();
 }
 
 DOMTimer::~DOMTimer()

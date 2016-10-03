@@ -91,6 +91,18 @@ IOServiceIPCClient::request_resource(const int& req_id,
     vlogself(2) << "done";
 }
 
+void
+IOServiceIPCClient::send_ResetSession()
+{
+    vlogself(2) << "begin";
+
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(ResetSession, bufbuilder);
+    }
+
+    vlogself(2) << "done";
+}
 
 void
 IOServiceIPCClient::_on_msg(GenericIpcChannel*, uint8_t type,

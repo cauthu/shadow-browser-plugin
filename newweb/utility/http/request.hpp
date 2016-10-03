@@ -113,7 +113,7 @@ public:
 
 private:
 
-    virtual ~Request() = default;
+    virtual ~Request();
 
     std::vector<std::pair<std::string, std::string> > headers_;
 

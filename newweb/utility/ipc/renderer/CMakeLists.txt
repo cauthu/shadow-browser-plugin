@@ -1,5 +1,7 @@
 set(RENDERER_FBS
   message_types.fbs.txt
+  reset_msg.fbs.txt
+  reset_resp_msg.fbs.txt
   load_page_msg.fbs.txt
   load_page_resp_msg.fbs.txt
   page_loaded_msg.fbs.txt

@@ -47,6 +47,11 @@ Request::Request(
     CHECK_GT(host_.length(), 0);
 }
 
+Request::~Request()
+{
+    vlogself(3) << "destructing";
+}
+
 void
 Request::dump_debug() const
 {

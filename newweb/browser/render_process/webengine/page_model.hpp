@@ -103,6 +103,8 @@ public:
 
     uint32_t get_element_initial_resInstNum(const uint32_t& elemInstNum) const;
 
+    uint32_t get_initial_render_tree_update_scope_id() const;
+
     /* return true if the scope is found, false otherwise */
     bool get_execution_scope_statements(uint32_t scope_id,
                                         std::vector<std::string>& statements) const;

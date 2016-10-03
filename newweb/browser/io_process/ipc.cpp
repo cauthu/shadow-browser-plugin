@@ -131,12 +131,17 @@ void
 IPCServer::_handle_RequestResource(const int& routing_id,
                                    const msgs::RequestResourceMsg* msg)
 {
-    vlogself(2) << "begin handling FetchMsg";
-
     hsessions_[routing_id]->handle_RequestResource(
         msg->req_id(), msg->webkit_resInstNum(),
         msg->host()->c_str(), msg->port(),
         msg->req_total_size(), msg->resp_meta_size(), msg->resp_body_size());
+}
+
+void
+IPCServer::_handle_ResetSession(const int& routing_id,
+                                const msgs::ResetSessionMsg*)
+{
+    hsessions_[routing_id]->handle_ResetSession();
 }
 
 void
@@ -193,6 +198,7 @@ IPCServer::_on_msg_recv(GenericIpcChannel* channel, uint8_t type,
     switch (type) {
 
         IPC_MSG_HANDLER(RequestResource)
+        IPC_MSG_HANDLER(ResetSession)
 
     default:
         logself(FATAL) << "invalid IPC message type " << type;

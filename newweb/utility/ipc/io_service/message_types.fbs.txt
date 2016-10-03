@@ -16,4 +16,8 @@ enum type:ubyte
     /* ioservice tells renderer a request has completed */
     RequestComplete,
 
+    /* renderer tells ioservice to reset the session, i.e., tear down
+    all connections, drop all active/queued requests, etc. */
+    ResetSession,
+
 }

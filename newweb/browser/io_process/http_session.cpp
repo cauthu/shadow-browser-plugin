@@ -47,6 +47,29 @@ HttpNetworkSession::HttpNetworkSession(struct event_base* evbase,
 }
 
 void
+HttpNetworkSession::handle_ResetSession()
+{
+    logself(INFO) << "reset the session";
+
+    /* first, reset the connman, which should close all connections
+     * that it manages; that should not do anything with our Request
+     * pointers, to which the conn man and its connections only have
+     * shallow pointers.
+     *
+     * (note: calling connman's reset() method (not the unique
+     * pointer's reset() method) */
+    connman_->reset();
+
+    /*
+     * now we can clear the pending requests, which will destroy the
+     * Request's
+     */
+    pending_requests_.clear();
+
+    vlogself(2) << "done";
+}
+
+void
 HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
                                            const uint32_t webkit_resInstNum,
                                            const char* host,
@@ -82,7 +105,6 @@ HttpNetworkSession::handle_RequestResource(const int req_res_req_id,
 
     PendingRequestInfo pri;
     pri.req_res_req_id = req_res_req_id;
-    pri.webkit_resInstNum = webkit_resInstNum;
     pri.req = req;
     const auto ret = pending_requests_.insert(make_pair(req->objId(), pri));
     CHECK(ret.second);

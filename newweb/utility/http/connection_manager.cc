@@ -51,6 +51,7 @@ ConnectionManager::ConnectionManager(struct event_base *evbase,
 
     , timestamp_recv_first_byte_(0)
     , totaltxbytes_(0), totalrxbytes_(0)
+    , is_resetting_(false)
 
     , notify_req_error_(request_error_cb)
 {
@@ -209,8 +210,10 @@ void
 ConnectionManager::cnx_eof_cb(Connection* conn,
                               const NetLoc& netloc)
 {
-    logself(WARNING) << "connection eof";
-    handle_unusable_conn(conn, netloc);
+    if (!is_resetting_) {
+        logself(WARNING) << "connection eof";
+        handle_unusable_conn(conn, netloc);
+    }
 }
 
 /***************************************************/
@@ -304,18 +307,21 @@ ConnectionManager::get_total_bytes(size_t& tx, size_t& rx)
 void
 ConnectionManager::reset()
 {
+    vlogself(1) << "begin resetting";
+
+    CHECK(!is_resetting_);
+    is_resetting_ = true;
+
     // we don't touch the Request* pointers.
     // pair<NetLoc, Server*> kv_pair;
-    for (const auto& kv_pair: servers_) {
-        vlogself(2) << "clearing server ["<< kv_pair.first.first <<"]:"
-                    << kv_pair.first.second;
-        const auto server = kv_pair.second;
-        server->connections_.clear();
-    }
     servers_.clear();
 
     timestamp_recv_first_byte_ = 0;
     totaltxbytes_ = totalrxbytes_ = 0;
+
+    is_resetting_ = false;
+
+    vlogself(1) << "done resetting";
 }
 
 /***************************************************/

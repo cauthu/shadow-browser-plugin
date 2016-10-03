@@ -80,6 +80,8 @@ private:
     size_t totaltxbytes_;
     size_t totalrxbytes_;
 
+    bool is_resetting_;
+
     RequestErrorCb notify_req_error_;
 
     /* map key is "[hostname, port]" pair.

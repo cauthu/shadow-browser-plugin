@@ -19,6 +19,7 @@ class DriverMsgHandler
 
 public:
     virtual void handle_LoadPage(const char* model_fpath) = 0;
+    virtual void handle_Reset() = 0;
 };
 
 #endif /* interfaces_hpp */

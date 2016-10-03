@@ -35,6 +35,7 @@ IPCServer::IPCServer(struct event_base* evbase,
     , stream_server_(std::move(streamserver))
     , driver_msg_handler_(nullptr)
     , load_call_id_(0)
+    , reset_call_id_(0)
 {
     stream_server_->set_observer(this);
     vlogself(2) << "ipc server starts accepting";
@@ -106,6 +107,28 @@ IPCServer::_handle_LoadPage(const uint32_t& id,
 }
 
 void
+IPCServer::_handle_Reset(const uint32_t& id,
+                        const msgs::ResetMsg* msg)
+{
+    vlogself(2) << "begin, id= " << id;
+    CHECK_GT(id, 0);
+    CHECK_EQ(reset_call_id_, 0) << reset_call_id_;
+    reset_call_id_ = id;
+
+    driver_msg_handler_->handle_Reset();
+
+    {
+        // send the response for the call
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+            ResetResp, bufbuilder, reset_call_id_);
+    }
+
+    // reset it
+    reset_call_id_ = 0;
+}
+
+void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
     // accepted an ipc client
@@ -154,6 +177,7 @@ IPCServer::_on_called(uint32_t id, uint8_t type,
     switch (type) {
 
         IPC_CALL_HANDLER(LoadPage)
+        IPC_CALL_HANDLER(Reset)
 
     default:
         CHECK(false) << "invalid IPC message type " << unsigned(type);

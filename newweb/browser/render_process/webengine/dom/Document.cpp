@@ -153,6 +153,7 @@ Document::add_elem(const uint32_t& elemInstNum)
     else if (elem_info.tag == "body") {
         CHECK(!has_body_element_);
         has_body_element_ = true;
+        webengine_->maybe_sched_INITIAL_render_update_scope();
         return;
     }
 

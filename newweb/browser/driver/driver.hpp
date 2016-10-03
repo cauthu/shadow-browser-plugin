@@ -20,6 +20,19 @@
  * the driver implement is spread across multiple driver_<...>.cpp
  * files just to be manageable and so each can use its own macros,
  * etc.
+
+ *
+ *
+ * the default/common state transitions are:
+ *
+ * * when renderer ipc channel is ready, tell renderer to reset
+ *
+ * * when that is done, tell tproxy to establish tunnel (with force reconnect)
+ *
+ * * when that is done, tell tproxy to set auto start defense
+ *
+ * * when that is done, tell renderer to load page
+ *
  */
 
 class Driver : public Object
@@ -60,15 +73,16 @@ private:
     void _renderer_on_ipc_ch_status(myipc::GenericIpcChannel*,
                                     myipc::GenericIpcChannel::ChannelStatus);
 
-    void _renderer_load();
-    void _renderer_on_load_resp(myipc::GenericIpcChannel::RespStatus,
-                       uint16_t len, const uint8_t* buf);
+    void _renderer_reset();
+    void _renderer_on_reset_resp(myipc::GenericIpcChannel::RespStatus,
+                                 uint16_t len, const uint8_t* buf);
+    void _renderer_load_page();
+    void _renderer_on_load_page_resp(myipc::GenericIpcChannel::RespStatus,
+                                     uint16_t len, const uint8_t* buf);
 
     void _tproxy_set_auto_start_defense_on_next_send();
     void _tproxy_on_set_auto_start_defense_on_next_send_resp(myipc::GenericIpcChannel::RespStatus,
                                                           uint16_t, const uint8_t* buf);
-
-    void _renderer_maybe_start_load();
 
     void _renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedMsg*);
 
@@ -84,23 +98,22 @@ private:
     myipc::GenericIpcChannel::UniquePtr renderer_ipc_ch_;
     myipc::GenericIpcChannel::UniquePtr tproxy_ipc_ch_;
 
-    enum class RendererState
-    {
-        NOT_READY,
-            READY
-    } renderer_state_;
-
-    enum class TProxyState
-    {
-        NOT_READY,
-            READY
-    } tproxy_state_;
+    bool tproxy_ipc_ch_ready_;
 
     enum class State
     {
-        PREPARING_LOAD,
-        LOADING,
-        THINKING,
+        INITIAL,
+
+            RESET_RENDERER,
+            DONE_RESET_RENDERER,
+            ESTABLISH_TPROXY_TUNNEL,
+            DONE_ESTABLISH_TPROXY_TUNNEL,
+            SET_TPROXY_AUTO_START,
+            DONE_SET_TPROXY_AUTO_START,
+
+            LOADING_PAGE,
+
+            THINKING,
     } state_;
 
     Timer::UniquePtr think_time_timer_;

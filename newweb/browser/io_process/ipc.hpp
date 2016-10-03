@@ -56,6 +56,8 @@ private:
 
     void _handle_RequestResource(const int&,
                                  const myipc::ioservice::messages::RequestResourceMsg*);
+    void _handle_ResetSession(const int&,
+                              const myipc::ioservice::messages::ResetSessionMsg*);
 
     void _setup_client(StreamChannel::UniquePtr);
     void _remove_route(const uint32_t& routing_id);

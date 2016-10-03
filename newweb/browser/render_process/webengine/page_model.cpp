@@ -452,4 +452,18 @@ PageModel::get_main_doc_info(DocumentInfo& info) const
     return true;
 }
 
+uint32_t
+PageModel::get_initial_render_tree_update_scope_id() const
+{
+    vlogself(2) << "begin";
+
+    uint32_t initial_render_tree_update_scope_id = 0;
+    GET_OBJECT_MEMBER(initial_render_tree_update_scope_id,
+                      model_json, "initial_render_tree_update_scope_id", false, Uint);
+
+    vlogself(2) << "done, returning " << initial_render_tree_update_scope_id;
+
+    return initial_render_tree_update_scope_id;
+}
+
 } // end namespace blink

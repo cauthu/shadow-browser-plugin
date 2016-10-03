@@ -57,21 +57,33 @@ Driver::_tproxy_on_ipc_msg(GenericIpcChannel*, uint8_t,
 void
 Driver::_tproxy_establish_tunnel()
 {
-    CHECK_EQ(state_, State::PREPARING_LOAD);
+    vlogself(2) << "begin";
 
-    flatbuffers::FlatBufferBuilder bufbuilder;
+    CHECK(tproxy_ipc_ch_ready_);
 
-    BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
-        EstablishTunnel, bufbuilder,
-        boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4));
+    CHECK_EQ(state_, State::DONE_RESET_RENDERER);
+    state_ = State::ESTABLISH_TPROXY_TUNNEL;
 
-    msgbuilder.add_forceReconnect(true);
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+
+        BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
+            EstablishTunnel, bufbuilder,
+            boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4));
+        msgbuilder.add_forceReconnect(true);
+    }
+
+    vlogself(2) << "done";
 }
 
 void
 Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
                                   uint16_t len, const uint8_t* buf)
 {
+    vlogself(2) << "begin";
+
+    CHECK_EQ(state_, State::ESTABLISH_TPROXY_TUNNEL);
+
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "command timed out";
     }
@@ -79,26 +91,44 @@ Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
     auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
     CHECK(msg->tunnelIsReady());
 
+    state_ = State::DONE_ESTABLISH_TPROXY_TUNNEL;
+
     _tproxy_set_auto_start_defense_on_next_send();
+
+    vlogself(2) << "done";
 }
 
 void
 Driver::_tproxy_set_auto_start_defense_on_next_send()
 {
-    CHECK_EQ(state_, State::PREPARING_LOAD);
+    vlogself(2) << "begin";
 
-    flatbuffers::FlatBufferBuilder bufbuilder;
+    CHECK(tproxy_ipc_ch_ready_);
 
-    BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
-        SetAutoStartDefenseOnNextSend, bufbuilder,
-        boost::bind(&Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp,
-                    this, _2, _3, _4));
+    CHECK_EQ(state_, State::DONE_ESTABLISH_TPROXY_TUNNEL);
+    state_ = State::SET_TPROXY_AUTO_START;
+
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+
+        BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
+            SetAutoStartDefenseOnNextSend, bufbuilder,
+            boost::bind(&Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp,
+                        this, _2, _3, _4));
+    }
+
+    vlogself(2) << "done";
 }
 
 void
-Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(GenericIpcChannel::RespStatus status,
-                                                         uint16_t, const uint8_t* buf)
+Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
+    GenericIpcChannel::RespStatus status,
+    uint16_t, const uint8_t* buf)
 {
+    vlogself(2) << "begin";
+
+    CHECK_EQ(state_, State::SET_TPROXY_AUTO_START);
+
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "command timed out";
     }
@@ -108,7 +138,9 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(GenericIpcChannel::R
 
     vlogself(2) << "tproxy is ready";
 
-    tproxy_state_ = TProxyState::READY;
+    state_ = State::DONE_SET_TPROXY_AUTO_START;
 
-    _renderer_maybe_start_load();
+    _renderer_load_page();
+
+    vlogself(2) << "done";
 }
