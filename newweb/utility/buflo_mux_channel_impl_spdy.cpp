@@ -80,8 +80,11 @@ using std::bitset;
 // in bits
 #define CELL_TYPE_WIDTH 3
 #define CELL_FLAGS_WIDTH (8 - CELL_TYPE_WIDTH)
-#define CELL_TYPE_MASK ((~0) << CELL_FLAGS_WIDTH)
+#define CELL_TYPE_MASK ((unsigned(~0)) << CELL_FLAGS_WIDTH)
 #define CELL_TYPE_SHIFT_AMT CELL_FLAGS_WIDTH
+
+static_assert((CELL_TYPE_WIDTH + CELL_FLAGS_WIDTH) == 8,
+              "must be one byte");
 
 
 // flags bit positions in cell flags
