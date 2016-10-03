@@ -34,7 +34,7 @@ Socks5Connector::Socks5Connector(StreamChannel::UniquePtr transport,
 {
     CHECK_EQ(transport_->get_avail_input_length(), 0);
     CHECK_EQ(transport_->get_output_length(), 0);
-    CHECK_LE(target_host_name_.length(), 20);
+    CHECK_LE(target_host_name_.length(), 255);
 }
 
 int
