@@ -30,11 +30,10 @@ using msgs::type;
 
 
 IPCServer::IPCServer(struct event_base* evbase,
-                     StreamServer::UniquePtr streamserver,
-                     blink::Webengine* webengine)
+                     StreamServer::UniquePtr streamserver)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
-    , webengine_(webengine)
+    , driver_msg_handler_(nullptr)
     , load_call_id_(0)
 {
     stream_server_->set_observer(this);
@@ -73,34 +72,33 @@ IPCServer::IPCServer(struct event_base* evbase,
 
 
 void
-IPCServer::send_Loaded()
+IPCServer::send_PageLoaded(const uint64_t ttfb_ms)
 {
     {
         // send the response for the call
         flatbuffers::FlatBufferBuilder bufbuilder;
-        BEGIN_BUILD_MSG_AND_SEND_AT_END(Loaded, bufbuilder);
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(PageLoaded, bufbuilder);
+
+        msgbuilder.add_ttfb_ms(ttfb_ms);
     }
 }
 
 void
-IPCServer::_handle_Load(const uint32_t& id,
-                        const msgs::LoadMsg* msg)
+IPCServer::_handle_LoadPage(const uint32_t& id,
+                        const msgs::LoadPageMsg* msg)
 {
     vlogself(2) << "begin, id= " << id;
     CHECK_GT(id, 0);
     CHECK_EQ(load_call_id_, 0) << load_call_id_;
     load_call_id_ = id;
 
-    // io_service_send_request_resource(
-    //     3124, "cnn.com", 80, 123, 234, 63000 + (rand() % 1000));
-
-    webengine_->loadPage(msg->model_fpath()->c_str());
+    driver_msg_handler_->handle_LoadPage(msg->model_fpath()->c_str());
 
     {
         // send the response for the call
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
-            LoadResp, bufbuilder, load_call_id_);
+            LoadPageResp, bufbuilder, load_call_id_);
     }
 
     // reset it
@@ -155,8 +153,7 @@ IPCServer::_on_called(uint32_t id, uint8_t type,
 {
     switch (type) {
 
-        // IPC_MSG_HANDLER(Hello)
-        IPC_CALL_HANDLER(Load)
+        IPC_CALL_HANDLER(LoadPage)
 
     default:
         CHECK(false) << "invalid IPC message type " << unsigned(type);

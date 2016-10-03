@@ -46,7 +46,7 @@ Document::Document(struct ::event_base* evbase,
     , webengine_(webengine)
     , page_model_(page_model)
     , resource_fetcher_(resource_fetcher)
-    , state_(DocumentState::INITIAL)
+    , state_(ReadyState::Initial)
     , pendingStylesheets_(0)
     , executeScriptsWaitingForResourcesTimer_(
         new Timer(evbase, true,
@@ -72,9 +72,46 @@ Document::Document(struct ::event_base* evbase,
 void
 Document::load()
 {
-    CHECK_EQ(state_, DocumentState::INITIAL);
-    state_ = DocumentState::LOADING;
+    CHECK_EQ(state_, ReadyState::Initial);
+    state_ = ReadyState::Loading;
     _load_main_resource();
+}
+
+void
+Document::setReadyState(ReadyState readyState)
+{
+    if (readyState == state_) {
+        return;
+    }
+
+    state_ = readyState;
+
+    switch (readyState) {
+    case ReadyState::Initial:
+    case ReadyState::Loading:
+    case ReadyState::Interactive:
+        break;
+    case ReadyState::Complete:
+        fireEventHandlingScopes(EventTypeNames::readystatechange_complete);
+        break;
+    }
+}
+
+void
+Document::implicitClose()
+{
+    CHECK_EQ(state_, ReadyState::Complete);
+
+    // in real webkit, this will be done by LocalDOMWindow, i.e., the
+    // window, not the document, fires "load" event. but we'll
+    // approximate it here
+    fireEventHandlingScopes(EventTypeNames::load);
+}
+
+bool
+Document::parsing() const
+{
+    return !finished_parsing_;
 }
 
 void
@@ -229,6 +266,8 @@ Document::_load_main_resource()
 void
 Document::notifyFinished(Resource* resource, bool success)
 {
+    /* the only resource we watch is our main resource */
+    
     vlogself(2) << "begin, success= " << success;
 
     CHECK_EQ(main_resource_.get(), resource);
@@ -236,9 +275,6 @@ Document::notifyFinished(Resource* resource, bool success)
     CHECK(success) << "TODO: deal with failure of main resource";
 
     parser_->finish_receive();
-
-    // i don't think we should pump the parser
-    // parser_->pump_parser();
 
     vlogself(2) << "done";
 }
@@ -263,6 +299,5 @@ Document::responseReceived(Resource* resource)
 {
     CHECK_EQ(main_resource_.get(), resource);
 }
-
 
 } // end namespace blink

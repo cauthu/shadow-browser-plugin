@@ -31,8 +31,6 @@ ResourceFetcher::ResourceFetcher(Webengine* webegine,
     , page_model_(page_model)
     , requestCount_(0)
 {
-    
-
 }
 
 shared_ptr<Resource>
@@ -65,6 +63,7 @@ ResourceFetcher::getResource(const uint32_t& instNum)
             );
     }
 
+    resource->addClient(this);
     const auto ret = documentResources_.insert(
         make_pair(resource->instNum(), resource));
     CHECK(ret.second);
@@ -84,6 +83,7 @@ ResourceFetcher::getMainResource()
         [](Resource* res) { res->destroy(); }
         );
 
+    resource->addClient(this);
     const auto ret = documentResources_.insert(
         make_pair(resource->instNum(), resource));
     CHECK(ret.second);
@@ -138,6 +138,14 @@ ResourceFetcher::decrementRequestCount(const Resource* resource)
     vlogself(2) << "res:" << resource->instNum()
                 << " decrements requestCount_ to " << requestCount_;
     CHECK_GE(requestCount_, 0);
+}
+
+void
+ResourceFetcher::notifyFinished(Resource*, bool)
+{
+    // we're using webengine kinda like it's a FrameLoader. we tell it
+    // to checkCompleted() on EVERY load finish
+    webengine_->checkCompleted();
 }
 
 ResourceFetcher::~ResourceFetcher()

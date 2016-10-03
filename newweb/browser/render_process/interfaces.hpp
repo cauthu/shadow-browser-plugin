@@ -14,4 +14,11 @@ public:
     virtual void handle_RequestComplete(const int& req_id, const bool success) = 0;
 };
 
+class DriverMsgHandler
+{
+
+public:
+    virtual void handle_LoadPage(const char* model_fpath) = 0;
+};
+
 #endif /* interfaces_hpp */

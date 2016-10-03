@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <boost/algorithm/string/join.hpp>
+#include <boost/bind.hpp>
 
 #include <angelscript.h>
 #include <angelscript/add_on/scriptstdstring/scriptstdstring.h>
@@ -27,6 +28,7 @@ MakeRequestID() {
     // set the req_id field in its ipc messages sent to us, and thus
     // the field will be zero, and we will not know about it
     static int next_request_id = 1;
+    CHECK_LT(next_request_id, 0xffffff);
     return next_request_id++;
 }
 
@@ -49,12 +51,19 @@ s_as_MessageCallback(const asSMessageInfo *msg, void *param)
 
 Webengine::Webengine(
     struct ::event_base* evbase,
-    IOServiceIPCClient* ioservice_ipcclient
+    IOServiceIPCClient* ioservice_ipcclient,
+    IPCServer* renderer_ipcserver
     )
     : evbase_(evbase)
     , ioservice_ipcclient_(ioservice_ipcclient)
+    , renderer_ipcserver_(renderer_ipcserver)
     , as_script_engine_(nullptr)
     , as_script_ctx_(nullptr)
+    , start_load_time_ms_(0)
+    , state_(State::IDLE)
+    , checkCompleted_timer_(
+        new Timer(evbase_, true,
+                  boost::bind(&Webengine::checkCompleted_timer_fired, this, _1)))
 {
     static bool initialized = false;
 
@@ -64,6 +73,7 @@ Webengine::Webengine(
     CHECK_NOTNULL(ioservice_ipcclient_);
 
     ioservice_ipcclient_->set_resource_msg_handler(this);
+    renderer_ipcserver_->set_driver_msg_handler(this);
 
     _init_angelscript_engine();
 
@@ -126,9 +136,11 @@ Webengine::_init_angelscript_engine()
 }
 
 void
-Webengine::loadPage(const char* model_fpath)
+Webengine::handle_LoadPage(const char* model_fpath)
 {
     // we are probably doing some of what DocumentLoader does
+
+    _reset_loading_state();
 
     LOG(INFO) << "start loading page";
 
@@ -145,6 +157,23 @@ Webengine::loadPage(const char* model_fpath)
                      this, page_model_.get(), resource_fetcher_.get()));
 
     document_->load();
+
+    start_load_time_ms_ = common::gettimeofdayMs(nullptr);
+    state_ = State::PAGE_LOADING;
+}
+
+void
+Webengine::_reset_loading_state()
+{
+    document_.reset();
+    page_model_.reset();
+    state_ = State::IDLE;
+    resource_fetcher_.reset();
+    dom_timers_.clear();
+    xhrs_.clear();
+    executed_scope_ids_.clear();
+    pending_requests_.clear();
+    checkCompleted_timer_->cancel();
 }
 
 void
@@ -363,6 +392,64 @@ Webengine::handle_RequestComplete(const int& req_id, const bool success)
 
     // remove the pending request since it's now complete
     pending_requests_.erase(req_id);
+}
+
+void
+Webengine::checkCompleted()
+{
+    VLOG(2) << "begin";
+
+    if (state_ != State::PAGE_LOADING) {
+        VLOG(2) << "we're not loading page";
+        return;
+    }
+
+    if (resource_fetcher_->requestCount()) {
+        VLOG(2) << "resource fetcher is not done";
+        return;
+    }
+
+    if (checkCompleted_timer_->is_running()) {
+        VLOG(2) << "already scheduled";
+        return;
+    }
+
+    static const uint32_t zero_ms = 0;
+    checkCompleted_timer_->start(zero_ms);
+    VLOG(2) << "done";
+    return;
+}
+
+void
+Webengine::checkCompleted_timer_fired(Timer*)
+{
+    VLOG(2) << "begin";
+    if (state_ != State::PAGE_LOADING) {
+        VLOG(2) << "we're not loading page";
+        return;
+    }
+
+    CHECK_NOTNULL(document_.get());
+    if (document_->parsing()) {
+        VLOG(2) << "document still parsing";
+        return;
+    }
+
+    if (resource_fetcher_->requestCount()) {
+        VLOG(2) << "resource fetcher is not done";
+        return;
+    }
+
+    document_->setReadyState(Document::ReadyState::Complete);
+    document_->implicitClose();
+
+    state_ = State::IDLE;
+
+    const auto ttfb_ms = document_->first_byte_time_ms() - start_load_time_ms_;
+
+    renderer_ipcserver_->send_PageLoaded(ttfb_ms);
+
+    VLOG(2) << "done";
 }
 
 } // end namespace blink

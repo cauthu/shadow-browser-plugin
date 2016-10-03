@@ -160,10 +160,14 @@ Resource::_notify_finished(bool success)
                 << " num clients= " << m_clients.size();
     DestructorGuard dg(this);
 
+    // the order can be important; double-check if you change the order
+    //
+    // first: decrement the request count
     if (part_of_page_loaded_check()) {
         resource_fetcher_->decrementRequestCount(this);
     }
 
+    // then, notify finished
     for (auto client : m_clients) {
         client->notifyFinished(this, success);
     }

@@ -62,7 +62,7 @@ Driver::_renderer_on_ipc_msg(GenericIpcChannel*, uint8_t type,
 
     switch (type) {
 
-        IPC_MSG_HANDLER(Loaded)
+        IPC_MSG_HANDLER(PageLoaded)
 
     default:
         logself(FATAL) << "invalid IPC message type " << unsigned(type);
@@ -71,7 +71,7 @@ Driver::_renderer_on_ipc_msg(GenericIpcChannel*, uint8_t type,
 }
 
 void
-Driver::_renderer_handle_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
+Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedMsg* msg)
 {
     vlogself(2) << "begin";
 
@@ -79,16 +79,16 @@ Driver::_renderer_handle_Loaded(const myipc::renderer::messages::LoadedMsg* msg)
 
     // page has loaded
 
+    logself(INFO) << "page loaded. TTFB= " << msg->ttfb_ms() << " ms";
+
     // TODO: inspect the success/failure bool, and do logging
 
     // now, start the think time timer
-    struct timeval think_time;
-    think_time.tv_sec = 60;
-    think_time.tv_usec = 0;
+    auto think_time_ms = 60*1000;
 
     state_ = State::THINKING;
 
-    think_time_timer_->start(&think_time);
+    think_time_timer_->start(think_time_ms);
 
     vlogself(2) << "done";
 }
@@ -116,7 +116,7 @@ Driver::_renderer_load()
         auto model_fpath = bufbuilder.CreateString("/home/me/page_model.json");
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
-            Load, bufbuilder,
+            LoadPage, bufbuilder,
             boost::bind(&Driver::_renderer_on_load_resp, this, _2, _3, _4));
 
         msgbuilder.add_model_fpath(model_fpath);

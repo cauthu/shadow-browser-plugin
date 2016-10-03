@@ -74,6 +74,8 @@ public:
     bool part_of_page_loaded_check() const { return res_info_.part_of_page_loaded_check; }
 
     const uint32_t& instNum() const;
+
+    const uint64_t& first_byte_time_ms() const { return first_byte_time_ms_; }
         
 protected:
 

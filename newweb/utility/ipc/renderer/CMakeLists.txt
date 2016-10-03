@@ -1,8 +1,8 @@
 set(RENDERER_FBS
   message_types.fbs.txt
-  load_msg.fbs.txt
-  load_resp_msg.fbs.txt
-  loaded_msg.fbs.txt
+  load_page_msg.fbs.txt
+  load_page_resp_msg.fbs.txt
+  page_loaded_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")

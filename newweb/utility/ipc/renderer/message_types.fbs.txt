@@ -4,7 +4,7 @@ namespace myipc.renderer.messages;
 
 enum type:ubyte
 {
-    Load,
-    LoadResp,
-    Loaded,
+    LoadPage,
+    LoadPageResp,
+    PageLoaded,
 }

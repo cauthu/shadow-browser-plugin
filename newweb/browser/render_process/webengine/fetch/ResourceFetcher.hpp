@@ -15,6 +15,7 @@
 namespace blink {
 
 class ResourceFetcher final : public Object
+                            , public ResourceClient
 {
 public:
     typedef std::unique_ptr<ResourceFetcher, Destructor> UniquePtr;
@@ -29,7 +30,14 @@ public:
     void incrementRequestCount(const Resource*);
     void decrementRequestCount(const Resource*);
 
-private:
+    const uint32_t& requestCount() const { return requestCount_; }
+
+protected:
+
+    /* ResourceClient interface, to know about main resource */
+    virtual void notifyFinished(Resource*, bool success) override;
+    virtual void responseReceived(Resource*) override {};
+    virtual void dataReceived(Resource*, size_t length) override {};
 
     virtual ~ResourceFetcher();
 

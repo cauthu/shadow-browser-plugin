@@ -44,13 +44,27 @@ public:
     ResourceFetcher* fetcher() { return resource_fetcher_; }
 
     bool isScriptExecutionReady() const;
-
     void addPendingSheet(Element* element);
     void removePendingSheet(Element* element);
-
     void finishedParsing();
-
     Webengine* webengine() { return webengine_; }
+    bool parsing() const;
+
+    enum class ReadyState {
+        Initial,
+        Loading,
+        Interactive,
+        Complete
+    };
+
+    void setReadyState(ReadyState);
+    void implicitClose();
+
+    const uint64_t& first_byte_time_ms() const
+    {
+        CHECK_NOTNULL(main_resource_.get());
+        return main_resource_->first_byte_time_ms();
+    }
 
 protected:
 
@@ -70,10 +84,7 @@ protected:
     const PageModel* page_model_;
     ResourceFetcher* resource_fetcher_;
 
-    enum class DocumentState
-    {
-        INITIAL, LOADING
-            } state_;
+    ReadyState state_;
 
     std::shared_ptr<Resource> main_resource_;
     HTMLDocumentParser::UniquePtr parser_;

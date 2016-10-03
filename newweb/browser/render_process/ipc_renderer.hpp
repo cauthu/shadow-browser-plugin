@@ -8,7 +8,7 @@
 #include "../../utility/object.hpp"
 #include "utility/ipc/renderer/gen/combined_headers"
 
-#include "webengine/webengine.hpp"
+#include "interfaces.hpp"
 
 
 /* handles clients of renderer ipc interface */
@@ -19,10 +19,14 @@ public:
     typedef std::unique_ptr<IPCServer, /*folly::*/Destructor> UniquePtr;
 
     explicit IPCServer(struct event_base*,
-                       myio::StreamServer::UniquePtr,
-                       blink::Webengine*);
+                       myio::StreamServer::UniquePtr);
 
-    void send_Loaded();
+    void send_PageLoaded(const uint64_t ttfb_ms);
+
+    void set_driver_msg_handler(DriverMsgHandler* handler)
+    {
+        driver_msg_handler_ = handler;
+    }
 
 private:
 
@@ -39,15 +43,16 @@ private:
 
     void _setup_client(myio::StreamChannel::UniquePtr channel);
 
-    void _handle_Load(const uint32_t& id,
-                      const myipc::renderer::messages::LoadMsg*);
+    void _handle_LoadPage(const uint32_t& id,
+                      const myipc::renderer::messages::LoadPageMsg*);
 
 
     struct event_base* evbase_; // don't free
     myio::StreamServer::UniquePtr stream_server_; /* to accept ipc clients */
     /* currently support only one ipc client */
     myipc::GenericIpcChannel::UniquePtr ipc_client_channel_;
-    blink::Webengine* webengine_;
+
+    DriverMsgHandler* driver_msg_handler_;
 
     uint32_t load_call_id_;
 };

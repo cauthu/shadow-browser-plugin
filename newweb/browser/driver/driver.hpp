@@ -70,7 +70,7 @@ private:
 
     void _renderer_maybe_start_load();
 
-    void _renderer_handle_Loaded(const myipc::renderer::messages::LoadedMsg*);
+    void _renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedMsg*);
 
     //////////
 

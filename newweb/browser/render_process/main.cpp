@@ -40,9 +40,6 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
 
     VLOG(2) << "ioservice ipc client is ready";
 
-    webengine.reset(
-        new blink::Webengine(evbase, io_service_ipc_client.get()));
-
     /// set up my ipc server
     myio::TCPServer::UniquePtr tcpServerForIPC;
 
@@ -51,9 +48,12 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
         new myio::TCPServer(
             evbase, common::getaddr("localhost"),
             renderer_ipcport, nullptr));
-    ipcserver.reset(
-        new IPCServer(
-            evbase, std::move(tcpServerForIPC), webengine.get()));
+    ipcserver.reset(new IPCServer(evbase, std::move(tcpServerForIPC)));
+
+    webengine.reset(
+        new blink::Webengine(evbase,
+                             io_service_ipc_client.get(),
+                             ipcserver.get()));
 
     VLOG(2) << "ioservice ip client: " << io_service_ipc_client.get()
             << " , my ipcserver: " <<  ipcserver.get();
