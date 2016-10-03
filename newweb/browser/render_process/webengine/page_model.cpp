@@ -55,7 +55,10 @@ namespace blink {
 
 PageModel::PageModel(const char* json_fpath)
 {
-    std::fstream fs(json_fpath);
+    std::fstream fs(json_fpath, std::ios_base::in);
+    if (!fs.is_open()) {
+        logself(FATAL) << "unable to open page model at " << json_fpath;
+    }
     std::stringstream ss;
     ss << fs.rdbuf();
     fs.close();
@@ -63,7 +66,7 @@ PageModel::PageModel(const char* json_fpath)
     const std::string file_contents = ss.str();
     model_json.Parse(file_contents.c_str());
 
-    logself(INFO) << "model_fpath= " << json_fpath;
+    vlogself(2) << "model_fpath= " << json_fpath;
     CHECK(model_json.IsObject());
 }
 
