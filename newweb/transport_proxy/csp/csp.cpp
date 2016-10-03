@@ -36,13 +36,13 @@ namespace csp
 
 ClientSideProxy::ClientSideProxy(struct event_base* evbase,
                                StreamServer::UniquePtr streamserver,
-                               const in_addr_t& peer_addr,
+                               const char* peer_host,
                                const in_port_t& peer_port,
                                const in_addr_t& socks5_addr,
                                const in_port_t& socks5_port)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
-    , peer_addr_(peer_addr), peer_port_(peer_port)
+    , peer_host_(peer_host), peer_port_(peer_port)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , state_(State::INITIAL)
 {
@@ -95,8 +95,9 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
             new TCPChannel(evbase_, socks5_addr_, socks5_port_, nullptr));
         state_ = State::PROXY_CONNECTING;
     } else {
+        const auto peer_addr = common::getaddr(peer_host_.c_str());
         peer_channel_.reset(
-            new TCPChannel(evbase_, peer_addr_, peer_port_, nullptr));
+            new TCPChannel(evbase_, peer_addr, peer_port_, nullptr));
         state_ = State::CONNECTING;
     }
 
@@ -152,7 +153,7 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
         CHECK(!socks_connector_);
         socks_connector_.reset(
             new Socks5Connector(std::move(peer_channel_),
-                                peer_addr_, peer_port_));
+                                peer_host_.c_str(), peer_port_));
         auto rv = socks_connector_->start_connecting(this);
         CHECK(!rv);
         state_ = State::CONNECTING;

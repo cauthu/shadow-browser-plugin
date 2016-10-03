@@ -38,10 +38,16 @@ public:
      * up its buflo channel with ssp, and start accepting socks5
      * connections
      *
+     *
+     * "peer": is the server-side proxy (duh! we're the client-side)
+     *
+     * "socks5_addr": if not zero, then it's the ip address of the
+     * socks5 proxy (e.g., local Tor client) that we should use to
+     * reach the peer.
      */
     explicit ClientSideProxy(struct event_base* evbase,
                             myio::StreamServer::UniquePtr,
-                            const in_addr_t& peer_addr,
+                             const char* peer_host,
                             const in_port_t& peer_port,
                             const in_addr_t& socks5_addr,
                             const in_port_t& socks5_port);
@@ -95,7 +101,7 @@ protected:
     myio::StreamServer::UniquePtr stream_server_;
 
     /* these are for pairing with the server-side proxy */
-    const in_addr_t peer_addr_;
+    const std::string peer_host_;
     const in_port_t peer_port_;
     const in_addr_t socks5_addr_;
     const in_port_t socks5_port_;

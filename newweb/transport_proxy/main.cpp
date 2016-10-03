@@ -46,6 +46,7 @@ int main(int argc, char **argv)
     uint16_t ssp_port = 0;
     /* for client or sever, depends on is_client bool below */
     uint16_t listenport = 0;
+    uint16_t torPort = 0;
 
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--ssp")) {
@@ -57,6 +58,8 @@ int main(int argc, char **argv)
             ssp_port = boost::lexical_cast<uint16_t>(ssp_host_port.substr(colon_pos+1));
         } else if (!strcmp(argv[i], "--port")) {
             listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
+        } else if (!strcmp(argv[i], "--torPort")) {
+            torPort = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
 
@@ -93,12 +96,14 @@ int main(int argc, char **argv)
                                 listenport, nullptr));
 
         VLOG(2) << "ssp: [" << ssp_host << "]:" << ssp_port;
+        VLOG(2) << "torPort: " << torPort;
         csp.reset(new csp::ClientSideProxy(
                       evbase.get(),
                       std::move(tcpserver),
-                      common::getaddr(ssp_host.c_str()),
+                      ssp_host.c_str(),
                       ssp_port,
-                      0, 0));
+                      torPort ? common::getaddr("localhost") : 0,
+                      torPort));
 
 #ifdef IN_SHADOW
         const uint16_t ipcport = common::ports::transport_proxy_ipc;
