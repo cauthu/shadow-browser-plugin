@@ -104,9 +104,9 @@ ConnectionManager::submit_request(Request *req)
         CHECK(!conn);
         conn.reset(new Connection(
                        evbase_,
-                       common::getaddr(netloc.first.c_str()), netloc.second,
+                       netloc.first.c_str(), netloc.second,
                        socks5_addr_, socks5_port_,
-                       0, 0,
+                       nullptr, 0,
                        boost::bind(&ConnectionManager::cnx_error_cb, this, _1, netloc),
                        boost::bind(&ConnectionManager::cnx_eof_cb, this, _1, netloc),
                        nullptr, nullptr, nullptr,

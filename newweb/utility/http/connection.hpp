@@ -82,16 +82,21 @@ public:
      * the constructor will immediately attempt to establish cnx to
      * the server/proxy.
      *
-     * "addr/port": of the final web server, "socks5_addr/port": of
-     * the socks5 proxy, "ssp_addr/port": of the ssp proxy.
+     * "host/port": of the final web server, "socks5_addr/port": of
+     * the socks5 proxy, "ssp_host/port": of the ssp proxy.
      *
-     * if the final server addr is specified, then ssp addr must not,
+     * if the final server host is specified, then ssp host must not,
      * and vice versa. (where "specified" means "non-zero.")
+     *
+     * if we are connecting through a socks5 proxy, then we will NOT
+     * resolve the host/ssp_host here, and will let the socks5 proxy
+     * resolve (this is similar to what chrome does)
+     *
      */
     Connection(struct event_base *evbase,
-               const in_addr_t& addr, const in_port_t& port,
+               const char* host, const in_port_t& port,
                const in_addr_t& socks5_addr, const in_port_t& socks5_port,
-               const in_addr_t& ssp_addr, const in_port_t& ssp_port,
+               const char* ssp_host, const in_port_t& ssp_port,
                ConnectionErrorCb error_cb, ConnectionEOFCb eof_cb,
                PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
                PushedBodyDoneCb pushed_body_done_cb,
@@ -247,12 +252,12 @@ private:
         DESTROYED,
     } state_;
 
-    const in_addr_t addr_;
+    const std::string host_;
     const in_port_t port_;
 
     const in_addr_t socks5_addr_;
     const in_port_t socks5_port_;
-    const in_addr_t ssp_addr_;
+    const std::string ssp_host_;
     const in_port_t ssp_port_;
 
     ConnectionErrorCb cnx_error_cb_;

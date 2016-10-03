@@ -49,9 +49,9 @@ namespace http
 
 Connection::Connection(
     struct event_base *evbase,
-    const in_addr_t& addr, const in_port_t& port,
+    const char* host, const in_port_t& port,
     const in_addr_t& socks5_addr, const in_port_t& socks5_port,
-    const in_addr_t& ssp_addr, const in_port_t& ssp_port,
+    const char* ssp_host, const in_port_t& ssp_port,
     ConnectionErrorCb error_cb, ConnectionEOFCb eof_cb,
     PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
     PushedBodyDoneCb pushed_body_done_cb,
@@ -59,9 +59,9 @@ Connection::Connection(
     )
     : use_spdy_(use_spdy), evbase_(evbase)
     , state_(State::DISCONNECTED)
-    , addr_(addr), port_(port)
+    , host_(host ? host : ""), port_(port)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
-    , ssp_addr_(ssp_addr), ssp_port_(ssp_port)
+    , ssp_host_(ssp_host ? ssp_host : ""), ssp_port_(ssp_port)
     , cnx_error_cb_(error_cb), cnx_eof_cb_(eof_cb)
     , notify_pushed_meta_(pushed_meta_cb)
     , notify_pushed_body_data_(pushed_body_data_cb)
@@ -77,11 +77,15 @@ Connection::Connection(
      * that. otherwise, i.e., no ssp host is specified, then we need
      * to the final site's address.
      */
-    if (ssp_addr_) {
-        CHECK(!addr_);
+    if (!ssp_host_.empty()) {
+        logself(FATAL) << "not yet implemented/tested";
+        CHECK(host_.empty());
     } else {
-        CHECK(addr_);
+        CHECK(!host_.empty());
     }
+
+    vlogself(2) << "host [" << host_ << "]:" << port_
+                << " ssp host [" << ssp_host_ << "]:" << ssp_port_;
 
     if (use_spdy_) {
         /* it's ok to set up the session now even though socket is not
@@ -670,15 +674,16 @@ Connection::onConnected(StreamChannel* ch) noexcept
         CHECK_EQ(transport_.get(), ch);
         state_ = State::PROXY_CONNECTED;
 
-        const in_addr_t& addr = (ssp_addr_) ? ssp_addr_ : addr_;
-        const uint16_t port = (ssp_addr_) ? ssp_port_ : port_;
-        CHECK_NE(addr, 0);
+        const auto& host = (!ssp_host_.empty()) ? ssp_host_ : host_;
+        const uint16_t port = (!ssp_host_.empty()) ? ssp_port_ : port_;
+        CHECK(!host.empty());
         CHECK_NE(port, 0);
 
-        vlogself(2) << "now tell proxy to connect to target";
+        vlogself(2) << "now tell proxy to connect to ["
+                    << host << "]:" << port;
         CHECK(!socks_connector_);
         socks_connector_.reset(
-            new Socks5Connector(std::move(transport_), addr, port));
+            new Socks5Connector(std::move(transport_), host.c_str(), port));
         auto rv = socks_connector_->start_connecting(this);
         CHECK(!rv);
         state_ = State::CONNECTING;
@@ -728,11 +733,14 @@ Connection::initiate_connection()
         state_ = State::PROXY_CONNECTING;
     }
     else if (state_ == State::DISCONNECTED) {
-        const in_addr_t addr = (addr_) ? addr_ : ssp_addr_;
+        const auto& host = (!ssp_host_.empty()) ? ssp_host_ : host_;
         const uint16_t port = (port_) ? port_ : ssp_port_;
 
-        CHECK_NE(addr, 0);
+        CHECK(!host.empty());
         CHECK_NE(port, 0);
+
+        const auto addr = common::getaddr(host.c_str());
+        CHECK_NE(addr, 0);
 
         CHECK(!transport_);
         transport_.reset(new TCPChannel(evbase_, addr, port, this));
