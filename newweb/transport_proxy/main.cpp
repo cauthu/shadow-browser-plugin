@@ -48,6 +48,8 @@ int main(int argc, char **argv)
     uint16_t listenport = 0;
     uint16_t torPort = 0;
 
+    uint16_t tproxy_ipcport = common::ports::transport_proxy_ipc;
+
     // have to manually parse command line args because shadow
     // confuses getopt[_long] (or at least it used to the last time i
     // tried it)
@@ -71,6 +73,9 @@ int main(int argc, char **argv)
             /* will connect to local (i.e., "localhost") tor proxy at
              * this port */
             torPort = boost::lexical_cast<uint16_t>(argv[i+1]);
+        }
+        else if (!strcmp(argv[i], "--tproxyIpcPort")) {
+            tproxy_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
 
@@ -118,12 +123,11 @@ int main(int argc, char **argv)
                       torPort));
 
 #ifdef IN_SHADOW
-        const uint16_t ipcport = common::ports::transport_proxy_ipc;
-        VLOG(2) << "ipc server listens on " << ipcport;
+        LOG(INFO) << "ipc server listens on " << tproxy_ipcport;
         tcpServerForIPC.reset(
             new myio::TCPServer(
                 evbase.get(), common::getaddr("localhost"),
-                ipcport, nullptr));
+                tproxy_ipcport, nullptr));
         ipcserver.reset(
             new IPCServer(
                 evbase.get(), std::move(tcpServerForIPC), std::move(csp)));

@@ -168,7 +168,11 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
 
     state_ = State::DONE_RESET_RENDERER;
 
-    _tproxy_establish_tunnel();
+    if (use_tproxy_) {
+        _tproxy_maybe_establish_tunnel();
+    } else {
+        _renderer_load_page();
+    }
 }
 
 void
@@ -176,7 +180,12 @@ Driver::_renderer_load_page()
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(state_, State::DONE_SET_TPROXY_AUTO_START);
+    if (use_tproxy_) {
+        CHECK_EQ(state_, State::DONE_SET_TPROXY_AUTO_START);
+    } else {
+        CHECK_EQ(state_, State::DONE_RESET_RENDERER);
+    }
+
     state_ = State::LOADING_PAGE;
 
     {

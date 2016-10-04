@@ -59,7 +59,7 @@ private:
     void _tproxy_on_ipc_ch_status(myipc::GenericIpcChannel*,
                                   myipc::GenericIpcChannel::ChannelStatus);
 
-    void _tproxy_establish_tunnel();
+    void _tproxy_maybe_establish_tunnel();
     void _tproxy_on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
                                    uint16_t len, const uint8_t* buf);
 
@@ -102,6 +102,7 @@ private:
     myipc::GenericIpcChannel::UniquePtr renderer_ipc_ch_;
     myipc::GenericIpcChannel::UniquePtr tproxy_ipc_ch_;
 
+    bool use_tproxy_;
     bool tproxy_ipc_ch_ready_;
 
     enum class State

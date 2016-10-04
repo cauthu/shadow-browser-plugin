@@ -49,11 +49,11 @@ namespace ports
 
 const uint16_t client_side_transport_proxy = 1080;
 const uint16_t server_side_transport_proxy = 2081;
-const uint16_t transport_proxy_ipc = 9010;
 
-const uint16_t io_service_ipc = 7000;
 
-const uint16_t default_renderer_ipc = 6000;
+const uint16_t io_service_ipc = 6000;
+const uint16_t default_renderer_ipc = 7000;
+const uint16_t transport_proxy_ipc = 8000;
 
 } // namespace ports
 

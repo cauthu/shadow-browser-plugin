@@ -55,13 +55,21 @@ Driver::_tproxy_on_ipc_msg(GenericIpcChannel*, uint8_t,
 }
 
 void
-Driver::_tproxy_establish_tunnel()
+Driver::_tproxy_maybe_establish_tunnel()
 {
     vlogself(2) << "begin";
 
-    CHECK(tproxy_ipc_ch_ready_);
+    if (!tproxy_ipc_ch_ready_) {
+        vlogself(2) << "tproxy ipc channel not ready";
+        return;
+    }
+    if ((state_ != State::DONE_RESET_RENDERER)) {
+        vlogself(2) << "not yet done resetting renderer";
+        return;
+    }
 
     CHECK_EQ(state_, State::DONE_RESET_RENDERER);
+    CHECK(tproxy_ipc_ch_ready_);
     state_ = State::ESTABLISH_TPROXY_TUNNEL;
 
     {

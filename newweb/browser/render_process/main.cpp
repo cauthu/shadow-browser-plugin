@@ -68,10 +68,15 @@ int main(int argc, char **argv)
 
     common::init_easylogging();
 
-    uint16_t renderer_ipcport = 0;
+    uint16_t ioservice_ipcport = common::ports::io_service_ipc;
+    uint16_t renderer_ipcport = common::ports::default_renderer_ipc;
+
     for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--ipcListenPort")) {
+        if (!strcmp(argv[i], "--rendererIpcPort")) {
             renderer_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
+        }
+        else if (!strcmp(argv[i], "--ioserviceIpcPort")) {
+            ioservice_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
 
@@ -89,11 +94,12 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
 
-    const uint16_t ioservice_port = common::ports::io_service_ipc;
+    LOG(INFO) << "use ioservice on ipc port " << ioservice_ipcport;
+    LOG(INFO) << "renderer ipc server listens on " << renderer_ipcport;
 
     myio::TCPChannel::UniquePtr tcpch1(
         new myio::TCPChannel(evbase.get(), common::getaddr("localhost"),
-                             ioservice_port, nullptr));
+                             ioservice_ipcport, nullptr));
 
     io_service_ipc_client.reset(
         new IOServiceIPCClient(

@@ -21,9 +21,16 @@ int main(int argc, char **argv)
     common::init_easylogging();
 
     uint16_t renderer_ipcport = common::ports::default_renderer_ipc;
+
+    /* by default we don't control tproxy */
+    uint16_t tproxy_ipcport = 0;
+
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--rendererIpcPort")) {
             renderer_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
+        }
+        else if (!strcmp(argv[i], "--tproxyIpcPort")) {
+            tproxy_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
 
@@ -39,8 +46,7 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
     Driver::UniquePtr driver(
-        new Driver(evbase.get(), common::ports::transport_proxy_ipc,
-                   renderer_ipcport));
+        new Driver(evbase.get(), tproxy_ipcport, renderer_ipcport));
 
     /* ***************************************** */
 

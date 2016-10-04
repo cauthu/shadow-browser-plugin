@@ -30,21 +30,24 @@ Driver::Driver(struct event_base* evbase,
                const uint16_t tproxy_ipc_port,
                const uint16_t renderer_ipc_port)
     : evbase_(evbase)
+    , use_tproxy_(tproxy_ipc_port > 0)
     , tproxy_ipc_ch_ready_(false)
     , state_(State::INITIAL)
 {
-    vlogself(2) << "connect to tproxy ipc port: " << tproxy_ipc_port;
-    myio::TCPChannel::UniquePtr tcpch1(
-        new myio::TCPChannel(evbase_, common::getaddr("localhost"),
-                             tproxy_ipc_port, nullptr));
-    tproxy_ipc_ch_.reset(
-        new GenericIpcChannel(
-            evbase_,
-            std::move(tcpch1),
-            boost::bind(&Driver::_tproxy_on_ipc_msg, this, _1, _2, _3, _4),
-            boost::bind(&Driver::_tproxy_on_ipc_ch_status, this, _1, _2)));
+    if (use_tproxy_) {
+        logself(INFO) << "connect to tproxy ipc port: " << tproxy_ipc_port;
+        myio::TCPChannel::UniquePtr tcpch1(
+            new myio::TCPChannel(evbase_, common::getaddr("localhost"),
+                                 tproxy_ipc_port, nullptr));
+        tproxy_ipc_ch_.reset(
+            new GenericIpcChannel(
+                evbase_,
+                std::move(tcpch1),
+                boost::bind(&Driver::_tproxy_on_ipc_msg, this, _1, _2, _3, _4),
+                boost::bind(&Driver::_tproxy_on_ipc_ch_status, this, _1, _2)));
+    }
 
-    vlogself(2) << "connect to renderer ipc port: " << renderer_ipc_port;
+    logself(INFO) << "connect to renderer ipc port: " << renderer_ipc_port;
     myio::TCPChannel::UniquePtr tcpch2(
         new myio::TCPChannel(evbase_, common::getaddr("localhost"),
                              renderer_ipc_port, nullptr));
@@ -84,6 +87,7 @@ Driver::_tproxy_on_ipc_ch_status(GenericIpcChannel*,
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
         tproxy_ipc_ch_ready_ = true;
+        _tproxy_maybe_establish_tunnel();
         break;
     }
 
