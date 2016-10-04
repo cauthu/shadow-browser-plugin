@@ -65,8 +65,11 @@ Resource::_load_next_chain_entry()
     vlogself(2) << "starting loading request chain entry: "
                 << current_req_chain_idx_;
 
-    webengine_->request_resource(
+    webengine_->ioservice_request_resource(
         res_info_.req_chain[current_req_chain_idx_], this);
+
+    webengine_->renderer_notify_RequestWillBeSent(
+        instNum(), current_req_chain_idx_);
 }
 
 bool
@@ -119,6 +122,9 @@ Resource::finish(bool success)
     vlogself(2) << "begin, success= " << success;
 
     CHECK_EQ(load_state_, LoadState::LOADING);
+
+    webengine_->renderer_notify_RequestFinished(
+        instNum(), current_req_chain_idx_, success);
 
     if (success) {
         CHECK_EQ(current_req_body_bytes_recv_,

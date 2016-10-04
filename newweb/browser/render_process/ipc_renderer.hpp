@@ -22,6 +22,11 @@ public:
                        myio::StreamServer::UniquePtr);
 
     void send_PageLoaded(const uint64_t ttfb_ms);
+    void send_RequestWillBeSent(const uint32_t& resInstNum,
+                                const uint32_t& reqChainIdx);
+    void send_RequestFinished(const uint32_t& resInstNum,
+                              const uint32_t& reqChainIdx,
+                              const bool& success);
 
     void set_driver_msg_handler(DriverMsgHandler* handler)
     {

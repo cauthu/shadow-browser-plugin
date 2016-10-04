@@ -85,6 +85,10 @@ private:
                                                           uint16_t, const uint8_t* buf);
 
     void _renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedMsg*);
+    void _renderer_handle_RequestWillBeSent(
+        const myipc::renderer::messages::RequestWillBeSentMsg* msg);
+    void _renderer_handle_RequestFinished(
+        const myipc::renderer::messages::RequestFinishedMsg* msg);
 
     //////////
 

@@ -192,8 +192,8 @@ Webengine::_reset_loading_state()
 }
 
 void
-Webengine::request_resource(const PageModel::RequestInfo& req_info,
-                            Resource* res)
+Webengine::ioservice_request_resource(const PageModel::RequestInfo& req_info,
+                                      Resource* res)
 {
     const auto req_id = MakeRequestID();
     ioservice_ipcclient_->request_resource(
@@ -206,6 +206,28 @@ Webengine::request_resource(const PageModel::RequestInfo& req_info,
         req_info.resp_body_size);
     const auto ret = pending_requests_.insert(make_pair(req_id, res));
     CHECK(ret.second);
+}
+
+void
+Webengine::renderer_notify_RequestWillBeSent(const uint32_t& resInstNum,
+                                           const uint32_t& reqChainIdx)
+{
+    if (!renderer_ipcserver_) {
+        return;
+    }
+    renderer_ipcserver_->send_RequestWillBeSent(resInstNum, reqChainIdx);
+}
+
+void
+Webengine::renderer_notify_RequestFinished(const uint32_t& resInstNum,
+                                         const uint32_t& reqChainIdx,
+                                         const bool& success)
+{
+    if (!renderer_ipcserver_) {
+        return;
+    }
+    renderer_ipcserver_->send_RequestFinished(
+        resInstNum, reqChainIdx, success);
 }
 
 void
@@ -307,9 +329,8 @@ Webengine::execute_scope(const uint32_t scope_id)
 {
     VLOG(2) << "begin, scope:" << scope_id << ":";
 
-    CHECK(!inSet(executed_scope_ids_, scope_id));
-
-    executed_scope_ids_.insert(scope_id);
+    const auto ret = executed_scope_ids_.insert(scope_id);
+    CHECK(ret.second) << "scope:" << scope_id << " has already been executed";
 
     std::vector<string> statements;
     const auto found =

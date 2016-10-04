@@ -55,11 +55,19 @@ public:
                        IPCServer*
         );
 
+    /* ------- send messages to io service --------- */
     /* will send a request to the io process, and will notify the
      * Resource response/data
      */
-    void request_resource(const PageModel::RequestInfo& req_info,
-                          Resource* res);
+    void ioservice_request_resource(const PageModel::RequestInfo& req_info,
+                                    Resource* res);
+
+    /* ------- send messages to client of renderer ipc --------- */
+    void renderer_notify_RequestWillBeSent(const uint32_t& resInstNum,
+                                           const uint32_t& reqChainIdx);
+    void renderer_notify_RequestFinished(const uint32_t& resInstNum,
+                                         const uint32_t& reqChainIdx,
+                                         const bool& success);
 
     /* implement ResourceMsgHandler interface */
     virtual void handle_ReceivedResponse(const int& req_id,

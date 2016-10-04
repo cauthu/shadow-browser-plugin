@@ -4,7 +4,12 @@ set(RENDERER_FBS
   reset_resp_msg.fbs.txt
   load_page_msg.fbs.txt
   load_page_resp_msg.fbs.txt
+
+  request_will_be_sent_msg.fbs.txt
+  request_finished_msg.fbs.txt
+
   page_loaded_msg.fbs.txt
+
   )
 
 set(COMBINED_HEADERS_CONTENT "")

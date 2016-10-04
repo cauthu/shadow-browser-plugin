@@ -49,6 +49,7 @@ HTMLDocumentParser::HTMLDocumentParser(const PageModel* page_model,
     , element_loc_idx_(0)
     , is_executing_script_(false)
     , m_endWasDelayed(false)
+    , done_parsing_(false)
     , m_pumpSessionNestingLevel(0)
 {
 
@@ -157,7 +158,7 @@ HTMLDocumentParser::resumeParsingAfterScriptExecution()
     CHECK(!isExecutingScript());
     CHECK(!isWaitingForScripts());
 
-    pump_parser();
+    pumpTokenizerIfPossible();
     endIfDelayed();
 
     vlogself(2) << "done";
@@ -213,7 +214,20 @@ HTMLDocumentParser::executeParsingBlockingScripts()
 }
 
 void
-HTMLDocumentParser::pump_parser()
+HTMLDocumentParser::pumpTokenizerIfPossible()
+{
+    if (done_parsing_) {
+        return;
+    }
+    if (isWaitingForScripts()) {
+        return;
+    }
+
+    pumpTokenizer();
+}
+
+void
+HTMLDocumentParser::pumpTokenizer()
 {
     vlogself(2) << "begin, parsed= " << num_bytes_parsed_
                 << " received= " << num_bytes_received_;

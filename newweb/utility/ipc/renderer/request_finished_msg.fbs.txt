@@ -1,0 +1,17 @@
+
+namespace myipc.renderer.messages;
+
+/* renderer notifies client that a request has finished loading */
+
+table RequestFinishedMsg
+{
+    resInstNum: uint;
+
+    /* 0-based index in the redirect chain */
+    reqChainIdx: uint;
+
+    /* whether the request finished successfully (true) or errored (false) */
+    success: bool;
+}
+
+root_type RequestFinishedMsg;

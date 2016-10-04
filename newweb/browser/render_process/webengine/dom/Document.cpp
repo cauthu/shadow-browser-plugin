@@ -290,7 +290,7 @@ Document::dataReceived(Resource* resource, size_t length)
     vlogself(2) << "pump the parser";
 
     parser_->appendBytes(length);
-    parser_->pump_parser();
+    parser_->pumpTokenizerIfPossible();
 
     vlogself(2) << "done";
 }

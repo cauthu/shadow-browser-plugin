@@ -8,5 +8,10 @@ enum type:ubyte
     ResetResp,
     LoadPage,
     LoadPageResp,
+
+    RequestWillBeSent,
+    RequestFinished,
+
     PageLoaded,
+
 }

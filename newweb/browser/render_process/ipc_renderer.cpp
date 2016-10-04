@@ -76,11 +76,38 @@ void
 IPCServer::send_PageLoaded(const uint64_t ttfb_ms)
 {
     {
-        // send the response for the call
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(PageLoaded, bufbuilder);
 
         msgbuilder.add_ttfb_ms(ttfb_ms);
+    }
+}
+
+void
+IPCServer::send_RequestWillBeSent(const uint32_t& resInstNum,
+                                  const uint32_t& reqChainIdx)
+{
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestWillBeSent, bufbuilder);
+
+        msgbuilder.add_resInstNum(resInstNum);
+        msgbuilder.add_reqChainIdx(reqChainIdx);
+    }
+}
+
+void
+IPCServer::send_RequestFinished(const uint32_t& resInstNum,
+                                const uint32_t& reqChainIdx,
+                                const bool& success)
+{
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(RequestFinished, bufbuilder);
+
+        msgbuilder.add_resInstNum(resInstNum);
+        msgbuilder.add_reqChainIdx(reqChainIdx);
+        msgbuilder.add_success(success);
     }
 }
 

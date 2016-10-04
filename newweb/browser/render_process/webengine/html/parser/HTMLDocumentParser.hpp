@@ -36,7 +36,8 @@ public:
                                 Webengine*,
                                 ResourceFetcher*);
 
-    void pump_parser();
+    void pumpTokenizer();
+    void pumpTokenizerIfPossible();
 
     /* more html bytes are received from network */
     void appendBytes(size_t len);
@@ -119,6 +120,7 @@ protected:
 
     bool is_executing_script_;
     bool m_endWasDelayed;
+    bool done_parsing_;
 
     unsigned m_pumpSessionNestingLevel;
 

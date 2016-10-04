@@ -62,12 +62,56 @@ Driver::_renderer_on_ipc_msg(GenericIpcChannel*, uint8_t type,
 
     switch (type) {
 
+        IPC_MSG_HANDLER(RequestWillBeSent)
+        IPC_MSG_HANDLER(RequestFinished)
         IPC_MSG_HANDLER(PageLoaded)
 
     default:
         logself(FATAL) << "invalid IPC message type " << unsigned(type);
         break;
     }
+}
+
+void
+Driver::_renderer_handle_RequestWillBeSent(
+    const myipc::renderer::messages::RequestWillBeSentMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    // the page might have fired the "load" event already
+    // CHECK_EQ(state_, State::LOADING_PAGE);
+
+    const auto resInstNum = msg->resInstNum();
+    const auto reqChainIdx = msg->reqChainIdx();
+
+    CHECK_GT(resInstNum, 0);
+    CHECK_GE(reqChainIdx, 0);
+
+    LOG(INFO) << "request " << resInstNum << ":" << reqChainIdx;
+
+    vlogself(2) << "done";
+}
+
+void
+Driver::_renderer_handle_RequestFinished(
+    const myipc::renderer::messages::RequestFinishedMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    // the page might have fired the "load" event already
+    // CHECK_EQ(state_, State::LOADING_PAGE);
+
+    const auto resInstNum = msg->resInstNum();
+    const auto reqChainIdx = msg->reqChainIdx();
+    const auto success = msg->success();
+
+    CHECK_GT(resInstNum, 0);
+    CHECK_GE(reqChainIdx, 0);
+
+    LOG(INFO) << "request " << resInstNum << ":" << reqChainIdx
+              << " finished, success= " << success;
+
+    vlogself(2) << "done";
 }
 
 void
