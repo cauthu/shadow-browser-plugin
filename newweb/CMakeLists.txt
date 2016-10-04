@@ -1,7 +1,7 @@
 project(newweb)
 
 ## ensure cmake version
-cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 set(MY_ROOT_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(UTILITY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/utility")
