@@ -116,6 +116,8 @@ ClientSideProxy::set_auto_start_defense_session_on_next_send()
     CHECK_NOTNULL(buflo_ch_.get());
 
     buflo_ch_->set_auto_start_defense_session_on_next_send();
+
+    logself(INFO) << "will start defense on next send";
 }
 
 void

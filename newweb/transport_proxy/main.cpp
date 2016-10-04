@@ -48,6 +48,10 @@ int main(int argc, char **argv)
     uint16_t listenport = 0;
     uint16_t torPort = 0;
 
+    // have to manually parse command line args because shadow
+    // confuses getopt[_long] (or at least it used to the last time i
+    // tried it)
+
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--ssp")) {
             // should be host:port
