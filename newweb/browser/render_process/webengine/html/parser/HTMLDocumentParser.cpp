@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <memory>
+#include <boost/bind.hpp>
 
 #include "HTMLDocumentParser.hpp"
 #include "../HTMLScriptElement.hpp"
@@ -51,6 +52,9 @@ HTMLDocumentParser::HTMLDocumentParser(const PageModel* page_model,
     , m_endWasDelayed(false)
     , done_parsing_(false)
     , m_pumpSessionNestingLevel(0)
+    , timer_to_resume_(
+        new Timer(webengine->evbase(), true,
+                  boost::bind(&HTMLDocumentParser::resumeParsingAfterYield, this, _1)))
 {
 
     CHECK_NOTNULL(document_);
@@ -65,10 +69,23 @@ HTMLDocumentParser::HTMLDocumentParser(const PageModel* page_model,
 void
 HTMLDocumentParser::appendBytes(size_t len)
 {
-    vlogself(2) << "received so far= " << num_bytes_received_
-                << " new bytes= " << len;
+    vlogself(2) << "begin, " << len << " more bytes, total so far= "
+                << num_bytes_received_;
     CHECK(!done_received_);
     num_bytes_received_ += len;
+
+    if (isWaitingForScripts()) {
+        _do_preload_scanning();
+    }
+
+    if (inPumpSession()) {
+        return;
+    }
+
+    pumpTokenizerIfPossible();
+    endIfDelayed();
+
+    vlogself(2) << "done";
 }
 
 void
@@ -214,6 +231,15 @@ HTMLDocumentParser::executeParsingBlockingScripts()
 }
 
 void
+HTMLDocumentParser::resumeParsingAfterYield(Timer*)
+{
+    vlogself(2) << "begin";
+    pumpTokenizerIfPossible();
+    endIfDelayed();
+    vlogself(2) << "done";
+}
+
+void
 HTMLDocumentParser::pumpTokenizerIfPossible()
 {
     if (done_parsing_) {
@@ -229,12 +255,20 @@ HTMLDocumentParser::pumpTokenizerIfPossible()
 void
 HTMLDocumentParser::pumpTokenizer()
 {
-    vlogself(2) << "begin, parsed= " << num_bytes_parsed_
-                << " received= " << num_bytes_received_;
+    vlogself(2) << "begin";
 
     NestingLevelIncrementer session(m_pumpSessionNestingLevel);
 
-    while ((num_bytes_parsed_ < num_bytes_received_)
+    // limit to 10K bytes per parse session
+    const uint32_t limit_this_session = std::min(
+        num_bytes_parsed_ + 10000,
+        num_bytes_received_);
+
+    vlogself(2) << "begin, parsed= " << num_bytes_parsed_
+                << " received= " << num_bytes_received_
+                << " limit_this_session= " << limit_this_session;
+
+    while ((num_bytes_parsed_ < limit_this_session)
            && !hasParserBlockingScript())
     {
         // continue parsing
@@ -243,17 +277,15 @@ HTMLDocumentParser::pumpTokenizer()
 
         if (element_loc_idx_ == element_locations_.size()) {
             // no more elements to parse, so we just consume all the
-            // available bytes ---- real browser has logic to stop
-            // pause parsing, i.e., yield, even if there's more data
-            // available, just to allow other stuff to run
-            num_bytes_parsed_ = num_bytes_received_;
+            // way to the limit_this_session
+            num_bytes_parsed_ = limit_this_session;
         } else {
             // REMEMBER that the location is byte offset, i.e.,
             // 0-based
             const auto num_bytes_needed =
                 (element_locations_[element_loc_idx_].first) + 1;
 
-            if (num_bytes_received_ >= num_bytes_needed) {
+            if (limit_this_session >= num_bytes_needed) {
                 // we can tell the tree builder to add the element to
                 // the dom
                 const auto elemInstNum =
@@ -268,10 +300,11 @@ HTMLDocumentParser::pumpTokenizer()
             } else {
                 // not enough byte to get the next element
                 // yet. nothing to do here
-                num_bytes_parsed_ = num_bytes_received_;
+                num_bytes_parsed_ = limit_this_session;
             }
 
-            vlogself(2) << "new num_bytes_parsed_= " << num_bytes_parsed_;
+            vlogself(2) << "new num_bytes_parsed_= " << num_bytes_parsed_
+                        << " num_bytes_received_= " << num_bytes_received_;
         }
     }
 
@@ -283,6 +316,18 @@ HTMLDocumentParser::pumpTokenizer()
         CHECK(!hasParserBlockingScript());
 
         attemptToEnd();
+    } else if ((num_bytes_parsed_ < num_bytes_received_)
+               && !hasParserBlockingScript())
+    {
+        // not blocked by script, and there's more bytes available
+        // that we're not parsing, that means we've reached the
+        // limit_this_session and should yield
+        CHECK_EQ(num_bytes_parsed_, limit_this_session);
+        CHECK(!timer_to_resume_->is_running());
+
+        vlogself(2) << "Yield parsing";
+        static const uint32_t zero_ms = 0;
+        timer_to_resume_->start(zero_ms);
     }
 
     if (hasParserBlockingScript()) {
@@ -371,6 +416,7 @@ void
 HTMLDocumentParser::end()
 {
     vlogself(2) << "begin";
+    done_parsing_ = true;
     document_->finishedParsing();
     vlogself(2) << "done";
 }
@@ -436,6 +482,9 @@ HTMLDocumentParser::shouldDelayEnd() const
         shoulddelay = true;
     } else if (num_bytes_parsed_ < num_bytes_received_) {
         vlogself(2) << "still more bytes to parse";
+        shoulddelay = true;
+    } else if (timer_to_resume_->is_running()) {
+        vlogself(2) << "being scheuled to resume";
         shoulddelay = true;
     }
 

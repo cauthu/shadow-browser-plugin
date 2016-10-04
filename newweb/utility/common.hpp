@@ -66,7 +66,7 @@ char*
 expandPath(const char* path);
 
 uint64_t
-gettimeofdayMs(struct timeval* t);
+gettimeofdayMs(struct timeval* t=nullptr);
 
 void
 printhex(const char *hdr,

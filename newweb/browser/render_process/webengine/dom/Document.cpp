@@ -53,6 +53,7 @@ Document::Document(struct ::event_base* evbase,
                   boost::bind(&Document::_executeScriptsWaitingForResourcesTimerFired, this, _1)))
     , has_body_element_(false)
     , finished_parsing_(false)
+    , load_start_time_ms_(0)
 {
     CHECK_NOTNULL(evbase_);
 
@@ -74,6 +75,7 @@ Document::load()
 {
     CHECK_EQ(state_, ReadyState::Initial);
     state_ = ReadyState::Loading;
+    load_start_time_ms_ = common::gettimeofdayMs();
     _load_main_resource();
 }
 
@@ -226,7 +228,8 @@ Document::removePendingSheet(Element* element)
 void
 Document::finishedParsing()
 {
-    logself(INFO) << "has finished parsing";
+    const auto elapsed_ms = common::gettimeofdayMs() - load_start_time_ms_;
+    logself(INFO) << "has finished parsing (after " << elapsed_ms << " ms)";
     finished_parsing_ = true;
     fireEventHandlingScopes(EventTypeNames::DOMContentLoaded);
 }

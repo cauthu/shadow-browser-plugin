@@ -8,6 +8,7 @@
 #include <queue>
 
 #include "../../../../../utility/object.hpp"
+#include "../../../../../utility/timer.hpp"
 #include "../../page_model.hpp"
 #include "../../fetch/ResourceFetcher.hpp"
 
@@ -38,6 +39,7 @@ public:
 
     void pumpTokenizer();
     void pumpTokenizerIfPossible();
+    void resumeParsingAfterYield(Timer*);
 
     /* more html bytes are received from network */
     void appendBytes(size_t len);
@@ -125,6 +127,21 @@ protected:
     unsigned m_pumpSessionNestingLevel;
 
     std::queue<HTMLScriptElement*> m_scriptsToExecuteAfterParsing;
+
+    /* webkit's html parser tries to limit a parsing/tokenizing
+     * session to 0.2 seconds (in HTMLParserScheduler). it will
+     * yield---so that other tasks can run---when it has exceeded that
+     * amount
+     *
+     * right now, we don't actually parse/tokenize, so we approximate
+     * using this scheme: 10K bytes takes 0.2 seconds --- note that
+     * our 10K bytes is 10K of compressed html data, which probably
+     * translates to 40-50K of original html bytes (e.g., cnn.com and
+     * nytimes.com index.html yields 4-5x compression ratio with
+     * gzip), and that would probably translate to under 1.0 second to
+     * parse cnn.com
+     */
+    Timer::UniquePtr timer_to_resume_;
 };
 
 } // end namespace blink

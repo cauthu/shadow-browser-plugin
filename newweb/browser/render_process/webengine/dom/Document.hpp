@@ -105,6 +105,8 @@ protected:
     bool has_body_element_;
 
     bool finished_parsing_;
+
+    uint64_t load_start_time_ms_;
 };
 
 } //namespace

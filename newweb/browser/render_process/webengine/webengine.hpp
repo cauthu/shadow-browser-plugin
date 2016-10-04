@@ -84,6 +84,7 @@ public:
     void execute_scope(const uint32_t scope_id);
 
     void checkCompleted();
+    struct ::event_base* evbase() { return evbase_; }
 
 protected:
 
