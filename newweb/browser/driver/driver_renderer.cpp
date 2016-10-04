@@ -93,7 +93,7 @@ Driver::_renderer_handle_RequestWillBeSent(
 
     vlogself(1) << "request " << resInstNum << ":" << reqChainIdx;
 
-    ++this_page_load_info_.totalnumobjects_;
+    ++this_page_load_info_.num_reqs_;
 
     vlogself(2) << "done";
 }
@@ -115,9 +115,11 @@ Driver::_renderer_handle_RequestFinished(
     CHECK_GE(reqChainIdx, 0);
 
     if (!success) {
-        ++this_page_load_info_.totalnumerrorobjects_;
+        ++this_page_load_info_.num_failed_reqs_;
         LOG(WARNING) << "request " << resInstNum << ":" << reqChainIdx
                      << " failed";
+    } else {
+        ++this_page_load_info_.num_succes_reqs_;
     }
 
     vlogself(2) << "done";
@@ -126,8 +128,9 @@ Driver::_renderer_handle_RequestFinished(
 void
 Driver::_reset_this_page_load_info()
 {
-    this_page_load_info_.totalnumerrorobjects_ = 0;
-    this_page_load_info_.totalnumobjects_ = 0;
+    this_page_load_info_.num_failed_reqs_ = 0;
+    this_page_load_info_.num_succes_reqs_ = 0;
+    this_page_load_info_.num_reqs_ = 0;
     this_page_load_info_.load_start_timepoint_ = 0;
     this_page_load_info_.load_done_timepoint_ = 0;
     this_page_load_info_.model_path_.clear();
@@ -151,8 +154,9 @@ Driver::_report_result(const PageLoadStatus& pageloadstatus,
         << " plt= " << (pageloadstatus == PageLoadStatus::OK ? plt : 0)
         << " url= [" << this_page_load_info_.model_path_ << "]"
         << " ttfb= " << (pageloadstatus == PageLoadStatus::OK ? ttfb_ms : 0)
-        << " numobjects= " << this_page_load_info_.totalnumobjects_
-        << " numerrorobjects= " << this_page_load_info_.totalnumerrorobjects_
+        << " numReqs= " << this_page_load_info_.num_reqs_
+        << " numSuccessReqs= " << this_page_load_info_.num_succes_reqs_
+        << " numFailedReqs= " << this_page_load_info_.num_failed_reqs_
         ;
 }
 

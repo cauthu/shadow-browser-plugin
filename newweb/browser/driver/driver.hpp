@@ -134,11 +134,12 @@ private:
 
     struct OnePageLoadInfo
     {
+        std::string model_path_;
         uint64_t load_start_timepoint_;
         uint64_t load_done_timepoint_;
-        uint32_t totalnumobjects_;
-        uint32_t totalnumerrorobjects_;
-        std::string model_path_;
+        uint32_t num_reqs_;
+        uint32_t num_succes_reqs_;
+        uint32_t num_failed_reqs_;
     } this_page_load_info_;
 
     void _report_result(const PageLoadStatus&,
