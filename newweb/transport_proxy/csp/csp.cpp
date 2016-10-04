@@ -151,9 +151,19 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
 
         vlogself(2) << "now tell proxy to connect to peer";
         CHECK(!socks_connector_);
+
+        /* due to issue
+         * https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/3/
+         * we do local lookup of the ssp's ip address here, even we'd
+         * prefer to give Socks5Connector() the hostname, which will
+         * let tor exit do resolution
+         */
+        const auto peer_addr = common::getaddr(peer_host_.c_str());
+        CHECK_NE(peer_addr, 0);
+
         socks_connector_.reset(
             new Socks5Connector(std::move(peer_channel_),
-                                peer_host_.c_str(), peer_port_));
+                                peer_addr, peer_port_));
         auto rv = socks_connector_->start_connecting(this);
         CHECK(!rv);
         state_ = State::CONNECTING;

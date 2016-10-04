@@ -51,6 +51,11 @@ int main(int argc, char **argv)
     for (int i = 0; i < argc; ++i) {
         if (!strcmp(argv[i], "--ssp")) {
             // should be host:port
+            /* NOTE that due to issue
+             * https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/3/
+             * the csp will do local lookup of the ssp's ip address
+             * and give that to Tor proxy
+             */
             std::string ssp_host_port = argv[i+1];
             const auto colon_pos = ssp_host_port.find(':');
             CHECK_GT(colon_pos, 0);
@@ -59,6 +64,8 @@ int main(int argc, char **argv)
         } else if (!strcmp(argv[i], "--port")) {
             listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
         } else if (!strcmp(argv[i], "--torPort")) {
+            /* will connect to local (i.e., "localhost") tor proxy at
+             * this port */
             torPort = boost::lexical_cast<uint16_t>(argv[i+1]);
         }
     }
