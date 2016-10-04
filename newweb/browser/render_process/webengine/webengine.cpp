@@ -172,7 +172,7 @@ Webengine::handle_LoadPage(const char* model_fpath)
 
     document_->load();
 
-    start_load_time_ms_ = common::gettimeofdayMs(nullptr);
+    start_load_time_ms_ = common::gettimeofdayMs();
     state_ = State::PAGE_LOADING;
 }
 

@@ -93,7 +93,7 @@ Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
     CHECK_EQ(state_, State::ESTABLISH_TPROXY_TUNNEL);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "command timed out";
+        logself(FATAL) << "timed out establishing tunnel";
     }
 
     auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);

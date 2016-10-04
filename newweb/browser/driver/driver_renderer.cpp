@@ -1,6 +1,7 @@
 
 #include <boost/bind.hpp>
 
+#include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
 #include "../../utility/folly/ScopeGuard.h"
 #include "utility/ipc/renderer/gen/combined_headers"
@@ -15,6 +16,9 @@ using renderermsgs::type;
 
 static const uint8_t s_resp_timeout_secs = 5;
 
+const char* Driver::PageLoadStatusStr[] = {
+    "OK", "FAILED", "TIMEDOUT"
+};
 
 
 #define _LOG_PREFIX(inst) 
@@ -87,7 +91,9 @@ Driver::_renderer_handle_RequestWillBeSent(
     CHECK_GT(resInstNum, 0);
     CHECK_GE(reqChainIdx, 0);
 
-    LOG(INFO) << "request " << resInstNum << ":" << reqChainIdx;
+    vlogself(1) << "request " << resInstNum << ":" << reqChainIdx;
+
+    ++this_page_load_info_.totalnumobjects_;
 
     vlogself(2) << "done";
 }
@@ -108,10 +114,46 @@ Driver::_renderer_handle_RequestFinished(
     CHECK_GT(resInstNum, 0);
     CHECK_GE(reqChainIdx, 0);
 
-    LOG(INFO) << "request " << resInstNum << ":" << reqChainIdx
-              << " finished, success= " << success;
+    if (!success) {
+        ++this_page_load_info_.totalnumerrorobjects_;
+        LOG(WARNING) << "request " << resInstNum << ":" << reqChainIdx
+                     << " failed";
+    }
 
     vlogself(2) << "done";
+}
+
+void
+Driver::_reset_this_page_load_info()
+{
+    this_page_load_info_.totalnumerrorobjects_ = 0;
+    this_page_load_info_.totalnumobjects_ = 0;
+    this_page_load_info_.load_start_timepoint_ = 0;
+    this_page_load_info_.load_done_timepoint_ = 0;
+    this_page_load_info_.model_path_.clear();
+}
+
+void
+Driver::_report_result(const PageLoadStatus& pageloadstatus,
+                       const uint32_t& ttfb_ms)
+{
+    CHECK_GE(pageloadstatus, 0);
+    CHECK_LT(pageloadstatus, (ARRAY_LEN(PageLoadStatusStr)));
+    const char* status_str = PageLoadStatusStr[pageloadstatus];
+
+    const auto plt = this_page_load_info_.load_done_timepoint_ - this_page_load_info_.load_start_timepoint_;
+
+    LOG(INFO)
+        << "loadnum= " << loadnum_
+        << ", vanilla: "
+        << status_str
+        << ": start= " << this_page_load_info_.load_start_timepoint_
+        << " plt= " << (pageloadstatus == PageLoadStatus::OK ? plt : 0)
+        << " url= [" << this_page_load_info_.model_path_ << "]"
+        << " ttfb= " << (pageloadstatus == PageLoadStatus::OK ? ttfb_ms : 0)
+        << " numobjects= " << this_page_load_info_.totalnumobjects_
+        << " numerrorobjects= " << this_page_load_info_.totalnumerrorobjects_
+        ;
 }
 
 void
@@ -123,14 +165,16 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     // page has loaded
 
-    LOG(INFO) << "page loaded. TTFB= " << msg->ttfb_ms() << " ms";
+    this_page_load_info_.load_done_timepoint_ = common::gettimeofdayMs();
 
-    // TODO: inspect the success/failure bool, and do logging
+    _report_result(PageLoadStatus::OK, msg->ttfb_ms());
 
     // now, start the think time timer
     auto think_time_ms = 120*1000;
 
     state_ = State::THINKING;
+
+    _reset_this_page_load_info();
 
     think_time_timer_->start(think_time_ms);
 
@@ -187,10 +231,18 @@ Driver::_renderer_load_page()
     }
 
     state_ = State::LOADING_PAGE;
+    this_page_load_info_.load_start_timepoint_ = common::gettimeofdayMs();
+    ++loadnum_;
+    if (loadnum_ % 2) {
+        this_page_load_info_.model_path_ = "/home/me/cnn_page_model.json";
+    } else {
+        this_page_load_info_.model_path_ = "/home/me/nytimes_page_model.json";
+    }
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
-        auto model_fpath = bufbuilder.CreateString("/home/me/page_model.json");
+        const auto& model_path = this_page_load_info_.model_path_;
+        auto model_fpath = bufbuilder.CreateString(model_path);
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             LoadPage, bufbuilder,

@@ -122,6 +122,28 @@ private:
     } state_;
 
     Timer::UniquePtr think_time_timer_;
+
+    enum PageLoadStatus {
+        OK = 0,
+        FAILED,
+        TIMEDOUT
+    };
+    static const char* PageLoadStatusStr[];
+
+    uint32_t loadnum_;
+
+    struct OnePageLoadInfo
+    {
+        uint64_t load_start_timepoint_;
+        uint64_t load_done_timepoint_;
+        uint32_t totalnumobjects_;
+        uint32_t totalnumerrorobjects_;
+        std::string model_path_;
+    } this_page_load_info_;
+
+    void _report_result(const PageLoadStatus&,
+                        const uint32_t&);
+    void _reset_this_page_load_info();
 };
 
 #endif /* end driver_hpp */

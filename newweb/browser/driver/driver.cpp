@@ -33,7 +33,11 @@ Driver::Driver(struct event_base* evbase,
     , use_tproxy_(tproxy_ipc_port > 0)
     , tproxy_ipc_ch_ready_(false)
     , state_(State::INITIAL)
+    , loadnum_(0)
 {
+
+    _reset_this_page_load_info();
+
     if (use_tproxy_) {
         logself(INFO) << "connect to tproxy ipc port: " << tproxy_ipc_port;
         myio::TCPChannel::UniquePtr tcpch1(
