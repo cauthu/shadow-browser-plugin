@@ -200,16 +200,22 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     // the write event has to be enabled only when we have data to
     // write
 
-    // we should be able to send our 2-byte cell size now, to avoid
-    // having to use a new State enum value and set up an EV_WRITE
-    // event, etc.
-
-    const uint16_t cs = htons(cell_size_);
-    auto rv = write(fd_, (uint8_t*)&cs, sizeof cs);
-    CHECK_EQ(rv, sizeof cs);
+    auto rv = 0;
+    if (is_client_side_) {
+        // client cand send hello (our cell size) now
+        //
+        // server first waits to read hello from client; otherwise our
+        // data might arrive right behind the socks5 reponse, which
+        // can confuse our csp when it tells the tcp channel to
+        // release the fd (see issue #4
+        // https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/4/)
+        const uint16_t cs = htons(cell_size_);
+        rv = write(fd_, (uint8_t*)&cs, sizeof cs);
+        CHECK_EQ(rv, sizeof cs);
+    }
 
     struct timeval timeout;
-    timeout.tv_sec = 4;
+    timeout.tv_sec = 5;
     timeout.tv_usec = 0;
     // set up a one-time event to read peer's cell size, and we will
     // then enable the regular read event
@@ -1067,6 +1073,13 @@ BufloMuxChannelImplSpdy::_on_read_peer_cell_size(short what)
         vlogself(2) << "peer using cell size: " << peer_cell_size_;
 
         peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
+
+        if (!is_client_side_) {
+            // server-side can now send our cell size
+            const uint16_t cs = htons(cell_size_);
+            rv = write(fd_, (uint8_t*)&cs, sizeof cs);
+            CHECK_EQ(rv, sizeof cs);
+        }
 
         // now we can enable the regular read event
         rv = event_add(socket_read_ev_.get(), nullptr);
