@@ -151,7 +151,7 @@ ClientHandler::_read_socks5_greeting(size_t num_avail_bytes)
         // how many authentication methods?
         const uint8_t nummethods = buf[1];
 
-        vlogself(2) << "num auth methods client supports: " << nummethods;
+        vlogself(2) << "num auth methods client supports: " << unsigned(nummethods);
 
         const auto total_greeting_size = 2 + nummethods;
         CHECK_EQ(num_avail_bytes, total_greeting_size);
