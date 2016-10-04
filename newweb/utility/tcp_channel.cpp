@@ -197,7 +197,11 @@ TCPChannel::is_closed() const
 int
 TCPChannel::release_fd()
 {
-    CHECK_EQ(evbuffer_get_length(input_evb_.get()), 0);
+    // if there's still data in the input buffer that the user has not
+    // read, then it's a bug
+    const auto remaining_input_amt = evbuffer_get_length(input_evb_.get());
+    CHECK_EQ(remaining_input_amt, 0) << "there are still " << remaining_input_amt
+                                     << " bytes in input buffer";
 
     auto ret = fd_;
     fd_ = -1;
