@@ -1,6 +1,7 @@
 
 
 #include <event2/event.h>
+#include <algorithm>
 
 #include "tcp_channel.hpp"
 #include "easylogging++.h"
@@ -200,8 +201,19 @@ TCPChannel::release_fd()
     // if there's still data in the input buffer that the user has not
     // read, then it's a bug
     const auto remaining_input_amt = evbuffer_get_length(input_evb_.get());
-    CHECK_EQ(remaining_input_amt, 0) << "there are still " << remaining_input_amt
-                                     << " bytes in input buffer";
+    if (remaining_input_amt) {
+        const auto amnt_to_log = std::min(remaining_input_amt, static_cast<unsigned long>(10));
+        auto bytes = evbuffer_pullup(input_evb_.get(), amnt_to_log);
+        CHECK_NOTNULL(bytes);
+        // it takes 2 hex chars to represent one byte
+        char *hex = (char*)calloc(1, (amnt_to_log*2) + 1);
+        CHECK_NOTNULL(hex);
+        common::to_hex(bytes, amnt_to_log, hex);
+        logself(FATAL) << "there are still " << remaining_input_amt
+                       << " bytes in input buffer; here is hex of first "
+                       << amnt_to_log << " bytes: [" << hex << "]";
+        free(hex);
+    }
 
     auto ret = fd_;
     fd_ = -1;
