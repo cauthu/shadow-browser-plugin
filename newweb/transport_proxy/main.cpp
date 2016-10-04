@@ -85,7 +85,8 @@ int main(int argc, char **argv)
                      : common::ports::server_side_transport_proxy;
     }
 
-    VLOG(2) << "listen port " << listenport;
+    LOG(INFO) << (is_client ? "client-" : "server-")
+              << "side proxy, listening on port " << listenport;
 
     /* ***************************************** */
 
