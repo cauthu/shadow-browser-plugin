@@ -29,6 +29,48 @@ static IOServiceIPCClient::UniquePtr io_service_ipc_client;
 static IPCServer::UniquePtr ipcserver;
 static blink::Webengine::UniquePtr webengine;
 
+
+
+using std::unique_ptr;
+using std::vector;
+using std::string;
+using std::pair;
+
+struct MyConfig
+{
+    MyConfig()
+        : renderer_ipcport(common::ports::default_renderer_ipc)
+        , ioservice_ipcport(common::ports::io_service_ipc)
+    {
+    }
+
+    uint16_t renderer_ipcport;
+    uint16_t ioservice_ipcport;
+};
+
+static void
+set_my_config(MyConfig& conf,
+              const vector<pair<string, string> >& name_value_pairs)
+{
+    for (auto nv_pair : name_value_pairs) {
+        const auto& name = nv_pair.first;
+        const auto& value = nv_pair.second;
+
+        if (name == "renderer-ipc-port") {
+            conf.renderer_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "ioservice-ipc-port") {
+            conf.ioservice_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else {
+            // ignore other args
+        }
+    }
+}
+
+
 INITIALIZE_EASYLOGGINGPP
 
 static void
@@ -65,24 +107,30 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
 int main(int argc, char **argv)
 {
     common::init_common();
-
     common::init_easylogging();
 
-    uint16_t ioservice_ipcport = common::ports::io_service_ipc;
-    uint16_t renderer_ipcport = common::ports::default_renderer_ipc;
+    MyConfig conf;
 
-    for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--rendererIpcPort")) {
-            renderer_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
-        }
-        else if (!strcmp(argv[i], "--ioserviceIpcPort")) {
-            ioservice_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
-        }
+    bool found_conf_name = false;
+    string found_conf_value;
+    vector<pair<string, string> > name_value_pairs;
+    auto rv = common::get_cmd_line_name_value_pairs(argc, (const char**)argv,
+                                                  found_conf_name, found_conf_value,
+                                                  name_value_pairs);
+    CHECK(rv == 0);
+
+    if (found_conf_name) {
+        name_value_pairs.clear();
+        LOG(INFO) << "configuring using config file. other command-line options are ignored.";
+        rv = common::get_config_name_value_pairs(found_conf_value.c_str(),
+                                                 name_value_pairs);
+        CHECK(rv == 0);
     }
 
+    set_my_config(conf, name_value_pairs);
 
-
-    CHECK_GT(renderer_ipcport, 0) << "must specify a positive port to listen on to provide renderer ipc service";
+    CHECK_GT(conf.renderer_ipcport, 0)
+        << "must specify a positive port to listen on to provide renderer ipc service";
 
     START_EASYLOGGINGPP(argc, argv);
 
@@ -94,18 +142,18 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
 
-    LOG(INFO) << "use ioservice on ipc port " << ioservice_ipcport;
-    LOG(INFO) << "renderer ipc server listens on " << renderer_ipcport;
+    LOG(INFO) << "use ioservice on ipc port " << conf.ioservice_ipcport;
+    LOG(INFO) << "renderer ipc server listens on " << conf.renderer_ipcport;
 
     myio::TCPChannel::UniquePtr tcpch1(
         new myio::TCPChannel(evbase.get(), common::getaddr("localhost"),
-                             ioservice_ipcport, nullptr));
+                             conf.ioservice_ipcport, nullptr));
 
     io_service_ipc_client.reset(
         new IOServiceIPCClient(
             evbase.get(), std::move(tcpch1),
             boost::bind(s_on_io_service_ipc_client_status,
-                        _2, evbase.get(), renderer_ipcport)));
+                        _2, evbase.get(), conf.renderer_ipcport)));
 
     /* ***************************************** */
 

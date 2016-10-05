@@ -12,40 +12,74 @@
 
 
 using std::unique_ptr;
+using std::vector;
+using std::string;
+using std::pair;
+
+struct MyConfig
+{
+    MyConfig()
+        : socks5_port(0)
+        , ioservice_ipcport(common::ports::io_service_ipc)
+    {
+    }
+
+    std::string socks5_host;
+    uint16_t socks5_port;
+    uint16_t ioservice_ipcport;
+};
+
+static void
+set_my_config(MyConfig& conf,
+              const vector<pair<string, string> >& name_value_pairs)
+{
+    for (auto nv_pair : name_value_pairs) {
+        const auto& name = nv_pair.first;
+        const auto& value = nv_pair.second;
+
+        if (name == "socks5-hostname") {
+            common::parse_host_port(value, conf.socks5_host, &conf.socks5_port);
+        }
+
+        else if (name == "ioservice-ipc-port") {
+            conf.ioservice_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else {
+            // ignore other args
+        }
+    }
+}
+
 
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
     common::init_common();
-
     common::init_easylogging();
 
-    std::string socks5_host;
-    uint16_t socks5_port = 0;
+    START_EASYLOGGINGPP(argc, argv);
 
-    uint16_t ioserviceIpcPort = common::ports::io_service_ipc;
+    MyConfig conf;
 
-    for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--socks5-hostname")) {
-            // should be host:port
-            const std::string socks5_host_port = argv[i+1];
-            const auto colon_pos = socks5_host_port.find(':');
-            if (colon_pos > 0) {
-                socks5_host = socks5_host_port.substr(0, colon_pos);
-                socks5_port = boost::lexical_cast<uint16_t>(
-                    socks5_host_port.substr(colon_pos+1));
-            } else {
-                socks5_host = socks5_host_port;
-                socks5_port = 1080;
-            }
-        }
-        else if (!strcmp(argv[i], "--ioserviceIpcPort")) {
-            ioserviceIpcPort = boost::lexical_cast<uint16_t>(argv[i+1]);
-        }
+    bool found_conf_name = false;
+    string found_conf_value;
+    vector<pair<string, string> > name_value_pairs;
+    auto rv = common::get_cmd_line_name_value_pairs(argc, (const char**)argv,
+                                                  found_conf_name, found_conf_value,
+                                                  name_value_pairs);
+    CHECK(rv == 0);
+
+    if (found_conf_name) {
+        name_value_pairs.clear();
+        LOG(INFO) << "configuring using config file. other command-line options are ignored.";
+        rv = common::get_config_name_value_pairs(found_conf_value.c_str(),
+                                                 name_value_pairs);
+        CHECK(rv == 0);
     }
 
-    START_EASYLOGGINGPP(argc, argv);
+    set_my_config(conf, name_value_pairs);
 
     LOG(INFO) << "io_process starting...";
 
@@ -55,16 +89,16 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
     NetConfig netconf;
-    if (!socks5_host.empty()) {
-        LOG(INFO) << "using socks5 proxy: [" << socks5_host << "]:" << socks5_port;
-        CHECK_GT(socks5_port, 0);
-        netconf.set_socks5_addr(common::getaddr(socks5_host.c_str()));
-        netconf.set_socks5_port(socks5_port);
+    if (!conf.socks5_host.empty()) {
+        LOG(INFO) << "using socks5 proxy: [" << conf.socks5_host << "]:" << conf.socks5_port;
+        CHECK_GT(conf.socks5_port, 0);
+        netconf.set_socks5_addr(common::getaddr(conf.socks5_host.c_str()));
+        netconf.set_socks5_port(conf.socks5_port);
     }
 
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), common::getaddr("localhost"),
-                            ioserviceIpcPort, nullptr));
+                            conf.ioservice_ipcport, nullptr));
     IPCServer::UniquePtr ipcserver(
         new IPCServer(evbase.get(), std::move(tcpServerForIPC), &netconf));
 

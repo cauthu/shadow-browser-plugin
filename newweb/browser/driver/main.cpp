@@ -3,6 +3,8 @@
 #include <memory>
 #include <arpa/inet.h>
 #include <boost/lexical_cast.hpp>
+#include <vector>
+#include <string>
 
 #include "../../utility/common.hpp"
 #include "../../utility/easylogging++.h"
@@ -11,32 +13,73 @@
 
 
 using std::unique_ptr;
+using std::vector;
+using std::pair;
+using std::string;
+
+struct MyConfig
+{
+    MyConfig()
+        : renderer_ipcport(common::ports::default_renderer_ipc)
+          /* by default we don't control tproxy */
+        , tproxy_ipcport(0)
+    {
+    }
+
+    uint16_t renderer_ipcport;
+    uint16_t tproxy_ipcport;
+};
+
+void
+set_my_config(MyConfig& conf,
+              const vector<pair<string, string> >& name_value_pairs)
+{
+    for (auto nv_pair : name_value_pairs) {
+        const auto& name = nv_pair.first;
+        const auto& value = nv_pair.second;
+
+        if (name == "renderer-ipc-port") {
+            conf.renderer_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "tproxy-ipc-port") {
+            conf.tproxy_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else {
+            // ignore other args
+        }
+    }
+}
 
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
 {
     common::init_common();
-
     common::init_easylogging();
 
-    uint16_t renderer_ipcport = common::ports::default_renderer_ipc;
+    START_EASYLOGGINGPP(argc, argv);
 
-    /* by default we don't control tproxy */
-    uint16_t tproxy_ipcport = 0;
+    MyConfig conf;
 
-    for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--rendererIpcPort")) {
-            renderer_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
-        }
-        else if (!strcmp(argv[i], "--tproxyIpcPort")) {
-            tproxy_ipcport = boost::lexical_cast<uint16_t>(argv[i+1]);
-        }
+    bool found_conf_name = false;
+    string found_conf_value;
+    vector<pair<string, string> > name_value_pairs;
+    auto rv = common::get_cmd_line_name_value_pairs(argc, (const char**)argv,
+                                                  found_conf_name, found_conf_value,
+                                                  name_value_pairs);
+    CHECK(rv == 0);
+
+    if (found_conf_name) {
+        name_value_pairs.clear();
+        LOG(INFO) << "configuring using config file. other command-line options are ignored.";
+        rv = common::get_config_name_value_pairs(found_conf_value.c_str(),
+                                                 name_value_pairs);
+        CHECK(rv == 0);
     }
 
-    CHECK_GT(renderer_ipcport, 0);
-
-    START_EASYLOGGINGPP(argc, argv);
+    set_my_config(conf, name_value_pairs);
 
     LOG(INFO) << "driver_process starting...";
 
@@ -46,7 +89,7 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
     Driver::UniquePtr driver(
-        new Driver(evbase.get(), tproxy_ipcport, renderer_ipcport));
+        new Driver(evbase.get(), conf.tproxy_ipcport, conf.renderer_ipcport));
 
     /* ***************************************** */
 
