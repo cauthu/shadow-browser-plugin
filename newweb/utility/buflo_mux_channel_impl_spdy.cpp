@@ -173,6 +173,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
     , whole_dummy_cell_at_end_outbuf_(false)
+    , all_recv_byte_count_(0)
+    , all_users_data_recv_byte_count_(0)
 {
     /* the value used by tamaraw paper */
     CHECK(cell_size == 750);
@@ -382,13 +384,6 @@ BufloMuxChannelImplSpdy::set_stream_connected(int sid)
     return true;
 }
 
-// int
-// BufloMuxChannelImplSpdy::read(int sid, uint8_t *data, size_t len)
-// {
-//     logself(FATAL) << "to implement";
-//     return 0;
-// }
-
 int
 BufloMuxChannelImplSpdy::read_buffer(int sid, struct evbuffer* buf, size_t len)
 {
@@ -434,13 +429,6 @@ BufloMuxChannelImplSpdy::get_avail_input_length(int sid) const
     }
 }
 
-// int
-// BufloMuxChannelImplSpdy::write(int sid, const uint8_t *data, size_t len)
-// {
-//     logself(FATAL) << "to implement";
-//     return -1;
-// }
-
 int
 BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf) 
 {
@@ -462,13 +450,6 @@ BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf)
 
     return 0;
 }
-
-// int
-// BufloMuxChannelImplSpdy::write_dummy(int sid, size_t len)
-// {
-//     logself(FATAL) << "to implement";
-//     return 0;
-// }
 
 void
 BufloMuxChannelImplSpdy::close_stream(int sid) 
@@ -1100,6 +1081,7 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
         vlogself(2) << "evbuffer_read() returns: " << rv;
         if (rv > 0) {
             // there's new data
+            all_recv_byte_count_ += rv;
             _read_cells();
         } else {
             _handle_failed_socket_io("read", rv, true);
@@ -1569,6 +1551,10 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
     const uint8_t *data,
     size_t len)
 {
+    // yay! we have data for user. we count this even if the stream
+    // might have been deleted
+    all_users_data_recv_byte_count_ += len;
+
     MAYBE_GET_STREAMSTATE(stream_id, );
 
     const auto rv = evbuffer_add(streamstate->outward_buf_, data, len);

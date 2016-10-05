@@ -68,6 +68,9 @@ public:
     // virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
 
+    const uint64_t& all_recv_byte_count() const { return all_recv_byte_count_; }
+    const uint64_t& useful_recv_byte_count() const { return all_users_data_recv_byte_count_; }
+
 protected:
 
     virtual ~BufloMuxChannelImplSpdy();
@@ -387,6 +390,17 @@ protected:
     } cell_read_info_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
+
+    /* number of bytes we have received, of any type, i.e., everything
+     * we read from the socket
+     */
+    uint64_t all_recv_byte_count_;
+
+    /* number of bytes we have received that are user's data, i.e.,
+     * data that we will send to user, a.k.a "outward data", for all
+     * user connections
+     */
+    uint64_t all_users_data_recv_byte_count_;
 };
 
 }
