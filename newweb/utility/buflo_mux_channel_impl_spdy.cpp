@@ -158,7 +158,7 @@ namespace myio { namespace buflo
 BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side,
-    size_t cell_size, const uint32_t& frequencyMs, const uint32_t& L,
+    size_t cell_size, const uint32_t& tamaraw_pkt_intvl_ms, const uint32_t& tamaraw_L,
     ChannelStatusCb ch_status_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
     : BufloMuxChannel(fd, is_client_side,
@@ -168,7 +168,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
     , cell_size_(cell_size)
-    , frequencyMs_(frequencyMs), L_(L)
+    , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms), tamaraw_L_(tamaraw_L)
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
@@ -180,22 +180,26 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     CHECK(cell_size == 750);
 
     // hardcoding this for now. this is what the tamaraw paper used
-    CHECK(   (L_ == 0)
-          || (L_ == 100));
+    CHECK(   (tamaraw_L_ == 0)
+          || (tamaraw_L_ == 100));
 
-    CHECK(   (frequencyMs_ == 0)
-          || (frequencyMs_ == 5)
-          || (frequencyMs_ == 20)
-          || (frequencyMs_ == 50)
-          || (frequencyMs_ == 75)
-          || (frequencyMs_ == 100)
-          || (frequencyMs_ == 125)
+    CHECK(   (tamaraw_pkt_intvl_ms_ == 0)
+          || (tamaraw_pkt_intvl_ms_ == 5)
+          || (tamaraw_pkt_intvl_ms_ == 20)
+          || (tamaraw_pkt_intvl_ms_ == 50)
+          || (tamaraw_pkt_intvl_ms_ == 75)
+          || (tamaraw_pkt_intvl_ms_ == 100)
+          || (tamaraw_pkt_intvl_ms_ == 125)
         );
 
-    if (L_ == 0 || frequencyMs_ == 0) {
+    if (tamaraw_L_ == 0 || tamaraw_pkt_intvl_ms_ == 0) {
         // both must be 0
-        CHECK((L == 0) & (frequencyMs_ == 0));
+        CHECK((tamaraw_L == 0) & (tamaraw_pkt_intvl_ms_ == 0));
     }
+
+    vlogself(2) << "using cell size= " << cell_size_
+                << " interval= " << tamaraw_pkt_intvl_ms_
+                << " L= " << tamaraw_L_;
 
     defense_info_.reset();
 
@@ -295,8 +299,8 @@ BufloMuxChannelImplSpdy::start_defense_session()
         << "currently only support starting session when none is active";
 
     // both must be greather than 0
-    CHECK_GT(frequencyMs_, 0);
-    CHECK_GT(L_, 0);
+    CHECK_GT(tamaraw_pkt_intvl_ms_, 0);
+    CHECK_GT(tamaraw_L_, 0);
 
     struct timeval current_tv;
     auto rv = gettimeofday(&current_tv, nullptr);
@@ -308,11 +312,11 @@ BufloMuxChannelImplSpdy::start_defense_session()
 
     evutil_timeradd(&current_tv, &duration_tv, &defense_info_.hard_stop_time);
 
-    struct timeval freq_tv = {0};
-    freq_tv.tv_sec = 0;
-    freq_tv.tv_usec = (frequencyMs_ * 1000);
+    struct timeval intvl_tv = {0};
+    intvl_tv.tv_sec = 0;
+    intvl_tv.tv_usec = (tamaraw_pkt_intvl_ms_ * 1000);
 
-    buflo_timer_->start(&freq_tv);
+    buflo_timer_->start(&intvl_tv);
 
     defense_info_.state = DefenseState::ACTIVE;
 
@@ -490,7 +494,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     const auto rv = gettimeofday(&current_tv, nullptr);
     CHECK_EQ(rv, 0);
 
-    if (defense_info_.is_done_defending(L_)) {
+    if (defense_info_.is_done_defending(tamaraw_L_)) {
         logself(INFO) << "done defending; final number of cells sent/attempted: "
                       << defense_info_.num_write_attempts;
         buflo_timer_->cancel();

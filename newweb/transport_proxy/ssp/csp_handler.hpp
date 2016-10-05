@@ -34,6 +34,8 @@ public:
     typedef std::unique_ptr<CSPHandler, /*folly::*/Destructor> UniquePtr;
 
     explicit CSPHandler(struct event_base* evbase,
+                        const uint32_t& tamaraw_pkt_intvl_ms,
+                        const uint32_t& tamaraw_L,
                         myio::StreamChannel::UniquePtr csp_channel,
                         CSPHandlerDoneCb);
 

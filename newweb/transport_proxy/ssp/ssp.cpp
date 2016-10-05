@@ -32,9 +32,13 @@ using myio::StreamChannel;
 
 
 ServerSideProxy::ServerSideProxy(struct event_base* evbase,
-                                 StreamServer::UniquePtr streamserver)
+                                 StreamServer::UniquePtr streamserver,
+                                 const uint32_t& tamaraw_pkt_intvl_ms,
+                                 const uint32_t& tamaraw_L)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
+    , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms)
+    , tamaraw_L_(tamaraw_L)
 {
     stream_server_->set_observer(this);
     const auto rv = stream_server_->start_accepting();
@@ -54,6 +58,8 @@ ServerSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noe
 
     CSPHandler::UniquePtr chandler(
         new CSPHandler(evbase_,
+                       tamaraw_pkt_intvl_ms_,
+                       tamaraw_L_,
                        std::move(channel),
                        boost::bind(&ServerSideProxy::_on_csp_handler_done,
                                    this, _1)));

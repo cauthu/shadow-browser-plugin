@@ -20,7 +20,9 @@ public:
     typedef std::unique_ptr<ServerSideProxy, /*folly::*/Destructor> UniquePtr;
 
     explicit ServerSideProxy(struct event_base* evbase,
-                             myio::StreamServer::UniquePtr);
+                             myio::StreamServer::UniquePtr,
+                             const uint32_t& tamaraw_pkt_intvl_ms,
+                             const uint32_t& tamaraw_L);
 
 protected:
 
@@ -42,6 +44,9 @@ protected:
     myio::StreamServer::UniquePtr stream_server_;
 
     std::map<uint32_t, CSPHandler::UniquePtr> csp_handlers_;
+
+    const uint32_t tamaraw_pkt_intvl_ms_;
+    const uint32_t tamaraw_L_;
 };
 
 }

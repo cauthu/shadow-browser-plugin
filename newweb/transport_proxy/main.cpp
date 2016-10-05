@@ -43,6 +43,8 @@ struct MyConfig
         , listenport(common::ports::client_side_transport_proxy)
         , torPort(0)
         , tproxy_ipcport(common::ports::transport_proxy_ipc)
+        , tamaraw_pkt_intvl_ms(0)
+        , tamaraw_L(0)
     {
     }
 
@@ -52,6 +54,8 @@ struct MyConfig
     uint16_t listenport;
     uint16_t torPort;
     uint16_t tproxy_ipcport;
+    uint16_t tamaraw_pkt_intvl_ms;
+    uint16_t tamaraw_L;
 };
 
 static void
@@ -84,6 +88,14 @@ set_my_config(MyConfig& conf,
 
         else if (name == "tproxy-ipc-port") {
             conf.tproxy_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "tamaraw-packet-interval") {
+            conf.tamaraw_pkt_intvl_ms = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "tamaraw-L") {
+            conf.tamaraw_L = boost::lexical_cast<uint16_t>(value);
         }
 
         else {
@@ -171,8 +183,8 @@ int main(int argc, char **argv)
                       conf.ssp_port,
                       conf.torPort ? common::getaddr("localhost") : 0,
                       conf.torPort,
-                      20,
-                      100));
+                      conf.tamaraw_pkt_intvl_ms,
+                      conf.tamaraw_L));
 
 #ifdef IN_SHADOW
         LOG(INFO) << "ipc server listens on " << conf.tproxy_ipcport;
@@ -197,7 +209,9 @@ int main(int argc, char **argv)
                                 conf.listenport, nullptr));
 
         ssp.reset(new ssp::ServerSideProxy(evbase.get(),
-                                      std::move(tcpserver)));
+                                           std::move(tcpserver),
+                                           conf.tamaraw_pkt_intvl_ms,
+                                           conf.tamaraw_L));
     }
 
     /* ***************************************** */

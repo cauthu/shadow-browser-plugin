@@ -29,6 +29,8 @@ namespace ssp
 {
 
 CSPHandler::CSPHandler(struct event_base* evbase,
+                       const uint32_t& tamaraw_pkt_intvl_ms,
+                       const uint32_t& tamaraw_L,
                        StreamChannel::UniquePtr csp_channel,
                        CSPHandlerDoneCb handler_done_cb)
     : evbase_(evbase)
@@ -39,7 +41,7 @@ CSPHandler::CSPHandler(struct event_base* evbase,
 
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase, fd, false, 750, 5, 100,
+            evbase, fd, false, 750, tamaraw_pkt_intvl_ms, tamaraw_L,
             boost::bind(&CSPHandler::_on_buflo_channel_status,
                         this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,

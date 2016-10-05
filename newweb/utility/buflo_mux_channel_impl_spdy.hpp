@@ -35,8 +35,8 @@ public:
      */
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             size_t cell_size,
-                            const uint32_t& frequencyMs,
-                            const uint32_t& L,
+                            const uint32_t& tamaraw_pkt_intvl_ms,
+                            const uint32_t& tamaraw_L,
                             ChannelStatusCb ch_status_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
@@ -255,8 +255,8 @@ protected:
     /* for cells that we send */
     const size_t cell_size_;
     const size_t cell_body_size_;
-    const uint32_t frequencyMs_;
-    const uint32_t L_;
+    const uint32_t tamaraw_pkt_intvl_ms_;
+    const uint32_t tamaraw_L_;
 
     /* for cells that the peer sends and we receive */
     size_t peer_cell_size_;
