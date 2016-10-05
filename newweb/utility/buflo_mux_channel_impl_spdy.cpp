@@ -140,7 +140,6 @@ static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
 
 #define SET_CELL_STOP_FLAG(t_n_f)                               \
     do {                                                        \
-        logself(INFO) << "setting the STOP flag";               \
         bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
         flags_bs.set(CELL_FLAGS_STOP_DEFENSE_POSITION, true);   \
                                                                 \
@@ -302,10 +301,10 @@ BufloMuxChannelImplSpdy::start_defense_session()
     CHECK_EQ(rv, 0);
 
     struct timeval duration_tv;
-    duration_tv.tv_sec = 180; /* 2 minute */
+    duration_tv.tv_sec = 180;
     duration_tv.tv_usec = 0;
 
-    evutil_timeradd(&current_tv, &duration_tv, &defense_info_.absolute_until);
+    evutil_timeradd(&current_tv, &duration_tv, &defense_info_.hard_stop_time);
 
     struct timeval freq_tv = {0};
     freq_tv.tv_sec = 0;
@@ -336,13 +335,18 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
 void
 BufloMuxChannelImplSpdy::stop_defense_session(bool right_now)
 {
-    logself(INFO) << "requested to stop defense (right now: " << right_now << ")";
+    logself(INFO) << "requested to stop defense (right now: " << right_now << "); "
+                  << "current number of cells sent/attempted: "
+                  << defense_info_.num_write_attempts;
     // for now requires it being active in order to stop
     CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
-    // CHECK(is_client_side_);
 
     if (!right_now) {
         defense_info_.request_stop();
+
+        if (is_client_side_) {
+            defense_info_.need_stop_flag_in_next_cell = true;
+        }
     } else {
         CHECK(0) << "todo";
         // buflo_timer_->cancel();
@@ -501,38 +505,27 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     CHECK_EQ(rv, 0);
 
     if (defense_info_.is_done_defending(L_)) {
-        logself(INFO) << "done defending; number of cells we sent/attempted to send: "
+        logself(INFO) << "done defending; final number of cells sent/attempted: "
                       << defense_info_.num_write_attempts;
         buflo_timer_->cancel();
 
-        if (is_client_side_) {
-            // need to propagate the stop signal to ssp
-            defense_info_.state = DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL;
-        } else {
-            // we are server-side and can just stop
+        if (!is_client_side_) {
+            // we are server-side and can just stop -- otherwise might
+            // need to manually send a dummy cell so we can piggyback
+            // the stop flag
             defense_info_.reset();
         }
-
-        // // allow to add control cells and pump spdy send
-        // _maybe_add_control_cell_to_outbuf();
 
         /* this will flush data cells and toggle write monitoring
          * appropriately since we have reset the defense state to none
          * above */
         _pump_spdy_send();
 
-        if (defense_info_.state == DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL) {
+        if (defense_info_.need_stop_flag_in_next_cell) {
             CHECK(is_client_side_);
-            /* nonew cell was added, so the STOP flag could not
-             * piggyback on any cell, so we have to add a *
-             * control/dummy cell ourselves here
+            /* the STOP flag could not piggyback on any cell, so we
+             * have to add a control/dummy cell ourselves here
              */
-
-            // apparently we reach here; in retrospect it's expected,
-            // because our driver tells us to stop when the page has
-            // fired the load event, so it's not unusual for it to
-            // currently have no data to send
-            /* CHECK(0) << "todo"; */
 
             /* we could use a control cell, but right now we don't
              * have any other use for control cells so we don't have
@@ -543,16 +536,15 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
 
-        if (is_client_side_) {
-            CHECK_EQ(defense_info_.state, DefenseState::STOP_FLAG_HAS_BEEN_ADDED);
-        }
+        CHECK(!defense_info_.need_stop_flag_in_next_cell);
 
-        // reset the defense info
+        // reset the defense info --- ok to do blindly; it's
+        // idempotent
         defense_info_.reset();
 
         goto done;
     } else {
-        if (evutil_timercmp(&current_tv, &defense_info_.absolute_until, >=)) {
+        if (evutil_timercmp(&current_tv, &defense_info_.hard_stop_time, >=)) {
             logself(FATAL) << "exceeding hard time limit! "
                            << "probably a bug; did you forget to stop defense after "
                            << "you're done with a page load?";
@@ -615,8 +607,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
         return;
     }
 
-    if ((defense_info_.state == DefenseState::NONE)
-        || (defense_info_.state == DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL)) {
+    if (defense_info_.state == DefenseState::NONE) {
         vlogself(2) << "maybe flush to cell outbuf";
         if (_maybe_flush_data_to_cell_outbuf()) {
             // there is definitely in out buf so just force enable
@@ -664,7 +655,6 @@ bool
 BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
 {
     CHECK(   (defense_info_.state == DefenseState::NONE)
-          || (defense_info_.state == DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL)
         );
     bool did_write = false;
     vlogself(2) << "begin, spdy outbuf len: "
@@ -710,9 +700,13 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
 
         const auto flags_val = flags_bs.to_ulong();
         SET_CELL_FLAGS(type_n_flags, flags_val);
-    } else if (defense_info_.state == DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL) {
+    }
+
+    if (defense_info_.need_stop_flag_in_next_cell) {
+        CHECK(defense_info_.stop_requested);
+        logself(INFO) << "setting the STOP flag (in a data cell)";
         SET_CELL_STOP_FLAG(type_n_flags);
-        defense_info_.state = DefenseState::STOP_FLAG_HAS_BEEN_ADDED;
+        defense_info_.need_stop_flag_in_next_cell = false;
     }
 
     auto rv = evbuffer_add(
@@ -877,9 +871,11 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
     SET_CELL_TYPE(type_n_flags, CellType::DUMMY);
     static const uint16_t len_field = 0;
 
-    if (defense_info_.state == DefenseState::NEED_STOP_FLAG_IN_NEXT_CELL) {
+    if (defense_info_.need_stop_flag_in_next_cell) {
+        CHECK(defense_info_.stop_requested);
+        logself(INFO) << "setting the STOP flag (in a dummy cell)";
         SET_CELL_STOP_FLAG(type_n_flags);
-        defense_info_.state = DefenseState::STOP_FLAG_HAS_BEEN_ADDED;
+        defense_info_.need_stop_flag_in_next_cell = false;
     }
 
     // add type and length

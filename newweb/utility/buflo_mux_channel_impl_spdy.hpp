@@ -270,11 +270,6 @@ protected:
                                         * the timer is NOT
                                         * running */,
             ACTIVE /* the buflo timer is running */,
-
-        /* set the STOP flag in the next cell we add to
-         * cell_outbuf_ */
-            NEED_STOP_FLAG_IN_NEXT_CELL,
-            STOP_FLAG_HAS_BEEN_ADDED,
     };
     struct {
         /* note on interaction with
@@ -286,9 +281,10 @@ protected:
         {
             state = DefenseState::NONE;
             num_data_cells_added = 0;
+            num_write_attempts = 0;
             stop_requested = false;
-            absolute_until = {0};
-            prev_timer_fired = {0};
+            need_stop_flag_in_next_cell = false;
+            evutil_timerclear(&hard_stop_time);
         }
 
         bool is_done_defending(const uint8_t& L) const
@@ -332,16 +328,23 @@ protected:
          */
         uint32_t num_write_attempts;
 
-        /* absolute time defense should stay active until, in case
+        /* absolute time defense allowed to stay active until, in case
          * user forgets to stop us.
          *
-         * if we reach this then it's most likely our bug
+         * if we reach this then it's most likely our bug, or user is
+         * loading a huge page/network is really congested; for now we
+         * assume it's a bug
          */
-        struct timeval absolute_until; 
-        bool stop_requested; /* whether the user has requested that we
-                              * stopped... we have to continue until
-                              * to satisfy L pameter */
-        struct timeval prev_timer_fired;
+        struct timeval hard_stop_time;
+        /* whether the user has requested that we stopped. we have
+         * to continue until to satisfy L pameter */
+        bool stop_requested;
+        /* as soon as user requests to stop (we must be csp), we will
+         * want to immediately notify ssp as well: we set this flag to
+         * true. in the code that adds cells to the cell outbuf, we
+         * will add the flag and once done, will clear this to
+         * false */
+        bool need_stop_flag_in_next_cell;
     } defense_info_;
 
     // Timer::UniquePtr buflo_timer_;
