@@ -340,10 +340,10 @@ Connection::_maybe_http_consume_input()
         case HTTPRespState::HTTP_RSP_STATE_STATUS_LINE: {
             /* readln() DOES drain the buffer if it returns a line */
 
-            Request *req = active_req_queue_.front();
-            CHECK_NOTNULL(req);
-
             if (evbuffer_get_length(inbuf) > 0) {
+                Request *req = active_req_queue_.front();
+                CHECK_NOTNULL(req);
+
                 req->notify_rsp_meta_bytes_recv();
             }
 
