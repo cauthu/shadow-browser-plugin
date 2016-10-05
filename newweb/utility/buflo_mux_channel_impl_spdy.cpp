@@ -340,8 +340,13 @@ BufloMuxChannelImplSpdy::stop_defense_session(bool right_now)
     logself(INFO) << "requested to stop defense (right now: " << right_now << "); "
                   << "current number of cells sent/attempted: "
                   << defense_info_.num_write_attempts;
-    // for now requires it being active in order to stop
-    CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
+
+    // for now make sure it's not PENDING_FIRST_SOCKET_WRITE
+    CHECK_NE(defense_info_.state, DefenseState::PENDING_FIRST_SOCKET_WRITE);
+    if (defense_info_.state != DefenseState::ACTIVE) {
+        logself(INFO) << "defense not currently active, so do nothing";
+        return;
+    }
 
     if (!right_now) {
         defense_info_.request_stop();
