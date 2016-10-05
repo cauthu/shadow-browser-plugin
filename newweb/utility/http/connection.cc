@@ -415,7 +415,7 @@ Connection::_maybe_http_consume_input()
                         // there's a req body we need to consume
                         http_rsp_state_ = HTTPRespState::HTTP_RSP_STATE_BODY;
                     } else {
-                        // no response body
+                        vlogself(2) << "no response body";
                         _done_with_resp();
                     }
 
@@ -488,7 +488,27 @@ Connection::_maybe_http_consume_input()
                 // have fully received resp body
                 /* no pipelining, so input buf should also be empty */
                 CHECK_EQ(evbuffer_get_length(inbuf), 0);
-                _done_with_resp();
+                vlogself(2) << "fully received resp body";
+
+                /* don't call _done_with_resp() because
+                 * _got_a_chunk_of_resp_body() should have already
+                 * done that, and popped the
+                 * active_req_queue_. calling _done_with_resp() here
+                 * caused a segfault when we "drain_len ==
+                 * remaining_resp_body_len_", so we called
+                 * _got_a_chunk_of_resp_body above() which woudl call
+                 * _done_with_resp() and then we'd call it again here.
+                 *
+                 * we let _got_a_chunk_of_resp_body() take care of
+                 * calling _done_with_resp() because if we're doing
+                 * the drop_future_input() for this case, then
+                 * _got_a_chunk_of_resp_body() will be the ONLY code
+                 * path that gets notified of received data chunks ---
+                 * we don't reach here again for this response --- and
+                 * thus only it can check the remaining_resp_body_len_
+                 * and know when the response is done.
+                 */
+                CHECK(active_req_queue_.empty());
             }
 
             break;
@@ -538,10 +558,14 @@ Connection::_done_with_resp()
 
     CHECK_EQ(remaining_resp_body_len_, 0);
 
+    CHECK(!active_req_queue_.empty());
     Request *req = active_req_queue_.front();
+    CHECK_NOTNULL(req);
 
     /* remove req from active queue before notifying */
     active_req_queue_.pop();
+
+    CHECK(active_req_queue_.empty());
 
     DestructorGuard dg(this);
     req->notify_rsp_done();
