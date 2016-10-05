@@ -105,7 +105,7 @@ private:
     myipc::GenericIpcChannel::UniquePtr renderer_ipc_ch_;
     myipc::GenericIpcChannel::UniquePtr tproxy_ipc_ch_;
 
-    bool use_tproxy_;
+    bool using_tproxy_;
     bool tproxy_ipc_ch_ready_;
 
     enum class State

@@ -172,7 +172,9 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     state_ = State::THINKING;
 
-    _tproxy_stop_defense(false);
+    if (using_tproxy_) {
+        _tproxy_stop_defense(false);
+    }
     
     // page has loaded
 
@@ -221,7 +223,7 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
 
     state_ = State::DONE_RESET_RENDERER;
 
-    if (use_tproxy_) {
+    if (using_tproxy_) {
         _tproxy_maybe_establish_tunnel();
     } else {
         _renderer_load_page();
@@ -233,7 +235,7 @@ Driver::_renderer_load_page()
 {
     vlogself(2) << "begin";
 
-    if (use_tproxy_) {
+    if (using_tproxy_) {
         CHECK_EQ(state_, State::DONE_SET_TPROXY_AUTO_START);
     } else {
         CHECK_EQ(state_, State::DONE_RESET_RENDERER);
