@@ -68,6 +68,9 @@ public:
     void set_auto_start_defense_session_on_next_send();
     void stop_defense_session(const bool& right_now);
 
+    const uint64_t all_recv_byte_count_so_far() const;
+    const uint64_t useful_recv_byte_count_so_far() const;
+
 protected:
 
     virtual ~ClientSideProxy();
@@ -96,6 +99,12 @@ protected:
 
     // the ProxyClientHandler tells us it's closing down
     void _on_client_handler_done(ClientHandler*);
+
+    /* should be called whenever our buflo channel is about to be
+     * destroyed, so that we can grab its stats */
+    void _update_recv_byte_counts();
+
+    /////////
 
     struct event_base* evbase_;
     /* server to listen for client connections */
@@ -128,6 +137,12 @@ protected:
     CSPReadyCb ready_cb_;
 
     std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
+
+    /* we get these from the buflo channel but also take a note of
+     * them ourselves when the buflo channel goes away
+     */
+    uint64_t all_recv_byte_count_so_far_;
+    uint64_t useful_recv_byte_count_so_far_;
 };
 
 } // namespace csp

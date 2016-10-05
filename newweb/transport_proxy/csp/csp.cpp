@@ -49,6 +49,8 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , buflo_frequencyMs_(buflo_frequencyMs)
     , buflo_L_(buflo_L)
     , state_(State::INITIAL)
+    , all_recv_byte_count_so_far_(0)
+    , useful_recv_byte_count_so_far_(0)
 {
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
 }
@@ -76,6 +78,8 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
 
         auto rv = stream_server_->pause_accepting();
         CHECK(rv);
+
+        _update_recv_byte_counts();
 
         /* note that this calls destructors of the client handler, and
          * those destructors used to notify our
@@ -131,6 +135,28 @@ ClientSideProxy::stop_defense_session(const bool& right_now)
     CHECK_NOTNULL(buflo_ch_.get());
 
     buflo_ch_->stop_defense_session(right_now);
+}
+
+const uint64_t
+ClientSideProxy::all_recv_byte_count_so_far() const
+{
+    const auto from_channel = buflo_ch_ ? buflo_ch_->all_recv_byte_count() : 0;
+    return all_recv_byte_count_so_far_ + from_channel;
+}
+
+const uint64_t
+ClientSideProxy::useful_recv_byte_count_so_far() const
+{
+    const auto from_channel = buflo_ch_ ? buflo_ch_->useful_recv_byte_count() : 0;
+    return useful_recv_byte_count_so_far_ + from_channel;
+}
+
+void
+ClientSideProxy::_update_recv_byte_counts()
+{
+    CHECK_NOTNULL(buflo_ch_.get());
+    all_recv_byte_count_so_far_ += buflo_ch_->all_recv_byte_count();
+    useful_recv_byte_count_so_far_ += buflo_ch_->useful_recv_byte_count();
 }
 
 void
@@ -273,6 +299,7 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 
         ready_cb_(this);
     } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
+        _update_recv_byte_counts();
         LOG(FATAL) << "buflo channel is closed, so we're exiting";
     } else {
         LOG(FATAL) << "unknown channel status";

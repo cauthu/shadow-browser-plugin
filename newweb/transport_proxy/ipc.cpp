@@ -86,6 +86,8 @@ IPCServer::_on_csp_ready(ClientSideProxy*)
         BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
             EstablishTunnelResp, bufbuilder, id);
         msgbuilder.add_tunnelIsReady(true);
+        msgbuilder.add_allRecvByteCountSoFar(csp_->all_recv_byte_count_so_far());
+        msgbuilder.add_usefulRecvByteCountSoFar(csp_->useful_recv_byte_count_so_far());
     }
 
     establish_tunnel_call_id_ = 0;

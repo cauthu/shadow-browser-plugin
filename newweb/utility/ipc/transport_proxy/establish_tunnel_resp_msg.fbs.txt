@@ -5,6 +5,10 @@ namespace myipc.transport_proxy.messages;
 table EstablishTunnelRespMsg
 {
     tunnelIsReady: bool;
+
+    /* these are what the csp has received so far from when it was launched */
+    allRecvByteCountSoFar: ulong;
+    usefulRecvByteCountSoFar: ulong;
 }
 
 root_type EstablishTunnelRespMsg;

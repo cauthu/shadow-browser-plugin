@@ -99,6 +99,9 @@ Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
     auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
     CHECK(msg->tunnelIsReady());
 
+    logself(INFO) << "CSP allRecvByteCountSoFar: " << msg->allRecvByteCountSoFar()
+                  << " usefulRecvByteCountSoFar: " << msg->usefulRecvByteCountSoFar();
+
     state_ = State::DONE_ESTABLISH_TPROXY_TUNNEL;
 
     _tproxy_set_auto_start_defense_on_next_send();
