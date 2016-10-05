@@ -8,9 +8,15 @@
 #include <arpa/inet.h>
 #include <event2/event.h>
 #include <memory>
+#include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "common.hpp"
 #include "easylogging++.h"
+
+using std::string;
+using std::vector;
+using std::make_pair;
 
 namespace common
 {
@@ -39,6 +45,117 @@ init_common()
 {
     static_bytes = new std::string(static_bytes_length, 'A');
     CHECK_NOTNULL(static_bytes);
+}
+
+/* return true if there's at least a name. the value might be empty */
+static bool
+maybe_parse_name_value(const std::string& maybe_nv,
+                       std::string& name,
+                       std::string& value)
+{
+    if (maybe_nv.find("--") == 0) {
+        CHECK(maybe_nv.length() >= 4);
+        const auto equal_pos = maybe_nv.find('=');
+        if (equal_pos != std::string::npos) {
+            name = maybe_nv.substr(2, equal_pos-2);
+            value = maybe_nv.substr(equal_pos + 1);
+            CHECK(!value.empty()) << "name \"" << name << "\" has empty value";
+        } else {
+            // no equal sign
+            name = maybe_nv.substr(2);
+            value = "";
+        }
+        CHECK(name[0] != '-');
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/* each line can be empty, a comment (started with #), or a
+ * configuration option, with the same format expected as on the
+ * command line, i.e.,
+ */
+int
+get_config_name_value_pairs(const char* fpath,
+                           std::vector<std::pair<string, string> >& name_value_pairs)
+{
+    CHECK(name_value_pairs.empty());
+    std::ifstream infile(fpath, std::ifstream::in);
+    if (!infile.good()) {
+        LOG(FATAL) << "error: can't read config file \"" << fpath << "\"";
+    }
+
+    string line;
+    while (std::getline(infile, line)) {
+        if (line.length() == 0 || line.at(0) == '#') {
+            /* empty lines and lines beginining with '#' are
+               ignored */
+            continue;
+        }
+
+        string name;
+        string value;
+        if (maybe_parse_name_value(line, name, value)) {
+            name_value_pairs.push_back(make_pair(name, value));
+        }
+    }
+
+    return 0;
+}
+
+/* options can be like:
+ *
+ * --name
+ *
+ * --name=value
+ *
+ * just basic string is supported, no escaping, quoting, etc will be
+ * done. same name can appear multiple times; i won't care.
+ *
+ * if we see a "--conf=...", we will set found_conf_name to true and
+ * set found_conf_value to the value
+ */
+int
+get_cmd_line_name_value_pairs(
+    int argc,
+    const char* argv[],
+    bool& found_conf_name,
+    std::string& found_conf_value,
+    std::vector<std::pair<std::string, std::string> >& name_value_pairs)
+{
+    CHECK(name_value_pairs.empty());
+    for (int i = 0; i < argc; ++i) {
+        const string maybe_nv(argv[i]);
+        string name;
+        string value;
+        if (maybe_parse_name_value(maybe_nv, name, value)) {
+            name_value_pairs.push_back(make_pair(name, value));
+
+            if (name == "conf") {
+                found_conf_name = true;
+                found_conf_value = value;
+            }
+        }
+    }
+    return 0;
+}
+
+void
+parse_host_port(const string& host_port_str,
+                string& host, uint16_t* port)
+{
+    vector<string> parts;
+    boost::split(parts, host_port_str, boost::is_any_of(":"));
+    const auto num_parts = parts.size();
+    CHECK((num_parts == 1) || (num_parts == 2));
+    if (num_parts == 2) {
+        host = parts[0];
+        *port = boost::lexical_cast<uint16_t>(parts[1]);
+    } else {
+        host = parts[0];
+    }
 }
 
 char*

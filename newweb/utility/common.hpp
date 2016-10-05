@@ -12,7 +12,7 @@
 #include <event2/event.h>
 #include <type_traits>
 #include <string>
-
+#include <vector>
 
 namespace common
 {
@@ -56,6 +56,24 @@ const uint16_t default_renderer_ipc = 7000;
 const uint16_t transport_proxy_ipc = 8000;
 
 } // namespace ports
+
+
+int
+get_config_name_value_pairs(
+    const char* fpath,
+    std::vector<std::pair<std::string, std::string> >& name_value_pairs);
+
+int
+get_cmd_line_name_value_pairs(
+    int argc,
+    const char* argv[],
+    bool& found_conf_name,
+    std::string& found_conf_value,
+    std::vector<std::pair<std::string, std::string> >& name_value_pairs);
+
+void
+parse_host_port(const std::string& host_port_str,
+                std::string& host, uint16_t* port);
 
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
