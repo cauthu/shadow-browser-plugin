@@ -4,8 +4,6 @@ namespace myipc.transport_proxy.messages;
 
 table StartDefenseSessionMsg
 {
-    frequencyMs: ushort;
-    durationSec: ushort;
 }
 
 root_type StartDefenseSessionMsg;

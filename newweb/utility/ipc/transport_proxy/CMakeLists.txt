@@ -4,6 +4,8 @@ set(TRANSPORT_PROXY_FBS
   establish_tunnel_resp_msg.fbs.txt
   set_auto_start_defense_on_next_send_msg.fbs.txt
   set_auto_start_defense_on_next_send_resp_msg.fbs.txt
+  stop_defense_msg.fbs.txt
+  stop_defense_resp_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")

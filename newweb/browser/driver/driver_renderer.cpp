@@ -120,6 +120,9 @@ Driver::_renderer_handle_RequestFinished(
                      << " failed";
     } else {
         ++this_page_load_info_.num_succes_reqs_;
+        vlogself(1) << "request " << resInstNum << ":" << reqChainIdx
+                    << " finished successfully; new num_succes_reqs_: "
+                    << this_page_load_info_.num_succes_reqs_;
     }
 
     vlogself(2) << "done";
@@ -167,6 +170,10 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     CHECK_EQ(state_, State::LOADING_PAGE);
 
+    state_ = State::THINKING;
+
+    _tproxy_stop_defense(false);
+    
     // page has loaded
 
     this_page_load_info_.load_done_timepoint_ = common::gettimeofdayMs();
@@ -175,8 +182,6 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     // now, start the think time timer
     auto think_time_ms = 120*1000;
-
-    state_ = State::THINKING;
 
     _reset_this_page_load_info();
 

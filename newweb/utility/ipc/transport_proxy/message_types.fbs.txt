@@ -9,4 +9,8 @@ enum type:ubyte
 
     SetAutoStartDefenseOnNextSend,
     SetAutoStartDefenseOnNextSendResp,
+
+    StopDefense,
+    StopDefenseResp,
+
 }

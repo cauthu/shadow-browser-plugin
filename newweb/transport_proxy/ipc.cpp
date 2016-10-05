@@ -125,6 +125,24 @@ IPCServer::_handle_SetAutoStartDefenseOnNextSend(const uint32_t& id,
 }
 
 void
+IPCServer::_handle_StopDefense(const uint32_t& id,
+                               const msgs::StopDefenseMsg* msg)
+{
+    logself(INFO) << "request to stop buflo defense";
+
+    CHECK_GT(id, 0);
+
+    csp_->stop_defense_session(msg->right_now());
+
+    {
+        // send the response
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
+            StopDefenseResp, bufbuilder, id);
+    }
+}
+
+void
 IPCServer::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
     // accepted an ipc client
@@ -180,6 +198,7 @@ IPCServer::_on_called(uint32_t id, uint8_t type,
 
         IPC_CALL_HANDLER(EstablishTunnel)
         IPC_CALL_HANDLER(SetAutoStartDefenseOnNextSend)
+        IPC_CALL_HANDLER(StopDefense)
 
     default:
         CHECK(false) << "invalid IPC message type " << unsigned(type);

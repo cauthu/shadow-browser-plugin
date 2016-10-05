@@ -30,8 +30,13 @@ public:
     // AsyncTransport.h for example)
     typedef std::unique_ptr<BufloMuxChannelImplSpdy, Destructor> UniquePtr;
 
+    /* right now only one cell size == 750 is supported. that is what
+     * the tamaraw paper used
+     */
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             size_t cell_size,
+                            const uint32_t& frequencyMs,
+                            const uint32_t& L,
                             ChannelStatusCb ch_status_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
@@ -42,9 +47,8 @@ public:
     /* this starts the timer but will NOT do any immediate write,
      * i.e., it will start writing at the timer fired
      */
-    virtual bool start_defense_session(const uint16_t& frequencyMs,
-                                       const uint16_t& durationSec) override;
-    virtual void stop_defense_session() override;
+    virtual bool start_defense_session() override;
+    virtual void stop_defense_session(bool right_now=false) override;
     virtual void set_auto_start_defense_session_on_next_send() override;
 
     /* BufloMuxChannel interface */
@@ -77,9 +81,10 @@ protected:
     static void s_read_peer_cell_size(int, short, void*);
 
     /* return true if it did add a cell to cell outbuf */
-    bool _maybe_add_control_cell_to_outbuf() {return false;}
+    bool _maybe_add_control_cell_to_outbuf() { CHECK(0) << "todo"; return false; }
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_ONE_data_cell_to_outbuf();
+    void _add_ONE_dummy_cell_to_outbuf();
 
     /* WILL move all data into cell outbuf. the current defense state
      * must be NONE */
@@ -247,6 +252,8 @@ protected:
     /* for cells that we send */
     const size_t cell_size_;
     const size_t cell_body_size_;
+    const uint32_t frequencyMs_;
+    const uint32_t L_;
 
     /* for cells that the peer sends and we receive */
     size_t peer_cell_size_;
@@ -263,6 +270,11 @@ protected:
                                         * the timer is NOT
                                         * running */,
             ACTIVE /* the buflo timer is running */,
+
+        /* set the STOP flag in the next cell we add to
+         * cell_outbuf_ */
+            NEED_STOP_FLAG_IN_NEXT_CELL,
+            STOP_FLAG_HAS_BEEN_ADDED,
     };
     struct {
         /* note on interaction with
@@ -272,22 +284,63 @@ protected:
          * able to write to socket */
         void reset()
         {
-            // active = false;
             state = DefenseState::NONE;
-            frequencyMs = 0;
             num_data_cells_added = 0;
-            until = {0};
+            stop_requested = false;
+            absolute_until = {0};
             prev_timer_fired = {0};
         }
-        // bool active;
-        DefenseState state;
-        uint16_t frequencyMs;
 
-        /* num added to cell_outbuf_, during either pending or
-         * active */
+        bool is_done_defending(const uint8_t& L) const
+        {
+            CHECK_EQ(state, DefenseState::ACTIVE);
+            return (stop_requested && (0 == (num_write_attempts % L)));
+        }
+
+        void increment_send_attempt()
+        {
+            CHECK_EQ(state, DefenseState::ACTIVE);
+            ++num_write_attempts;
+        }
+
+        void request_stop()
+        {
+            CHECK_EQ(state, DefenseState::ACTIVE);
+            CHECK(!stop_requested);
+            stop_requested = true;
+        }
+
+        DefenseState state;
+
+        /* "num_data_cells_added" is number of *added* to
+         * cell_outbuf_, during either pending or active.
+         *
+         * !!!! NOTE !!!!  that this is NOT the number of cells we
+         * have attempted to write to socket, which is the one to be
+         * used when deciding whether we can stop
+         */
         uint32_t num_data_cells_added;
-        struct timeval until; /* absolute time defense should stay
-                                * active until */
+
+        /* number of cells we have sent since the beginning of the
+         * defense. to be like CS-BuFLO, even if the socket write()
+         * rejects wholy or partially our write, we will still count
+         * as a cell written. essentially, this is the number of
+         * ATTEMPTS to write to socket, or approximately the number of
+         * timer fires
+         *
+         * this is the values to use when deciding whether can stop
+         */
+        uint32_t num_write_attempts;
+
+        /* absolute time defense should stay active until, in case
+         * user forgets to stop us.
+         *
+         * if we reach this then it's most likely our bug
+         */
+        struct timeval absolute_until; 
+        bool stop_requested; /* whether the user has requested that we
+                              * stopped... we have to continue until
+                              * to satisfy L pameter */
         struct timeval prev_timer_fired;
     } defense_info_;
 

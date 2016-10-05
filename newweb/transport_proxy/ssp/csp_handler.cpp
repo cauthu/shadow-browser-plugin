@@ -39,15 +39,12 @@ CSPHandler::CSPHandler(struct event_base* evbase,
 
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase, fd, false, 1024,
+            evbase, fd, false, 750, 5, 100,
             boost::bind(&CSPHandler::_on_buflo_channel_status,
                         this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,
                         this, _1, _2, _3, _4)
             ));
-
-    // auto rv = buflo_channel_->start_defense_session(50, 4);
-    // CHECK(rv);
 }
 
 void

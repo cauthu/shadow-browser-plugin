@@ -63,6 +63,9 @@ private:
     void _tproxy_on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
                                    uint16_t len, const uint8_t* buf);
 
+    void _tproxy_stop_defense(const bool& right_now);
+    void _tproxy_on_stop_defense_resp(myipc::GenericIpcChannel::RespStatus,
+                                   uint16_t len, const uint8_t* buf);
 
     ///////////
 

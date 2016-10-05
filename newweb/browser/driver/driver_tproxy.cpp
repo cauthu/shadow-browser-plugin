@@ -152,3 +152,40 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
 
     vlogself(2) << "done";
 }
+
+void
+Driver::_tproxy_stop_defense(const bool& right_now)
+{
+    vlogself(2) << "begin";
+
+    CHECK(tproxy_ipc_ch_ready_);
+
+    CHECK_EQ(state_, State::THINKING);
+
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+
+        BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
+            StopDefense, bufbuilder,
+            boost::bind(&Driver::_tproxy_on_stop_defense_resp,
+                        this, _2, _3, _4));
+    }
+
+    vlogself(2) << "done";
+}
+
+void
+Driver::_tproxy_on_stop_defense_resp(
+    GenericIpcChannel::RespStatus status,
+    uint16_t, const uint8_t* buf)
+{
+    vlogself(2) << "begin";
+
+    CHECK_EQ(state_, State::THINKING);
+
+    if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
+        logself(FATAL) << "command timed out";
+    }
+
+    vlogself(2) << "done";
+}

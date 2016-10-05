@@ -65,9 +65,14 @@ public:
                               const in_port_t& port,
                               BufloMuxChannelStreamObserver*) = 0;
 
-    virtual bool start_defense_session(const uint16_t& frequencyMs,
-                                       const uint16_t& durationSec) = 0;
-    virtual void stop_defense_session() = 0;
+    /* these are the same parameters as in the Tamaraw paper */
+    virtual bool start_defense_session() = 0;
+    /* schedule the defense to stop when it has reached sending the
+     * next multiple of L.
+     *
+     * but if "right_now" is true, then will stop right now
+     */
+    virtual void stop_defense_session(bool right_now=false) = 0;
 
     /* user wants to be defended, but only once he next actually has
      * useful activity. "start_defense_session()" immediately starts

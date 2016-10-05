@@ -50,9 +50,9 @@ public:
                              const char* peer_host,
                             const in_port_t& peer_port,
                             const in_addr_t& socks5_addr,
-                            const in_port_t& socks5_port);
-
-    // void kickstart(CSPReadyCb);
+                             const in_port_t& socks5_port,
+                             const uint32_t& buflo_frequencyMs,
+                             const uint32_t& buflo_L);
 
     enum class EstablishReturnValue
     {
@@ -66,6 +66,7 @@ public:
     EstablishReturnValue establish_tunnel(CSPReadyCb, const bool force_reconnect=true);
 
     void set_auto_start_defense_session_on_next_send();
+    void stop_defense_session(const bool& right_now);
 
 protected:
 
@@ -105,6 +106,8 @@ protected:
     const in_port_t peer_port_;
     const in_addr_t socks5_addr_;
     const in_port_t socks5_port_;
+    const uint32_t buflo_frequencyMs_;
+    const uint32_t buflo_L_;
 
     myio::TCPChannel::UniquePtr peer_channel_;
     myio::Socks5Connector::UniquePtr socks_connector_;

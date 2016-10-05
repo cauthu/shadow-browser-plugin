@@ -35,15 +35,19 @@ namespace csp
 {
 
 ClientSideProxy::ClientSideProxy(struct event_base* evbase,
-                               StreamServer::UniquePtr streamserver,
-                               const char* peer_host,
-                               const in_port_t& peer_port,
-                               const in_addr_t& socks5_addr,
-                               const in_port_t& socks5_port)
+                                 StreamServer::UniquePtr streamserver,
+                                 const char* peer_host,
+                                 const in_port_t& peer_port,
+                                 const in_addr_t& socks5_addr,
+                                 const in_port_t& socks5_port,
+                                 const uint32_t& buflo_frequencyMs,
+                                 const uint32_t& buflo_L)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
     , peer_host_(peer_host), peer_port_(peer_port)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
+    , buflo_frequencyMs_(buflo_frequencyMs)
+    , buflo_L_(buflo_L)
     , state_(State::INITIAL)
 {
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
@@ -118,6 +122,15 @@ ClientSideProxy::set_auto_start_defense_session_on_next_send()
     buflo_ch_->set_auto_start_defense_session_on_next_send();
 
     logself(INFO) << "will start defense on next send";
+}
+
+void
+ClientSideProxy::stop_defense_session(const bool& right_now)
+{
+    CHECK_EQ(state_, State::READY);
+    CHECK_NOTNULL(buflo_ch_.get());
+
+    buflo_ch_->stop_defense_session(right_now);
 }
 
 void
@@ -225,7 +238,7 @@ ClientSideProxy::_on_connected_to_ssp()
 
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase_, peer_fd, true, 512,
+            evbase_, peer_fd, true, 750, buflo_frequencyMs_, buflo_L_,
             boost::bind(&ClientSideProxy::_on_buflo_channel_status,
                         this, _1, _2),
             NULL

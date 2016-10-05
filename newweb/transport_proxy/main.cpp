@@ -120,7 +120,9 @@ int main(int argc, char **argv)
                       ssp_host.c_str(),
                       ssp_port,
                       torPort ? common::getaddr("localhost") : 0,
-                      torPort));
+                      torPort,
+                      20,
+                      100));
 
 #ifdef IN_SHADOW
         LOG(INFO) << "ipc server listens on " << tproxy_ipcport;
