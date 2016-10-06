@@ -508,8 +508,14 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
                 logself(FATAL) << "getting EINPROGRESS after a " << io_op_str;
             }
         } else {
-            logself(WARNING) << io_op_str << " got errno= " << errno
-                             << " (" << strerror(errno) << ")";
+            // let's not war if the socket had been closed by peer
+            if (errno == ECONNRESET) {
+                vlogself(2) << io_op_str << " got errno= " << errno
+                            << " (" << strerror(errno) << ")";
+            } else {
+                logself(WARNING) << io_op_str << " got errno= " << errno
+                                 << " (" << strerror(errno) << ")";
+            }
             _on_error();
         }
     }
