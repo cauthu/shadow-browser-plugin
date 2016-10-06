@@ -234,7 +234,8 @@ getaddr(const char *hostname)
             struct addrinfo* info;
             int result = getaddrinfo(hostname, nullptr, &hints, &info);
             if(result != 0) {
-                CHECK(0) << "error: " << gai_strerror(result);
+                VLOG(1) << "error: " << gai_strerror(result);
+                return INADDR_NONE;
             }
 
             addr = ((struct sockaddr_in*)(info->ai_addr))->sin_addr.s_addr;
