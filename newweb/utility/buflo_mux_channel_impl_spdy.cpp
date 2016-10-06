@@ -126,14 +126,20 @@ static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
     } while (0)
 
 
-#define MAYBE_GET_STREAMSTATE(sid, errretval)                           \
+#define MAYBE_GET_STREAMSTATE(sid, reset_stream_if_unknown, errretval)  \
     auto streamstate = stream_states_[sid].get();                       \
     do {                                                                \
         if (!streamstate) {                                             \
-            logself(ERROR) << "unknown sid: " << sid;                   \
             /* std::map just created an empty unique_ptr */             \
             /* so we erase it */                                        \
+            logself(WARNING) << "unknown sid: " << sid;                 \
             stream_states_.erase(sid);                                  \
+            if (reset_stream_if_unknown) {                              \
+                vlogself(2) << "resetting sid: " << sid;                \
+                auto rv = spdylay_submit_rst_stream(                    \
+                    spdysess_, sid, SPDYLAY_CANCEL);                    \
+                CHECK_EQ(rv, 0);                                        \
+            }                                                           \
             return errretval;                                           \
         }                                                               \
     } while(0)
@@ -391,7 +397,7 @@ BufloMuxChannelImplSpdy::set_stream_connected(int sid)
 int
 BufloMuxChannelImplSpdy::read_buffer(int sid, struct evbuffer* buf, size_t len)
 {
-    MAYBE_GET_STREAMSTATE(sid, -1);
+    MAYBE_GET_STREAMSTATE(sid, false, -1);
 
     const auto rv = evbuffer_remove_buffer(
         /* src */ streamstate->outward_buf_, /* dst */ buf, len);
@@ -415,7 +421,7 @@ BufloMuxChannelImplSpdy::peek(int sid, ssize_t len)
 struct evbuffer*
 BufloMuxChannelImplSpdy::get_input_evbuf(int sid)
 {
-    MAYBE_GET_STREAMSTATE(sid, nullptr);
+    MAYBE_GET_STREAMSTATE(sid, false, nullptr);
 
     // return the buf that user can read their new input data, i.e.,
     // outward data.  XXX/maybe rename function
@@ -426,8 +432,9 @@ BufloMuxChannelImplSpdy::get_input_evbuf(int sid)
 size_t
 BufloMuxChannelImplSpdy::get_avail_input_length(int sid) const
 {
-    if (inMap(stream_states_, sid)) {
-        return evbuffer_get_length(stream_states_.at(sid)->outward_buf_);
+    const auto it = stream_states_.find(sid);
+    if (it != stream_states_.end()) {
+        return evbuffer_get_length(it->second->outward_buf_);
     } else {
         return 0;
     }
@@ -436,7 +443,7 @@ BufloMuxChannelImplSpdy::get_avail_input_length(int sid) const
 int
 BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf) 
 {
-    MAYBE_GET_STREAMSTATE(sid, -1);
+    MAYBE_GET_STREAMSTATE(sid, false, -1);
 
     auto rv = evbuffer_add_buffer(
         /* dst */ streamstate->inward_buf_,
@@ -1182,6 +1189,8 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_stream_close_cb(spdylay_session *session
                                                         int32_t stream_id,
                                                         spdylay_status_code status_code)
 {
+    DestructorGuard dg(this);
+
     vlogself(2) << "begin, sid= " << stream_id;
     auto *observer = (BufloMuxChannelStreamObserver*)
                      spdylay_session_get_stream_user_data(session, stream_id);
@@ -1262,6 +1271,8 @@ BufloMuxChannelImplSpdy::_on_spdylay_before_ctrl_send_cb(
     spdylay_frame_type type,
     spdylay_frame *frame)
 {
+    DestructorGuard dg(this);
+
     vlogself(2) << "begin";
 
     CHECK_EQ(session, spdysess_);
@@ -1285,7 +1296,6 @@ BufloMuxChannelImplSpdy::_on_spdylay_before_ctrl_send_cb(
         _init_stream_data_provider(sid);
 
         vlogself(2) << "notify that stream id is assigned";
-        DestructorGuard dg(this);
         observer->onStreamIdAssigned(this, sid);
     }
 
@@ -1319,6 +1329,8 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_ctrl_recv_cb(spdylay_session *session,
                                                      spdylay_frame_type type,
                                                      spdylay_frame *frame)
 {
+    DestructorGuard dg(this);
+
     vlogself(2) << "begin";
 
     switch(type) {
@@ -1550,11 +1562,13 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
     const uint8_t *data,
     size_t len)
 {
+    DestructorGuard dg(this);
+
     // yay! we have data for user. we count this even if the stream
     // might have been deleted
     all_users_data_recv_byte_count_ += len;
 
-    MAYBE_GET_STREAMSTATE(stream_id, );
+    MAYBE_GET_STREAMSTATE(stream_id, true, );
 
     const auto rv = evbuffer_add(streamstate->outward_buf_, data, len);
     CHECK_NE(rv, -1);
@@ -1594,7 +1608,7 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
 
     ssize_t retval = SPDYLAY_ERR_CALLBACK_FAILURE;
 
-    MAYBE_GET_STREAMSTATE(stream_id, SPDYLAY_ERR_TEMPORAL_CALLBACK_FAILURE);
+    MAYBE_GET_STREAMSTATE(stream_id, true, SPDYLAY_ERR_TEMPORAL_CALLBACK_FAILURE);
 
     const auto rv = evbuffer_remove(streamstate->inward_buf_, buf, length);
     CHECK_NE(rv, -1);
