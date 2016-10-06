@@ -40,7 +40,7 @@ struct MyConfig
 {
     MyConfig()
         : ssp_port(common::ports::server_side_transport_proxy)
-        , listenport(common::ports::client_side_transport_proxy)
+        , listenport(0)
         , torPort(0)
         , tproxy_ipcport(common::ports::transport_proxy_ipc)
         , tamaraw_pkt_intvl_ms(0)
