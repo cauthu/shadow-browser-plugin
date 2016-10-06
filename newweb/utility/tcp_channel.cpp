@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <event2/event.h>
 #include <algorithm>
+#include <boost/bind.hpp>
 
 #include "tcp_channel.hpp"
 #include "easylogging++.h"
@@ -80,19 +81,27 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
         state_ = ChannelState::CONNECTING_SOCKET;
 
         /* call the onConnectError() in a separate stack */
-        rv = event_base_once(evbase_, -1, EV_TIMEOUT, s_socket_connect_errorcb,
-                             this, nullptr);
-        CHECK_EQ(rv, 0);
+        connect_error_cb_timer_.reset(
+            new Timer(evbase_, true,
+                      boost::bind(&TCPChannel::_on_socket_connect_errorcb, this, _1)));
+        CHECK_NOTNULL(connect_error_cb_timer_.get());
+
+        static const auto zero_ms = 0;
+        connect_error_cb_timer_->start(zero_ms);
+        CHECK(connect_error_cb_timer_->is_running());
     }
     else {
-      rv = event_base_once(
-			   evbase_, fd_, EV_WRITE, s_socket_connect_eventcb,
-			   this, connect_timeout);
-      CHECK_EQ(rv, 0);
+        state_ = ChannelState::CONNECTING_SOCKET;
 
-      state_ = ChannelState::CONNECTING_SOCKET;
+        socket_connect_ev_.reset(
+            event_new(evbase_, fd_, EV_READ | EV_WRITE | EV_TIMEOUT,
+                      s_socket_connect_eventcb, this));
+        CHECK_NOTNULL(socket_connect_ev_.get());
 
-      _initialize_read_write_events();
+        rv = event_add(socket_connect_ev_.get(), connect_timeout);
+        CHECK_EQ(rv, 0);
+
+        _initialize_read_write_events();
     }
 
     return 0;
@@ -221,6 +230,8 @@ TCPChannel::close()
     }
 
     state_ = ChannelState::CLOSED;
+    connect_error_cb_timer_.reset();
+    socket_connect_ev_.reset();
     socket_read_ev_.reset();
     socket_write_ev_.reset();
     input_evb_.reset(); // XXX/maybe we can keep the input buf for
@@ -314,7 +325,10 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
 
     DestructorGuard dg(this);
 
-    if (what & EV_WRITE) {
+    const auto rv = event_del(socket_connect_ev_.get());
+    CHECK_EQ(rv, 0);
+
+    if ((what & EV_WRITE) || (what & EV_READ)) {
         state_ = ChannelState::SOCKET_CONNECTED;
         _set_read_monitoring(true);
         _maybe_toggle_write_monitoring();
@@ -325,12 +339,12 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
         connect_observer_->onConnectTimeout(this);
     }
     else {
-        CHECK(0) << "unexpected events: " << what;
+        logself(FATAL) << "unexpected events: " << unsigned(what);
     }
 }
 
 void
-TCPChannel::_on_socket_connect_errorcb()
+TCPChannel::_on_socket_connect_errorcb(Timer*)
 {
     CHECK_EQ(state_, ChannelState::CONNECTING_SOCKET);
     CHECK_NE(connect_errno_, 0);
@@ -557,6 +571,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     : StreamChannel(observer)
     , evbase_(evbase), connect_observer_(nullptr)
     , state_(starting_state), fd_(fd)
+    , socket_connect_ev_(nullptr, event_free)
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
     , addr_(addr), port_(port), is_client_(is_client)
@@ -573,14 +588,6 @@ TCPChannel::s_socket_connect_eventcb(int fd, short what, void* arg)
 {
     TCPChannel* ch = (TCPChannel*)arg;
     ch->_on_socket_connect_eventcb(fd, what);
-}
-
-void
-TCPChannel::s_socket_connect_errorcb(int fd, short what, void* arg)
-{
-    CHECK_EQ(fd, -1);
-    TCPChannel* ch = (TCPChannel*)arg;
-    ch->_on_socket_connect_errorcb();
 }
 
 void

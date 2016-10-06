@@ -8,6 +8,7 @@
 #include "folly/DelayedDestruction.h"
 
 #include "object.hpp"
+#include "timer.hpp"
 #include "stream_channel.hpp"
 #include "easylogging++.h"
 
@@ -103,7 +104,7 @@ protected:
     void _on_eof();
     void _on_error();
     void _on_socket_connect_eventcb(int fd, short what);
-    void _on_socket_connect_errorcb();
+    void _on_socket_connect_errorcb(Timer*);
     void _on_socket_readcb(int fd, short what);
     void _on_socket_writecb(int fd, short what);
 
@@ -117,7 +118,6 @@ protected:
     bool _maybe_dropread();
 
     static void s_socket_connect_eventcb(int fd, short what, void* arg);
-    static void s_socket_connect_errorcb(int fd, short what, void* arg);
     static void s_socket_readcb(int fd, short what, void* arg);
     static void s_socket_writecb(int fd, short what, void* arg);
 
@@ -129,7 +129,19 @@ protected:
     ChannelState state_;
 
     int fd_;
-    int connect_errno_;
+
+    /* for the connect success and connect errors, use events we have
+     * pointer to, so that we can cancel them when we are
+     * destroyed. using event_base_once() means we could be called
+     * back after we have been destroyed. valgrind has reported that
+     * in the connect success case; haven't seen the error case yet,
+     * but it's similar situation, so i'll fix both
+     */
+    int connect_errno_; /* save the errno for the connect error cb to
+                         * use */
+    Timer::UniquePtr connect_error_cb_timer_;
+    std::unique_ptr<struct event, void(*)(struct event*)> socket_connect_ev_;
+
     /* using separate events for read and write, so it's easy to
      * enable/disable
      */
