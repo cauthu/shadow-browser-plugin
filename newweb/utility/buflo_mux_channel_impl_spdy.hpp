@@ -80,8 +80,7 @@ protected:
     void _pump_spdy_send();
     void _pump_spdy_recv();
 
-    void      _on_read_peer_cell_size(short what);
-    static void s_read_peer_cell_size(int, short, void*);
+    void _read_peer_cell_size();
 
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() { CHECK(0) << "todo"; return false; }

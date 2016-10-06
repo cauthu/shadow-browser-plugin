@@ -1083,7 +1083,7 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 
     if (what & EV_READ) {
         if (need_to_read_cell_size_) {
-            _read_peer_cell_size(what);
+            _read_peer_cell_size();
         } else {
             // let buffer decide how much to read
             const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
@@ -1144,10 +1144,9 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
 }
 
 void
-BufloMuxChannelImplSpdy::_read_peer_cell_size(short what)
+BufloMuxChannelImplSpdy::_read_peer_cell_size()
 {
     CHECK(need_to_read_cell_size_);
-    CHECK(what & EV_READ);
     auto rv = read(fd_, &peer_cell_size_, sizeof peer_cell_size_);
     CHECK_EQ(rv, 2) << "error: " << strerror(errno);
     peer_cell_size_ = ntohs(peer_cell_size_);
