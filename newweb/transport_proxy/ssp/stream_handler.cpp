@@ -41,6 +41,8 @@ StreamHandler::StreamHandler(struct event_base* evbase,
     , buflo_channel_(buflo_ch)
     , sid_(sid)
     , handler_done_cb_(handler_done_cb)
+    , target_host_(target_host)
+    , target_port_(port)
 {
     CHECK_GT(sid, -1);
 
@@ -97,7 +99,8 @@ void
 StreamHandler::onConnectError(StreamChannel*, int) noexcept
 {
     CHECK_EQ(state_, State::CONNECTING_TARGET);
-    logself(WARNING) << "error connecting to target";
+    logself(ERROR) << "error connecting to target [" << target_host_ << "]:"
+                   << target_port_;
     _close();
 }
 

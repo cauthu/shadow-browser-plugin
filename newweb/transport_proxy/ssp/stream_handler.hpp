@@ -65,6 +65,9 @@ protected:
     InnerOuterHandler::UniquePtr inner_outer_handler_;
     StreamHandlerDoneCb handler_done_cb_;
 
+    const std::string target_host_;
+    const uint16_t target_port_;
+
     enum class State {
         CONNECTING_TARGET,
         FORWARDING /* handled by InnerOuterHandler */,
