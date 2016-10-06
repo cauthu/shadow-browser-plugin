@@ -37,6 +37,8 @@ Timer::Timer(struct event_base *evbase,
 void
 Timer::start(const struct timeval *tv)
 {
+    CHECK_NOTNULL(tv);
+
     if (!one_shot_) {
         CHECK(timerisset(tv)) << "a repeating timer with 0 delay??";
     }
