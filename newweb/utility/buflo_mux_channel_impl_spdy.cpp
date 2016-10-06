@@ -173,6 +173,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
     , whole_dummy_cell_at_end_outbuf_(false)
+    , need_to_read_cell_size_(true)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
 {
@@ -246,13 +247,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         CHECK_EQ(rv, sizeof cs);
     }
 
-    struct timeval timeout;
-    timeout.tv_sec = 5;
-    timeout.tv_usec = 0;
-    // set up a one-time event to read peer's cell size, and we will
-    // then enable the regular read event
-    rv = event_base_once(evbase_, fd_, EV_READ|EV_TIMEOUT,
-                         s_read_peer_cell_size, this, &timeout);
+    rv = event_add(socket_read_ev_.get(), nullptr);
     CHECK_EQ(rv, 0);
 
     _self_test_bit_manipulation();
@@ -1084,16 +1079,22 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 {
     vlogself(2) << "begin";
 
+    DestructorGuard dg(this);
+
     if (what & EV_READ) {
-        // let buffer decide how much to read
-        const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
-        vlogself(2) << "evbuffer_read() returns: " << rv;
-        if (rv > 0) {
-            // there's new data
-            all_recv_byte_count_ += rv;
-            _read_cells();
+        if (need_to_read_cell_size_) {
+            _read_peer_cell_size(what);
         } else {
-            _handle_failed_socket_io("read", rv, true);
+            // let buffer decide how much to read
+            const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
+            vlogself(2) << "evbuffer_read() returns: " << rv;
+            if (rv > 0) {
+                // there's new data
+                all_recv_byte_count_ += rv;
+                _read_cells();
+            } else {
+                _handle_failed_socket_io("read", rv, true);
+            }
         }
     } else {
         CHECK(0) << "invalid events: " << what;
@@ -1112,6 +1113,8 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     CHECK_NE(defense_info_.state, DefenseState::ACTIVE);
 
     vlogself(2) << "begin";
+
+    DestructorGuard dg(this);
 
     if (what & EV_WRITE) {
         if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
@@ -1141,40 +1144,28 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
 }
 
 void
-BufloMuxChannelImplSpdy::s_read_peer_cell_size(int, short what, void *arg)
+BufloMuxChannelImplSpdy::_read_peer_cell_size(short what)
 {
-    auto ch = (BufloMuxChannelImplSpdy*)arg;
-    ch->_on_read_peer_cell_size(what);
-}
+    CHECK(need_to_read_cell_size_);
+    CHECK(what & EV_READ);
+    auto rv = read(fd_, &peer_cell_size_, sizeof peer_cell_size_);
+    CHECK_EQ(rv, 2) << "error: " << strerror(errno);
+    peer_cell_size_ = ntohs(peer_cell_size_);
+    vlogself(2) << "peer using cell size: " << peer_cell_size_;
 
-void
-BufloMuxChannelImplSpdy::_on_read_peer_cell_size(short what)
-{
-    if (what & EV_TIMEOUT) {
-        logself(FATAL) << "timeout reading peer cell size";
-    } else {
-        CHECK(what & EV_READ);
-        auto rv = read(fd_, &peer_cell_size_, sizeof peer_cell_size_);
-        CHECK_EQ(rv, 2);
-        peer_cell_size_ = ntohs(peer_cell_size_);
-        vlogself(2) << "peer using cell size: " << peer_cell_size_;
+    peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
 
-        peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
+	need_to_read_cell_size_ = false;
 
-        if (!is_client_side_) {
-            // server-side can now send our cell size
-            const uint16_t cs = htons(cell_size_);
-            rv = write(fd_, (uint8_t*)&cs, sizeof cs);
-            CHECK_EQ(rv, sizeof cs);
-        }
-
-        // now we can enable the regular read event
-        rv = event_add(socket_read_ev_.get(), nullptr);
-        CHECK_EQ(rv, 0);
-
-        DestructorGuard dg(this);
-        ch_status_cb_(this, ChannelStatus::READY);
+    if (!is_client_side_) {
+        // server-side can now send our cell size
+        const uint16_t cs = htons(cell_size_);
+        rv = write(fd_, (uint8_t*)&cs, sizeof cs);
+        CHECK_EQ(rv, sizeof cs);
     }
+
+    DestructorGuard dg(this);
+    ch_status_cb_(this, ChannelStatus::READY);
 }
 
 void

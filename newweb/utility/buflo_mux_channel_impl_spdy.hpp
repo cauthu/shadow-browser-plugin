@@ -388,6 +388,7 @@ protected:
             payload_len_ = 0;
         }
     } cell_read_info_;
+    bool need_to_read_cell_size_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
 
