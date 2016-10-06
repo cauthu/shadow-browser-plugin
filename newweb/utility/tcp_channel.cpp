@@ -1,5 +1,7 @@
 
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
 #include <event2/event.h>
 #include <algorithm>
 
@@ -30,6 +32,7 @@ TCPChannel::TCPChannel(struct event_base *evbase,
                        StreamChannelObserver* observer)
     : TCPChannel(evbase, -1, addr, port, observer, ChannelState::INIT, true)
 {
+    connect_errno_ = 0;
     // observer can be set later with set_observer()
     CHECK(is_client_);
 }
@@ -37,6 +40,7 @@ TCPChannel::TCPChannel(struct event_base *evbase,
 TCPChannel::TCPChannel(struct event_base *evbase, int fd)
     : TCPChannel(evbase, fd, 0, 0, nullptr, ChannelState::SOCKET_CONNECTED, false)
 {
+    connect_errno_ = 0;
     CHECK_GE(fd_, 0);
     CHECK(!is_client_);
     vlogself(2) << "contructing a (server) tcp chan, fd= " << fd;
@@ -68,18 +72,58 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
 
     auto rv = connect(fd_, (struct sockaddr*)&server, sizeof(server));
     CHECK_EQ(rv, -1);
-    CHECK_EQ(errno, EINPROGRESS);
+    connect_errno_ = errno;
 
-    rv = event_base_once(
-        evbase_, fd_, EV_WRITE, s_socket_connect_eventcb,
-        this, connect_timeout);
-    CHECK_EQ(rv, 0);
+    if (connect_errno_ != EINPROGRESS) {
+        vlogself(1) << "errno: " << errno;
 
-    state_ = ChannelState::CONNECTING_SOCKET;
+        state_ = ChannelState::CONNECTING_SOCKET;
 
-    _initialize_read_write_events();
+        /* call the onConnectError() in a separate stack */
+        rv = event_base_once(evbase_, -1, EV_TIMEOUT, s_socket_connect_errorcb,
+                             this, nullptr);
+        CHECK_EQ(rv, 0);
+    }
+    else {
+      rv = event_base_once(
+			   evbase_, fd_, EV_WRITE, s_socket_connect_eventcb,
+			   this, connect_timeout);
+      CHECK_EQ(rv, 0);
+
+      state_ = ChannelState::CONNECTING_SOCKET;
+
+      _initialize_read_write_events();
+    }
 
     return 0;
+}
+
+void
+TCPChannel::get_peer_name(std::string& address, uint16_t& port) const
+{
+    CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
+
+    struct sockaddr_storage addr;
+    socklen_t len = sizeof addr;
+    char ipstr[INET6_ADDRSTRLEN] = {0};
+
+    auto rv = getpeername(fd_, (struct sockaddr*)&addr, &len);
+    CHECK_EQ(rv, 0);
+
+    // deal with both IPv4 and IPv6:
+    if (addr.ss_family == AF_INET) {
+        struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+        port = ntohs(s->sin_port);
+        inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+
+        address = ipstr;
+    } else { // AF_INET6
+        struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+        port = ntohs(s->sin6_port);
+        inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+
+        address = ipstr;
+    }
 }
 
 void
@@ -283,6 +327,16 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
     else {
         CHECK(0) << "unexpected events: " << what;
     }
+}
+
+void
+TCPChannel::_on_socket_connect_errorcb()
+{
+    CHECK_EQ(state_, ChannelState::CONNECTING_SOCKET);
+    CHECK_NE(connect_errno_, 0);
+
+    DestructorGuard dg(this);
+    connect_observer_->onConnectError(this, connect_errno_);
 }
 
 void
@@ -519,6 +573,14 @@ TCPChannel::s_socket_connect_eventcb(int fd, short what, void* arg)
 {
     TCPChannel* ch = (TCPChannel*)arg;
     ch->_on_socket_connect_eventcb(fd, what);
+}
+
+void
+TCPChannel::s_socket_connect_errorcb(int fd, short what, void* arg)
+{
+    CHECK_EQ(fd, -1);
+    TCPChannel* ch = (TCPChannel*)arg;
+    ch->_on_socket_connect_errorcb();
 }
 
 void

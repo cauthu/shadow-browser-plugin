@@ -48,13 +48,16 @@ ServerSideProxy::ServerSideProxy(struct event_base* evbase,
 void
 ServerSideProxy::_on_csp_handler_done(CSPHandler* chandler)
 {
+    logself(INFO) << "csp:" << chandler->objId() << " is closed";
     csp_handlers_.erase(chandler->objId());
 }
 
 void
 ServerSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noexcept
 {
-    vlogself(2) << "a new csp";
+    std::string peer_ip;
+    uint16_t peer_port = 0;
+    channel->get_peer_name(peer_ip, peer_port);
 
     CSPHandler::UniquePtr chandler(
         new CSPHandler(evbase_,
@@ -66,6 +69,10 @@ ServerSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noe
     const auto chid = chandler->objId();
     const auto ret = csp_handlers_.insert(
         make_pair(chid, std::move(chandler)));
+
+    logself(INFO) << "accepted new csp:" << chid
+                  << " from " << peer_ip << ":" << peer_port;
+
     CHECK(ret.second); // insist it was newly inserted
 }
 

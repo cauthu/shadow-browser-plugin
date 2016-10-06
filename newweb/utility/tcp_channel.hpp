@@ -68,6 +68,8 @@ public:
     virtual bool is_closed() const override;
     virtual int release_fd() override;
 
+    virtual void get_peer_name(std::string& address, uint16_t& port) const override;
+
 protected:
 
     enum class ChannelState {
@@ -101,6 +103,7 @@ protected:
     void _on_eof();
     void _on_error();
     void _on_socket_connect_eventcb(int fd, short what);
+    void _on_socket_connect_errorcb();
     void _on_socket_readcb(int fd, short what);
     void _on_socket_writecb(int fd, short what);
 
@@ -114,6 +117,7 @@ protected:
     bool _maybe_dropread();
 
     static void s_socket_connect_eventcb(int fd, short what, void* arg);
+    static void s_socket_connect_errorcb(int fd, short what, void* arg);
     static void s_socket_readcb(int fd, short what, void* arg);
     static void s_socket_writecb(int fd, short what, void* arg);
 
@@ -125,6 +129,7 @@ protected:
     ChannelState state_;
 
     int fd_;
+    int connect_errno_;
     /* using separate events for read and write, so it's easy to
      * enable/disable
      */

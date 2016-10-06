@@ -189,6 +189,8 @@ public:
 
     virtual int release_fd() = 0;
 
+    virtual void get_peer_name(std::string& address, uint16_t& port) const = 0;
+
     virtual const size_t& num_total_read_bytes() const final
     {
         return num_total_read_bytes_;
