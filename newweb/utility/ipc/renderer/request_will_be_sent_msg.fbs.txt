@@ -1,0 +1,14 @@
+
+namespace myipc.renderer.messages;
+
+/* renderer notifies client that a request will be sent */
+
+table RequestWillBeSentMsg
+{
+    resInstNum: uint;
+
+    /* 0-based index in the redirect chain */
+    reqChainIdx: uint;
+}
+
+root_type RequestWillBeSentMsg;

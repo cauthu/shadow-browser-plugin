@@ -18,6 +18,10 @@ macro(add_cflags)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ARGN}")
 endmacro(add_cflags)
 
+macro(add_cxxflags)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ARGN}")
+endmacro(add_cxxflags)
+
 ## now handle the options, set up our own flags
 set(CMAKE_C_FLAGS_DEBUG "")
 set(CMAKE_C_FLAGS_RELEASE "")
@@ -25,10 +29,15 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     message(STATUS "Release enabled. Setting '-DNDEBUG' and '-O3'.")
     add_definitions(-DNDEBUG)
     add_cflags(-O3)
+    add_cxxflags(-O3)
 else()
     message(STATUS "Debug enabled. Setting '-DDEBUG' and '-g'.")
-    add_definitions(-DDEBUG)
+    add_cflags(-DDEBUG)
     add_cflags(-g)
+    add_cflags(-O0)
+    add_cxxflags(-DDEBUG)
+    add_cxxflags(-g)
+    add_cxxflags(-O0)
 endif()
 
 ## get general includes
@@ -91,18 +100,12 @@ include_directories(${GLIB_INCLUDES})
 ## plug-ins need to disable fortification to ensure syscalls are intercepted
 #add_definitions(-D_GNU_SOURCE)
 add_cflags("-fno-inline -fno-strict-aliasing -U_FORTIFY_SOURCE")
+add_cxxflags("-fno-inline -fno-strict-aliasing -U_FORTIFY_SOURCE")
 
 ## CFLAGS status update
 message(STATUS "CMAKE_C_FLAGS = ${CMAKE_C_FLAGS}")
+message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
 ## recurse to build each plug-in
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/echo/)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/filetransfer/)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/browser/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/hello/)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/ping/)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/torcontrol/)
-#add_subdirectory(${CMAKE_SOURCE_DIR}/torrent/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/python/)
-add_subdirectory(${CMAKE_SOURCE_DIR}/python/python3)
+add_subdirectory(${CMAKE_SOURCE_DIR}/newweb/)

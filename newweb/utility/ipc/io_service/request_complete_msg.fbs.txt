@@ -1,0 +1,13 @@
+
+namespace myipc.ioservice.messages;
+
+/* similar purpose to chrome's ResourceHostMsg_RequestComplete */
+
+table RequestCompleteMsg
+{
+    req_id: int;
+
+    success: bool;
+}
+
+root_type RequestCompleteMsg;

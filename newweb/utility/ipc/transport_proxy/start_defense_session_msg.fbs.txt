@@ -1,0 +1,9 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+table StartDefenseSessionMsg
+{
+}
+
+root_type StartDefenseSessionMsg;

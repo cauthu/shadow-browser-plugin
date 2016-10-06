@@ -1,0 +1,8 @@
+
+namespace myipc.transport_proxy.messages;
+
+table SetAutoStartDefenseOnNextSendMsg
+{
+}
+
+root_type SetAutoStartDefenseOnNextSendMsg;

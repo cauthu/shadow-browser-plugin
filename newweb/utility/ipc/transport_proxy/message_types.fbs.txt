@@ -1,0 +1,16 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+enum type:ubyte
+{
+    EstablishTunnel,
+    EstablishTunnelResp,
+
+    SetAutoStartDefenseOnNextSend,
+    SetAutoStartDefenseOnNextSendResp,
+
+    StopDefense,
+    StopDefenseResp,
+
+}

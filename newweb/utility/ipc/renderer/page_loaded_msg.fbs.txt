@@ -1,0 +1,11 @@
+
+namespace myipc.renderer.messages;
+
+/* renderer notifies client of successful load */
+
+table PageLoadedMsg
+{
+    ttfb_ms: ulong;
+}
+
+root_type PageLoadedMsg;

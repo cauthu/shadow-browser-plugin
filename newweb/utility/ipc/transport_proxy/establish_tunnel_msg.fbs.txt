@@ -1,0 +1,14 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+// msg for CSP to establish tunnel to SSP
+
+table EstablishTunnelMsg
+{
+    /* if true, then force CSP to re-establish even if the tunnel is
+     * currently established */
+    forceReconnect: bool = true;
+}
+
+root_type EstablishTunnelMsg;

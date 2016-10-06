@@ -1,0 +1,10 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+table StopDefenseMsg
+{
+    right_now: bool;
+}
+
+root_type StopDefenseMsg;

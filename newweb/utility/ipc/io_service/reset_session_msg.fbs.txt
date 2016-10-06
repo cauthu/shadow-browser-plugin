@@ -1,0 +1,12 @@
+
+namespace myipc.ioservice.messages;
+
+/* tell the io service to reset the http session, i.e., close all of
+the session's connections, drop whatever requests they might be
+handling, etc. */
+
+table ResetSessionMsg
+{
+}
+
+root_type ResetSessionMsg;

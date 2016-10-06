@@ -1,0 +1,9 @@
+
+namespace myipc.renderer.messages;
+
+table LoadPageMsg
+{
+    model_fpath: string;
+}
+
+root_type LoadPageMsg;
