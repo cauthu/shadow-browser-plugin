@@ -1615,6 +1615,11 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
 
 BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
 {
+    // delete these events BEFORE closing the fd; this seems to fix
+    // issue #6
+    socket_read_ev_.reset();
+    socket_write_ev_.reset();
+
     if (fd_) {
         ::close(fd_);
         fd_ = -1;
