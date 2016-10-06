@@ -41,6 +41,7 @@ public:
 
 protected:
 
+    virtual ~CSPHandler() = default;
 
     ////////////
 
