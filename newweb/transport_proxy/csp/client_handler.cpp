@@ -192,14 +192,6 @@ ClientHandler::_read_socks5_greeting(size_t num_avail_bytes)
 }
 
 bool
-ClientHandler::_create_stream(const char* host,
-                              uint16_t port)
-{
-    const auto rv = buflo_channel_->create_stream(host, port, this);
-    return (rv == 0);
-}
-
-bool
 ClientHandler::_read_socks5_connect_req(size_t num_avail_bytes)
 {
     if (num_avail_bytes >= 4) {
@@ -332,7 +324,9 @@ ClientHandler::onEOF(StreamChannel*) noexcept
 {
     vlogself(2) << "client channel eof";
     CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
-          (state_ == State::READ_SOCKS5_GREETING));
+          (state_ == State::READ_SOCKS5_GREETING) ||
+          (state_ == State::CREATE_BUFLO_STREAM))
+        << "state is: " << unsigned(state_);
     _close();
 }
 
@@ -341,7 +335,9 @@ ClientHandler::onError(StreamChannel*, int) noexcept
 {
     vlogself(2) << "client channel error";
     CHECK((state_ == State::READ_SOCKS5_CONNECT_REQ) ||
-          (state_ == State::READ_SOCKS5_GREETING));
+          (state_ == State::READ_SOCKS5_GREETING) ||
+          (state_ == State::CREATE_BUFLO_STREAM))
+        << "state is: " << unsigned(state_);
     _close();
 }
 

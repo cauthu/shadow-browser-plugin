@@ -64,7 +64,6 @@ protected:
     void _consume_client_input();
     bool _read_socks5_greeting(size_t);
     bool _read_socks5_connect_req(size_t);
-    bool _create_stream(const char* host, uint16_t port);
     void _on_inner_outer_handler_done(InnerOuterHandler*, bool);
     void _write_socks5_connect_request_granted();
     void _close();
