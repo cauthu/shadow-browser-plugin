@@ -202,9 +202,14 @@ int main(int argc, char **argv)
                 conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
             CHECK(found) << "cannot find myself in proxy mode spec file";
 
-            LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
+            LOG(INFO) << "browser using proxy mode \"" << proxy_mode << "\"";
 
             do_setup_csp = (proxy_mode == expcommon::proxy_mode_tproxy);
+
+            if (!do_setup_csp) {
+                LOG(INFO) << "we are of no use; exiting";
+                return 0;
+            }
         }
 #endif
 
