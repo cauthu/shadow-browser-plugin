@@ -5,6 +5,7 @@ include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLU
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(DRIVER_PROCESS_SOURCES
+  ../../experiment_common.cpp
   main.cpp
   driver.cpp
   driver_tproxy.cpp

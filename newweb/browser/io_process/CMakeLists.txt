@@ -5,6 +5,7 @@ include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLU
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(IO_PROCESS_SOURCES
+  ../../experiment_common.cpp
   io_process.cpp
   ipc.cpp
   http_session.cpp

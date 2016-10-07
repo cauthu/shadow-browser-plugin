@@ -10,6 +10,9 @@
 #include "csp/csp.hpp"
 #include "ssp/ssp.hpp"
 
+#include "../experiment_common.hpp"
+
+
 using std::vector;
 using std::pair;
 using std::string;
@@ -41,7 +44,7 @@ struct MyConfig
     MyConfig()
         : ssp_port(common::ports::server_side_transport_proxy)
         , listenport(0)
-        , torPort(0)
+        , tor_socks_port(0)
         , tproxy_ipcport(common::ports::transport_proxy_ipc)
         , tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
@@ -52,10 +55,15 @@ struct MyConfig
     uint16_t ssp_port;
     /* for client or sever, depends on is_client bool below */
     uint16_t listenport;
-    uint16_t torPort;
+    uint16_t tor_socks_port;
     uint16_t tproxy_ipcport;
     uint16_t tamaraw_pkt_intvl_ms;
     uint16_t tamaraw_L;
+
+#ifdef IN_SHADOW
+    std::string browser_proxy_mode_spec_file;
+#endif
+
 };
 
 static void
@@ -80,10 +88,10 @@ set_my_config(MyConfig& conf,
             conf.listenport = boost::lexical_cast<uint16_t>(value);
         }
 
-        else if (name == "tor-port") {
+        else if (name == "tor-socks-port") {
             /* will connect to local (i.e., "localhost") tor proxy at
              * this port */
-            conf.torPort = boost::lexical_cast<uint16_t>(value);
+            conf.tor_socks_port = boost::lexical_cast<uint16_t>(value);
         }
 
         else if (name == "tproxy-ipc-port") {
@@ -96,6 +104,14 @@ set_my_config(MyConfig& conf,
 
         else if (name == "tamaraw-L") {
             conf.tamaraw_L = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
+#ifdef IN_SHADOW
+            conf.browser_proxy_mode_spec_file = value;
+#else
+            LOG(FATAL) << "browser-proxy-mode-spec makes sense only in shadow";
+#endif
         }
 
         else {
@@ -167,41 +183,87 @@ int main(int argc, char **argv)
     myio::TCPServer::UniquePtr tcpServerForIPC;
     IPCServer::UniquePtr ipcserver;
 
+    bool do_setup_csp = true;
     if (is_client) {
-        /* tcpserver to accept connections from clients */
-        myio::TCPServer::UniquePtr tcpserver(
-            new myio::TCPServer(evbase.get(),
-                                common::getaddr("localhost"),
-                                conf.listenport, nullptr));
-
-        VLOG(2) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
-        VLOG(2) << "torPort: " << conf.torPort;
-        csp.reset(new csp::ClientSideProxy(
-                      evbase.get(),
-                      std::move(tcpserver),
-                      conf.ssp_host.c_str(),
-                      conf.ssp_port,
-                      conf.torPort ? common::getaddr("localhost") : 0,
-                      conf.torPort,
-                      conf.tamaraw_pkt_intvl_ms,
-                      conf.tamaraw_L));
-
 #ifdef IN_SHADOW
-        LOG(INFO) << "ipc server listens on " << conf.tproxy_ipcport;
-        tcpServerForIPC.reset(
-            new myio::TCPServer(
-                evbase.get(), common::getaddr("localhost"),
-                conf.tproxy_ipcport, nullptr));
-        ipcserver.reset(
-            new IPCServer(
-                evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
-#else
-        const auto rv = csp->establish_tunnel(
-            boost::bind(s_on_csp_ready, _1),
-            true);
+        // find out if this node does not use buflo tproxy
+
+        if (!conf.browser_proxy_mode_spec_file.empty()) {
+            char myhostname[80] = {0};
+            rv = gethostname(myhostname, (sizeof myhostname) - 1);
+            CHECK_EQ(rv, 0);
+
+            LOG(INFO) << "my hostname \"" << myhostname << "\"";
+
+            bool found = false;
+            const auto proxy_mode = expcommon::get_my_proxy_mode(
+                conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
+            CHECK(found) << "cannot find myself in proxy mode spec file";
+
+            LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
+
+            do_setup_csp = (proxy_mode == expcommon::proxy_mode_tproxy);
+        }
 #endif
 
+        if (do_setup_csp) {
+            /* tcpserver to accept connections from clients */
+            myio::TCPServer::UniquePtr tcpserver(
+                new myio::TCPServer(evbase.get(),
+                                    common::getaddr("localhost"),
+                                    conf.listenport, nullptr));
+
+            VLOG(2) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
+            VLOG(2) << "tor_socks_port: " << conf.tor_socks_port;
+            csp.reset(new csp::ClientSideProxy(
+                          evbase.get(),
+                          std::move(tcpserver),
+                          conf.ssp_host.c_str(),
+                          conf.ssp_port,
+                          conf.tor_socks_port ? common::getaddr("localhost") : 0,
+                          conf.tor_socks_port,
+                          conf.tamaraw_pkt_intvl_ms,
+                          conf.tamaraw_L));
+
+#ifdef IN_SHADOW
+            // only in shadow do we use ipc cuz shadow doesn't support
+            // launching nodes (i.e., fork() so we can't restart csp
+            // for every page load, so we need to use ipc
+            //
+            // outside shadow, we just kill and launch csp every time,
+            // so don't need ipc
+
+            LOG(INFO) << "ipc server listens on " << conf.tproxy_ipcport;
+            tcpServerForIPC.reset(
+                new myio::TCPServer(
+                    evbase.get(), common::getaddr("localhost"),
+                    conf.tproxy_ipcport, nullptr));
+            ipcserver.reset(
+                new IPCServer(
+                    evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
+#else
+            const auto rv = csp->establish_tunnel(
+                boost::bind(s_on_csp_ready, _1),
+                true);
+#endif
+
+        } else {
+#ifdef IN_SHADOW
+            // don't do anything
+#else
+            // if not setting up csp outside shadow then it's a bug
+            LOG(FATAL) << "bug";
+#endif
+        }
+
     } else {
+
+#ifdef IN_SHADOW
+        if (!conf.browser_proxy_mode_spec_file.empty()) {
+            LOG(FATAL) << "tproxy ssp does not use browser proxy mode spec file";
+        }
+#endif
+
         /* tcpserver to accept connections from CSPs */
         myio::TCPServer::UniquePtr tcpserver(
             new myio::TCPServer(evbase.get(),
@@ -220,6 +282,8 @@ int main(int argc, char **argv)
 
     common::dispatch_evbase(evbase.get());
 
-    LOG(FATAL) << "not reached";
+#ifdef IN_SHADOW
+    CHECK(!do_setup_csp);
+#endif
     return 0;
 }

@@ -11,6 +11,7 @@
 #include "../../utility/tcp_channel.hpp"
 #include "driver.hpp"
 
+#include "../../experiment_common.hpp"
 
 using std::unique_ptr;
 using std::vector;
@@ -28,6 +29,11 @@ struct MyConfig
 
     uint16_t renderer_ipcport;
     uint16_t tproxy_ipcport;
+
+#ifdef IN_SHADOW
+    std::string browser_proxy_mode_spec_file;
+#endif
+
 };
 
 void
@@ -44,6 +50,14 @@ set_my_config(MyConfig& conf,
 
         else if (name == "tproxy-ipc-port") {
             conf.tproxy_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
+#ifdef IN_SHADOW
+            conf.browser_proxy_mode_spec_file = value;
+#else
+            LOG(FATAL) << "browser-proxy-mode-spec makes sense only in shadow";
+#endif
         }
 
         else {
@@ -80,6 +94,30 @@ int main(int argc, char **argv)
     }
 
     set_my_config(conf, name_value_pairs);
+
+#ifdef IN_SHADOW
+
+    if (!conf.browser_proxy_mode_spec_file.empty()) {
+        char myhostname[80] = {0};
+        rv = gethostname(myhostname, (sizeof myhostname) - 1);
+        CHECK_EQ(rv, 0);
+
+        LOG(INFO) << "my hostname \"" << myhostname << "\"";
+
+        bool found = false;
+        const auto proxy_mode = expcommon::get_my_proxy_mode(
+            conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
+        CHECK(found) << "cannot find myself in proxy mode spec file";
+
+        LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
+
+        if (proxy_mode != expcommon::proxy_mode_tproxy) {
+            // let's NOT use the tproxy
+            conf.tproxy_ipcport = 0;
+        }
+    }
+
+#endif
 
     LOG(INFO) << "driver_process starting...";
 

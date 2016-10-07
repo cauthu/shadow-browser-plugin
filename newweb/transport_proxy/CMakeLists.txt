@@ -4,6 +4,7 @@ include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLU
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(TRANSPORT_PROXY_SOURCES
+  ../experiment_common.cpp
   main.cpp
   ipc.cpp
   common_inner_outer_handler.cpp

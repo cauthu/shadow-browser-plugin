@@ -10,6 +10,7 @@
 #include "../../utility/easylogging++.h"
 #include "ipc.hpp"
 
+#include "../../experiment_common.hpp"
 
 using std::unique_ptr;
 using std::vector;
@@ -27,6 +28,12 @@ struct MyConfig
     std::string socks5_host;
     uint16_t socks5_port;
     uint16_t ioservice_ipcport;
+
+#ifdef IN_SHADOW
+    uint16_t tor_socks_port;
+    uint16_t tproxy_socks_port;
+    std::string browser_proxy_mode_spec_file;
+#endif
 };
 
 static void
@@ -38,11 +45,39 @@ set_my_config(MyConfig& conf,
         const auto& value = nv_pair.second;
 
         if (name == "socks5-hostname") {
+#ifdef IN_SHADOW
+            LOG(FATAL) << "don't use socks-hostname in shadow";
+#else
             common::parse_host_port(value, conf.socks5_host, &conf.socks5_port);
+#endif
         }
 
         else if (name == "ioservice-ipc-port") {
             conf.ioservice_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "tor-socks-port") {
+#ifdef IN_SHADOW
+            conf.tor_socks_port = boost::lexical_cast<uint16_t>(value);
+#else
+            LOG(FATAL) << "don't use tor-socks-port outside shadow; use socks5-hostname";
+#endif
+        }
+
+        else if (name == "tproxy-socks-port") {
+#ifdef IN_SHADOW
+            conf.tproxy_socks_port = boost::lexical_cast<uint16_t>(value);
+#else
+            LOG(FATAL) << "don't use tproxy-socks-port outside shadow; use socks5-hostname";
+#endif
+        }
+
+        else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
+#ifdef IN_SHADOW
+            conf.browser_proxy_mode_spec_file = value;
+#else
+            LOG(FATAL) << "browser-proxy-mode-spec makes sense only in shadow";
+#endif
         }
 
         else {
@@ -80,6 +115,52 @@ int main(int argc, char **argv)
     }
 
     set_my_config(conf, name_value_pairs);
+
+#ifdef IN_SHADOW
+
+    if (!conf.browser_proxy_mode_spec_file.empty()) {
+        char myhostname[80] = {0};
+        rv = gethostname(myhostname, (sizeof myhostname) - 1);
+        CHECK_EQ(rv, 0);
+
+        LOG(INFO) << "my hostname \"" << myhostname << "\"";
+
+        bool found = false;
+        const auto proxy_mode = expcommon::get_my_proxy_mode(
+            conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
+        CHECK(found) << "cannot find myself in proxy mode spec file";
+
+        LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
+
+        conf.socks5_host = "127.0.0.1";
+        if (proxy_mode == expcommon::proxy_mode_tproxy) {
+            conf.socks5_port = conf.tproxy_socks_port;
+        } else if (proxy_mode == expcommon::proxy_mode_tor) {
+            conf.socks5_port = conf.tor_socks_port;
+        } else if (proxy_mode == expcommon::proxy_mode_none) {
+            conf.socks5_host.clear();
+            conf.socks5_port = 0;
+        } else {
+            CHECK(0) << "bad proxy mode \"" << proxy_mode << "\"";
+        }
+    } else {
+        if ((conf.tproxy_socks_port != 0) && (conf.tor_socks_port != 0)) {
+            LOG(FATAL) << "cannot specify both tproxy-socks-port and tor-socks-port "
+                       << "without browser-proxy-mode-spec; i won't know which proxy to use";
+        }
+
+        conf.socks5_host = "127.0.0.1";
+        if (conf.tproxy_socks_port) {
+            conf.socks5_port = conf.tproxy_socks_port;
+        } else if (conf.tor_socks_port) {
+            conf.socks5_port = conf.tor_socks_port;
+        } else {
+            conf.socks5_host.clear();
+            conf.socks5_port = 0;
+        }
+    }
+
+#endif
 
     LOG(INFO) << "io_process starting...";
 
