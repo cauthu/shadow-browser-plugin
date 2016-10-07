@@ -53,6 +53,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , useful_recv_byte_count_so_far_(0)
 {
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
+    CHECK(!stream_server_->is_listening());
 }
 
 ClientSideProxy::EstablishReturnValue
@@ -286,6 +287,16 @@ ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 }
 
 void
+ClientSideProxy::start_accepting_clients()
+{
+    auto rv = stream_server_->start_listening();
+    CHECK(rv);
+
+    rv = stream_server_->start_accepting();
+    CHECK(rv);
+}
+
+void
 ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
                                           BufloMuxChannel::ChannelStatus status)
 {
@@ -294,8 +305,6 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 
         // now we can start accepting client connections
         stream_server_->set_observer(this);
-        auto rv = stream_server_->start_accepting();
-        CHECK(rv);
 
         ready_cb_(this);
     } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {

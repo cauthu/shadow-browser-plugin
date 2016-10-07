@@ -34,9 +34,11 @@ using std::string;
 
 
 static void
-s_on_csp_ready(csp::ClientSideProxy*)
+s_on_buflo_channel_ready(csp::ClientSideProxy* csp)
 {
-    LOG(INFO) << "CSP is ready";
+    LOG(INFO) << "buflo channel ready";
+    csp->start_accepting_clients();
+    LOG(INFO) << "CSP is ready and accepting clients";
 }
 
 struct MyConfig
@@ -173,7 +175,7 @@ int main(int argc, char **argv)
     }
 
     LOG(INFO) << (is_client ? "client-" : "server-")
-              << "side proxy, listening on port " << conf.listenport;
+              << "side proxy, will accept clients on port " << conf.listenport;
 
     /* ***************************************** */
 
@@ -211,7 +213,7 @@ int main(int argc, char **argv)
             myio::TCPServer::UniquePtr tcpserver(
                 new myio::TCPServer(evbase.get(),
                                     common::getaddr("localhost"),
-                                    conf.listenport, nullptr));
+                                    conf.listenport, nullptr, false));
 
             VLOG(2) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
             VLOG(2) << "tor_socks_port: " << conf.tor_socks_port;
@@ -243,7 +245,7 @@ int main(int argc, char **argv)
                     evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
 #else
             const auto rv = csp->establish_tunnel(
-                boost::bind(s_on_csp_ready, _1),
+                boost::bind(s_on_buflo_channel_ready, _1),
                 true);
 #endif
 

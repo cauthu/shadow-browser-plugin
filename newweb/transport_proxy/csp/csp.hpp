@@ -71,6 +71,8 @@ public:
     const uint64_t all_recv_byte_count_so_far() const;
     const uint64_t useful_recv_byte_count_so_far() const;
 
+    void start_accepting_clients();
+
 protected:
 
     virtual ~ClientSideProxy();
