@@ -25,9 +25,12 @@ class StreamServer : public Object
 public:
     typedef std::unique_ptr<StreamServer, /*folly::*/Destructor> UniquePtr;
 
+    virtual bool start_listening() = 0;
     virtual bool start_accepting() = 0;
     virtual bool pause_accepting() = 0;
     virtual void set_observer(StreamServerObserver*) = 0;
+
+    virtual bool is_listening() const = 0;
 };
 
 }

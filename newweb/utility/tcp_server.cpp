@@ -16,11 +16,13 @@ namespace myio
 TCPServer::TCPServer(
     struct event_base* evbase,
     const in_addr_t& addr, const in_port_t& port,
-    StreamServerObserver* observer
+    StreamServerObserver* observer,
+    const bool start_listening
     )
     : evbase_(evbase), observer_(observer), addr_(addr), port_(port)
     , state_(ServerState::INIT)
     , evlistener_(nullptr, evconnlistener_free)
+    , listening_(false)
 {
 
     /* create socket and manually bind so that we don't specify
@@ -28,11 +30,11 @@ TCPServer::TCPServer(
      * which shadow doesn't support
      */
 
-	const auto fd = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
-	CHECK_GT(fd, 0);
+	fd_ = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	CHECK_GT(fd_, 0);
 
     int rv = 0;
-    rv = evutil_make_listen_socket_reuseable(fd);
+    rv = evutil_make_listen_socket_reuseable(fd_);
     CHECK_EQ(rv, 0);
 
     struct sockaddr_in server;
@@ -41,29 +43,19 @@ TCPServer::TCPServer(
     server.sin_addr.s_addr = addr_;
     server.sin_port = htons(port_);
 
-	rv = bind(fd, (struct sockaddr *) &server, sizeof(server));
+	rv = bind(fd_, (struct sockaddr *) &server, sizeof(server));
 	CHECK_EQ(rv, 0);
 
-    static const auto backlog = 20;
-
-	rv = listen(fd, backlog); // hardcode for now
-    CHECK_EQ(rv, 0);
-
-    CHECK(!evlistener_);
-    evlistener_.reset(
-        evconnlistener_new(
-            evbase_, s_listener_acceptcb, this,
-            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
-            backlog, fd));
-    CHECK_NOTNULL(evlistener_);
-
-    rv = evconnlistener_disable(evlistener_.get());
-    CHECK_EQ(rv, 0);
+    if (start_listening) {
+        _start_listening();
+    }
 }
 
 bool
 TCPServer::start_accepting()
 {
+    CHECK(listening_);
+
     CHECK((state_ == ServerState::INIT) || (state_ == ServerState::PAUSED));
 
     auto rv = evconnlistener_enable(evlistener_.get());
@@ -120,6 +112,41 @@ TCPServer::on_accept_error(
     CHECK_EQ(evlistener_.get(), listener);
 
     observer_->onAcceptError(this, errorcode);
+}
+
+bool
+TCPServer::start_listening()
+{
+    if (listening_) {
+        logself(WARNING) << "is already listening";
+    } else {
+        _start_listening();
+    }
+    return true;
+}
+
+void
+TCPServer::_start_listening()
+{
+    CHECK(!listening_);
+
+    static const auto backlog = 20;
+
+    auto rv = listen(fd_, backlog);
+    CHECK_EQ(rv, 0);
+
+    CHECK(!evlistener_);
+    evlistener_.reset(
+        evconnlistener_new(
+            evbase_, s_listener_acceptcb, this,
+            LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE,
+            backlog, fd_));
+    CHECK_NOTNULL(evlistener_);
+
+    rv = evconnlistener_disable(evlistener_.get());
+    CHECK_EQ(rv, 0);
+
+    listening_ = true;
 }
 
 void

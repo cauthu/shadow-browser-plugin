@@ -16,11 +16,15 @@ public:
     /* "port" should be in host byte order */
     explicit TCPServer(struct event_base*,
                        const in_addr_t& addr, const in_port_t& port,
-                       StreamServerObserver*);
+                       StreamServerObserver*,
+                       const bool start_listening=true);
 
+    virtual bool start_listening() override;
     virtual bool start_accepting() override;
     virtual bool pause_accepting() override;
     virtual void set_observer(myio::StreamServerObserver*) override;
+
+    virtual bool is_listening() const override { return listening_ ;}
 
 protected:
 
@@ -34,11 +38,14 @@ protected:
                                     int, struct sockaddr *, int, void *);
     static void s_listener_errorcb(struct evconnlistener *, void *);
 
+    void _start_listening();
+
     ////////////////
 
     struct event_base* evbase_; // don't free
     StreamServerObserver* observer_; // don't free
 
+    int fd_;
     const in_addr_t addr_;
     const in_port_t port_;
 
@@ -48,6 +55,8 @@ protected:
         PAUSED,
         CLOSED /* after either eof or error */
     } state_;
+
+    bool listening_;
 
     std::unique_ptr<struct evconnlistener, void(*)(struct evconnlistener*)> evlistener_;
 };
