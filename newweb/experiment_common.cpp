@@ -55,7 +55,7 @@ get_my_proxy_mode(const char* modespecfile,
             const auto& mode = token;
             if ((mode != proxy_mode_none)
                 && (mode != proxy_mode_tor)
-                && (mode != proxy_mode_tor))
+                && (mode != proxy_mode_tproxy))
             {
                 LOG(FATAL) << "invalid browser proxy mode \"" << mode << "\"";
             }
