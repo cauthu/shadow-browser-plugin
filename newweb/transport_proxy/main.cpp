@@ -215,8 +215,8 @@ int main(int argc, char **argv)
                                     common::getaddr("localhost"),
                                     conf.listenport, nullptr, false));
 
-            VLOG(2) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
-            VLOG(2) << "tor_socks_port: " << conf.tor_socks_port;
+            LOG(INFO) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
+            LOG(INFO) << "tor socks port: " << conf.tor_socks_port;
             csp.reset(new csp::ClientSideProxy(
                           evbase.get(),
                           std::move(tcpserver),

@@ -706,8 +706,19 @@ Connection::onConnected(StreamChannel* ch) noexcept
         vlogself(2) << "now tell proxy to connect to ["
                     << host << "]:" << port;
         CHECK(!socks_connector_);
+
+#ifdef IN_SHADOW
+        // due to https://github.com/shadow/shadow/issues/323 , tor
+        // exit (version 0.2.7.6) cannot resolve hostname, e.g.,
+        // "eventdns rejected address "host.com"". so we lookup ip
+        // locally. it makes no difference in shadow simulation
+        socks_connector_.reset(
+            new Socks5Connector(std::move(transport_), common::getaddr(host.c_str()), port));
+#else
         socks_connector_.reset(
             new Socks5Connector(std::move(transport_), host.c_str(), port));
+#endif
+
         auto rv = socks_connector_->start_connecting(this);
         CHECK(!rv);
         state_ = State::CONNECTING;
