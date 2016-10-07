@@ -74,9 +74,11 @@ IPCServer::IPCServer(struct event_base* evbase,
     }
 
 void
-IPCServer::_on_csp_ready(ClientSideProxy*)
+IPCServer::_on_buflo_channel_ready(ClientSideProxy* csp)
 {
     CHECK_GT(establish_tunnel_call_id_, 0);
+
+    csp->start_accepting_clients();
 
     {
         // send the response
@@ -104,7 +106,7 @@ IPCServer::_handle_EstablishTunnel(const uint32_t& id,
     establish_tunnel_call_id_ = id;
 
     const auto rv = csp_->establish_tunnel(
-        boost::bind(&IPCServer::_on_csp_ready, this, _1),
+        boost::bind(&IPCServer::_on_buflo_channel_ready, this, _1),
         msg->forceReconnect());
     CHECK_EQ(rv, ClientSideProxy::EstablishReturnValue::PENDING);
 }

@@ -48,7 +48,7 @@ private:
     void _handle_StopDefense(const uint32_t& id,
                                  const msgs::StopDefenseMsg*);
 
-    void _on_csp_ready(csp::ClientSideProxy*);
+    void _on_buflo_channel_ready(csp::ClientSideProxy*);
 
 
     struct event_base* evbase_; // don't free
