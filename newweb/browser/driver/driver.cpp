@@ -52,6 +52,10 @@ Driver::Driver(struct event_base* evbase,
     logself(INFO) << "using page models listed in " << page_models_list_file;
     _read_page_models_file(page_models_list_file);
 
+    page_model_rand_idx_gen_.reset(
+        new boost::variate_generator<boost::mt19937, boost::uniform_int<> >(
+            boost::mt19937(std::time(0)), boost::uniform_int<>(0, page_models_.size() - 1)));
+
     _reset_this_page_load_info();
 
     if (using_tproxy_) {
@@ -85,6 +89,15 @@ Driver::Driver(struct event_base* evbase,
     think_time_timer_.reset(
         new Timer(evbase_, true,
                   boost::bind(&Driver::_on_think_time_timer_fired, this, _1)));
+
+    static const int lowerbound_thinktime_ms = 20*1000;
+    static const int upperbound_thinktime_ms = 60*1000;
+    think_time_rand_gen_.reset(
+        new boost::variate_generator<boost::mt19937, boost::uniform_real<double> >(
+            boost::mt19937(std::time(0)), boost::uniform_real<double>(
+                lowerbound_thinktime_ms, upperbound_thinktime_ms)));
+    logself(INFO) << "picking uniform thinktimes in range [" << lowerbound_thinktime_ms
+                  << ", " << upperbound_thinktime_ms << "]";
 }
 
 Driver::~Driver()
@@ -156,7 +169,9 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
 
     CHECK_EQ(timer, grace_period_timer_.get());
 
-    logself(INFO) << "done grace period; start thinking";
+    const auto think_time_ms = (*think_time_rand_gen_)();
+
+    logself(INFO) << "done grace period; start thinking for " << think_time_ms << " ms";
 
     CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
@@ -178,9 +193,6 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
     _reset_this_page_load_info();
 
     state_ = State::THINKING;
-
-    // now, start the think time timer
-    static const auto think_time_ms = 90*1000;
 
     think_time_timer_->start(think_time_ms);
 

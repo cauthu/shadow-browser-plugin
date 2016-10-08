@@ -247,14 +247,19 @@ Driver::_renderer_load_page()
     }
 
     state_ = State::LOADING_PAGE;
-    this_page_load_info_.load_start_timepoint_ = common::gettimeofdayMs();
+    auto& tpli = this_page_load_info_;
+    tpli.load_start_timepoint_ = common::gettimeofdayMs();
     ++loadnum_;
 
-    this_page_load_info_.page_model_idx_ = loadnum_ % page_models_.size();
+    tpli.page_model_idx_ = (*page_model_rand_idx_gen_)();
+    CHECK_GE(tpli.page_model_idx_, 0);
+    CHECK_LT(tpli.page_model_idx_, page_models_.size());
+
+    vlogself(1) << "picked new page_model_idx_= " << tpli.page_model_idx_;
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
-        const auto& model_path = page_models_[this_page_load_info_.page_model_idx_].second;
+        const auto& model_path = page_models_[tpli.page_model_idx_].second;
         auto model_fpath = bufbuilder.CreateString(model_path);
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(

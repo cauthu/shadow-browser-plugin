@@ -2,6 +2,8 @@
 #define driver_hpp
 
 #include <event2/event.h>
+#include <boost/random.hpp>
+#include <boost/generator_iterator.hpp>
 
 #include "../../utility/stream_channel.hpp"
 #include "../../utility/generic_message_channel.hpp"
@@ -114,6 +116,8 @@ private:
     bool using_tproxy_;
     bool tproxy_ipc_ch_ready_;
     const std::string browser_proxy_mode_;
+    std::unique_ptr<boost::variate_generator<boost::mt19937, boost::uniform_int<> > > page_model_rand_idx_gen_;
+    std::unique_ptr<boost::variate_generator<boost::mt19937, boost::uniform_real<> > > think_time_rand_gen_;
 
     enum class State
     {
