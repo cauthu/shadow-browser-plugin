@@ -158,6 +158,24 @@ parse_host_port(const string& host_port_str,
     }
 }
 
+bool
+get_json_doc_from_file(const char* json_fpath,
+                       rapidjson::Document& doc)
+{
+    std::fstream fs(json_fpath, std::ios_base::in);
+    if (!fs.is_open()) {
+        LOG(FATAL) << "unable to open json file at \"" << json_fpath << "\"";
+    }
+    std::stringstream ss;
+    ss << fs.rdbuf();
+    fs.close();
+
+    const std::string file_contents = ss.str();
+    doc.Parse(file_contents.c_str());
+
+    return true;
+}
+
 char*
 expandPath(const char* path) {
     char *s = NULL;

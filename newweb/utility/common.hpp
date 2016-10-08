@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <string>
 #include <vector>
+#include <rapidjson/document.h>
 
 namespace common
 {
@@ -74,6 +75,10 @@ get_cmd_line_name_value_pairs(
 void
 parse_host_port(const std::string& host_port_str,
                 std::string& host, uint16_t* port);
+
+bool
+get_json_doc_from_file(const char* json_fpath,
+                       rapidjson::Document& doc);
 
 /* if "path" begins with '~', then replace '~' with the homedir path
  * of the user.
