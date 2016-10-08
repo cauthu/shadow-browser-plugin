@@ -31,6 +31,10 @@ struct MyConfig
     uint16_t tproxy_ipcport;
 
 #ifdef IN_SHADOW
+    struct {
+        bool found;
+        std::string path;
+    } page_models_list_file;
     std::string browser_proxy_mode_spec_file;
 #endif
 
@@ -50,6 +54,15 @@ set_my_config(MyConfig& conf,
 
         else if (name == "tproxy-ipc-port") {
             conf.tproxy_ipcport = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "page-models-list-file") {
+#ifdef IN_SHADOW
+            conf.page_models_list_file.found = true;
+            conf.page_models_list_file.path = value;
+#else
+            LOG(FATAL) << "page-models-list-file does not yet make sense outside shadow";
+#endif
         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
@@ -117,6 +130,10 @@ int main(int argc, char **argv)
         }
     }
 
+    if (!conf.page_models_list_file.found) {
+        LOG(FATAL) << "must specify page models list file";
+    }
+
 #endif
 
     LOG(INFO) << "driver_process starting...";
@@ -127,7 +144,8 @@ int main(int argc, char **argv)
     /* ***************************************** */
 
     Driver::UniquePtr driver(
-        new Driver(evbase.get(), conf.tproxy_ipcport, conf.renderer_ipcport));
+        new Driver(evbase.get(), conf.page_models_list_file.path,
+                   conf.tproxy_ipcport, conf.renderer_ipcport));
 
     /* ***************************************** */
 

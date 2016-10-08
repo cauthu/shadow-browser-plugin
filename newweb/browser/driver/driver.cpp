@@ -1,5 +1,13 @@
 
+#include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
+#include <fstream>
+#include <sstream>
+#include <set>
+#include <string>
+#include <rapidjson/document.h>
+
+
 
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/common.hpp"
@@ -10,7 +18,9 @@
 
 using myio::TCPChannel;
 using myipc::GenericIpcChannel;
-
+using std::string;
+using std::set;
+namespace json = rapidjson;
 
 #define _LOG_PREFIX(inst) << "driver= " << (inst)->objId() << ": "
 
@@ -27,6 +37,7 @@ using myipc::GenericIpcChannel;
 
 
 Driver::Driver(struct event_base* evbase,
+               const string& page_models_list_file,
                const uint16_t tproxy_ipc_port,
                const uint16_t renderer_ipc_port)
     : evbase_(evbase)
@@ -35,6 +46,9 @@ Driver::Driver(struct event_base* evbase,
     , state_(State::INITIAL)
     , loadnum_(0)
 {
+
+    logself(INFO) << "using page models listed in " << page_models_list_file;
+    _read_page_models_file(page_models_list_file);
 
     _reset_this_page_load_info();
 
@@ -69,6 +83,55 @@ Driver::Driver(struct event_base* evbase,
 
 Driver::~Driver()
 {
+}
+
+void
+Driver::_read_page_models_file(const string& page_models_list_file)
+{
+    std::ifstream infile(page_models_list_file, std::ifstream::in);
+    if (!infile.good()) {
+        LOG(FATAL) << "error: can't read page models list file";
+    }
+
+    string line;
+    set<string> page_names;
+    set<string> page_model_fpaths;
+
+    while (std::getline(infile, line)) {
+        vlogself(1) << "line: [" << line << "]";
+        if (line.length() == 0 || line.at(0) == '#') {
+            /* empty lines and lines beginining with '#' are
+               ignored */
+            continue;
+        }
+
+        std::istringstream iss(line);
+        string token;
+        std::getline(iss, token, ' '); // get rid of page name
+        const auto page_name = token;
+        auto ret = page_names.insert(page_name);
+        CHECK(ret.second) << "duplicated page name [" << page_name << "]";
+
+        std::getline(iss, token, ' '); // now get the model file path
+        boost::algorithm::trim(token);
+        CHECK(token.length() > 0);
+        const auto page_model_fpath = token;
+        ret = page_model_fpaths.insert(page_model_fpath);
+        CHECK(ret.second) << "duplicated page model [" << page_model_fpath << "]";
+
+        logself(INFO) << "page \"" << page_name << "\", model \"" << page_model_fpath << "\"";
+
+        // sanity test that the file at least contains a json object
+        json::Document doc;
+        const auto rv = common::get_json_doc_from_file(page_model_fpath.c_str(), doc);
+        CHECK(rv && doc.IsObject());
+
+        page_models_.push_back(make_pair(page_name, page_model_fpath));
+    }
+
+    if (page_models_.empty()) {
+        logself(FATAL) << "no page models to load";
+    }
 }
 
 void

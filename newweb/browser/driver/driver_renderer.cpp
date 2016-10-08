@@ -244,11 +244,8 @@ Driver::_renderer_load_page()
     state_ = State::LOADING_PAGE;
     this_page_load_info_.load_start_timepoint_ = common::gettimeofdayMs();
     ++loadnum_;
-    if (loadnum_ % 2) {
-        this_page_load_info_.model_path_ = "/home/me/cnn_page_model.json";
-    } else {
-        this_page_load_info_.model_path_ = "/home/me/nytimes_page_model.json";
-    }
+
+    this_page_load_info_.model_path_ = page_models_[loadnum_ % page_models_.size()].second;
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;

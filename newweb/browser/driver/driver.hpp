@@ -42,6 +42,7 @@ public:
     typedef std::unique_ptr<Driver, Destructor> UniquePtr;
 
     explicit Driver(struct event_base*,
+                    const std::string& page_models_list_file,
                     const uint16_t tproxy_ipc_port,
                     const uint16_t renderer_ipc_port);
 
@@ -97,6 +98,7 @@ private:
 
     void _on_think_time_timer_fired(Timer*);
 
+    void _read_page_models_file(const std::string&);
 
     /////////
 
@@ -105,6 +107,8 @@ private:
     myipc::GenericIpcChannel::UniquePtr renderer_ipc_ch_;
     myipc::GenericIpcChannel::UniquePtr tproxy_ipc_ch_;
 
+    /* list of <page name, file path to the page model> pairs */
+    std::vector<std::pair<std::string, std::string> > page_models_;
     bool using_tproxy_;
     bool tproxy_ipc_ch_ready_;
 
