@@ -30,6 +30,11 @@ find_package(EVENT2 REQUIRED)
 find_package(SPDYLAY REQUIRED)
 find_package(OPENSSL REQUIRED)
 
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    message(STATUS "disable verbose and debug levels of easylogging")
+    add_definitions(-DELPP_NO_DEFAULT_LOG_FILE -DELPP_DISABLE_VERBOSE_LOGS -DELPP_DISABLE_DEBUG_LOGS)
+endif()
+
 # need this so we can do #include the generated flatbuffer headers;
 # setting CMAKE_INCLUDE_CURRENT_DIR to ON doens't seem to work
 # include_directories(AFTER ${CMAKE_CURRENT_BINARY_DIR})
