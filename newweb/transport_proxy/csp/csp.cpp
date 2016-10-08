@@ -110,6 +110,8 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
         state_ = State::CONNECTING;
     }
 
+    logself(INFO) << "begin (re)establishing channel to ssp...";
+
     struct timeval timeout_tv = {5, 0};
     const auto rv = peer_channel_->start_connecting(this, &timeout_tv);
     CHECK_EQ(rv, 0);
@@ -263,6 +265,8 @@ ClientSideProxy::_on_connected_to_ssp()
 
     peer_channel_.reset();
 
+    logself(INFO) << "... connected to ssp at transport level";
+
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
             evbase_, peer_fd, true, 750, buflo_frequencyMs_, buflo_L_,
@@ -302,6 +306,8 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 {
     if (status == BufloMuxChannel::ChannelStatus::READY) {
         DestructorGuard dg(this);
+
+        logself(INFO) << "channel to ssp is ready";
 
         // now we can start accepting client connections
         stream_server_->set_observer(this);
