@@ -27,6 +27,25 @@ NPERF50K = 0.0
 NPERF1M = 0.0
 NPERF5M = 0.0
 
+ioservice_conf_fpath = 'newweb_conf/ioservice.conf'
+renderer_conf_fpath = 'newweb_conf/renderer.conf'
+driver_conf_fpath = 'newweb_conf/driver.conf'
+tproxy_csp_conf_fpath = 'newweb_conf/tproxy_csp.conf'
+tproxy_ssp_conf_fpath = 'newweb_conf/tproxy_ssp.conf'
+
+ioservice_args = '--conf={}'.format(ioservice_args)
+renderer_args = '--conf={}'.format(renderer_args)
+driver_args = '--conf={}'.format(driver_conf_fpath)
+tproxy_csp_args = '--conf={}'.format(tproxy_csp_conf_fpath)
+tproxy_ssp_args = '--conf={}'.format(tproxy_ssp_conf_fpath)
+webserver_args = ''
+
+ioservice_pluginid = 'ioservice'
+renderer_pluginid = 'renderer'
+driver_pluginid = 'driver'
+tproxy_pluginid = 'tproxy'
+webserver_pluginid = 'webserver'
+
 class Relay():
     def __init__(self, ip, bw, isExit=False, isGuard=False):
         self.ip = ip
@@ -404,7 +423,8 @@ def generate(args):
         v3bwfile.write("node_id=${0}\tbw={1}\tnick={2}\n".format(fp.replace(" ", ""), r.getBWConsensusArg(), name))
         starttime = "{0}".format(int(round(relayStartTime)))
         torargs = "{0} -f conf/tor.exitguard.torrc --BandwidthRate {1} --BandwidthBurst {2}".format(default_tor_args, r.getBWRateArg(), r.getBWBurstArg()) # in bytes
-        addRelayToXML(root, starttime, torargs, None, name, r.download, r.upload, r.ip, r.code)
+        addRelayToXML(root, starttime, torargs, None, name, r.download, r.upload, r.ip, r.code,
+                      tproxy_args=tproxy_ssp_args)
         relayStartTime += secondsPerRelay
         i += 1
 
@@ -444,7 +464,8 @@ def generate(args):
         v3bwfile.write("node_id=${0}\tbw={1}\tnick={2}\n".format(fp.replace(" ", ""), r.getBWConsensusArg(), name))
         starttime = "{0}".format(int(round(relayStartTime)))
         torargs = "{0} -f conf/tor.exit.torrc --BandwidthRate {1} --BandwidthBurst {2}".format(default_tor_args, r.getBWRateArg(), r.getBWBurstArg()) # in bytes
-        addRelayToXML(root, starttime, torargs, None, name, r.download, r.upload, r.ip, r.code)
+        addRelayToXML(root, starttime, torargs, None, name, r.download, r.upload, r.ip, r.code,
+                      tproxy_args=tproxy_ssp_args)
         relayStartTime += secondsPerRelay
         i += 1
 
@@ -497,9 +518,10 @@ def generate(args):
         name = "webclient{0}".format(i)
         starttime = "{0}".format(int(round(clientStartTime)))
         torargs = "{0} -f conf/tor.client.torrc".format(default_tor_args) # in bytes
-        tgenargs = "conf/tgen.torwebclient.graphml.xml"
+        tgenargs = None
 
-        addRelayToXML(root, starttime, torargs, tgenargs, name, code=choice(clientCountryCodes))
+        addRelayToXML(root, starttime, torargs, tgenargs, name, code=choice(clientCountryCodes),
+                      tproxy_args=tproxy_csp_args)
 
         clientStartTime += secondsPerClient
         i += 1
@@ -581,6 +603,34 @@ def generate(args):
         e.set("path", "{0}plugins/libshadow-plugin-tor.so".format(INSTALLPREFIX))
         root.insert(0, e)
 
+
+        e = etree.Element("plugin")
+        e.set("id", ioservice_pluginid)
+        e.set("path", "{0}plugins/libshadow-plugin-io_process.so".format(INSTALLPREFIX))
+        root.insert(0, e)
+
+        e = etree.Element("plugin")
+        e.set("id", renderer_pluginid)
+        e.set("path", "{0}plugins/libshadow-plugin-render_process.so".format(INSTALLPREFIX))
+        root.insert(0, e)
+
+        e = etree.Element("plugin")
+        e.set("id", tproxy_pluginid)
+        e.set("path", "{0}plugins/libshadow-plugin-transport_proxy.so".format(INSTALLPREFIX))
+        root.insert(0, e)
+
+        e = etree.Element("plugin")
+        e.set("id", driver_pluginid)
+        e.set("path", "{0}plugins/libshadow-plugin-driver_process.so".format(INSTALLPREFIX))
+        root.insert(0, e)
+
+        e = etree.Element("plugin")
+        e.set("id", webserver_pluginid)
+        e.set("path", "{0}plugins/libshadow-plugin-webserver.so".format(INSTALLPREFIX))
+        root.insert(0, e)
+
+
+
         # internet topology map
         e = etree.Element("topology")
         e.set("path", "{0}share/topology.graphml.xml".format(INSTALLPREFIX))
@@ -594,7 +644,7 @@ def generate(args):
         # all our hosts
         print >>fhosts, (etree.tostring(root, pretty_print=True, xml_declaration=False))
 
-def addRelayToXML(root, starttime, torargs, tgenargs, name, download=0, upload=0, ip=None, code=None, torflowworkers=1): # bandwidth in KiB
+def addRelayToXML(root, starttime, torargs, tgenargs, name, download=0, upload=0, ip=None, code=None, torflowworkers=1, tproxy_args=None, is_newweb_client=False): # bandwidth in KiB
     # node
     e = etree.SubElement(root, "node")
     e.set("id", name)
@@ -664,6 +714,33 @@ def addRelayToXML(root, starttime, torargs, tgenargs, name, download=0, upload=0
         a.set("plugin", "tgen")
         a.set("starttime", "{0}".format(int(starttime)+300))
         a.set("arguments", tgenargs)
+        pass
+
+    if tproxy_args is not None:
+        a = etree.SubElement(e, "application")
+        a.set("plugin", "tproxy")
+        a.set("starttime", "{0}".format(int(starttime)))
+        a.set("arguments", tproxy_args)
+        pass
+
+    if is_newweb_client:
+        assert tproxy_args is not None
+
+        # add the browser-related plugins
+
+        for (plugin_id, plugin_starttime, plugin_args) in (
+                (ioservice_pluginid, int(starttime)+300, ioservice_args),
+                (renderer_pluginid, int(starttime)+301, renderer_args),
+                (driver_pluginid, int(starttime)+302, driver_args),
+                ):
+            a = etree.SubElement(e, "application")
+            a.set("plugin", plugin_id)
+            a.set("starttime", "{0}".format(int(plugin_starttime)))
+            a.set("arguments", plugin_args)
+            pass
+        pass
+
+    pass
 
 def getClientCountryChoices(connectinguserspath):
     lines = None
@@ -1040,6 +1117,103 @@ SocksPort 0\n' # note - also need exit policy
         with open("conf/tor.bridgeclient.torrc", 'wb') as f: print >>f, clients + bridgeclients
     with open("conf/tor.torperf.torrc", 'wb') as f: print >>f, clients + maxdirty + noguards
     log("finished generating torrc files")
+
+def write_newweb_config():
+    tproxy_ssp_port = 3000
+
+    tproxy_csp_socks_port = 2000
+    tproxy_csp_ipc_port = 2100
+
+    tamaraw_pkt_intvl = 5
+    tamaraw_L = 100
+
+    tor_socks_port = 9000
+
+    renderer_ipc_port = 3000
+
+    ioservice_ipc_port = 4000
+
+    browser_proxy_mode_spec_fpath = 'browser_proxy_mode_spec.txt'
+    page_models_list_fpath = 'page_models_list.txt'
+
+    ioservice_conf = '''
+--ioservice-ipc-port={ioservice_ipc_port}
+--tproxy-socks-port={tproxy_csp_socks_port}
+--tor-socks-port={tor_socks_port}
+
+--browser-proxy-mode-spec-file={browser_proxy_mode_spec_file}
+'''.format(ioservice_ipc_port=ioservice_ipc_port,
+           tproxy_csp_socks_port=tproxy_csp_socks_port,
+           tor_socks_port=9000,
+           browser_proxy_mode_spec_file=browser_proxy_mode_spec_fpath,
+           )
+    with open(ioservice_conf_fpath, 'w') as f:
+        print >>f, ioservice_conf
+        pass
+
+    renderer_conf = '''
+--ioservice-ipc-port={ioservice_ipc_port}
+--renderer-ipc-port={renderer_ipc_port}
+'''.format(ioservice_ipc_port=ioservice_ipc_port,
+           renderer_ipc_port=renderer_ipc_port)
+    with open(renderer_conf_fpath, 'w') as f:
+        print >>f, renderer_conf
+        pass
+
+    tproxy_ssp_conf = '''
+--port={tproxy_ssp_port}
+
+--tamaraw-packet-interval={tamaraw_pkt_intvl}
+--tamaraw-L={tamaraw_L}
+'''.format(tproxy_ssp_port=tproxy_ssp_port,
+           tamaraw_pkt_intvl=tamaraw_pkt_intvl,
+           tamaraw_L=tamaraw_L,
+           )
+    with open(tproxy_ssp_conf_fpath, 'w') as f:
+        print >>f, tproxy_ssp_conf
+        pass
+
+    tproxy_csp_conf = '''
+--port={tproxy_csp_socks_port}
+--tproxy-ipc-port={tproxy_csp_ipc_port}
+--ssp=127.0.0.1:{tproxy_ssp_port}
+--tor-socks-port={tor_socks_port}
+
+--browser-proxy-mode-spec-file={browser_proxy_mode_spec_file}
+
+--tamaraw-packet-interval={tamaraw_pkt_intvl}
+--tamaraw-L={tamaraw_L}
+'''.format(tor_socks_port=9000,
+           tproxy_ssp_port=tproxy_ssp_port,
+           tproxy_csp_socks_port=tproxy_csp_socks_port,
+           tproxy_csp_ipc_port=tproxy_csp_ipc_port,
+           tamaraw_pkt_intvl=tamaraw_pkt_intvl,
+           tamaraw_L=tamaraw_L,
+           browser_proxy_mode_spec_file=browser_proxy_mode_spec_fpath,
+           )
+    with open(tproxy_csp_conf_fpath, 'w') as f:
+        print >>f, tproxy_csp_conf
+        pass
+
+    driver_conf = '''
+--ioservice-ipc-port={ioservice_ipc_port}
+--renderer-ipc-port={renderer_ipc_port}
+--tproxy-ipc-port={tproxy_csp_ipc_port}
+
+--browser-proxy-mode-spec-file={browser_proxy_mode_spec_file}
+
+--page-models-list-file={page_models_list_file}
+'''.format(ioservice_ipc_port=ioservice_ipc_port,
+           renderer_ipc_port=renderer_ipc_port,
+           browser_proxy_mode_spec_file=browser_proxy_mode_spec_fpath,
+           tproxy_csp_ipc_port=tproxy_csp_ipc_port,
+           page_models_list_file=page_models_list_fpath,
+           )
+    with open(driver_conf_fpath, 'w') as f:
+        print >>f, driver_conf
+        pass
+
+    pass
 
 def write_tgen_config_files(servernames):
     servers = []
