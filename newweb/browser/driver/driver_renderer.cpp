@@ -155,8 +155,9 @@ Driver::_report_result(const PageLoadStatus& pageloadstatus,
 
     LOG(INFO)
         << "loadnum= " << loadnum_
-        << ", vanilla: "
-        << status_str
+        << ", webmode= vanilla"
+        << ", proxyMode= " << browser_proxy_mode_
+        << ": loadResult= " << status_str
         << ": start= " << tpli.load_start_timepoint_
         << " plt= " << (pageloadstatus == PageLoadStatus::OK ? plt : 0)
         << " page= [" << page_models_[tpli.page_model_idx_].first << "]"

@@ -43,6 +43,7 @@ public:
 
     explicit Driver(struct event_base*,
                     const std::string& page_models_list_file,
+                    const std::string& browser_proxy_mode,
                     const uint16_t tproxy_ipc_port,
                     const uint16_t renderer_ipc_port);
 
@@ -112,6 +113,7 @@ private:
     std::vector<std::pair<std::string, std::string> > page_models_;
     bool using_tproxy_;
     bool tproxy_ipc_ch_ready_;
+    const std::string browser_proxy_mode_;
 
     enum class State
     {

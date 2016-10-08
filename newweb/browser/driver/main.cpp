@@ -114,6 +114,8 @@ int main(int argc, char **argv)
 
     set_my_config(conf, name_value_pairs);
 
+    string proxy_mode = expcommon::proxy_mode_none;
+
 #ifdef IN_SHADOW
 
     if (!conf.browser_proxy_mode_spec_file.empty()) {
@@ -124,7 +126,7 @@ int main(int argc, char **argv)
         LOG(INFO) << "my hostname \"" << myhostname << "\"";
 
         bool found = false;
-        const auto proxy_mode = expcommon::get_my_proxy_mode(
+        proxy_mode = expcommon::get_my_proxy_mode(
             conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
         CHECK(found) << "cannot find myself in proxy mode spec file";
 
@@ -157,6 +159,7 @@ int main(int argc, char **argv)
 
     Driver::UniquePtr driver(
         new Driver(evbase.get(), conf.page_models_list_file.path,
+                   proxy_mode,
                    conf.tproxy_ipcport, conf.renderer_ipcport));
 
     /* ***************************************** */

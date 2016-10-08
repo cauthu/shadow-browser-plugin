@@ -38,11 +38,13 @@ namespace json = rapidjson;
 
 Driver::Driver(struct event_base* evbase,
                const string& page_models_list_file,
+               const string& browser_proxy_mode,
                const uint16_t tproxy_ipc_port,
                const uint16_t renderer_ipc_port)
     : evbase_(evbase)
     , using_tproxy_(tproxy_ipc_port > 0)
     , tproxy_ipc_ch_ready_(false)
+    , browser_proxy_mode_(browser_proxy_mode)
     , state_(State::INITIAL)
     , loadnum_(0)
 {
