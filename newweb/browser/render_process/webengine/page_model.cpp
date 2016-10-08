@@ -7,6 +7,7 @@
 #include "page_model.hpp"
 
 #include "../../../utility/easylogging++.h"
+#include "../../../utility/common.hpp"
 
 #include "webengine.hpp"
 
@@ -55,19 +56,9 @@ namespace blink {
 
 PageModel::PageModel(const char* json_fpath)
 {
-    std::fstream fs(json_fpath, std::ios_base::in);
-    if (!fs.is_open()) {
-        logself(FATAL) << "unable to open page model at " << json_fpath;
-    }
-    std::stringstream ss;
-    ss << fs.rdbuf();
-    fs.close();
-
-    const std::string file_contents = ss.str();
-    model_json.Parse(file_contents.c_str());
-
     vlogself(2) << "model_fpath= " << json_fpath;
-    CHECK(model_json.IsObject());
+    const auto rv = common::get_json_doc_from_file(json_fpath, model_json);
+    CHECK(rv && model_json.IsObject());
 }
 
 bool
