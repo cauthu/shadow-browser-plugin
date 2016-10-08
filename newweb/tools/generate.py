@@ -27,11 +27,13 @@ NPERF50K = 0.0
 NPERF1M = 0.0
 NPERF5M = 0.0
 
-ioservice_conf_fpath = 'newweb_conf/ioservice.conf'
-renderer_conf_fpath = 'newweb_conf/renderer.conf'
-driver_conf_fpath = 'newweb_conf/driver.conf'
-tproxy_csp_conf_fpath = 'newweb_conf/tproxy_csp.conf'
-tproxy_ssp_conf_fpath = 'newweb_conf/tproxy_ssp.conf'
+newweb_conf_dir = 'newweb_conf'
+
+ioservice_conf_fpath = '{}/ioservice.conf'.format(newweb_conf_dir)
+renderer_conf_fpath = '{}/renderer.conf'.format(newweb_conf_dir)
+driver_conf_fpath = '{}/driver.conf'.format(newweb_conf_dir)
+tproxy_csp_conf_fpath = '{}/tproxy_csp.conf'.format(newweb_conf_dir)
+tproxy_ssp_conf_fpath = '{}/tproxy_ssp.conf'.format(newweb_conf_dir)
 
 ioservice_args = '--conf={}'.format(ioservice_conf_fpath)
 renderer_args = '--conf={}'.format(renderer_conf_fpath)
@@ -283,6 +285,8 @@ def generate(args):
     servers = getServers(geoentries, args.alexa)
     clientCountryCodes = getClientCountryChoices(args.connectingusers)
 
+    if not os.path.exists(newweb_conf_dir): os.makedirs(newweb_conf_dir)
+
     # output choices
     if not os.path.exists("conf"): os.makedirs("conf")
     with open("conf/relay.choices.csv", "wb") as f:
@@ -297,6 +301,7 @@ def generate(args):
 
     servernames = []
     i = 0
+    country_to_webserver_names = defaultdict(set)
     while i < args.nservers:
         serverip, servercode = chooseServer(servers)
         i += 1
@@ -306,6 +311,7 @@ def generate(args):
         e.set("id", name)
         e.set("iphint", serverip)
         e.set("geocodehint", servercode)
+        country_to_webserver_names[servercode.upper()].add(name)
         e.set("typehint", "server")
         e.set("bandwidthup", "102400") # in KiB
         e.set("bandwidthdown", "102400") # in KiB
@@ -315,6 +321,13 @@ def generate(args):
         a.set("plugin", "tgen")
         a.set("starttime", "1")
         a.set("arguments", "conf/tgen.server.graphml.xml")
+
+        a = etree.SubElement(e, "application")
+        a.set("plugin", webserver_pluginid)
+        a.set("starttime", "1")
+        a.set("arguments", webserver_args)
+
+        pass
     write_tgen_config_files(servernames)
 
     with open("conf/shadowresolv.conf", "wb") as f: print >>f, "nameserver 127.0.0.1"
@@ -577,6 +590,15 @@ def generate(args):
     # generate torrc files now that we know the authorities and bridges
     bridges = None
     write_torrc_files(args, dirauths, bridgeauths, bridges, guardfps, exitfps)
+
+    write_newweb_config()
+
+    # write the country_to_webserver_names file
+    with open('country_to_webservers.txt', 'w') as f:
+        for country, server_names in country_to_webserver_names.iteritems():
+            f.write('%s %s\n' % (country.upper(), ' '.join(server_names)))
+            pass
+        pass
 
     # finally, print the XML file
     with open("shadow.config.xml", 'wb') as fhosts:
