@@ -1,11 +1,30 @@
 #!/usr/bin/env python2.7
 
+#
+# script to generate shadow.config.xml for tor experiments, originally
+# copied from shadow-plugin-tor repository at commit:
+#
+# commit b7e5a9c3ad63decdd1b90b17cb09dd831459777f
+# Author: Rob Jansen <jansen@cs.umn.edu>
+# Date:   Wed Jun 1 15:54:00 2016 -0400
+#
+#     Correct consensus bandwidth unit to KiB/s
+#
+#     thanks @swojo!
+#
+#
+# original instructions to use this are at
+# https://github.com/shadow/shadow-plugin-tor/wiki#generating-a-new-tor-network
+#
+
 import os, sys, subprocess, argparse, time, shlex, shutil
 from random import choice
+import random
 from datetime import datetime
 from numpy import mean
 from lxml import etree
 from networkx import DiGraph, write_graphml
+from collections import defaultdict
 
 # This should NOT be expanded, we'll use this directly in the XML file
 INSTALLPREFIX="~/.shadow/"
@@ -26,6 +45,8 @@ FBULK = 0.03
 NPERF50K = 0.0
 NPERF1M = 0.0
 NPERF5M = 0.0
+
+SEED = 7281353
 
 newweb_conf_dir = 'newweb_conf'
 
@@ -200,6 +221,7 @@ def main():
     ap.add_argument('--nperf5m', action="store", type=float, dest="nperf5m", help="number N of 5MiB perf clients", metavar='F', default=NPERF5M)
     ap.add_argument('--nservers', action="store", type=int, dest="nservers", help="number N of fileservers", metavar='N', default=NSERVERS)
     ap.add_argument('--geoippath', action="store", dest="geoippath", help="path to geoip file, needed to convert IPs to cluster codes", default=INSTALLPREFIX+"share/geoip")
+    ap.add_argument('--seed', action="store", type=float, dest="seed", help="seed the random generator", metavar='S', default=SEED)
 
     # positional args (required)
     ap.add_argument('alexa', action="store", type=str, help="path to an ALEXA file (produced with contrib/parsealexa.py)", metavar='ALEXA', default=None)
@@ -210,6 +232,8 @@ def main():
 
     # get arguments, accessible with args.value
     args = ap.parse_args()
+
+    random.seed(args.seed)
 
     totalclientf = args.fweb + args.fbulk
     if totalclientf != 1.0:
@@ -534,7 +558,7 @@ def generate(args):
         tgenargs = None
 
         addRelayToXML(root, starttime, torargs, tgenargs, name, code=choice(clientCountryCodes),
-                      tproxy_args=tproxy_csp_args)
+                      tproxy_args=tproxy_csp_args, is_newweb_client=True)
 
         clientStartTime += secondsPerClient
         i += 1
@@ -594,10 +618,13 @@ def generate(args):
     write_newweb_config()
 
     # write the country_to_webserver_names file
-    with open('country_to_webservers.txt', 'w') as f:
+    with open('countrycode_to_webserver_names.json', 'w') as fp:
+        import json
+        output_dict = {}
         for country, server_names in country_to_webserver_names.iteritems():
-            f.write('%s %s\n' % (country.upper(), ' '.join(server_names)))
+            output_dict[country] = sorted(server_names)
             pass
+        json.dump(output_dict, fp, indent=2, sort_keys=True)
         pass
 
     # finally, print the XML file
