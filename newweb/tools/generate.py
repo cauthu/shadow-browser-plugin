@@ -45,6 +45,8 @@ NPERF50K = 0.0
 NPERF1M = 0.0
 NPERF5M = 0.0
 
+SEED = 7281353
+
 newweb_conf_dir = 'newweb_conf'
 
 ioservice_conf_fpath = '{}/ioservice.conf'.format(newweb_conf_dir)
@@ -218,6 +220,7 @@ def main():
     ap.add_argument('--nperf5m', action="store", type=float, dest="nperf5m", help="number N of 5MiB perf clients", metavar='F', default=NPERF5M)
     ap.add_argument('--nservers', action="store", type=int, dest="nservers", help="number N of fileservers", metavar='N', default=NSERVERS)
     ap.add_argument('--geoippath', action="store", dest="geoippath", help="path to geoip file, needed to convert IPs to cluster codes", default=INSTALLPREFIX+"share/geoip")
+    ap.add_argument('--seed', action="store", type=float, dest="seed", help="seed the random generator", metavar='S', default=SEED)
 
     # positional args (required)
     ap.add_argument('alexa', action="store", type=str, help="path to an ALEXA file (produced with contrib/parsealexa.py)", metavar='ALEXA', default=None)
@@ -228,6 +231,8 @@ def main():
 
     # get arguments, accessible with args.value
     args = ap.parse_args()
+
+    random.seed(args.seed)
 
     totalclientf = args.fweb + args.fbulk
     if totalclientf != 1.0:
@@ -612,10 +617,13 @@ def generate(args):
     write_newweb_config()
 
     # write the country_to_webserver_names file
-    with open('country_to_webservers.txt', 'w') as f:
+    with open('countrycode_to_webserver_names.json', 'w') as fp:
+        import json
+        output_dict = {}
         for country, server_names in country_to_webserver_names.iteritems():
-            f.write('%s %s\n' % (country.upper(), ' '.join(server_names)))
+            output_dict[country] = sorted(server_names)
             pass
+        json.dump(output_dict, fp, indent=2, sort_keys=True)
         pass
 
     # finally, print the XML file
