@@ -33,8 +33,8 @@ driver_conf_fpath = 'newweb_conf/driver.conf'
 tproxy_csp_conf_fpath = 'newweb_conf/tproxy_csp.conf'
 tproxy_ssp_conf_fpath = 'newweb_conf/tproxy_ssp.conf'
 
-ioservice_args = '--conf={}'.format(ioservice_args)
-renderer_args = '--conf={}'.format(renderer_args)
+ioservice_args = '--conf={}'.format(ioservice_conf_fpath)
+renderer_args = '--conf={}'.format(renderer_conf_fpath)
 driver_args = '--conf={}'.format(driver_conf_fpath)
 tproxy_csp_args = '--conf={}'.format(tproxy_csp_conf_fpath)
 tproxy_ssp_args = '--conf={}'.format(tproxy_ssp_conf_fpath)
