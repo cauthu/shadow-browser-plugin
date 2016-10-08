@@ -19,6 +19,7 @@
 
 import os, sys, subprocess, argparse, time, shlex, shutil
 from random import choice
+import random
 from datetime import datetime
 from numpy import mean
 from lxml import etree
@@ -557,7 +558,7 @@ def generate(args):
         tgenargs = None
 
         addRelayToXML(root, starttime, torargs, tgenargs, name, code=choice(clientCountryCodes),
-                      tproxy_args=tproxy_csp_args)
+                      tproxy_args=tproxy_csp_args, is_newweb_client=True)
 
         clientStartTime += secondsPerClient
         i += 1
