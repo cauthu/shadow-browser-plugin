@@ -11,6 +11,7 @@ namespace expcommon {
 static const char proxy_mode_none[] = "none";
 static const char proxy_mode_tor[] = "tor";
 static const char proxy_mode_tproxy[] = "tproxy";
+static const char proxy_mode_tproxy_via_tor[] = "tproxy-via-tor";
 
 
 namespace conf_names {

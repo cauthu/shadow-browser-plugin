@@ -132,7 +132,9 @@ int main(int argc, char **argv)
 
         LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
 
-        if (proxy_mode != expcommon::proxy_mode_tproxy) {
+        if ((proxy_mode != expcommon::proxy_mode_tproxy)
+            && (proxy_mode != expcommon::proxy_mode_tproxy_via_tor))
+        {
             // let's NOT use the tproxy
             conf.tproxy_ipcport = 0;
         }

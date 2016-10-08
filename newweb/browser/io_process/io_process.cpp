@@ -133,7 +133,9 @@ int main(int argc, char **argv)
         LOG(INFO) << "using proxy mode \"" << proxy_mode << "\"";
 
         conf.socks5_host = "127.0.0.1";
-        if (proxy_mode == expcommon::proxy_mode_tproxy) {
+        if ((proxy_mode == expcommon::proxy_mode_tproxy)
+            || (proxy_mode == expcommon::proxy_mode_tproxy_via_tor))
+        {
             conf.socks5_port = conf.tproxy_socks_port;
         } else if (proxy_mode == expcommon::proxy_mode_tor) {
             conf.socks5_port = conf.tor_socks_port;

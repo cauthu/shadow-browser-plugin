@@ -185,6 +185,7 @@ int main(int argc, char **argv)
     myio::TCPServer::UniquePtr tcpServerForIPC;
     IPCServer::UniquePtr ipcserver;
 
+    string proxy_mode = expcommon::proxy_mode_none;
     bool do_setup_csp = true;
     if (is_client) {
 #ifdef IN_SHADOW
@@ -198,13 +199,14 @@ int main(int argc, char **argv)
             LOG(INFO) << "my hostname \"" << myhostname << "\"";
 
             bool found = false;
-            const auto proxy_mode = expcommon::get_my_proxy_mode(
+            proxy_mode = expcommon::get_my_proxy_mode(
                 conf.browser_proxy_mode_spec_file.c_str(), myhostname, found);
             CHECK(found) << "cannot find myself in proxy mode spec file";
 
             LOG(INFO) << "browser using proxy mode \"" << proxy_mode << "\"";
 
-            do_setup_csp = (proxy_mode == expcommon::proxy_mode_tproxy);
+            do_setup_csp = ((proxy_mode == expcommon::proxy_mode_tproxy)
+                            || (proxy_mode == expcommon::proxy_mode_tproxy_via_tor));
 
             if (!do_setup_csp) {
                 LOG(INFO) << "we are of no use; exiting";
@@ -221,6 +223,12 @@ int main(int argc, char **argv)
                                     conf.listenport, nullptr, false));
 
             LOG(INFO) << "ssp: [" << conf.ssp_host << "]:" << conf.ssp_port;
+            if (proxy_mode == expcommon::proxy_mode_tproxy_via_tor) {
+                CHECK_GT(conf.tor_socks_port, 0);
+            } else if (proxy_mode == expcommon::proxy_mode_tproxy) {
+                // force it to zero so we don't use tor
+                conf.tor_socks_port = 0;
+            }
             LOG(INFO) << "tor socks port: " << conf.tor_socks_port;
             csp.reset(new csp::ClientSideProxy(
                           evbase.get(),
