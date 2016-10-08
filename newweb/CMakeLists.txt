@@ -11,10 +11,19 @@ if(EXISTS "${SHADOW_ROOT}/share/cmake/Modules")
   set(CMAKE_MODULE_PATH "${SHADOW_ROOT}/share/cmake/Modules" ${CMAKE_MODULE_PATH})
 endif()
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+message(STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}")
 
 add_cxxflags("-std=c++11")
 
+# set these so that the cmake FindEVENT2 and FindOPENSSL will use our
+# shadow-specific versions
+set(CMAKE_EXTRA_INCLUDES "${CMAKE_INSTALL_PREFIX}/include")
+set(CMAKE_EXTRA_LIBRARIES "${CMAKE_INSTALL_PREFIX}/lib")
+
 message(STATUS "CMAKE_CXX_FLAGS for newweb project = ${CMAKE_CXX_FLAGS}")
+message(STATUS "CMAKE_EXTRA_INCLUDES for newweb project = ${CMAKE_EXTRA_INCLUDES}")
+message(STATUS "CMAKE_EXTRA_LIBRARIES for newweb project = ${CMAKE_EXTRA_LIBRARIES}")
+
 
 find_package(Boost REQUIRED)
 find_package(EVENT2 REQUIRED)
