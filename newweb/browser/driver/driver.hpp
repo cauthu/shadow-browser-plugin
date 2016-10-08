@@ -96,6 +96,7 @@ private:
 
     //////////
 
+    void _on_grace_period_timer_fired(Timer*);
     void _on_think_time_timer_fired(Timer*);
 
     void _read_page_models_file(const std::string&);
@@ -125,28 +126,42 @@ private:
 
             LOADING_PAGE,
 
+        /* "grace period" is probably not best choice of words, but
+         * basically webpages can fire "load" event but still
+         * afterwards generate a lot of network requests, so we wait
+         * for a little bit to catch (some of) these requests before
+         * reporting page load result
+         */
+            GRACE_PERIOD_AFTER_DOM_LOAD_EVENT,
+
             THINKING,
     } state_;
 
+    Timer::UniquePtr grace_period_timer_;
     Timer::UniquePtr think_time_timer_;
 
-    enum PageLoadStatus {
-        OK = 0,
+    enum class PageLoadStatus {
+        PENDING = 0,
+        OK,
         FAILED,
         TIMEDOUT
     };
-    static const char* PageLoadStatusStr[];
+    static const char* s_page_load_status_to_string(const PageLoadStatus&);
 
     uint32_t loadnum_;
 
     struct OnePageLoadInfo
     {
-        std::string model_path_;
+        uint32_t page_model_idx_;
         uint64_t load_start_timepoint_;
-        uint64_t load_done_timepoint_;
+        uint64_t DOM_load_event_fired_timepoint_;
         uint32_t num_reqs_;
         uint32_t num_succes_reqs_;
         uint32_t num_failed_reqs_;
+        uint32_t num_post_DOM_load_event_reqs_;
+
+        PageLoadStatus page_load_status_;
+        uint32_t ttfb_ms_;
     } this_page_load_info_;
 
     void _report_result(const PageLoadStatus&,

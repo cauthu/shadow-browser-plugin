@@ -14,14 +14,10 @@ using myipc::GenericIpcChannel;
 namespace renderermsgs = myipc::renderer::messages;
 using renderermsgs::type;
 
-static const uint8_t s_resp_timeout_secs = 5;
-
-const char* Driver::PageLoadStatusStr[] = {
-    "OK", "FAILED", "TIMEDOUT"
-};
+static const uint8_t s_ipc_cmd_resp_timeout_secs = 5;
 
 
-#define _LOG_PREFIX(inst) 
+#define _LOG_PREFIX(inst) << "driver= " << (inst)->objId() << ": "
 
 /* "inst" stands for instance, as in, instance of a class */
 #define vloginst(level, inst) VLOG(level) _LOG_PREFIX(inst)
@@ -47,7 +43,7 @@ const char* Driver::PageLoadStatusStr[] = {
         renderer_ipc_ch_->call(                                         \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer(), __resp_type,                 \
-            on_resp_status, &s_resp_timeout_secs);                      \
+            on_resp_status, &s_ipc_cmd_resp_timeout_secs);              \
     }
 
 
@@ -95,6 +91,10 @@ Driver::_renderer_handle_RequestWillBeSent(
 
     ++this_page_load_info_.num_reqs_;
 
+    if (this_page_load_info_.DOM_load_event_fired_timepoint_ > 0) {
+        ++this_page_load_info_.num_post_DOM_load_event_reqs_;
+    }
+
     vlogself(2) << "done";
 }
 
@@ -134,32 +134,37 @@ Driver::_reset_this_page_load_info()
     this_page_load_info_.num_failed_reqs_ = 0;
     this_page_load_info_.num_succes_reqs_ = 0;
     this_page_load_info_.num_reqs_ = 0;
+    this_page_load_info_.num_post_DOM_load_event_reqs_ = 0;
     this_page_load_info_.load_start_timepoint_ = 0;
-    this_page_load_info_.load_done_timepoint_ = 0;
-    this_page_load_info_.model_path_.clear();
+    this_page_load_info_.DOM_load_event_fired_timepoint_ = 0;
+    this_page_load_info_.page_model_idx_ = 0;
+
+    this_page_load_info_.page_load_status_ = PageLoadStatus::PENDING;
+    this_page_load_info_.ttfb_ms_ = 0;
 }
 
 void
 Driver::_report_result(const PageLoadStatus& pageloadstatus,
                        const uint32_t& ttfb_ms)
 {
-    CHECK_GE(pageloadstatus, 0);
-    CHECK_LT(pageloadstatus, (ARRAY_LEN(PageLoadStatusStr)));
-    const char* status_str = PageLoadStatusStr[pageloadstatus];
+    const char* status_str = s_page_load_status_to_string(pageloadstatus);
+    CHECK_NOTNULL(status_str);
 
-    const auto plt = this_page_load_info_.load_done_timepoint_ - this_page_load_info_.load_start_timepoint_;
+    auto& tpli = this_page_load_info_;
+    const auto plt = tpli.DOM_load_event_fired_timepoint_ - tpli.load_start_timepoint_;
 
     LOG(INFO)
         << "loadnum= " << loadnum_
         << ", vanilla: "
         << status_str
-        << ": start= " << this_page_load_info_.load_start_timepoint_
+        << ": start= " << tpli.load_start_timepoint_
         << " plt= " << (pageloadstatus == PageLoadStatus::OK ? plt : 0)
-        << " url= [" << this_page_load_info_.model_path_ << "]"
+        << " page= [" << page_models_[tpli.page_model_idx_].first << "]"
         << " ttfb= " << (pageloadstatus == PageLoadStatus::OK ? ttfb_ms : 0)
-        << " numReqs= " << this_page_load_info_.num_reqs_
-        << " numSuccessReqs= " << this_page_load_info_.num_succes_reqs_
-        << " numFailedReqs= " << this_page_load_info_.num_failed_reqs_
+        << " numReqs= " << tpli.num_reqs_
+        << " numSuccess= " << tpli.num_succes_reqs_
+        << " numFailed= " << tpli.num_failed_reqs_
+        << " numPostDOMLoadEvent= " << tpli.num_post_DOM_load_event_reqs_
         ;
 }
 
@@ -170,24 +175,23 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     CHECK_EQ(state_, State::LOADING_PAGE);
 
-    state_ = State::THINKING;
+    state_ = State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT;
 
     if (using_tproxy_) {
         _tproxy_stop_defense(false);
     }
     
-    // page has loaded
+    // page "load" event fired
 
-    this_page_load_info_.load_done_timepoint_ = common::gettimeofdayMs();
+    this_page_load_info_.DOM_load_event_fired_timepoint_ = common::gettimeofdayMs();
+    this_page_load_info_.page_load_status_ = PageLoadStatus::OK;
+    this_page_load_info_.ttfb_ms_ = msg->ttfb_ms();
 
-    _report_result(PageLoadStatus::OK, msg->ttfb_ms());
+    static const auto grace_period_ms = 3*1000;
 
-    // now, start the think time timer
-    auto think_time_ms = 120*1000;
+    logself(INFO) << "DOM \"load\" event has fired; start grace period";
 
-    _reset_this_page_load_info();
-
-    think_time_timer_->start(think_time_ms);
+    grace_period_timer_->start(grace_period_ms);
 
     vlogself(2) << "done";
 }
@@ -245,11 +249,11 @@ Driver::_renderer_load_page()
     this_page_load_info_.load_start_timepoint_ = common::gettimeofdayMs();
     ++loadnum_;
 
-    this_page_load_info_.model_path_ = page_models_[loadnum_ % page_models_.size()].second;
+    this_page_load_info_.page_model_idx_ = loadnum_ % page_models_.size();
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
-        const auto& model_path = this_page_load_info_.model_path_;
+        const auto& model_path = page_models_[this_page_load_info_.page_model_idx_].second;
         auto model_fpath = bufbuilder.CreateString(model_path);
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
@@ -271,5 +275,27 @@ Driver::_renderer_on_load_page_resp(GenericIpcChannel::RespStatus status,
         logself(FATAL) << "Load command times out";
     }
 }
+
+const char*
+Driver::s_page_load_status_to_string(const PageLoadStatus& status)
+{
+    switch (status) {
+    case PageLoadStatus::PENDING:
+        return "PENDING";
+        break;
+    case PageLoadStatus::OK:
+        return "OK";
+        break;
+    case PageLoadStatus::FAILED:
+        return "FAILED";
+        break;
+    case PageLoadStatus::TIMEDOUT:
+        return "TIMEDOUT";
+        break;
+    default:
+        LOG(FATAL) << "not reached";
+        break;
+    }
+};
 
 #undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END

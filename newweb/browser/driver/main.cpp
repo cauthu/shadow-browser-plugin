@@ -30,11 +30,12 @@ struct MyConfig
     uint16_t renderer_ipcport;
     uint16_t tproxy_ipcport;
 
-#ifdef IN_SHADOW
     struct {
         bool found;
         std::string path;
     } page_models_list_file;
+
+#ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
 #endif
 
@@ -57,13 +58,18 @@ set_my_config(MyConfig& conf,
         }
 
         else if (name == "page-models-list-file") {
-#ifdef IN_SHADOW
             conf.page_models_list_file.found = true;
             conf.page_models_list_file.path = value;
-#else
-            LOG(FATAL) << "page-models-list-file does not yet make sense outside shadow";
-#endif
         }
+
+//         else if (name == "load-page-then-exit") {
+// #ifdef IN_SHADOW
+//             LOG(FATAL) << "load-page-then-exit does not yet make sense in shadow";
+// #else
+//             conf.load_model_then_exit.found = true;
+//             conf.load_model_then_exit.path = value;
+// #endif
+//         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
 #ifdef IN_SHADOW
@@ -130,11 +136,17 @@ int main(int argc, char **argv)
         }
     }
 
+#else
+
+    // if (!conf.load_model_then_exit.found) {
+    //     LOG(FATAL) << "must specify page model to load with --load-page-then-exit";
+    // }
+
+#endif
+
     if (!conf.page_models_list_file.found) {
         LOG(FATAL) << "must specify page models list file";
     }
-
-#endif
 
     LOG(INFO) << "driver_process starting...";
 

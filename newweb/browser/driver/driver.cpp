@@ -76,6 +76,10 @@ Driver::Driver(struct event_base* evbase,
             boost::bind(&Driver::_renderer_on_ipc_msg, this, _1, _2, _3, _4),
             boost::bind(&Driver::_renderer_on_ipc_ch_status, this, _1, _2)));
 
+    grace_period_timer_.reset(
+        new Timer(evbase_, true,
+                  boost::bind(&Driver::_on_grace_period_timer_fired, this, _1)));
+
     think_time_timer_.reset(
         new Timer(evbase_, true,
                   boost::bind(&Driver::_on_think_time_timer_fired, this, _1)));
@@ -132,12 +136,63 @@ Driver::_read_page_models_file(const string& page_models_list_file)
     if (page_models_.empty()) {
         logself(FATAL) << "no page models to load";
     }
+
+#ifndef IN_SHADOW
+
+    if (page_models_.size() != 1) {
+        logself(FATAL) << "outside shadow, should specify exactly one page to load";
+    }
+
+#endif
+
 }
 
 void
-Driver::_on_think_time_timer_fired(Timer*)
+Driver::_on_grace_period_timer_fired(Timer* timer)
 {
     vlogself(2) << "begin";
+
+    CHECK_EQ(timer, grace_period_timer_.get());
+
+    logself(INFO) << "done grace period; start thinking";
+
+    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
+
+    CHECK_NE(this_page_load_info_.page_load_status_,
+             PageLoadStatus::PENDING);
+
+    _report_result(this_page_load_info_.page_load_status_,
+                   this_page_load_info_.ttfb_ms_);
+
+#ifndef IN_SHADOW
+
+    // running outside shadow, so exit after one page load
+    CHECK(0) << "need testing";
+    CHECK_EQ(loadnum_, 1);
+    logself(INFO) << "exiting";
+
+#endif
+
+    _reset_this_page_load_info();
+
+    state_ = State::THINKING;
+
+    // now, start the think time timer
+    static const auto think_time_ms = 90*1000;
+
+    think_time_timer_->start(think_time_ms);
+
+    vlogself(2) << "done";
+}
+
+void
+Driver::_on_think_time_timer_fired(Timer* timer)
+{
+    vlogself(2) << "begin";
+
+    CHECK_EQ(timer, think_time_timer_.get());
+
+    logself(INFO) << "done thinking";
 
     // done thinkin, so prepare another round of loading
     CHECK_EQ(state_, State::THINKING);

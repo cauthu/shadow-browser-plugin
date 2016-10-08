@@ -163,7 +163,7 @@ Driver::_tproxy_stop_defense(const bool& right_now)
 
     CHECK(tproxy_ipc_ch_ready_);
 
-    CHECK_EQ(state_, State::THINKING);
+    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
@@ -184,7 +184,7 @@ Driver::_tproxy_on_stop_defense_resp(
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(state_, State::THINKING);
+    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "command timed out";
