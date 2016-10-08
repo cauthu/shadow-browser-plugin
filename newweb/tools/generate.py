@@ -1,5 +1,22 @@
 #!/usr/bin/env python2.7
 
+#
+# script to generate shadow.config.xml for tor experiments, originally
+# copied from shadow-plugin-tor repository at commit:
+#
+# commit b7e5a9c3ad63decdd1b90b17cb09dd831459777f
+# Author: Rob Jansen <jansen@cs.umn.edu>
+# Date:   Wed Jun 1 15:54:00 2016 -0400
+#
+#     Correct consensus bandwidth unit to KiB/s
+#
+#     thanks @swojo!
+#
+#
+# original instructions to use this are at
+# https://github.com/shadow/shadow-plugin-tor/wiki#generating-a-new-tor-network
+#
+
 import os, sys, subprocess, argparse, time, shlex, shutil
 from random import choice
 from datetime import datetime
