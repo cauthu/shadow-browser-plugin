@@ -6,7 +6,12 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 set(MY_ROOT_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 set(UTILITY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/utility")
 
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
+## we use cmake files from shadow
+if(EXISTS "${SHADOW_ROOT}/share/cmake/Modules")
+  set(CMAKE_MODULE_PATH "${SHADOW_ROOT}/share/cmake/Modules" ${CMAKE_MODULE_PATH})
+endif()
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+
 add_cxxflags("-std=c++11")
 
 message(STATUS "CMAKE_CXX_FLAGS for newweb project = ${CMAKE_CXX_FLAGS}")
