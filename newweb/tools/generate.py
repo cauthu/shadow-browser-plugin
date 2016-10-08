@@ -6,6 +6,7 @@ from datetime import datetime
 from numpy import mean
 from lxml import etree
 from networkx import DiGraph, write_graphml
+from collections import defaultdict
 
 # This should NOT be expanded, we'll use this directly in the XML file
 INSTALLPREFIX="~/.shadow/"
