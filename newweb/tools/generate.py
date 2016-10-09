@@ -554,11 +554,15 @@ def generate(args):
         i += 1
 
     i = 1
+
+    webclient_names = set()
     while i <= nwebclients:
         name = "webclient{0}".format(i)
         starttime = "{0}".format(int(round(clientStartTime)))
         torargs = "{0} -f conf/tor.client.torrc".format(default_tor_args) # in bytes
         tgenargs = None
+
+        webclient_names.add(name)
 
         addRelayToXML(root, starttime, torargs, tgenargs, name, code=choice(clientCountryCodes),
                       tproxy_args=tproxy_csp_args, is_newweb_client=True)
@@ -630,6 +634,11 @@ def generate(args):
         json.dump(output_dict, fp, indent=2, sort_keys=True)
         pass
 
+    with open('webclient_names.json', 'w') as fp:
+        import json
+        json.dump(sorted(list(webclient_names)), fp, indent=2, sort_keys=True)
+        pass
+
     # finally, print the XML file
     with open("shadow.config.xml", 'wb') as fhosts:
         # plug-ins
@@ -692,6 +701,8 @@ def generate(args):
         e = etree.Element("kill")
         e.set("time", "3600")
         root.insert(0, e)
+
+        root.insert(0, etree.Comment(' generated with cmd: %s ' % (' '.join(sys.argv))))
 
         # all our hosts
         print >>fhosts, (etree.tostring(root, pretty_print=True, xml_declaration=False))
