@@ -307,9 +307,16 @@ BufloMuxChannelImplSpdy::start_defense_session()
     auto rv = gettimeofday(&current_tv, nullptr);
     CHECK_EQ(rv, 0);
 
-    struct timeval duration_tv;
-    duration_tv.tv_sec = 180;
-    duration_tv.tv_usec = 0;
+    /* if we're on the server side, it's possible due to congestion
+     * that the client's stop request doesn't reach us in team, so
+     * wait a little longer than on client side
+     */
+    struct timeval duration_tv = {0};
+    if (is_client_side_) {
+        duration_tv.tv_sec = 180;
+    } else {
+        duration_tv.tv_sec = 210;
+    }
 
     evutil_timeradd(&current_tv, &duration_tv, &defense_info_.hard_stop_time);
 
