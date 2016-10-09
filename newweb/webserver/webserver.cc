@@ -57,8 +57,9 @@ INITIALIZE_EASYLOGGINGPP
 int main(int argc, char **argv)
 {
     common::init_common();
-
     common::init_easylogging();
+
+    START_EASYLOGGINGPP(argc, argv);
 
     std::set<uint16_t> listenports;
 
@@ -72,8 +73,6 @@ int main(int argc, char **argv)
     if (listenports.empty()) {
         listenports.insert(80);
     }
-
-    START_EASYLOGGINGPP(argc, argv);
 
     LOG(INFO) << "webserver starting...";
 

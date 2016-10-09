@@ -109,6 +109,8 @@ int main(int argc, char **argv)
     common::init_common();
     common::init_easylogging();
 
+    START_EASYLOGGINGPP(argc, argv);
+
     MyConfig conf;
 
     bool found_conf_name = false;
@@ -131,8 +133,6 @@ int main(int argc, char **argv)
 
     CHECK_GT(conf.renderer_ipcport, 0)
         << "must specify a positive port to listen on to provide renderer ipc service";
-
-    START_EASYLOGGINGPP(argc, argv);
 
     LOG(INFO) << "render_process starting...";
 
