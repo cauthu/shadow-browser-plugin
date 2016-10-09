@@ -30,12 +30,6 @@ find_package(EVENT2 REQUIRED)
 find_package(SPDYLAY REQUIRED)
 find_package(OPENSSL REQUIRED)
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-  message(FATAL_ERROR "release mode would crash shadow when we try to initialize easylogging++ " 
-      "(shadow can't properly handle somestatic stuff in c++). see issue " 
-      "https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/7/" )
-endif()
-
 # need this so we can do #include the generated flatbuffer headers;
 # setting CMAKE_INCLUDE_CURRENT_DIR to ON doens't seem to work
 # include_directories(AFTER ${CMAKE_CURRENT_BINARY_DIR})
