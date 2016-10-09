@@ -48,6 +48,9 @@ NPERF5M = 0.0
 
 SEED = 7281353
 
+# have tgen listen on this to leave 80 for my webserver
+TGEN_SERVERPORT = 90
+
 newweb_conf_dir = 'newweb_conf'
 
 ioservice_conf_fpath = '{}/ioservice.conf'.format(newweb_conf_dir)
@@ -1266,7 +1269,7 @@ def write_newweb_config():
 
 def write_tgen_config_files(servernames):
     servers = []
-    for n in servernames: servers.append("{0}:80".format(n))
+    for n in servernames: servers.append("{0}:{1}".format(n, TGEN_SERVERPORT))
     s = ','.join(servers)
 
     generate_tgen_server()
@@ -1277,7 +1280,7 @@ def write_tgen_config_files(servernames):
 
 def generate_tgen_server():
     G = DiGraph()
-    G.add_node("start", serverport="80")
+    G.add_node("start", serverport="{0}".format(TGEN_SERVERPORT))
     write_graphml(G, "conf/tgen.server.graphml.xml")
 
 def generate_tgen_filetransfer_clients(servers):
