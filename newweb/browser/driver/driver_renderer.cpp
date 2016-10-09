@@ -178,6 +178,8 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     state_ = State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT;
 
+    page_load_timeout_timer_->cancel();
+
     if (using_tproxy_) {
         _tproxy_stop_defense(false);
     }
@@ -280,6 +282,10 @@ Driver::_renderer_on_load_page_resp(GenericIpcChannel::RespStatus status,
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "Load command times out";
     }
+
+    // 120 seconds
+    static const uint32_t page_load_timeout_ms = 120*1000;
+    page_load_timeout_timer_->start(page_load_timeout_ms);
 }
 
 const char*

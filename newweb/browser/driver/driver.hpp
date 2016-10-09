@@ -99,6 +99,7 @@ private:
 
     //////////
 
+    void _on_page_load_timeout(Timer*);
     void _on_grace_period_timer_fired(Timer*);
     void _on_think_time_timer_fired(Timer*);
 
@@ -143,6 +144,7 @@ private:
             THINKING,
     } state_;
 
+    Timer::UniquePtr page_load_timeout_timer_;
     Timer::UniquePtr grace_period_timer_;
     Timer::UniquePtr think_time_timer_;
 

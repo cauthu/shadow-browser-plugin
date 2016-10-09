@@ -82,6 +82,10 @@ Driver::Driver(struct event_base* evbase,
             boost::bind(&Driver::_renderer_on_ipc_msg, this, _1, _2, _3, _4),
             boost::bind(&Driver::_renderer_on_ipc_ch_status, this, _1, _2)));
 
+    page_load_timeout_timer_.reset(
+        new Timer(evbase_, true,
+                  boost::bind(&Driver::_on_page_load_timeout, this, _1)));
+
     grace_period_timer_.reset(
         new Timer(evbase_, true,
                   boost::bind(&Driver::_on_grace_period_timer_fired, this, _1)));
@@ -169,9 +173,7 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
 
     CHECK_EQ(timer, grace_period_timer_.get());
 
-    const auto think_time_ms = (*think_time_rand_gen_)();
-
-    logself(INFO) << "done grace period; start thinking for " << think_time_ms << " ms";
+    logself(INFO) << "done grace period";
 
     CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
@@ -194,6 +196,51 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
 
     state_ = State::THINKING;
 
+    const auto think_time_ms = (*think_time_rand_gen_)();
+    logself(INFO) << "start thinking for " << think_time_ms << " ms";
+    think_time_timer_->start(think_time_ms);
+
+    vlogself(2) << "done";
+}
+
+void
+Driver::_on_page_load_timeout(Timer* timer)
+{
+    vlogself(2) << "begin";
+
+    CHECK_EQ(timer, page_load_timeout_timer_.get());
+
+    logself(WARNING) << "page load has timed out";
+
+    CHECK_EQ(state_, State::LOADING_PAGE);
+
+    if (using_tproxy_) {
+        _tproxy_stop_defense(false);
+    }
+
+    auto& tpli = this_page_load_info_;
+
+    CHECK_NE(tpli.page_load_status_, PageLoadStatus::PENDING);
+
+    tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
+
+    _report_result(tpli.page_load_status_, 0);
+
+#ifndef IN_SHADOW
+
+    // running outside shadow, so exit after one page load
+    CHECK(0) << "need testing";
+    CHECK_EQ(loadnum_, 1);
+    logself(INFO) << "exiting";
+
+#endif
+
+    _reset_this_page_load_info();
+
+    state_ = State::THINKING;
+
+    const auto think_time_ms = (*think_time_rand_gen_)();
+    logself(INFO) << "start thinking for " << think_time_ms << " ms";
     think_time_timer_->start(think_time_ms);
 
     vlogself(2) << "done";
