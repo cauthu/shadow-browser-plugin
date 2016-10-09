@@ -31,8 +31,9 @@ find_package(SPDYLAY REQUIRED)
 find_package(OPENSSL REQUIRED)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    message(STATUS "disable verbose and debug levels of easylogging")
-    add_definitions(-DELPP_NO_DEFAULT_LOG_FILE -DELPP_DISABLE_VERBOSE_LOGS -DELPP_DISABLE_DEBUG_LOGS)
+  message(FATAL_ERROR "release mode would crash shadow when we try to initialize easylogging++ " 
+      "(shadow can't properly handle somestatic stuff in c++). see issue " 
+      "https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/7/" )
 endif()
 
 # need this so we can do #include the generated flatbuffer headers;
@@ -40,6 +41,8 @@ endif()
 # include_directories(AFTER ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(AFTER ${MY_ROOT_BUILD_DIR})
 
+message(STATUS "Disabling easylogging verbose and debug logging\n")
+add_definitions(-DELPP_NO_DEFAULT_LOG_FILE -DELPP_DISABLE_VERBOSE_LOGS -DELPP_DISABLE_DEBUG_LOGS)
 add_definitions(-DELPP_DEBUG_ASSERT_FAILURE -DELPP_STACKTRACE_ON_CRASH)
 
 add_subdirectory(utility)
