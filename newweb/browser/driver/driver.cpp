@@ -220,7 +220,7 @@ Driver::_on_page_load_timeout(Timer* timer)
 
     auto& tpli = this_page_load_info_;
 
-    CHECK_NE(tpli.page_load_status_, PageLoadStatus::PENDING);
+    CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
 
     tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
 

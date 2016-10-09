@@ -249,6 +249,9 @@ Driver::_renderer_load_page()
     }
 
     state_ = State::LOADING_PAGE;
+
+    _reset_this_page_load_info();
+
     auto& tpli = this_page_load_info_;
     tpli.load_start_timepoint_ = common::gettimeofdayMs();
     ++loadnum_;
