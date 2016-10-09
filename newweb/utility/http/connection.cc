@@ -712,8 +712,12 @@ Connection::onConnected(StreamChannel* ch) noexcept
         // exit (version 0.2.7.6) cannot resolve hostname, e.g.,
         // "eventdns rejected address "host.com"". so we lookup ip
         // locally. it makes no difference in shadow simulation
+
+        const auto addr = common::getaddr(host.c_str());
+        CHECK(addr && (addr != INADDR_NONE))
+            << "couldn't get adddress for host [" << host << "]";
         socks_connector_.reset(
-            new Socks5Connector(std::move(transport_), common::getaddr(host.c_str()), port));
+            new Socks5Connector(std::move(transport_), addr, port));
 #else
         socks_connector_.reset(
             new Socks5Connector(std::move(transport_), host.c_str(), port));
@@ -775,7 +779,8 @@ Connection::initiate_connection()
         CHECK_NE(port, 0);
 
         const auto addr = common::getaddr(host.c_str());
-        CHECK_NE(addr, 0);
+        CHECK(addr && (addr != INADDR_NONE))
+            << "couldn't get adddress for host [" << host << "]";
 
         CHECK(!transport_);
         transport_.reset(new TCPChannel(evbase_, addr, port, this));
