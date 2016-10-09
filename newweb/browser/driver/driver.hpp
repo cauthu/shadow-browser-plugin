@@ -149,7 +149,8 @@ private:
     Timer::UniquePtr think_time_timer_;
 
     enum class PageLoadStatus {
-        PENDING = 0,
+        NONE = 0,
+        PENDING,
         OK,
         FAILED,
         TIMEDOUT
@@ -172,8 +173,8 @@ private:
         uint32_t ttfb_ms_;
     } this_page_load_info_;
 
-    void _report_result(const PageLoadStatus&,
-                        const uint32_t&);
+    void _start_thinking();
+    void _report_result();
     void _reset_this_page_load_info();
 };
 

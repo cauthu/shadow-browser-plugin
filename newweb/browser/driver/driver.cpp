@@ -178,10 +178,9 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
     CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
     CHECK_NE(this_page_load_info_.page_load_status_,
-             PageLoadStatus::PENDING);
+	     PageLoadStatus::PENDING);
 
-    _report_result(this_page_load_info_.page_load_status_,
-                   this_page_load_info_.ttfb_ms_);
+    _report_result();
 
 #ifndef IN_SHADOW
 
@@ -194,11 +193,7 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
 
     _reset_this_page_load_info();
 
-    state_ = State::THINKING;
-
-    const auto think_time_ms = (*think_time_rand_gen_)();
-    logself(INFO) << "start thinking for " << think_time_ms << " ms";
-    think_time_timer_->start(think_time_ms);
+    _renderer_reset();
 
     vlogself(2) << "done";
 }
@@ -214,17 +209,11 @@ Driver::_on_page_load_timeout(Timer* timer)
 
     CHECK_EQ(state_, State::LOADING_PAGE);
 
-    if (using_tproxy_) {
-        _tproxy_stop_defense(false);
-    }
-
     auto& tpli = this_page_load_info_;
-
     CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
-
     tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
 
-    _report_result(tpli.page_load_status_, 0);
+    _report_result();
 
 #ifndef IN_SHADOW
 
@@ -237,11 +226,11 @@ Driver::_on_page_load_timeout(Timer* timer)
 
     _reset_this_page_load_info();
 
-    state_ = State::THINKING;
+    _renderer_reset();
 
-    const auto think_time_ms = (*think_time_rand_gen_)();
-    logself(INFO) << "start thinking for " << think_time_ms << " ms";
-    think_time_timer_->start(think_time_ms);
+    if (using_tproxy_) {
+        _tproxy_stop_defense(false);
+    }
 
     vlogself(2) << "done";
 }
@@ -255,10 +244,9 @@ Driver::_on_think_time_timer_fired(Timer* timer)
 
     logself(INFO) << "done thinking";
 
-    // done thinkin, so prepare another round of loading
     CHECK_EQ(state_, State::THINKING);
 
-    _renderer_reset();
+    _renderer_load_page();
 
     vlogself(2) << "done";
 }
