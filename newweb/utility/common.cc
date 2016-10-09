@@ -384,7 +384,20 @@ init_easylogging()
        el::Level::Verbose, el::ConfigurationType::Format,
        "%datetime{%h:%m:%s} %level-%vlevel - %fbase :%line, %func ::   %msg");
 
-    el::Loggers::reconfigureLogger("default", defaultConf);
+    // by default easylogging also logs to a default log file
+    // "logs/myeasylog.log" every loggable message; we disable that
+    // behavior here... god this was driving me crazy for half a day
+    // because i'd set -DELPP_NO_DEFAULT_LOG_FILE thinking that would
+    // do the job, but it only caused easylogging to crash when it
+    // tries to write to the file (on line easylogging++.h:4235) but
+    // the fs is garbage
+    //
+    // fs->write(logLine.c_str(), logLine.size());
+    //
+    defaultConf.setGlobally(el::ConfigurationType::ToFile, "false");
+
+    const std::string identity("default");
+    el::Loggers::reconfigureLogger(identity, defaultConf);
 }
 
 } // end namespace common
