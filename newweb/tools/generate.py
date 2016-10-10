@@ -64,7 +64,7 @@ renderer_args = '--conf={}'.format(renderer_conf_fpath)
 driver_args = '--conf={}'.format(driver_conf_fpath)
 tproxy_csp_args = '--conf={}'.format(tproxy_csp_conf_fpath)
 tproxy_ssp_args = '--conf={}'.format(tproxy_ssp_conf_fpath)
-webserver_args = ''
+webserver_args = '--port=80 --port=443'
 
 ioservice_pluginid = 'ioservice'
 renderer_pluginid = 'renderer'
