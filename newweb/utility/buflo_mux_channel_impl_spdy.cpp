@@ -479,6 +479,30 @@ BufloMuxChannelImplSpdy::write_buffer(int sid, struct evbuffer *buf)
     return 0;
 }
 
+int
+BufloMuxChannelImplSpdy::set_write_eof(int sid) 
+{
+    MAYBE_GET_STREAMSTATE(sid, false, -1);
+
+    vlogself(2) << "begin";
+
+    CHECK(!streamstate->inward_has_seen_eof_);
+    streamstate->inward_has_seen_eof_ = true;
+
+    if (streamstate->inward_deferred_) {
+        vlogself(2) << "inner stream " << sid << " was deferred; resume now";
+        const auto rv = spdylay_session_resume_data(spdysess_, sid);
+        CHECK_EQ(rv, 0);
+        streamstate->inward_deferred_ = false;
+    }
+
+    _pump_spdy_send();
+
+    vlogself(2) << "done";
+
+    return 0;
+}
+
 void
 BufloMuxChannelImplSpdy::close_stream(int sid) 
 {
@@ -1659,9 +1683,16 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
         retval = rv;
     } else {
         CHECK_EQ(rv, 0);
-        vlogself(2) << "nothing to read, so we defer";
-        streamstate->inward_deferred_ = true;
-        retval = SPDYLAY_ERR_DEFERRED;
+
+        if (!streamstate->inward_has_seen_eof_) {
+            vlogself(2) << "nothing to read, so we defer";
+            streamstate->inward_deferred_ = true;
+            retval = SPDYLAY_ERR_DEFERRED;
+        } else {
+            vlogself(2) << "nothing to read, has reached eof";
+            *eof = 1;
+            retval = 0;
+        }
     }
 
     vlogself(2) << "done, returning: " << retval;

@@ -148,6 +148,12 @@ public:
     /* returns 0 on success, -1 on failure. */
     virtual int write_buffer(int sid, struct evbuffer *buf) = 0;
 
+    /* tell the buflo channel that the there will be no more data to
+     * write for the stream id. the buflo channel will continue to
+     * write any data still buffered for this stream
+     */
+    virtual int set_write_eof(int sid) = 0;
+
     /* write "len" bytes of dummy data. for now it should be all
      * ascii */
     // virtual int write_dummy(int sid, size_t len) = 0;

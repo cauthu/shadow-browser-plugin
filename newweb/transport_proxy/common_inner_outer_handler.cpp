@@ -80,8 +80,8 @@ InnerOuterHandler::onWrittenData(myio::StreamChannel*) noexcept
 void
 InnerOuterHandler::onEOF(myio::StreamChannel*) noexcept
 {
-    vlogself(2) << "outer stream EOF";
-    _be_done(false);
+    vlogself(2) << "outer stream EOF, tell buflo channel about that";
+    buflo_channel_->set_write_eof(inner_sid_);
 }
 
 void

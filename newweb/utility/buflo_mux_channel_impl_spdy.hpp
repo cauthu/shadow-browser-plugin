@@ -69,6 +69,8 @@ public:
     virtual size_t get_avail_input_length(int sid) const override;
     // virtual int write(int sid, const uint8_t *data, size_t len) override;
     virtual int write_buffer(int sid, struct evbuffer *buf) override;
+    virtual int set_write_eof(int sid) override;
+
     // virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
 
@@ -216,6 +218,7 @@ protected:
             inward_buf_ = evbuffer_new();
             outward_buf_ = evbuffer_new();
             inward_deferred_ = false;
+            inward_has_seen_eof_ = false;
         }
         ~StreamState()
         {
@@ -239,6 +242,12 @@ protected:
                                 * stream. so when have data again,
                                 * resume it
                                 */
+        bool inward_has_seen_eof_; /* set to true when the outer
+                                    * stream has closed gracefully.
+                                    * we will continue to try to send
+                                    * any buffered data into the
+                                    * tunnel
+                                    */
 
         // stores data spdy receives from the tunnel stream to be sent
         // outward, i.e., to client or server
