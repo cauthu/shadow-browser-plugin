@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     std::vector<Webserver::UniquePtr> webservers;
 
     for (const auto& listenport : listenports) {
-        VLOG(2) << "listen port " << listenport;
+        LOG(INFO) << "listening on port " << listenport;
         myio::TCPServer::UniquePtr tcpserver(
             new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
         Webserver::UniquePtr webserver(new Webserver(std::move(tcpserver)));

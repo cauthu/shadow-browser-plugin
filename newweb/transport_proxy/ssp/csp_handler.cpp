@@ -4,6 +4,7 @@
 #include "csp_handler.hpp"
 #include "stream_handler.hpp"
 #include "../../utility/buflo_mux_channel_impl_spdy.hpp"
+#include "../../utility/common.hpp"
 
 
 #define _LOG_PREFIX(inst) << "csphandler= " << (inst)->objId() << ": "
@@ -39,9 +40,15 @@ CSPHandler::CSPHandler(struct event_base* evbase,
     const auto fd = csp_channel->release_fd();
     csp_channel.reset();
 
+    // get my ip address, in host byte order
+    char myhostname[80] = {0};
+    const auto rv = gethostname(myhostname, (sizeof myhostname) - 1);
+    CHECK_EQ(rv, 0);
+
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase, fd, false, 750, tamaraw_pkt_intvl_ms, tamaraw_L,
+            evbase, fd, false, ntohl(common::getaddr(myhostname)),
+            750, tamaraw_pkt_intvl_ms, tamaraw_L,
             boost::bind(&CSPHandler::_on_buflo_channel_status,
                         this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,

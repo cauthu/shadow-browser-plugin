@@ -145,6 +145,8 @@ protected:
      */
     uint64_t all_recv_byte_count_so_far_;
     uint64_t useful_recv_byte_count_so_far_;
+
+    in_addr_t myaddr_;
 };
 
 } // namespace csp

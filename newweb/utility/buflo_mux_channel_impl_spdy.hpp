@@ -32,8 +32,12 @@ public:
 
     /* right now only one cell size == 750 is supported. that is what
      * the tamaraw paper used
+     *
+     * "myaddr" will be sent to the other end, to help
+     * troublingshooting. should be in host-byte order
      */
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
+                            const in_addr_t& myaddr,
                             size_t cell_size,
                             const uint32_t& tamaraw_pkt_intvl_ms,
                             const uint32_t& tamaraw_L,
@@ -80,7 +84,7 @@ protected:
     void _pump_spdy_send();
     void _pump_spdy_recv();
 
-    void _read_peer_cell_size();
+    void _read_peer_info();
 
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() { CHECK(0) << "todo"; return false; }
@@ -261,6 +265,9 @@ protected:
     size_t peer_cell_size_;
     size_t peer_cell_body_size_;
 
+    /* in host byte order */
+    const in_addr_t myaddr_;
+
     enum class DefenseState
     {
         NONE = 0,
@@ -358,6 +365,7 @@ protected:
     struct evbuffer* spdy_inbuf_;
     struct evbuffer* spdy_outbuf_;
 
+    struct evbuffer* peer_info_inbuf_;
     // cell in/out bufs are for data that we read from/write into
     // socket
     struct evbuffer* cell_inbuf_;
@@ -387,7 +395,7 @@ protected:
             payload_len_ = 0;
         }
     } cell_read_info_;
-    bool need_to_read_cell_size_;
+    bool need_to_read_peer_info_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
 

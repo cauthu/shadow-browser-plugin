@@ -139,18 +139,23 @@ Driver::_reset_this_page_load_info()
     this_page_load_info_.DOM_load_event_fired_timepoint_ = 0;
     this_page_load_info_.page_model_idx_ = 0;
 
-    this_page_load_info_.page_load_status_ = PageLoadStatus::PENDING;
+    this_page_load_info_.page_load_status_ = PageLoadStatus::NONE;
     this_page_load_info_.ttfb_ms_ = 0;
 }
 
 void
-Driver::_report_result(const PageLoadStatus& pageloadstatus,
-                       const uint32_t& ttfb_ms)
+Driver::_report_result()
 {
+    auto& tpli = this_page_load_info_;
+    const auto& pageloadstatus = tpli.page_load_status_;
+    const auto& ttfb_ms = tpli.ttfb_ms_;
+
+    CHECK((pageloadstatus != PageLoadStatus::NONE)
+	  && (pageloadstatus != PageLoadStatus::PENDING));
+
     const char* status_str = s_page_load_status_to_string(pageloadstatus);
     CHECK_NOTNULL(status_str);
 
-    auto& tpli = this_page_load_info_;
     const auto plt = tpli.DOM_load_event_fired_timepoint_ - tpli.load_start_timepoint_;
 
     LOG(INFO)
@@ -176,7 +181,11 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     CHECK_EQ(state_, State::LOADING_PAGE);
 
+    logself(INFO) << "DOM \"load\" event has fired; start grace period";
+
     state_ = State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT;
+
+    page_load_timeout_timer_->cancel();
 
     if (using_tproxy_) {
         _tproxy_stop_defense(false);
@@ -190,8 +199,6 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     static const auto grace_period_ms = 3*1000;
 
-    logself(INFO) << "DOM \"load\" event has fired; start grace period";
-
     grace_period_timer_->start(grace_period_ms);
 
     vlogself(2) << "done";
@@ -202,8 +209,9 @@ Driver::_renderer_reset()
 {
     vlogself(2) << "begin";
 
-    CHECK((state_ == State::INITIAL)
-          || (state_ == State::THINKING));
+    // CHECK((state_ == State::INITIAL)
+    //       || (state_ == State::LOADING_PAGE)
+    //       || (state_ == State::LOADING_PAGE));
     state_ = State::RESET_RENDERER;
 
     {
@@ -223,7 +231,7 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
     CHECK_EQ(state_, State::RESET_RENDERER);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "Load command times out";
+        logself(FATAL) << "reset command times out";
     }
 
     state_ = State::DONE_RESET_RENDERER;
@@ -231,8 +239,27 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
     if (using_tproxy_) {
         _tproxy_maybe_establish_tunnel();
     } else {
-        _renderer_load_page();
+        if (loadnum_) {
+            // we got here after a page load, so we need to think
+            _start_thinking();
+        } else {
+            // start loading immediately since we got here from
+            // initializing
+            _renderer_load_page();
+        }
     }
+}
+
+void
+Driver::_start_thinking()
+{
+    CHECK((state_ == State::DONE_RESET_RENDERER)
+          || (state_ == State::DONE_SET_TPROXY_AUTO_START));
+    state_ = State::THINKING;
+
+    const auto think_time_ms = (*think_time_rand_gen_)();
+    logself(INFO) << "start thinking for " << think_time_ms << " ms";
+    think_time_timer_->start(think_time_ms);
 }
 
 void
@@ -241,14 +268,25 @@ Driver::_renderer_load_page()
     vlogself(2) << "begin";
 
     if (using_tproxy_) {
-        CHECK_EQ(state_, State::DONE_SET_TPROXY_AUTO_START);
+        CHECK((state_ == State::THINKING)
+              || (state_ == State::DONE_SET_TPROXY_AUTO_START))
+            << "unexpected state " << common::as_integer(state_);
     } else {
-        CHECK_EQ(state_, State::DONE_RESET_RENDERER);
+        /* normally we get here after thinking, except for the very
+         * first load, for which there was no thinking before it
+         */
+        CHECK((state_ == State::THINKING)
+              || (state_ == State::DONE_RESET_RENDERER))
+            << "unexpected state " << common::as_integer(state_);
     }
 
     state_ = State::LOADING_PAGE;
+
+    _reset_this_page_load_info();
+
     auto& tpli = this_page_load_info_;
     tpli.load_start_timepoint_ = common::gettimeofdayMs();
+    tpli.page_load_status_ = PageLoadStatus::PENDING;
     ++loadnum_;
 
     tpli.page_model_idx_ = (*page_model_rand_idx_gen_)();
@@ -256,6 +294,8 @@ Driver::_renderer_load_page()
     CHECK_LT(tpli.page_model_idx_, page_models_.size());
 
     vlogself(1) << "picked new page_model_idx_= " << tpli.page_model_idx_;
+
+    logself(INFO) << "start loading page [" << page_models_[tpli.page_model_idx_].first << "]";
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
@@ -280,6 +320,10 @@ Driver::_renderer_on_load_page_resp(GenericIpcChannel::RespStatus status,
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "Load command times out";
     }
+
+    // 120 seconds
+    static const uint32_t page_load_timeout_ms = 120*1000;
+    page_load_timeout_timer_->start(page_load_timeout_ms);
 }
 
 const char*
@@ -302,6 +346,7 @@ Driver::s_page_load_status_to_string(const PageLoadStatus& status)
         LOG(FATAL) << "not reached";
         break;
     }
-};
+    return nullptr;
+}
 
 #undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END

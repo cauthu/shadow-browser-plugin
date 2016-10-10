@@ -151,7 +151,14 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
 
     state_ = State::DONE_SET_TPROXY_AUTO_START;
 
-    _renderer_load_page();
+    if (loadnum_) {
+        // we got here after a page load, so we need to think
+        _start_thinking();
+    } else {
+        // start loading immediately since we got here from
+        // initializing
+        _renderer_load_page();
+    }
 
     vlogself(2) << "done";
 }
@@ -163,7 +170,7 @@ Driver::_tproxy_stop_defense(const bool& right_now)
 
     CHECK(tproxy_ipc_ch_ready_);
 
-    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
+    // CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
@@ -184,7 +191,7 @@ Driver::_tproxy_on_stop_defense_resp(
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
+    // CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(FATAL) << "command timed out";

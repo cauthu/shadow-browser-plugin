@@ -16,8 +16,8 @@
  * this is akin to the chrome driver: it uses ipc to control the
  * renderer process, e.g., instructs the render to load pages, etc.
  *
- * the driver also talks to the transport proxy to set it up for each
- * page load.
+ * the driver also OPTIONALLY talks to the transport proxy to set it
+ * up for each page load.
  *
  * the driver implement is spread across multiple driver_<...>.cpp
  * files just to be manageable and so each can use its own macros,
@@ -27,13 +27,20 @@
  *
  * the default/common state transitions are:
  *
- * * when renderer ipc channel is ready, tell renderer to reset
+ * 1. reset renderer
+ * --> when done, skip to 3. if not using tproxy
  *
- * * when that is done, tell tproxy to establish tunnel (with force reconnect)
+ * 2. tell tproxy to reestablish tunnel and then set_auto_star_on_next_send
  *
- * * when that is done, tell tproxy to set auto start defense
+ * 3. sleep for random "think time" amount if this is not the first load
  *
- * * when that is done, tell renderer to load page
+ * 4. start loading page
+ * --> if timed out (TODO: also if failed), go back to step 1.
+ * --> if success go to 5.
+ *
+ * 5. wait for a few seconds "grace period"
+ * --> when done go back to 1.
+ * 
  *
  */
 
@@ -99,6 +106,7 @@ private:
 
     //////////
 
+    void _on_page_load_timeout(Timer*);
     void _on_grace_period_timer_fired(Timer*);
     void _on_think_time_timer_fired(Timer*);
 
@@ -143,11 +151,13 @@ private:
             THINKING,
     } state_;
 
+    Timer::UniquePtr page_load_timeout_timer_;
     Timer::UniquePtr grace_period_timer_;
     Timer::UniquePtr think_time_timer_;
 
     enum class PageLoadStatus {
-        PENDING = 0,
+        NONE = 0,
+        PENDING,
         OK,
         FAILED,
         TIMEDOUT
@@ -170,8 +180,8 @@ private:
         uint32_t ttfb_ms_;
     } this_page_load_info_;
 
-    void _report_result(const PageLoadStatus&,
-                        const uint32_t&);
+    void _start_thinking();
+    void _report_result();
     void _reset_this_page_load_info();
 };
 
