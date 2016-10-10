@@ -365,6 +365,7 @@ protected:
     struct evbuffer* spdy_inbuf_;
     struct evbuffer* spdy_outbuf_;
 
+    struct evbuffer* peer_info_inbuf_;
     // cell in/out bufs are for data that we read from/write into
     // socket
     struct evbuffer* cell_inbuf_;
