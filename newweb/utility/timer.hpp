@@ -64,7 +64,7 @@ protected:
     FiredCb fired_cb_;
 
     /* not using a pointer, maybe a lil faster */
-    struct event ev_;
+    std::unique_ptr<struct event, void(*)(struct event*)> ev_;
     const bool one_shot_; // to catch potential bugs
 };
 

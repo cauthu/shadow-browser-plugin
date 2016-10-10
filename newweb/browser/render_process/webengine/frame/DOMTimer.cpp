@@ -54,11 +54,14 @@ DOMTimer::DOMTimer(
 void
 DOMTimer::_on_event_cb()
 {
+    DestructorGuard dg(this);
+
     vlogself(2) << "begin, fired_scope_idx= " << next_fired_scope_idx_;
 
     CHECK_LT(next_fired_scope_idx_, timer_info_.fired_scope_ids.size())
         << "we have exhausted timer fired scopes :(";
 
+    CHECK_NOTNULL(webengine_);
     webengine_->execute_scope(
         timer_info_.fired_scope_ids[next_fired_scope_idx_]);
 
@@ -72,6 +75,7 @@ DOMTimer::_on_event_cb()
 DOMTimer::~DOMTimer()
 {
     vlogself(2) << "destructing";
+    webengine_ = nullptr;
     cancel();
 }
 

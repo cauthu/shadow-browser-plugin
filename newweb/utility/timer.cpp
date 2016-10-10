@@ -21,14 +21,14 @@ Timer::Timer(struct event_base *evbase,
              FiredCb cb,
              int priority)
     : fired_cb_(cb)
+    , ev_(nullptr, event_free)
     , one_shot_(one_shot)
 {
-    auto rv = event_assign(
-        &ev_, evbase, -1, (one_shot ? 0 : EV_PERSIST), s_event_cb, this);
-    CHECK_EQ(rv, 0);
+    ev_.reset(event_new(evbase, -1, (one_shot ? 0 : EV_PERSIST), s_event_cb, this));
+    CHECK_NOTNULL(ev_.get());
 
     if (priority >= 0) {
-        rv = event_priority_set(&ev_, priority);
+        auto rv = event_priority_set(ev_.get(), priority);
         CHECK_EQ(rv, 0);
     }
     vlogself(2) << "timer constructed";
@@ -45,7 +45,7 @@ Timer::start(const struct timeval *tv)
 
     CHECK(!is_running()) << "timer is pending/firing; maybe you want restart()?";
 
-    auto rv = event_add(&ev_, tv);
+    auto rv = event_add(ev_.get(), tv);
     CHECK_EQ(rv, 0);
 
     vlogself(2) << "timer started";
@@ -66,7 +66,7 @@ Timer::start(const uint32_t msec)
 void
 Timer::cancel()
 {
-    auto rv = event_del(&ev_);
+    auto rv = event_del(ev_.get());
     CHECK_EQ(rv, 0);
 }
 
@@ -82,14 +82,14 @@ Timer::is_running() const
 {
     // since we specify EV_TIMEOUT, event_pending will return
     // EV_TIMEOUT if it's pending for EV_TIMEOUT
-    auto rv = event_pending(&ev_, EV_TIMEOUT, nullptr);
+    auto rv = event_pending(ev_.get(), EV_TIMEOUT, nullptr);
     return (rv != 0);
 }
 
 Timer::~Timer()
 {
     vlogself(2) << "timer destroyed";
-    event_del(&ev_);
+    ev_.reset();
 }
 
 
@@ -107,5 +107,12 @@ Timer::_on_event_cb()
     // anything else. so if the user destroys us, during the callback,
     // will be fine (specifically, it's ok for our destructor to call
     // event_del while the event is active
+    //
+    // update: due to issue
+    // https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/9/another-crashing-issue,
+    // i'll just use destructor guard here even though i don't know
+    // for sure if this is the cause
+    
+    DestructorGuard dg(this);
     fired_cb_(this);
 }
