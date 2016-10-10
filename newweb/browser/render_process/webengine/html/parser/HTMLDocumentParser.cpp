@@ -323,11 +323,13 @@ HTMLDocumentParser::pumpTokenizer()
         // that we're not parsing, that means we've reached the
         // limit_this_session and should yield
         CHECK_EQ(num_bytes_parsed_, limit_this_session);
-        CHECK(!timer_to_resume_->is_running());
-
-        vlogself(2) << "Yield parsing";
-        static const uint32_t zero_ms = 0;
-        timer_to_resume_->start(zero_ms);
+        if (!timer_to_resume_->is_running()) {
+            vlogself(2) << "Yield parsing";
+            static const uint32_t zero_ms = 0;
+            timer_to_resume_->start(zero_ms);
+        } else {
+            vlogself(2) << "the resume timer is already scheduled";
+        }
     }
 
     if (hasParserBlockingScript()) {
