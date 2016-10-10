@@ -71,6 +71,10 @@ using std::bitset;
 
 */
 
+
+/* 2 bytes for cell size and 4 for address */
+#define PEER_INFO_NUM_BYTES (2 + 4)
+
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
 #define CELL_PAYLOAD_LEN_FIELD_SIZE 2
@@ -225,6 +229,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
     ALLOC_EVBUF(spdy_inbuf_);
     ALLOC_EVBUF(spdy_outbuf_);
+    ALLOC_EVBUF(peer_info_inbuf_);
     ALLOC_EVBUF(cell_inbuf_);
     ALLOC_EVBUF(cell_outbuf_);
 
@@ -250,12 +255,12 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         // release the fd (see issue #4
         // https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/4/)
         const uint16_t cs = htons(cell_size_);
-        rv = write(fd_, (uint8_t*)&cs, sizeof cs);
-        CHECK_EQ(rv, sizeof cs);
+        rv = write(fd_, (uint8_t*)&cs, 2);
+        CHECK_EQ(rv, 2);
 
-        const auto addr = htonl(myaddr_);
-        rv = write(fd_, (uint8_t*)&addr, sizeof addr);
-        CHECK_EQ(rv, sizeof addr);
+        const in_addr_t addr = htonl(myaddr_);
+        rv = write(fd_, (uint8_t*)&addr, 4);
+        CHECK_EQ(rv, 4);
     }
 
     rv = event_add(socket_read_ev_.get(), nullptr);
@@ -1102,7 +1107,12 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 
     if (what & EV_READ) {
         if (need_to_read_peer_info_) {
-            _read_peer_info();
+            const auto still_need = PEER_INFO_NUM_BYTES - evbuffer_get_length(peer_info_inbuf_);
+            CHECK(still_need > 0);
+            const auto rv = evbuffer_read(peer_info_inbuf_, fd_, still_need);
+            if (evbuffer_get_length(peer_info_inbuf_) == PEER_INFO_NUM_BYTES) {
+                _read_peer_info();
+            }
         } else {
             // let buffer decide how much to read
             const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
@@ -1166,18 +1176,23 @@ void
 BufloMuxChannelImplSpdy::_read_peer_info()
 {
     CHECK(need_to_read_peer_info_);
-    auto rv = read(fd_, &peer_cell_size_, 2);
-    CHECK_EQ(rv, 2) << "error: " << strerror(errno);
+    CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
+
+    auto rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_cell_size_, 2);
+    CHECK_EQ(rv, 2);
+    rv = evbuffer_drain(peer_info_inbuf_, 2);
+    CHECK_EQ(rv, 0);
+
     peer_cell_size_ = ntohs(peer_cell_size_);
     vlogself(2) << "peer using cell size: " << peer_cell_size_;
 
     peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
 
-    need_to_read_peer_info_ = false;
-
     in_addr_t peeraddr = 0;
-    rv = read(fd_, &peeraddr, sizeof peeraddr);
-    CHECK_EQ(rv, sizeof peeraddr) << "error: " << strerror(errno);
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peeraddr, 4);
+    CHECK_EQ(rv, 4);
+    rv = evbuffer_drain(peer_info_inbuf_, 4);
+    CHECK_EQ(rv, 0);
 
     struct in_addr ip_addr;
     ip_addr.s_addr = peeraddr;
@@ -1186,13 +1201,15 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     if (!is_client_side_) {
         // server-side can now send our cell size
         const uint16_t cs = htons(cell_size_);
-        rv = write(fd_, (uint8_t*)&cs, sizeof cs);
-        CHECK_EQ(rv, sizeof cs);
+        rv = write(fd_, (uint8_t*)&cs, 2);
+        CHECK_EQ(rv, 2);
 
-        const auto addr = htonl(myaddr_);
-        rv = write(fd_, (uint8_t*)&addr, sizeof addr);
-        CHECK_EQ(rv, sizeof addr);
+        const in_addr_t addr = htonl(myaddr_);
+        rv = write(fd_, (uint8_t*)&addr, 4);
+        CHECK_EQ(rv, 4);
     }
+
+    need_to_read_peer_info_ = false;
 
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::READY);
@@ -1673,6 +1690,7 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
 
     FREE_EVBUF(spdy_inbuf_);
     FREE_EVBUF(spdy_outbuf_);
+    FREE_EVBUF(peer_info_inbuf_);
     FREE_EVBUF(cell_inbuf_);
     FREE_EVBUF(cell_outbuf_);
 
