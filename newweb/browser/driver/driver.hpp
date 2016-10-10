@@ -16,8 +16,8 @@
  * this is akin to the chrome driver: it uses ipc to control the
  * renderer process, e.g., instructs the render to load pages, etc.
  *
- * the driver also talks to the transport proxy to set it up for each
- * page load.
+ * the driver also OPTIONALLY talks to the transport proxy to set it
+ * up for each page load.
  *
  * the driver implement is spread across multiple driver_<...>.cpp
  * files just to be manageable and so each can use its own macros,
@@ -27,13 +27,20 @@
  *
  * the default/common state transitions are:
  *
- * * when renderer ipc channel is ready, tell renderer to reset
+ * 1. reset renderer
+ * --> when done, skip to 3. if not using tproxy
  *
- * * when that is done, tell tproxy to establish tunnel (with force reconnect)
+ * 2. tell tproxy to reestablish tunnel and then set_auto_star_on_next_send
  *
- * * when that is done, tell tproxy to set auto start defense
+ * 3. sleep for random "think time" amount if this is not the first load
  *
- * * when that is done, tell renderer to load page
+ * 4. start loading page
+ * --> if timed out (TODO: also if failed), go back to step 1.
+ * --> if success go to 5.
+ *
+ * 5. wait for a few seconds "grace period"
+ * --> when done go back to 1.
+ * 
  *
  */
 

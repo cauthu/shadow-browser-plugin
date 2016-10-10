@@ -151,7 +151,14 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
 
     state_ = State::DONE_SET_TPROXY_AUTO_START;
 
-    _renderer_load_page();
+    if (loadnum_) {
+        // we got here after a page load, so we need to think
+        _start_thinking();
+    } else {
+        // start loading immediately since we got here from
+        // initializing
+        _renderer_load_page();
+    }
 
     vlogself(2) << "done";
 }

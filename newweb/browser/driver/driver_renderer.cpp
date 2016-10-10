@@ -253,7 +253,8 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
 void
 Driver::_start_thinking()
 {
-    CHECK_EQ(state_, State::DONE_RESET_RENDERER);
+    CHECK((state_ == State::DONE_RESET_RENDERER)
+          || (state_ == State::DONE_SET_TPROXY_AUTO_START));
     state_ = State::THINKING;
 
     const auto think_time_ms = (*think_time_rand_gen_)();
@@ -267,13 +268,16 @@ Driver::_renderer_load_page()
     vlogself(2) << "begin";
 
     if (using_tproxy_) {
-        CHECK_EQ(state_, State::DONE_SET_TPROXY_AUTO_START);
+        CHECK((state_ == State::THINKING)
+              || (state_ == State::DONE_SET_TPROXY_AUTO_START))
+            << "unexpected state " << common::as_integer(state_);
     } else {
         /* normally we get here after thinking, except for the very
          * first load, for which there was no thinking before it
          */
-        CHECK((state_ == State::INITIAL)
-              || (state_ == State::DONE_RESET_RENDERER));
+        CHECK((state_ == State::THINKING)
+              || (state_ == State::DONE_RESET_RENDERER))
+            << "unexpected state " << common::as_integer(state_);
     }
 
     state_ = State::LOADING_PAGE;
