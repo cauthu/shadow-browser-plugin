@@ -31,7 +31,7 @@ static const uint8_t s_resp_timeout_secs = 5;
 
 
 #undef BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END
-#define BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(TYPE, bufbuilder, on_resp_status) \
+#define BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(TYPE, bufbuilder, on_resp_status, resp_timeout_secs) \
     auto const __type = tproxymsgs::type_ ## TYPE;                      \
     auto const __resp_type = tproxymsgs::type_ ## TYPE ## Resp;         \
     VLOG(2) << "begin building msg type: "                              \
@@ -41,10 +41,11 @@ static const uint8_t s_resp_timeout_secs = 5;
         auto msg = msgbuilder.Finish();                                 \
         bufbuilder.Finish(msg);                                         \
         VLOG(2) << "send msg";                                          \
+        static const uint8_t __resp_timeout_secs = (resp_timeout_secs); \
         tproxy_ipc_ch_->call(                                           \
             __type, bufbuilder.GetSize(),                               \
             bufbuilder.GetBufferPointer(), __resp_type,                 \
-            on_resp_status, &s_resp_timeout_secs);                      \
+            on_resp_status, &__resp_timeout_secs);                      \
     }
 
 void
@@ -77,7 +78,8 @@ Driver::_tproxy_maybe_establish_tunnel()
 
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             EstablishTunnel, bufbuilder,
-            boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4));
+            boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4),
+            10);
         msgbuilder.add_forceReconnect(true);
     }
 
@@ -125,7 +127,8 @@ Driver::_tproxy_set_auto_start_defense_on_next_send()
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             SetAutoStartDefenseOnNextSend, bufbuilder,
             boost::bind(&Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp,
-                        this, _2, _3, _4));
+                        this, _2, _3, _4),
+            3);
     }
 
     vlogself(2) << "done";
@@ -178,7 +181,8 @@ Driver::_tproxy_stop_defense(const bool& right_now)
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             StopDefense, bufbuilder,
             boost::bind(&Driver::_tproxy_on_stop_defense_resp,
-                        this, _2, _3, _4));
+                        this, _2, _3, _4),
+            3);
     }
 
     vlogself(2) << "done";
