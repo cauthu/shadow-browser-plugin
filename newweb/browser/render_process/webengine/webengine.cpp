@@ -142,10 +142,10 @@ Webengine::_init_angelscript_engine()
 void
 Webengine::handle_Reset()
 {
-    VLOG(2) << "begin";
+    LOG(INFO) << "reset webengine...";
     ioservice_ipcclient_->send_ResetSession();
     _reset_loading_state();
-    VLOG(2) << "done";
+    LOG(INFO) << "done";
 }
 
 void
