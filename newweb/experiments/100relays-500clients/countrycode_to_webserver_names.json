@@ -1,0 +1,248 @@
+{
+  "AU": [
+    "server142"
+  ], 
+  "BR": [
+    "server146"
+  ], 
+  "CL": [
+    "server100"
+  ], 
+  "CN": [
+    "server110", 
+    "server115", 
+    "server132", 
+    "server138", 
+    "server147", 
+    "server161", 
+    "server175", 
+    "server187", 
+    "server19", 
+    "server195", 
+    "server21", 
+    "server30", 
+    "server31", 
+    "server56", 
+    "server68", 
+    "server69", 
+    "server72", 
+    "server85", 
+    "server86", 
+    "server88", 
+    "server93", 
+    "server94", 
+    "server96"
+  ], 
+  "CZ": [
+    "server65"
+  ], 
+  "DE": [
+    "server136", 
+    "server170", 
+    "server92"
+  ], 
+  "ES": [
+    "server15"
+  ], 
+  "FR": [
+    "server168", 
+    "server189", 
+    "server199", 
+    "server67"
+  ], 
+  "GB": [
+    "server135", 
+    "server16", 
+    "server46"
+  ], 
+  "HK": [
+    "server71"
+  ], 
+  "IE": [
+    "server165", 
+    "server24"
+  ], 
+  "IN": [
+    "server113", 
+    "server191", 
+    "server42"
+  ], 
+  "IR": [
+    "server149", 
+    "server153", 
+    "server29"
+  ], 
+  "JP": [
+    "server156", 
+    "server18", 
+    "server193", 
+    "server55", 
+    "server58", 
+    "server70", 
+    "server95"
+  ], 
+  "KR": [
+    "server116"
+  ], 
+  "NL": [
+    "server105", 
+    "server125", 
+    "server186", 
+    "server23", 
+    "server48", 
+    "server77"
+  ], 
+  "PL": [
+    "server17", 
+    "server47", 
+    "server61"
+  ], 
+  "RO": [
+    "server53"
+  ], 
+  "RU": [
+    "server155", 
+    "server190", 
+    "server36", 
+    "server4", 
+    "server60", 
+    "server90"
+  ], 
+  "SG": [
+    "server154", 
+    "server45"
+  ], 
+  "TR": [
+    "server12", 
+    "server120"
+  ], 
+  "TW": [
+    "server51"
+  ], 
+  "US": [
+    "server1", 
+    "server10", 
+    "server101", 
+    "server102", 
+    "server103", 
+    "server104", 
+    "server106", 
+    "server107", 
+    "server108", 
+    "server109", 
+    "server11", 
+    "server111", 
+    "server112", 
+    "server114", 
+    "server117", 
+    "server118", 
+    "server119", 
+    "server121", 
+    "server122", 
+    "server123", 
+    "server124", 
+    "server126", 
+    "server127", 
+    "server128", 
+    "server129", 
+    "server13", 
+    "server130", 
+    "server131", 
+    "server133", 
+    "server134", 
+    "server137", 
+    "server139", 
+    "server14", 
+    "server140", 
+    "server141", 
+    "server143", 
+    "server144", 
+    "server145", 
+    "server148", 
+    "server150", 
+    "server151", 
+    "server152", 
+    "server157", 
+    "server158", 
+    "server159", 
+    "server160", 
+    "server162", 
+    "server163", 
+    "server164", 
+    "server166", 
+    "server167", 
+    "server169", 
+    "server171", 
+    "server172", 
+    "server173", 
+    "server174", 
+    "server176", 
+    "server177", 
+    "server178", 
+    "server179", 
+    "server180", 
+    "server181", 
+    "server182", 
+    "server183", 
+    "server184", 
+    "server185", 
+    "server188", 
+    "server192", 
+    "server194", 
+    "server196", 
+    "server197", 
+    "server198", 
+    "server2", 
+    "server20", 
+    "server200", 
+    "server22", 
+    "server25", 
+    "server26", 
+    "server27", 
+    "server28", 
+    "server3", 
+    "server32", 
+    "server33", 
+    "server34", 
+    "server35", 
+    "server37", 
+    "server38", 
+    "server39", 
+    "server40", 
+    "server41", 
+    "server43", 
+    "server44", 
+    "server49", 
+    "server5", 
+    "server50", 
+    "server52", 
+    "server54", 
+    "server57", 
+    "server59", 
+    "server6", 
+    "server62", 
+    "server63", 
+    "server64", 
+    "server66", 
+    "server7", 
+    "server73", 
+    "server74", 
+    "server75", 
+    "server76", 
+    "server78", 
+    "server79", 
+    "server8", 
+    "server80", 
+    "server81", 
+    "server82", 
+    "server83", 
+    "server84", 
+    "server87", 
+    "server89", 
+    "server9", 
+    "server91", 
+    "server97", 
+    "server98", 
+    "server99"
+  ]
+}

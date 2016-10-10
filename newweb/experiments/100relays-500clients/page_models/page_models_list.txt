@@ -1,0 +1,2 @@
+cnn ../../../page_models/cnn_page_model.json
+nytimes ../../../page_models/nytimes_page_model.json
