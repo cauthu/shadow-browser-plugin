@@ -51,9 +51,18 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , state_(State::INITIAL)
     , all_recv_byte_count_so_far_(0)
     , useful_recv_byte_count_so_far_(0)
+    , myaddr_(INADDR_NONE)
 {
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
     CHECK(!stream_server_->is_listening());
+
+    // get my ip address, in host byte order
+    char myhostname[80] = {0};
+    const auto rv = gethostname(myhostname, (sizeof myhostname) - 1);
+    CHECK_EQ(rv, 0);
+
+    myaddr_ = ntohl(common::getaddr(myhostname));
+    CHECK(myaddr_ && (myaddr_ != INADDR_NONE));
 }
 
 ClientSideProxy::EstablishReturnValue
@@ -269,7 +278,7 @@ ClientSideProxy::_on_connected_to_ssp()
 
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase_, peer_fd, true, 750, buflo_frequencyMs_, buflo_L_,
+            evbase_, peer_fd, true, myaddr_, 750, buflo_frequencyMs_, buflo_L_,
             boost::bind(&ClientSideProxy::_on_buflo_channel_status,
                         this, _1, _2),
             NULL

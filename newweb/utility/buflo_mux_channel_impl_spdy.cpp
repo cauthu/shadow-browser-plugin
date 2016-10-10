@@ -163,7 +163,7 @@ namespace myio { namespace buflo
 
 BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
-    int fd, bool is_client_side,
+    int fd, bool is_client_side, const in_addr_t& myaddr,
     size_t cell_size, const uint32_t& tamaraw_pkt_intvl_ms, const uint32_t& tamaraw_L,
     ChannelStatusCb ch_status_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
@@ -178,8 +178,9 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
+    , myaddr_(myaddr)
     , whole_dummy_cell_at_end_outbuf_(false)
-    , need_to_read_cell_size_(true)
+    , need_to_read_peer_info_(true)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
 {
@@ -251,6 +252,10 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         const uint16_t cs = htons(cell_size_);
         rv = write(fd_, (uint8_t*)&cs, sizeof cs);
         CHECK_EQ(rv, sizeof cs);
+
+        const auto addr = htonl(myaddr_);
+        rv = write(fd_, (uint8_t*)&addr, sizeof addr);
+        CHECK_EQ(rv, sizeof addr);
     }
 
     rv = event_add(socket_read_ev_.get(), nullptr);
@@ -1096,8 +1101,8 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
     DestructorGuard dg(this);
 
     if (what & EV_READ) {
-        if (need_to_read_cell_size_) {
-            _read_peer_cell_size();
+        if (need_to_read_peer_info_) {
+            _read_peer_info();
         } else {
             // let buffer decide how much to read
             const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
@@ -1158,23 +1163,35 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
 }
 
 void
-BufloMuxChannelImplSpdy::_read_peer_cell_size()
+BufloMuxChannelImplSpdy::_read_peer_info()
 {
-    CHECK(need_to_read_cell_size_);
-    auto rv = read(fd_, &peer_cell_size_, sizeof peer_cell_size_);
+    CHECK(need_to_read_peer_info_);
+    auto rv = read(fd_, &peer_cell_size_, 2);
     CHECK_EQ(rv, 2) << "error: " << strerror(errno);
     peer_cell_size_ = ntohs(peer_cell_size_);
     vlogself(2) << "peer using cell size: " << peer_cell_size_;
 
     peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
 
-	need_to_read_cell_size_ = false;
+    need_to_read_peer_info_ = false;
+
+    in_addr_t peeraddr = 0;
+    rv = read(fd_, &peeraddr, sizeof peeraddr);
+    CHECK_EQ(rv, sizeof peeraddr) << "error: " << strerror(errno);
+
+    struct in_addr ip_addr;
+    ip_addr.s_addr = peeraddr;
+    logself(INFO) << "peer IP is " << inet_ntoa(ip_addr);
 
     if (!is_client_side_) {
         // server-side can now send our cell size
         const uint16_t cs = htons(cell_size_);
         rv = write(fd_, (uint8_t*)&cs, sizeof cs);
         CHECK_EQ(rv, sizeof cs);
+
+        const auto addr = htonl(myaddr_);
+        rv = write(fd_, (uint8_t*)&addr, sizeof addr);
+        CHECK_EQ(rv, sizeof addr);
     }
 
     DestructorGuard dg(this);
