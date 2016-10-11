@@ -87,7 +87,7 @@ GenericIpcChannel::call(uint8_t type, uint16_t len, const uint8_t* buf,
     pending_calls_[id].exp_resp_msg_type = resp_type;
     pending_calls_[id].on_resp_status_cb = on_resp_status_cb;
     if (timeoutSecs) {
-        CHECK_LE(*timeoutSecs, 10);
+        CHECK_LE(*timeoutSecs, 30);
         struct timeval timeout_tv = {0};
         timeout_tv.tv_sec = *timeoutSecs;
 

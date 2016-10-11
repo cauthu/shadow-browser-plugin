@@ -79,7 +79,7 @@ Driver::_tproxy_maybe_establish_tunnel()
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             EstablishTunnel, bufbuilder,
             boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4),
-            10);
+            30);
         msgbuilder.add_forceReconnect(true);
     }
 
