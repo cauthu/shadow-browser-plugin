@@ -1,3 +1,3 @@
 #!/bin/bash
 
-time shadow-tor --workers=16 --heartbeat-frequency=30 -i ../../../shadow.config.xml --seed=137589913
+time shadow-tor --workers=16 --heartbeat-frequency=30 -i ../../../shadow.config.xml --cpu-threshold=-1 --seed=137589913
