@@ -52,7 +52,8 @@ public:
                             const in_addr_t& socks5_addr,
                              const in_port_t& socks5_port,
                              const uint32_t& buflo_frequencyMs,
-                             const uint32_t& buflo_L);
+                             const uint32_t& buflo_L,
+                             const uint32_t& buflo_time_limit_secs);
 
     enum class EstablishReturnValue
     {
@@ -119,6 +120,7 @@ protected:
     const in_port_t socks5_port_;
     const uint32_t buflo_frequencyMs_;
     const uint32_t buflo_L_;
+    const uint32_t buflo_time_limit_secs_;
 
     myio::TCPChannel::UniquePtr peer_channel_;
     myio::Socks5Connector::UniquePtr socks_connector_;

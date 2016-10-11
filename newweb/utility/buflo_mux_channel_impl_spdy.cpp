@@ -94,10 +94,13 @@ static_assert((CELL_TYPE_WIDTH + CELL_FLAGS_WIDTH) == 8,
 // flags bit positions in cell flags
 #define CELL_FLAGS_START_DEFENSE_POSITION 0
 #define CELL_FLAGS_STOP_DEFENSE_POSITION 1
+#define CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION 2
 
 static_assert(CELL_FLAGS_START_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
               "bit position out-of-bounds");
 static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
+              "bit position out-of-bounds");
+static_assert(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION < CELL_FLAGS_WIDTH,
               "bit position out-of-bounds");
 
 /* extract the type from the type_and_flags field t_n_f */
@@ -148,10 +151,28 @@ static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
         }                                                               \
     } while(0)
 
+#define SET_CELL_START_FLAG(t_n_f)                               \
+    do {                                                         \
+        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                    \
+        flags_bs.set(CELL_FLAGS_START_DEFENSE_POSITION, true);   \
+                                                                 \
+        const auto flags_val = flags_bs.to_ulong();              \
+        SET_CELL_FLAGS((t_n_f), flags_val);                      \
+    } while (0)
+
 #define SET_CELL_STOP_FLAG(t_n_f)                               \
     do {                                                        \
         bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
         flags_bs.set(CELL_FLAGS_STOP_DEFENSE_POSITION, true);   \
+                                                                \
+        const auto flags_val = flags_bs.to_ulong();             \
+        SET_CELL_FLAGS((t_n_f), flags_val);                     \
+    } while (0)
+
+#define SET_CELL_AUTO_STOPPED_FLAG(t_n_f)                       \
+    do {                                                        \
+        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
+        flags_bs.set(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION, true);   \
                                                                 \
         const auto flags_val = flags_bs.to_ulong();             \
         SET_CELL_FLAGS((t_n_f), flags_val);                     \
@@ -169,6 +190,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side, const in_addr_t& myaddr,
     size_t cell_size, const uint32_t& tamaraw_pkt_intvl_ms, const uint32_t& tamaraw_L,
+    const uint32_t& defense_session_time_limit,
     ChannelStatusCb ch_status_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
     : BufloMuxChannel(fd, is_client_side,
@@ -183,6 +205,9 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
     , myaddr_(myaddr)
+    , defense_session_time_limit_(defense_session_time_limit
+                                  ? defense_session_time_limit
+                                  : default_defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
     , need_to_read_peer_info_(true)
     , all_recv_byte_count_(0)
@@ -190,6 +215,9 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 {
     /* the value used by tamaraw paper */
     CHECK(cell_size == 750);
+
+    CHECK_GT(defense_session_time_limit_, 1);
+    CHECK_LE(defense_session_time_limit_, 60 * 3);
 
     // hardcoding this for now. this is what the tamaraw paper used
     CHECK(   (tamaraw_L_ == 0)
@@ -322,13 +350,9 @@ BufloMuxChannelImplSpdy::start_defense_session()
      * wait a little longer than on client side
      */
     struct timeval duration_tv = {0};
-    if (is_client_side_) {
-        duration_tv.tv_sec = 180;
-    } else {
-        duration_tv.tv_sec = 210;
-    }
+    duration_tv.tv_sec = defense_session_time_limit_;
 
-    evutil_timeradd(&current_tv, &duration_tv, &defense_info_.hard_stop_time);
+    evutil_timeradd(&current_tv, &duration_tv, &defense_info_.auto_stop_time_point);
 
     struct timeval intvl_tv = {0};
     intvl_tv.tv_sec = 0;
@@ -354,6 +378,8 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
     CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
 
     defense_info_.state = DefenseState::PENDING_FIRST_SOCKET_WRITE;
+    CHECK(!defense_info_.need_start_flag_in_next_cell);
+    defense_info_.need_start_flag_in_next_cell = true;
 }
 
 void
@@ -555,6 +581,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         _pump_spdy_send();
 
         if (defense_info_.need_stop_flag_in_next_cell) {
+            vlogself(2) << "still need to send the stop flag, so we send a dummy cell";
             CHECK(is_client_side_);
             /* the STOP flag could not piggyback on any cell, so we
              * have to add a control/dummy cell ourselves here
@@ -566,10 +593,11 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
              * just use dummy
              */
             _add_ONE_dummy_cell_to_outbuf();
+            CHECK(!defense_info_.need_stop_flag_in_next_cell);
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
+        } else {
+            vlogself(2) << "the stop flag has been added";
         }
-
-        CHECK(!defense_info_.need_stop_flag_in_next_cell);
 
         // reset the defense info --- ok to do blindly; it's
         // idempotent
@@ -577,11 +605,30 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 
         goto done;
     } else {
-        if (evutil_timercmp(&current_tv, &defense_info_.hard_stop_time, >=)) {
-            logself(FATAL) << "exceeding hard time limit! "
-                           << "probably a bug; did you forget to stop defense after "
-                           << "you're done with a page load?";
-            CHECK(0) << "not reached";
+        if (evutil_timercmp(&current_tv, &defense_info_.auto_stop_time_point, >=)) {
+            if (is_client_side_) {
+                logself(FATAL) << "exceeding defense session time limit! "
+                               << "perhaps you forgot to stop defense after "
+                               << "you're done with a page load?";
+            } else {
+                logself(WARNING) << "exceeding defense session time limit! "
+                                 << "auto-stopping";
+                buflo_timer_->cancel();
+                defense_info_.need_auto_stopped_flag_in_next_cell = true;
+                _pump_spdy_send();
+                if (defense_info_.need_auto_stopped_flag_in_next_cell) {
+                    /* the flag could not piggyback on any cell, so we
+                     * have to add a control/dummy cell ourselves here
+                     */
+                    _add_ONE_dummy_cell_to_outbuf();
+                    CHECK(!defense_info_.need_auto_stopped_flag_in_next_cell);
+                    defense_info_.reset();
+                    _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
+                }
+                defense_info_.reset();
+
+                goto done;
+            }
         }
     }
 
@@ -702,6 +749,36 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
     return did_write;
 }
 
+void
+BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
+                                               const char* cell_type)
+{
+    if (defense_info_.need_start_flag_in_next_cell) {
+        /* we should need the start flag only when waiting for first
+         * socket write or when we're active and has not been
+         * requested to stop (presumably because the ssp has
+         * auto-stopped and we want it to start again) */
+        CHECK((defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE)
+              || (defense_info_.state == DefenseState::ACTIVE && !defense_info_.stop_requested));
+        logself(INFO) << "setting the START flag, in a " << cell_type << " cell";
+        SET_CELL_START_FLAG(*type_n_flags);
+        defense_info_.need_start_flag_in_next_cell = false;
+    }
+
+    if (defense_info_.need_stop_flag_in_next_cell) {
+        CHECK(defense_info_.stop_requested);
+        logself(INFO) << "setting the STOP flag, in a " << cell_type << " cell";
+        SET_CELL_STOP_FLAG(*type_n_flags);
+        defense_info_.need_stop_flag_in_next_cell = false;
+    }
+
+    if (defense_info_.need_auto_stopped_flag_in_next_cell) {
+        logself(INFO) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
+        SET_CELL_AUTO_STOPPED_FLAG(*type_n_flags);
+        defense_info_.need_auto_stopped_flag_in_next_cell = false;
+    }
+}
+
 /*
  * possibly add ONE cell of spdy data to the cell outbuf
  */
@@ -725,22 +802,7 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
     uint8_t type_n_flags = 0;
     SET_CELL_TYPE(type_n_flags, CellType::DATA);
 
-    // determine if we should set the START flag
-    if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
-        vlogself(1) << "setting the START flag";
-        bitset<CELL_FLAGS_WIDTH> flags_bs(0);
-        flags_bs.set(CELL_FLAGS_START_DEFENSE_POSITION, true);
-
-        const auto flags_val = flags_bs.to_ulong();
-        SET_CELL_FLAGS(type_n_flags, flags_val);
-    }
-
-    if (defense_info_.need_stop_flag_in_next_cell) {
-        CHECK(defense_info_.stop_requested);
-        logself(INFO) << "setting the STOP flag (in a data cell)";
-        SET_CELL_STOP_FLAG(type_n_flags);
-        defense_info_.need_stop_flag_in_next_cell = false;
-    }
+    _maybe_set_cell_flags(&type_n_flags, "data");
 
     auto rv = evbuffer_add(
         cell_outbuf_, (const uint8_t*)&type_n_flags, sizeof type_n_flags);
@@ -904,12 +966,7 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
     SET_CELL_TYPE(type_n_flags, CellType::DUMMY);
     static const uint16_t len_field = 0;
 
-    if (defense_info_.need_stop_flag_in_next_cell) {
-        CHECK(defense_info_.stop_requested);
-        logself(INFO) << "setting the STOP flag (in a dummy cell)";
-        SET_CELL_STOP_FLAG(type_n_flags);
-        defense_info_.need_stop_flag_in_next_cell = false;
-    }
+    _maybe_set_cell_flags(&type_n_flags, "dummy");
 
     // add type and length
     auto rv = evbuffer_add(
@@ -1055,6 +1112,23 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
 
         const auto start_defense = flags_bs.test(CELL_FLAGS_START_DEFENSE_POSITION);
         const auto stop_defense = flags_bs.test(CELL_FLAGS_STOP_DEFENSE_POSITION);
+        const auto defense_auto_stopped = flags_bs.test(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION);
+
+        if (defense_auto_stopped) {
+            // only ssp auto-stops and notifies csp about it
+            CHECK(is_client_side_);
+            logself(WARNING) << "SSP has auto-stopped its defense";
+
+            // if we're still active and not stopping soon, ask ssp to
+            // start again
+            if ((defense_info_.state == DefenseState::ACTIVE)
+                && (!defense_info_.stop_requested))
+            {
+                logself(INFO) << "ask SSP to start again";
+                CHECK(!defense_info_.need_start_flag_in_next_cell);
+                defense_info_.need_start_flag_in_next_cell = true;
+            }
+        }
 
         // cannot both start and stop
         CHECK(! (start_defense && stop_defense));

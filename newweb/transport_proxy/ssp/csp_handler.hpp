@@ -36,6 +36,7 @@ public:
     explicit CSPHandler(struct event_base* evbase,
                         const uint32_t& tamaraw_pkt_intvl_ms,
                         const uint32_t& tamaraw_L,
+                        const uint32_t& tamaraw_time_limit_secs,
                         myio::StreamChannel::UniquePtr csp_channel,
                         CSPHandlerDoneCb);
 

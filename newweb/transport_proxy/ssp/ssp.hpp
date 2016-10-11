@@ -22,7 +22,8 @@ public:
     explicit ServerSideProxy(struct event_base* evbase,
                              myio::StreamServer::UniquePtr,
                              const uint32_t& tamaraw_pkt_intvl_ms,
-                             const uint32_t& tamaraw_L);
+                             const uint32_t& tamaraw_L,
+                             const uint32_t& tamaraw_time_limit_secs);
 
 protected:
 
@@ -47,6 +48,7 @@ protected:
 
     const uint32_t tamaraw_pkt_intvl_ms_;
     const uint32_t tamaraw_L_;
+    const uint32_t tamaraw_time_limit_secs_;
 };
 
 }

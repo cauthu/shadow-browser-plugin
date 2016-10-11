@@ -34,11 +34,13 @@ using myio::StreamChannel;
 ServerSideProxy::ServerSideProxy(struct event_base* evbase,
                                  StreamServer::UniquePtr streamserver,
                                  const uint32_t& tamaraw_pkt_intvl_ms,
-                                 const uint32_t& tamaraw_L)
+                                 const uint32_t& tamaraw_L,
+                                 const uint32_t& tamaraw_time_limit_secs)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
     , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms)
     , tamaraw_L_(tamaraw_L)
+    , tamaraw_time_limit_secs_(tamaraw_time_limit_secs)
 {
     stream_server_->set_observer(this);
     const auto rv = stream_server_->start_accepting();
@@ -63,6 +65,7 @@ ServerSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noe
         new CSPHandler(evbase_,
                        tamaraw_pkt_intvl_ms_,
                        tamaraw_L_,
+                       tamaraw_time_limit_secs_,
                        std::move(channel),
                        boost::bind(&ServerSideProxy::_on_csp_handler_done,
                                    this, _1)));

@@ -35,12 +35,24 @@ public:
      *
      * "myaddr" will be sent to the other end, to help
      * troublingshooting. should be in host-byte order
+     *
+     * "defense_session_time_limit": the maximum amount of time in
+     * seconds a defense session is allowed to be active.  if it's
+     * reached, a client side channel will crash. a server side
+     * channel will automatically stop its side of the defense, of
+     * course, the client side might continue its side of the defense
+     *
+     * if 0 is speficied, will use default_defense_session_time_limit
      */
+
+    static const uint32_t default_defense_session_time_limit = 180;
+
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             const in_addr_t& myaddr,
                             size_t cell_size,
                             const uint32_t& tamaraw_pkt_intvl_ms,
                             const uint32_t& tamaraw_L,
+                            const uint32_t& defense_session_time_limit,
                             ChannelStatusCb ch_status_cb,
                             NewStreamConnectRequestCb st_connect_req_cb);
 
@@ -93,6 +105,9 @@ protected:
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_ONE_data_cell_to_outbuf();
     void _add_ONE_dummy_cell_to_outbuf();
+
+    void _maybe_set_cell_flags(uint8_t* type_n_flags,
+                               const char* cell_type);
 
     /* WILL move all data into cell outbuf. the current defense state
      * must be NONE */
@@ -295,6 +310,8 @@ protected:
     /* in host byte order */
     const in_addr_t myaddr_;
 
+    const uint32_t defense_session_time_limit_;
+
     enum class DefenseState
     {
         NONE = 0,
@@ -319,8 +336,12 @@ protected:
             num_data_cells_added = 0;
             num_write_attempts = 0;
             stop_requested = false;
+
+            need_start_flag_in_next_cell = false;
             need_stop_flag_in_next_cell = false;
-            evutil_timerclear(&hard_stop_time);
+            need_auto_stopped_flag_in_next_cell = false;
+
+            evutil_timerclear(&auto_stop_time_point);
         }
 
         bool is_done_defending(const uint8_t& L) const
@@ -371,16 +392,25 @@ protected:
          * loading a huge page/network is really congested; for now we
          * assume it's a bug
          */
-        struct timeval hard_stop_time;
+        struct timeval auto_stop_time_point;
         /* whether the user has requested that we stopped. we have
          * to continue until to satisfy L pameter */
         bool stop_requested;
+
+        bool need_start_flag_in_next_cell;
+
         /* as soon as user requests to stop (we must be csp), we will
          * want to immediately notify ssp as well: we set this flag to
          * true. in the code that adds cells to the cell outbuf, we
          * will add the flag and once done, will clear this to
          * false */
         bool need_stop_flag_in_next_cell;
+
+        /* used by ssp to notify csp that it has auto-matically
+         * stopped its side of defense session. the csp can choose to
+         * tell ssp to start again
+         */
+        bool need_auto_stopped_flag_in_next_cell;
     } defense_info_;
 
     // Timer::UniquePtr buflo_timer_;

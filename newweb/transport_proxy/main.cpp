@@ -50,6 +50,7 @@ struct MyConfig
         , tproxy_ipcport(common::ports::transport_proxy_ipc)
         , tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
+        , tamaraw_time_limit_secs(0)
     {
     }
 
@@ -61,6 +62,7 @@ struct MyConfig
     uint16_t tproxy_ipcport;
     uint16_t tamaraw_pkt_intvl_ms;
     uint16_t tamaraw_L;
+    uint32_t tamaraw_time_limit_secs;
 
 #ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
@@ -106,6 +108,10 @@ set_my_config(MyConfig& conf,
 
         else if (name == "tamaraw-L") {
             conf.tamaraw_L = boost::lexical_cast<uint16_t>(value);
+        }
+
+        else if (name == "tamaraw-time-limit-secs") {
+            conf.tamaraw_time_limit_secs = boost::lexical_cast<uint32_t>(value);
         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
@@ -238,7 +244,8 @@ int main(int argc, char **argv)
                           conf.tor_socks_port ? common::getaddr("localhost") : 0,
                           conf.tor_socks_port,
                           conf.tamaraw_pkt_intvl_ms,
-                          conf.tamaraw_L));
+                          conf.tamaraw_L,
+                          conf.tamaraw_time_limit_secs));
 
 #ifdef IN_SHADOW
             // only in shadow do we use ipc cuz shadow doesn't support
@@ -288,7 +295,8 @@ int main(int argc, char **argv)
         ssp.reset(new ssp::ServerSideProxy(evbase.get(),
                                            std::move(tcpserver),
                                            conf.tamaraw_pkt_intvl_ms,
-                                           conf.tamaraw_L));
+                                           conf.tamaraw_L,
+                                           conf.tamaraw_time_limit_secs));
     }
 
     /* ***************************************** */
