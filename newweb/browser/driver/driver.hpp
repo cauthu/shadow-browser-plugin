@@ -175,7 +175,7 @@ private:
         uint32_t num_reqs_;
         uint32_t num_succes_reqs_;
         uint32_t num_failed_reqs_;
-        uint32_t num_post_DOM_load_event_reqs_;
+        uint32_t num_after_DOM_load_event_reqs_;
 
         PageLoadStatus page_load_status_;
         uint32_t ttfb_ms_;

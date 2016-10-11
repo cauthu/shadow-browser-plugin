@@ -93,7 +93,7 @@ Driver::_renderer_handle_RequestWillBeSent(
     ++this_page_load_info_.num_reqs_;
 
     if (this_page_load_info_.DOM_load_event_fired_timepoint_ > 0) {
-        ++this_page_load_info_.num_post_DOM_load_event_reqs_;
+        ++this_page_load_info_.num_after_DOM_load_event_reqs_;
     }
 
     vlogself(2) << "done";
@@ -135,7 +135,7 @@ Driver::_reset_this_page_load_info()
     this_page_load_info_.num_failed_reqs_ = 0;
     this_page_load_info_.num_succes_reqs_ = 0;
     this_page_load_info_.num_reqs_ = 0;
-    this_page_load_info_.num_post_DOM_load_event_reqs_ = 0;
+    this_page_load_info_.num_after_DOM_load_event_reqs_ = 0;
     this_page_load_info_.load_start_timepoint_ = 0;
     this_page_load_info_.DOM_load_event_fired_timepoint_ = 0;
     this_page_load_info_.page_model_idx_ = 0;
@@ -171,7 +171,7 @@ Driver::_report_result()
         << " numReqs= " << tpli.num_reqs_
         << " numSuccess= " << tpli.num_succes_reqs_
         << " numFailed= " << tpli.num_failed_reqs_
-        << " numPostDOMLoadEvent= " << tpli.num_post_DOM_load_event_reqs_
+        << " numAfterDOMLoadEvent= " << tpli.num_after_DOM_load_event_reqs_
         ;
 }
 
