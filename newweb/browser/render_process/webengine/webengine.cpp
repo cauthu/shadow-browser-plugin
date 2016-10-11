@@ -489,6 +489,12 @@ Webengine::handle_RequestComplete(const int& req_id, const bool success)
 }
 
 void
+Webengine::finishedParsing()
+{
+  checkCompleted();
+}
+
+void
 Webengine::checkCompleted()
 {
     VLOG(2) << "begin";

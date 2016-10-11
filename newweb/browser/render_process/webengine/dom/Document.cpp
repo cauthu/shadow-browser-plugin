@@ -232,6 +232,7 @@ Document::finishedParsing()
     logself(INFO) << "has finished parsing (after " << elapsed_ms << " ms)";
     finished_parsing_ = true;
     fireEventHandlingScopes(EventTypeNames::DOMContentLoaded);
+    webengine_->finishedParsing();
 }
 
 void
