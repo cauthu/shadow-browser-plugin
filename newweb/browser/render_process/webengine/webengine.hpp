@@ -94,6 +94,8 @@ protected:
 
     void _init_angelscript_engine();
     void checkCompleted_timer_fired(Timer*);
+    void _reset();
+    void _main_resource_failed();
 
     friend class DOMTimer;
     friend class Document;

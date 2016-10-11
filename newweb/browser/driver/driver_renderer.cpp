@@ -65,6 +65,7 @@ Driver::_renderer_on_ipc_msg(GenericIpcChannel*, uint8_t type,
         IPC_MSG_HANDLER(RequestWillBeSent)
         IPC_MSG_HANDLER(RequestFinished)
         IPC_MSG_HANDLER(PageLoaded)
+        IPC_MSG_HANDLER(PageLoadFailed)
 
     default:
         logself(FATAL) << "invalid IPC message type " << unsigned(type);
@@ -200,6 +201,43 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
     static const auto grace_period_ms = 3*1000;
 
     grace_period_timer_->start(grace_period_ms);
+
+    vlogself(2) << "done";
+}
+
+void
+Driver::_renderer_handle_PageLoadFailed(const myipc::renderer::messages::PageLoadFailedMsg* msg)
+{
+    vlogself(2) << "begin";
+
+    logself(WARNING) << "page load has failed";
+
+    CHECK_EQ(state_, State::LOADING_PAGE);
+
+    page_load_timeout_timer_->cancel();
+
+    auto& tpli = this_page_load_info_;
+    CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
+    tpli.page_load_status_ = PageLoadStatus::FAILED;
+
+    _report_result();
+
+#ifndef IN_SHADOW
+
+    // running outside shadow, so exit after one page load
+    CHECK(0) << "need testing";
+    CHECK_EQ(loadnum_, 1);
+    logself(INFO) << "exiting";
+
+#endif
+
+    _reset_this_page_load_info();
+
+    _renderer_reset();
+
+    if (using_tproxy_) {
+        _tproxy_stop_defense(false);
+    }
 
     vlogself(2) << "done";
 }

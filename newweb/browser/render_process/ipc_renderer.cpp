@@ -84,6 +84,15 @@ IPCServer::send_PageLoaded(const uint64_t ttfb_ms)
 }
 
 void
+IPCServer::send_PageLoadFailed()
+{
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(PageLoadFailed, bufbuilder);
+    }
+}
+
+void
 IPCServer::send_RequestWillBeSent(const uint32_t& resInstNum,
                                   const uint32_t& reqChainIdx)
 {

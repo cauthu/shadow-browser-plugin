@@ -1,0 +1,10 @@
+
+namespace myipc.renderer.messages;
+
+/* renderer notifies client of failed page load */
+
+table PageLoadFailedMsg
+{
+}
+
+root_type PageLoadFailedMsg;

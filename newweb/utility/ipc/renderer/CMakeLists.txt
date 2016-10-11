@@ -10,6 +10,7 @@ set(RENDERER_FBS
 
   page_loaded_msg.fbs.txt
 
+  page_load_failed_msg.fbs.txt
   )
 
 set(COMBINED_HEADERS_CONTENT "")

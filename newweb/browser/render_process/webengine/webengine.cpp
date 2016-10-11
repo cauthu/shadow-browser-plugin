@@ -140,12 +140,18 @@ Webengine::_init_angelscript_engine()
 }
 
 void
-Webengine::handle_Reset()
+Webengine::_reset()
 {
     LOG(INFO) << "reset webengine...";
     ioservice_ipcclient_->send_ResetSession();
     _reset_loading_state();
     LOG(INFO) << "done";
+}
+
+void
+Webengine::handle_Reset()
+{
+    _reset();
 }
 
 void
@@ -228,6 +234,14 @@ Webengine::renderer_notify_RequestFinished(const uint32_t& resInstNum,
     }
     renderer_ipcserver_->send_RequestFinished(
         resInstNum, reqChainIdx, success);
+}
+
+void
+Webengine::_main_resource_failed()
+{
+    LOG(WARNING) << "main resource failed to load, so reset and notify user";
+    _reset();
+    renderer_ipcserver_->send_PageLoadFailed();
 }
 
 void
@@ -461,13 +475,17 @@ Webengine::handle_RequestComplete(const int& req_id, const bool success)
     Resource* resource = pending_requests_[req_id];
     CHECK_NOTNULL(resource);
 
-    resource->finish(success);
-
     // remove the pending request since it's now complete
     pending_requests_.erase(it);
 
-    //////
-    _do_end_of_task_work();
+    if (!success && (1 == resource->instNum())) {
+        _main_resource_failed();
+    } else {
+        resource->finish(success);
+
+        //////
+        _do_end_of_task_work();
+    }
 }
 
 void
