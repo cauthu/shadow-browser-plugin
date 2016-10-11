@@ -1,5 +1,10 @@
 
+#include <string>
+#include <vector>
+#include <set>
 #include <boost/lexical_cast.hpp>
+
+
 
 #include "../utility/tcp_server.hpp"
 #include "../utility/common.hpp"
@@ -8,7 +13,10 @@
 #include "webserver.hpp"
 #include "handler.hpp"
 
-
+using std::vector;
+using std::string;
+using std::set;
+using std::pair;
 using myio::StreamServer;
 using myio::StreamChannel;
 
@@ -52,6 +60,33 @@ Webserver::~Webserver()
 }
 
 
+struct MyConfig
+{
+    MyConfig()
+  {
+    }
+
+  std::set<uint16_t> listenports;
+};
+
+static void
+set_my_config(MyConfig& conf,
+              const vector<pair<string, string> >& name_value_pairs)
+{
+    for (auto nv_pair : name_value_pairs) {
+        const auto& name = nv_pair.first;
+        const auto& value = nv_pair.second;
+
+        if (name == "port") {
+          conf.listenports.insert(boost::lexical_cast<uint16_t>(value));
+	}
+
+        else {
+            // ignore other args
+        }
+    }
+}
+
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
@@ -61,17 +96,28 @@ int main(int argc, char **argv)
 
     START_EASYLOGGINGPP(argc, argv);
 
-    std::set<uint16_t> listenports;
+    MyConfig conf;
 
-    for (int i = 0; i < argc; ++i) {
-        if (!strcmp(argv[i], "--port")) {
-            uint16_t listenport = boost::lexical_cast<uint16_t>(argv[i+1]);
-            listenports.insert(listenport);
-        }
+    bool found_conf_name = false;
+    string found_conf_value;
+    vector<pair<string, string> > name_value_pairs;
+    auto rv = common::get_cmd_line_name_value_pairs(argc, (const char**)argv,
+                                                  found_conf_name, found_conf_value,
+                                                  name_value_pairs);
+    CHECK(rv == 0);
+
+    if (found_conf_name) {
+        name_value_pairs.clear();
+        LOG(INFO) << "configuring using config file. other command-line options are ignored.";
+        rv = common::get_config_name_value_pairs(found_conf_value.c_str(),
+                                                 name_value_pairs);
+        CHECK(rv == 0);
     }
 
-    if (listenports.empty()) {
-        listenports.insert(80);
+    set_my_config(conf, name_value_pairs);
+
+    if (conf.listenports.empty()) {
+        conf.listenports.insert(80);
     }
 
     LOG(INFO) << "webserver starting...";
@@ -83,7 +129,7 @@ int main(int argc, char **argv)
 
     std::vector<Webserver::UniquePtr> webservers;
 
-    for (const auto& listenport : listenports) {
+    for (const auto& listenport : conf.listenports) {
         LOG(INFO) << "listening on port " << listenport;
         myio::TCPServer::UniquePtr tcpserver(
             new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
