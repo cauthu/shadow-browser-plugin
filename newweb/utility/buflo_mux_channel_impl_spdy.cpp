@@ -613,7 +613,8 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                                << "you're done with a page load?";
             } else {
                 logself(WARNING) << "exceeding defense session time limit! "
-                                 << "auto-stopping";
+                                 << "auto-stopping; number of cells sent/attempted: "
+                                 << defense_info_.num_write_attempts;
                 buflo_timer_->cancel();
                 defense_info_.need_auto_stopped_flag_in_next_cell = true;
                 _pump_spdy_send();
