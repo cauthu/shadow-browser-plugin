@@ -237,9 +237,10 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         CHECK((tamaraw_L == 0) & (tamaraw_pkt_intvl_ms_ == 0));
     }
 
-    vlogself(2) << "using cell size= " << cell_size_
-                << " interval= " << tamaraw_pkt_intvl_ms_
-                << " L= " << tamaraw_L_;
+    logself(INFO) << "using cell size= " << cell_size_
+                  << " interval= " << tamaraw_pkt_intvl_ms_
+                  << " L= " << tamaraw_L_
+                  << " time limit= " << defense_session_time_limit_;
 
     defense_info_.reset();
 
