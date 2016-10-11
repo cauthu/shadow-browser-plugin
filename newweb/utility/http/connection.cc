@@ -296,10 +296,8 @@ Connection::_maybe_http_consume_input()
 {
     vlogself(2) << "begin";
 
-    if (active_req_queue_.empty()) {
-        vlogself(2) << "no active req waiting to be received";
-        return;
-    }
+    CHECK(!active_req_queue_.empty())
+        << "server sends us data when we have no active req waiting to be received";
 
     char *line = nullptr;
     bool keep_consuming = true;
@@ -526,8 +524,10 @@ Connection::_maybe_http_consume_input()
 void
 Connection::onInputBytesDropped(StreamChannel* ch, size_t len) noexcept
 {
+    vlogself(2) << "begin, len= " << len;
     CHECK_EQ(transport_.get(), ch);
     _got_a_chunk_of_resp_body(len);
+    vlogself(2) << "done";
 }
 
 void
@@ -539,7 +539,8 @@ Connection::_got_a_chunk_of_resp_body(size_t len)
 
     DestructorGuard dg(this);
 
-    vlogself(2) << "notify request of recv'ed resp body chunk";
+    vlogself(2) << "notify request of recv'ed resp body chunk"
+                << ", remaining_resp_body_len_= " << remaining_resp_body_len_;
     Request *req = active_req_queue_.front();
     req->notify_rsp_body_data(nullptr, len);
 
