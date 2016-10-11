@@ -595,6 +595,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
              */
             _add_ONE_dummy_cell_to_outbuf();
             CHECK(!defense_info_.need_stop_flag_in_next_cell);
+            defense_info_.reset();
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         } else {
             vlogself(2) << "the stop flag has been added";
@@ -627,6 +628,9 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                     defense_info_.reset();
                     _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
                 }
+
+                // reset the defense info --- ok to do blindly; it's
+                // idempotent
                 defense_info_.reset();
 
                 goto done;
@@ -900,6 +904,11 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
     vlogself(2) << "done";
 }
 
+/*
+ * defense state must not be active. cuz if it's active we should be
+ * writing every time the buflo timer fires, and not rely on the
+ * socket being ready to write.
+ */
 void
 BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(ForceToggleMode forcemode)
 {
