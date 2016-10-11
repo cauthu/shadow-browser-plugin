@@ -124,13 +124,13 @@ StreamHandler::_on_inner_outer_handler_done(InnerOuterHandler*,
 }
 
 void
-StreamHandler::onStreamNewDataAvailable(BufloMuxChannel*) noexcept
+StreamHandler::onStreamNewDataAvailable(BufloMuxChannel*, int) noexcept
 {
     logself(FATAL) << "not reached";
 }
 
 void
-StreamHandler::onStreamClosed(BufloMuxChannel*) noexcept
+StreamHandler::onStreamClosed(BufloMuxChannel*, int) noexcept
 {
     // we should only get this stream closed when we're still trying
     // to connect to the target (after that, the innerouterhandler

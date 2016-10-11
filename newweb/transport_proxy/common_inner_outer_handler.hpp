@@ -61,8 +61,9 @@ protected:
     {
         LOG(FATAL) << "not reached";
     }
-    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept override;
-    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept override;
+    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*, int) noexcept override;
+    virtual void onStreamRecvEOF(myio::buflo::BufloMuxChannel*, int) noexcept override;
+    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*, int) noexcept override;
 
     /***** implement StreamChannel interface */
     virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
@@ -80,6 +81,9 @@ protected:
     myio::StreamChannel* outer_channel_;
     myio::buflo::BufloMuxChannel* buflo_channel_;
     const int inner_sid_;
+
+    /* inner stream has finished sending us data */
+    bool inner_stream_half_closed_;
 
     InnerOuterHandlerDoneCb handler_done_cb_;
 

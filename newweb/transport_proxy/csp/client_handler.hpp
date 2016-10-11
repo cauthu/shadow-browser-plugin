@@ -49,8 +49,9 @@ protected:
                                       bool,
                                       const in_addr_t&,
                                       const uint16_t&) noexcept override;
-    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept override;
-    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept override;
+    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*, int) noexcept override;
+    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*, int) noexcept override;
+    virtual void onStreamRecvEOF(myio::buflo::BufloMuxChannel*, int) noexcept override;
 
     /***** implement StreamChannel interface */
     virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;

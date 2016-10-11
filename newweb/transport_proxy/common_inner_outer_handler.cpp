@@ -29,6 +29,7 @@ InnerOuterHandler::InnerOuterHandler(StreamChannel* outer_channel,
     : outer_channel_(outer_channel)
     , buflo_channel_(buflo_ch)
     , inner_sid_(inner_sid)
+    , inner_stream_half_closed_(false)
     , handler_done_cb_(handler_done_cb)
     , written_to_outer_bytes_(0)
     , written_to_inner_bytes_(0)
@@ -44,8 +45,9 @@ InnerOuterHandler::InnerOuterHandler(StreamChannel* outer_channel,
 }
 
 void
-InnerOuterHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept
+InnerOuterHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*, int sid) noexcept
 {
+    CHECK_EQ(sid, inner_sid_);
     auto buf = buflo_channel_->get_input_evbuf(inner_sid_);
     vlogself(2) << "copy data inner --> outer "
                 << evbuffer_get_length(buf) << " bytes";
@@ -55,9 +57,20 @@ InnerOuterHandler::onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexc
 }
 
 void
-InnerOuterHandler::onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept
+InnerOuterHandler::onStreamClosed(myio::buflo::BufloMuxChannel*, int sid) noexcept
 {
+    vlogself(2) << "inner stream closed";
+    CHECK_EQ(sid, inner_sid_);
     _be_done(true);
+}
+
+void
+InnerOuterHandler::onStreamRecvEOF(myio::buflo::BufloMuxChannel*, int sid) noexcept
+{
+    vlogself(2) << "inner stream has half-closed";
+    CHECK_EQ(sid, inner_sid_);
+    CHECK(!inner_stream_half_closed_);
+    inner_stream_half_closed_ = true;
 }
 
 void
@@ -72,9 +85,23 @@ InnerOuterHandler::onNewReadDataAvailable(myio::StreamChannel*) noexcept
 }
 
 void
-InnerOuterHandler::onWrittenData(myio::StreamChannel*) noexcept
+InnerOuterHandler::onWrittenData(myio::StreamChannel* ch) noexcept
 {
-    // don't care
+    CHECK_EQ(ch, outer_channel_);
+    // we are using default write low water mark of 0
+    CHECK_EQ(ch->get_output_length(), 0);
+    if (inner_stream_half_closed_) {
+        // the inner stream finished sending to us, and now we have
+        // finished sending to outer stream, so we're done: if we're
+        // on client-side, then really done, because http client
+        // should not send request if server can no longer send
+        // response; if we're on the server side, then technically
+        // it's the client who has finished sending request, so the
+        // server can still send response. but our clients don't do
+        // half-closing
+        vlogself(2) << " BE DONE";
+        _be_done(false);
+    }
 }
 
 void

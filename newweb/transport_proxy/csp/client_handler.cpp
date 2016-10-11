@@ -99,13 +99,19 @@ ClientHandler::_on_inner_outer_handler_done(InnerOuterHandler*,
 }
 
 void
-ClientHandler::onStreamNewDataAvailable(BufloMuxChannel*) noexcept
+ClientHandler::onStreamNewDataAvailable(BufloMuxChannel*, int) noexcept
 {
     logself(FATAL) << "not reached";
 }
 
 void
-ClientHandler::onStreamClosed(BufloMuxChannel*) noexcept
+ClientHandler::onStreamRecvEOF(BufloMuxChannel*, int) noexcept
+{
+    logself(FATAL) << "not reached";
+}
+
+void
+ClientHandler::onStreamClosed(BufloMuxChannel*, int) noexcept
 {
     CHECK_EQ(state_, State::CREATE_BUFLO_STREAM);
     buflo_channel_ = nullptr; // stream is closed, so clear

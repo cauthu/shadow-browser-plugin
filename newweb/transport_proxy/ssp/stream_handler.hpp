@@ -49,8 +49,9 @@ protected:
     {
         LOG(FATAL) << "not reached";
     }
-    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*) noexcept override;
-    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*) noexcept override;
+    virtual void onStreamNewDataAvailable(myio::buflo::BufloMuxChannel*, int) noexcept override;
+    virtual void onStreamRecvEOF(myio::buflo::BufloMuxChannel*, int) noexcept override {};
+    virtual void onStreamClosed(myio::buflo::BufloMuxChannel*, int) noexcept override;
 
     //////////////
 
