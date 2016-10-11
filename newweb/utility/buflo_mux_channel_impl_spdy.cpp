@@ -1260,7 +1260,7 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_stream_close_cb(spdylay_session *session
     auto *observer = (BufloMuxChannelStreamObserver*)
                      spdylay_session_get_stream_user_data(session, stream_id);
     if (observer) {
-        observer->onStreamClosed(this);
+        observer->onStreamClosed(this, stream_id);
     }
 
     // erase will do nothing if stream_id is not in map
@@ -1385,7 +1385,7 @@ BufloMuxChannelImplSpdy::_init_stream_data_provider(const int& sid)
 
     // don't use flag_fin because it would mean this would be the last
     // frame sent on this stream
-    const auto rv = spdylay_submit_data(spdysess_, sid, 0, &data_provider);
+    const auto rv = spdylay_submit_data(spdysess_, sid, SPDYLAY_DATA_FLAG_FIN, &data_provider);
     CHECK_EQ(rv, 0);
 }
 
@@ -1518,7 +1518,7 @@ BufloMuxChannelImplSpdy::_setup_spdylay_session()
     callbacks.recv_callback = s_spdylay_recv_cb;
     callbacks.on_ctrl_recv_callback = s_spdylay_on_ctrl_recv_cb;
     callbacks.on_data_chunk_recv_callback = s_spdylay_on_data_chunk_recv_cb;
-    // callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
+    callbacks.on_data_recv_callback = s_spdylay_on_data_recv_cb;
     callbacks.on_stream_close_callback = s_spdylay_on_stream_close_cb;
     callbacks.before_ctrl_send_callback = s_spdylay_before_ctrl_send_cb;
     // callbacks.on_ctrl_not_send_callback = s_spdylay_on_ctrl_not_send_cb;
@@ -1629,11 +1629,16 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
 {
     DestructorGuard dg(this);
 
+    vlogself(2) << "got chunk of " << len << " bytes from inner";
+
     // yay! we have data for user. we count this even if the stream
     // might have been deleted
     all_users_data_recv_byte_count_ += len;
 
     MAYBE_GET_STREAMSTATE(stream_id, true, );
+
+    streamstate->total_recv_from_inner_ += len;
+    vlogself(2) << "   so far " << streamstate->total_recv_from_inner_;
 
     const auto rv = evbuffer_add(streamstate->outward_buf_, data, len);
     CHECK_NE(rv, -1);
@@ -1641,10 +1646,46 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
     auto *observer = (BufloMuxChannelStreamObserver*)
                      spdylay_session_get_stream_user_data(session, stream_id);
     if (observer) {
-        observer->onStreamNewDataAvailable(this);
+        observer->onStreamNewDataAvailable(this, stream_id);
     } else {
         logself(WARNING) << "no observer for sid " << stream_id
                          << " to notify of new available data";
+    }
+}
+
+void
+BufloMuxChannelImplSpdy::s_spdylay_on_data_recv_cb(spdylay_session *session,
+                                                      uint8_t flags,
+                                                      int32_t stream_id,
+                                                      int32_t length,
+                                                      void *user_data)
+{
+    auto *ch = (BufloMuxChannelImplSpdy*)user_data;
+    ch->_on_spdylay_on_data_recv_cb(session, flags, stream_id, length);
+}
+
+void
+BufloMuxChannelImplSpdy::_on_spdylay_on_data_recv_cb(spdylay_session *session,
+                                                     uint8_t flags,
+                                                     int32_t stream_id,
+                                                     int32_t length)
+{
+    DestructorGuard dg(this);
+
+    if ((flags & SPDYLAY_DATA_FLAG_FIN) != 0) {
+        MAYBE_GET_STREAMSTATE(stream_id, true, );
+
+        CHECK(!streamstate->inner_recv_eof_);
+        streamstate->inner_recv_eof_ = true;
+
+        auto *observer = (BufloMuxChannelStreamObserver*)
+                         spdylay_session_get_stream_user_data(session, stream_id);
+        if (observer) {
+            observer->onStreamRecvEOF(this, stream_id);
+        } else {
+            logself(WARNING) << "no observer for sid " << stream_id
+                             << " to notify of eof";
+        }
     }
 }
 

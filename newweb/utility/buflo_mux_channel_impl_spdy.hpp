@@ -210,6 +210,16 @@ protected:
                                                 size_t len,
                                                 void *user_data);
 
+    void         _on_spdylay_on_data_recv_cb(spdylay_session *session,
+                                             uint8_t flags,
+                                             int32_t stream_id,
+                                             int32_t length);
+    static void s_spdylay_on_data_recv_cb(spdylay_session *session,
+                                             uint8_t flags,
+                                             int32_t stream_id,
+                                             int32_t length,
+                                             void *user_data);
+
     class StreamState
     {
     public:
@@ -219,6 +229,9 @@ protected:
             outward_buf_ = evbuffer_new();
             inward_deferred_ = false;
             inward_has_seen_eof_ = false;
+
+            total_recv_from_inner_ = 0;
+            inner_recv_eof_ = false;
         }
         ~StreamState()
         {
@@ -248,6 +261,11 @@ protected:
                                     * any buffered data into the
                                     * tunnel
                                     */
+
+        /* num bytes received from inner (to be given to outer) */
+        uint32_t total_recv_from_inner_;
+        /* we have received the last data frame from inner stream */
+        bool inner_recv_eof_;
 
         // stores data spdy receives from the tunnel stream to be sent
         // outward, i.e., to client or server

@@ -27,8 +27,18 @@ public:
                                       const in_addr_t&, const uint16_t&) = 0;
 
     /* for streams for either side */
-    virtual void onStreamNewDataAvailable(BufloMuxChannel*) = 0;
-    virtual void onStreamClosed(BufloMuxChannel*) = 0;
+    virtual void onStreamNewDataAvailable(BufloMuxChannel*, int sid) = 0;
+
+    /* there will be no more data available after being notified of
+     * this, but the stream is not closed yet. i.e., it's only half
+     * closed.
+     *
+     * you should still be able to send into the stream. NOT TESTED
+     * yet
+     */
+    virtual void onStreamRecvEOF(BufloMuxChannel*, int sid) = 0;
+
+    virtual void onStreamClosed(BufloMuxChannel*, int sid) = 0;
 };
 
 class BufloMuxChannel : public Object
