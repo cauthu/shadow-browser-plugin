@@ -1,0 +1,39 @@
+{
+  "elements": {
+      "9999": {
+          "initial_resInstNum": 0,
+          "tag": "img"
+      }
+  },
+  "exec_scopes": {},
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+        [
+            1427,
+            9999
+        ]
+    ],
+    "event_handling_scopes": []
+  },
+  "orig_used_hostnames": [],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server1",
+          "method": "GET",
+          "port": 80,
+          "priority": 4,
+          "req_total_size": 337,
+          "resp_body_size": 54321,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    }
+  },
+  "timers": {},
+  "xhrs": {}
+}

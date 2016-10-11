@@ -1,0 +1,59 @@
+diff --git newweb/webserver/handler.cc newweb/webserver/handler.cc
+index 8c9c2e0..a4abe60 100644
+--- newweb/webserver/handler.cc
++++ newweb/webserver/handler.cc
+@@ -251,7 +251,7 @@ Handler::_serve_response()
+     std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> buf(
+         evbuffer_new(), evbuffer_free);
+     CHECK_NOTNULL(buf.get());
+-
++    
+     auto rv = evbuffer_add_printf(
+         buf.get(),
+         "%s\r\n"
+@@ -304,7 +304,15 @@ Handler::_serve_response()
+         vlogself(2) << "tell channel to write "
+                     << current_req_.resp_body_size << " dummy BODY bytes";
+ 
+-        rv = channel_->write_dummy(current_req_.resp_body_size);
++        if (current_req_.resp_body_size == 54321) {
++            static int sst = 0;
++            ++sst;
++            const auto less = current_req_.resp_body_size - ((sst % 2) ? 10 : 0);
++            vlogself(2) << "actually . write only " << less;
++            rv = channel_->write_dummy(less);
++        } else {
++            rv = channel_->write_dummy(current_req_.resp_body_size);
++        }
+         CHECK_EQ(rv, 0);
+     }
+ 
+@@ -323,6 +331,15 @@ Handler::onNewReadDataAvailable(StreamChannel* channel) noexcept
+ }
+ 
+ void
++Handler::onWrittenData(StreamChannel* channel) noexcept
++{
++    CHECK_EQ(channel_.get(), channel);
++    logself(INFO) << "notified data has been written, remaining in outbuf: "
++                << channel_->get_output_length();
++    channel_->destroy();
++}
++
++void
+ Handler::onEOF(StreamChannel* channel) noexcept
+ {
+     CHECK_EQ(channel_.get(), channel);
+diff --git newweb/webserver/handler.hpp newweb/webserver/handler.hpp
+index d217325..e00bc52 100644
+--- newweb/webserver/handler.hpp
++++ newweb/webserver/handler.hpp
+@@ -35,7 +35,7 @@ private:
+     virtual void onNewReadDataAvailable(myio::StreamChannel*) noexcept override;
+     virtual void onEOF(myio::StreamChannel*) noexcept override;
+     virtual void onError(myio::StreamChannel*, int errorcode) noexcept override;
+-    virtual void onWrittenData(myio::StreamChannel*) noexcept override {};
++    virtual void onWrittenData(myio::StreamChannel*) noexcept override;
+ 
+     /********* StreamChannelInputDropObserver interface *************/
+     virtual void onInputBytesDropped(myio::StreamChannel*, size_t) noexcept override;
