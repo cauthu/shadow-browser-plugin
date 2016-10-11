@@ -439,19 +439,38 @@ TCPChannel::_maybe_dropread()
                                   // and notify observer once before
                                   // we exit
 
+    bool had_an_unsuccessful_read = false;
+
     while (input_drop_.num_remaining() && maybe_theres_more) {
         // read into drop buf instead of into input_evb_
-        dvlogself(3) << "want to dropread "
+        vlogself(3) << "want to dropread "
                      << input_drop_.num_remaining() << " bytes";
         const auto num_to_read =
             std::min(input_drop_.num_remaining(), sizeof drop_buf);
         const auto rv = ::read(fd_, drop_buf, num_to_read);
-        dvlogself(3) << "got " << rv;
+        vlogself(3) << "got " << rv;
         if (rv > 0) {
             num_total_read_bytes_ += rv;
             dropped_this_time += rv;
             input_drop_.progress(rv);
+
+            if (rv < num_to_read) {
+                // there was less data than we wanted, so the socket
+                // doesn't have more for us at this time, so we can
+                // break.
+                //
+                // this fixes a bug where we dont break and try to
+                // read again in the loop and get zero, and we call
+                // _handle_non_successful_socket_io() which notifies
+                // the user of eof, and user destroys himself, and
+                // then we proceed below to the next block with a
+                // positive dropped_this_time and notifies a
+                // now-deleted object
+
+                maybe_theres_more = false;
+            }
         } else {
+            had_an_unsuccessful_read = true;
             _handle_non_successful_socket_io("dropread", rv, true);
 
             // whetever the reason, there is no more to read this time
@@ -461,6 +480,9 @@ TCPChannel::_maybe_dropread()
     }
 
     if (dropped_this_time) {
+        CHECK(!had_an_unsuccessful_read);
+        CHECK_NE(fd_, -1);
+        CHECK_NE(state_, ChannelState::CLOSED);
         const auto remaining = input_drop_.num_remaining();
         vlogself(3) << dropped_this_time << " bytes dropped this time around"
                     << " (" << remaining << " remaining)";
@@ -497,6 +519,9 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
                                              const ssize_t rv,
                                              const bool crash_if_EINPROGRESS)
 {
+    vlogself(2) << "begin, io_op_str: " << io_op_str
+                << ", error: " << strerror(errno);
+
     if (rv == 0) {
         _on_eof();
     } else {
@@ -519,6 +544,8 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
             _on_error();
         }
     }
+
+    vlogself(2) << "done";
 }
 
 void
@@ -555,19 +582,23 @@ TCPChannel::_on_socket_writecb(int fd, short what)
 void
 TCPChannel::_on_eof()
 {
+    vlogself(2) << "begin";
     // assuming desctructorguard already set up
-    close();
+    // close();
     DCHECK_NOTNULL(observer_);
     observer_->onEOF(this);
+    vlogself(2) << "done";
 }
 
 void
 TCPChannel::_on_error()
 {
+    vlogself(2) << "begin";
     // assuming desctructorguard already set up
-    close();
+    // close();
     DCHECK_NOTNULL(observer_);
     observer_->onError(this, errno);
+    vlogself(2) << "done";
 }
 
 TCPChannel::TCPChannel(struct event_base *evbase, int fd,
@@ -612,8 +643,9 @@ TCPChannel::s_socket_writecb(int fd, short what, void* arg)
 
 TCPChannel::~TCPChannel()
 {
-    vlogself(2) << "tcpchannel destructing (fd= " << fd_ << ")";
+    vlogself(2) << "tcpchannel begin destructing (fd= " << fd_ << ")";
     close();
+    vlogself(2) << "tcpchannel done destructing (fd= " << fd_ << ")";
 }
 
 } // end myio namespace
