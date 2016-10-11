@@ -440,6 +440,7 @@ TCPChannel::_maybe_dropread()
                                   // we exit
 
     bool had_an_unsuccessful_read = false;
+    int read_error = 0;
 
     while (input_drop_.num_remaining() && maybe_theres_more) {
         // read into drop buf instead of into input_evb_
@@ -471,8 +472,7 @@ TCPChannel::_maybe_dropread()
             }
         } else {
             had_an_unsuccessful_read = true;
-            _handle_non_successful_socket_io("dropread", rv, true);
-
+            read_error = rv;
             // whetever the reason, there is no more to read this time
             // around
             maybe_theres_more = false;
@@ -480,7 +480,6 @@ TCPChannel::_maybe_dropread()
     }
 
     if (dropped_this_time) {
-        CHECK(!had_an_unsuccessful_read);
         CHECK_NE(fd_, -1);
         CHECK_NE(state_, ChannelState::CLOSED);
         const auto remaining = input_drop_.num_remaining();
@@ -508,6 +507,10 @@ TCPChannel::_maybe_dropread()
             // now reset
             input_drop_.reset();
         }
+    }
+
+    if (had_an_unsuccessful_read) {
+        _handle_non_successful_socket_io("dropread", read_error, true);
     }
 
     vlogself(3) << "done, returning: " << maybe_theres_more;
