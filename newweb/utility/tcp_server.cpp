@@ -133,7 +133,8 @@ TCPServer::_start_listening()
     static const auto backlog = 20;
 
     auto rv = listen(fd_, backlog);
-    CHECK_EQ(rv, 0);
+    CHECK_EQ(rv, 0) << "listen(fd=" << fd_ << ") fails :( rv= " << rv
+                    << " errno= " << errno << " (" << strerror(errno) << ")";
 
     CHECK(!evlistener_);
     evlistener_.reset(
