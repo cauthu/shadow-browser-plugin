@@ -1,0 +1,11 @@
+
+namespace myipc.transport_proxy.messages;
+
+
+// proxy notifies user that the tunnel has closed
+
+table TunnelClosedMsg
+{
+}
+
+root_type TunnelClosedMsg;

@@ -13,4 +13,7 @@ enum type:ubyte
     StopDefense,
     StopDefenseResp,
 
+    /* proxy notifies user that it -- its tunnel -- has been closed */
+    TunnelClosed,
+
 }
