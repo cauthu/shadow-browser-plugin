@@ -222,7 +222,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
     // hardcoding this for now. this is what the tamaraw paper used
     CHECK(   (tamaraw_L_ == 0)
-          || (tamaraw_L_ == 100));
+          || (tamaraw_L_ == 100))
+        << "currently only L=100 is supported";
 
     CHECK(   (tamaraw_pkt_intvl_ms_ == 0)
           || (tamaraw_pkt_intvl_ms_ == 5)
