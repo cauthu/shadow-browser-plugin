@@ -98,7 +98,8 @@ protected:
     void _pump_spdy_send();
     void _pump_spdy_recv();
 
-    void _send_my_info();
+    void _fill_my_peer_info_outbuf();
+    void _write_my_peer_info_outbuf();
     void _read_peer_info();
     void _close_socket_and_events();
 
@@ -425,6 +426,7 @@ protected:
     struct evbuffer* spdy_outbuf_;
 
     struct evbuffer* peer_info_inbuf_;
+    struct evbuffer* my_peer_info_outbuf_;
     // cell in/out bufs are for data that we read from/write into
     // socket
     struct evbuffer* cell_inbuf_;

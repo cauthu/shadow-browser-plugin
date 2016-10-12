@@ -261,6 +261,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     ALLOC_EVBUF(spdy_inbuf_);
     ALLOC_EVBUF(spdy_outbuf_);
     ALLOC_EVBUF(peer_info_inbuf_);
+    ALLOC_EVBUF(my_peer_info_outbuf_);
     ALLOC_EVBUF(cell_inbuf_);
     ALLOC_EVBUF(cell_outbuf_);
 
@@ -276,16 +277,19 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     // the write event has to be enabled only when we have data to
     // write
 
+    _fill_my_peer_info_outbuf();
+
     auto rv = 0;
     if (is_client_side_) {
-        // client cand send hello (our cell size) now
+        // client cand send my info now
         //
         // server first waits to read hello from client; otherwise our
         // data might arrive right behind the socks5 reponse, which
         // can confuse our csp when it tells the tcp channel to
         // release the fd (see issue #4
         // https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/4/)
-        _send_my_info();
+        _write_my_peer_info_outbuf();
+        CHECK(!my_peer_info_outbuf_);
     }
 
     /* poll to check for socket close
@@ -1225,13 +1229,18 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 
     if (what & (EV_READ | EV_TIMEOUT)) {
         if (need_to_read_peer_info_) {
+            vlogself(2) << "read peer info";
             const auto still_need =
                 PEER_INFO_NUM_BYTES - evbuffer_get_length(peer_info_inbuf_);
             CHECK(still_need > 0);
             const auto rv = evbuffer_read(peer_info_inbuf_, fd_, still_need);
-            CHECK(evbuffer_get_length(peer_info_inbuf_) <= PEER_INFO_NUM_BYTES);
-            if (evbuffer_get_length(peer_info_inbuf_) == PEER_INFO_NUM_BYTES) {
-                _read_peer_info();
+            if (rv > 0) {
+                CHECK(evbuffer_get_length(peer_info_inbuf_) <= PEER_INFO_NUM_BYTES);
+                if (evbuffer_get_length(peer_info_inbuf_) == PEER_INFO_NUM_BYTES) {
+                    _read_peer_info();
+                }
+            } else {
+                _handle_failed_socket_io("readPeerInfo", rv, true);
             }
         } else {
             // let buffer decide how much to read
@@ -1266,27 +1275,34 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
     DestructorGuard dg(this);
 
     if (what & EV_WRITE) {
-        if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
-            // for now, to keep logic simple, we insist that the
-            // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
-            // check that cell_outbuf_ has one cell
-            CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
-
-            /* disable write monitoring because we will start the
-             * defense, which will write when timer fires
-             */
+        if (my_peer_info_outbuf_) {
+            vlogself(2) << "write my peer info buf";
+            _write_my_peer_info_outbuf();
+            CHECK(!my_peer_info_outbuf_);
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
+        } else {
+            if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+                // for now, to keep logic simple, we insist that the
+                // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
+                // check that cell_outbuf_ has one cell
+                CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
 
-            vlogself(2) << "automatically starting the defense";
-            // start_defense_session() will set to ACTIVE
-            defense_info_.state = DefenseState::NONE;
-            start_defense_session();
-            // we have only started the timer. we will fall through to
-            // do the first write here
+                /* disable write monitoring because we will start the
+                 * defense, which will write when timer fires
+                 */
+                _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
+
+                vlogself(2) << "automatically starting the defense";
+                // start_defense_session() will set to ACTIVE
+                defense_info_.state = DefenseState::NONE;
+                start_defense_session();
+                // we have only started the timer. we will fall through to
+                // do the first write here
+            }
+            _send_cell_outbuf();
         }
-        _send_cell_outbuf();
     } else {
-        CHECK(0) << "invalid events: " << what;
+        CHECK(0) << "invalid events: " << unsigned(what);
     }
 
     vlogself(2) << "done";
@@ -1330,8 +1346,10 @@ BufloMuxChannelImplSpdy::_read_peer_info()
                   << " using cell size= " << peer_cell_size_;
 
     if (!is_client_side_) {
-        // server-side can now send our cell size
-        _send_my_info();
+        // server-side can now enable the write event... we used to
+        // just write right here, but sometimes socket did not accept
+        // our write
+        _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
     }
 
     if (peer_version != s_version) {
@@ -1355,18 +1373,41 @@ BufloMuxChannelImplSpdy::_read_peer_info()
 }
 
 void
-BufloMuxChannelImplSpdy::_send_my_info()
+BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
 {
-    auto rv = write(fd_, (uint8_t*)&s_version, 1);
-    CHECK_EQ(rv, 1);
+    CHECK_NOTNULL(my_peer_info_outbuf_);
+    CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), 0);
+
+    auto rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&s_version, 1);
+    CHECK_EQ(rv, 0);
 
     const uint16_t cs = htons(cell_size_);
-    rv = write(fd_, (uint8_t*)&cs, 2);
-    CHECK_EQ(rv, 2);
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&cs, 2);
+    CHECK_EQ(rv, 0);
 
     const in_addr_t addr = htonl(myaddr_);
-    rv = write(fd_, (uint8_t*)&addr, 4);
-    CHECK_EQ(rv, 4);
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&addr, 4);
+    CHECK_EQ(rv, 0);
+
+    CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), PEER_INFO_NUM_BYTES);
+}
+
+void
+BufloMuxChannelImplSpdy::_write_my_peer_info_outbuf()
+{
+    auto buflen = evbuffer_get_length(my_peer_info_outbuf_);
+    CHECK_EQ(buflen, PEER_INFO_NUM_BYTES) << "unexpected buf len: " << buflen;
+    const auto rv = evbuffer_write(my_peer_info_outbuf_, fd_);
+
+    // we only write a small amount, so we should be able empty the
+    // buffer
+    CHECK_EQ(rv, PEER_INFO_NUM_BYTES) << "write rv: " << rv;
+
+    buflen = evbuffer_get_length(my_peer_info_outbuf_);
+    CHECK_EQ(buflen, 0) << "unexpected buf len: " << buflen;
+
+    evbuffer_free(my_peer_info_outbuf_);
+    my_peer_info_outbuf_ = nullptr;
 }
 
 void
@@ -1886,6 +1927,7 @@ BufloMuxChannelImplSpdy::_close_socket_and_events()
 
 BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
 {
+    vlogself(2) << "begin destructing";
     _close_socket_and_events();
 
 #define FREE_EVBUF(buf)                         \
@@ -1899,6 +1941,7 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
     FREE_EVBUF(spdy_inbuf_);
     FREE_EVBUF(spdy_outbuf_);
     FREE_EVBUF(peer_info_inbuf_);
+    FREE_EVBUF(my_peer_info_outbuf_);
     FREE_EVBUF(cell_inbuf_);
     FREE_EVBUF(cell_outbuf_);
 
@@ -1906,7 +1949,8 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
         spdylay_session_del(spdysess_);
         spdysess_ = nullptr;
     }
-    // TODO: free the stream states
+
+    vlogself(2) << "done destructing";
 }
 
 } // end namespace buflo
