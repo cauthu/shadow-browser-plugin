@@ -234,8 +234,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         );
 
     if (tamaraw_L_ == 0 || tamaraw_pkt_intvl_ms_ == 0) {
-        // both must be 0
-        CHECK((tamaraw_L == 0) & (tamaraw_pkt_intvl_ms_ == 0));
+        // if either is 0, then both must be 0
+        CHECK((tamaraw_L == 0) && (tamaraw_pkt_intvl_ms_ == 0));
     }
 
     logself(INFO) << "my version= " << unsigned(s_version)
