@@ -33,13 +33,34 @@ using std::string;
  */
 
 
+#ifndef IN_SHADOW
 static void
-s_on_buflo_channel_ready(csp::ClientSideProxy* csp)
+s_on_buflo_channel_ready(csp::ClientSideProxy* csp,
+                         const bool auto_start_defense_session_on_next_send)
 {
     LOG(INFO) << "buflo channel ready";
     csp->start_accepting_clients();
     LOG(INFO) << "CSP is ready and accepting clients";
+    if (auto_start_defense_session_on_next_send) {
+        const auto rv = csp->set_auto_start_defense_session_on_next_send();
+        CHECK(rv);
+        LOG(INFO) << "will automatically start defense session on next send";
+    } else {
+        LOG(INFO) << "will NOT start any defense session";
+    }
 }
+#endif
+
+
+static const char auto_start_defense_session_on_next_send_name[] =
+    "auto-start-defense-session-on-next-send";
+static const char tamaraw_packet_interval_name[] =
+    "tamaraw-packet-interval";
+static const char tamaraw_L_name[] =
+    "tamaraw-L";
+static const char tamaraw_time_limit_secs_name[] =
+    "tamaraw-time-limit-secs";
+
 
 struct MyConfig
 {
@@ -51,6 +72,9 @@ struct MyConfig
         , tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
         , tamaraw_time_limit_secs(0)
+#ifndef IN_SHADOW
+        , auto_start_defense_session_on_next_send(false)
+#endif
     {
     }
 
@@ -66,6 +90,13 @@ struct MyConfig
 
 #ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
+
+#else
+
+    /* automatically start the defense the next time we send stuff to
+     * the ssp */
+    bool auto_start_defense_session_on_next_send;
+
 #endif
 
 };
@@ -102,16 +133,31 @@ set_my_config(MyConfig& conf,
             conf.tproxy_ipcport = boost::lexical_cast<uint16_t>(value);
         }
 
-        else if (name == "tamaraw-packet-interval") {
-            conf.tamaraw_pkt_intvl_ms = boost::lexical_cast<uint16_t>(value);
+        else if (name == tamaraw_packet_interval_name) {
+            try {
+                conf.tamaraw_pkt_intvl_ms = boost::lexical_cast<uint16_t>(value);
+            }
+            catch (...) {
+                LOG(FATAL) << "bad value for " << tamaraw_packet_interval_name;
+            }
         }
 
-        else if (name == "tamaraw-L") {
-            conf.tamaraw_L = boost::lexical_cast<uint16_t>(value);
+        else if (name == tamaraw_L_name) {
+            try {
+                conf.tamaraw_L = boost::lexical_cast<uint16_t>(value);
+            }
+            catch (...) {
+                LOG(FATAL) << "bad value for " << tamaraw_L_name;
+            }
         }
 
-        else if (name == "tamaraw-time-limit-secs") {
-            conf.tamaraw_time_limit_secs = boost::lexical_cast<uint32_t>(value);
+        else if (name == tamaraw_time_limit_secs_name) {
+            try {
+                conf.tamaraw_time_limit_secs = boost::lexical_cast<uint32_t>(value);
+            }
+            catch (...) {
+                LOG(FATAL) << "bad value for " << tamaraw_time_limit_secs_name;
+            }
         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
@@ -119,6 +165,17 @@ set_my_config(MyConfig& conf,
             conf.browser_proxy_mode_spec_file = value;
 #else
             LOG(FATAL) << "browser-proxy-mode-spec makes sense only in shadow";
+#endif
+        }
+
+        else if (name == auto_start_defense_session_on_next_send_name) {
+#ifdef IN_SHADOW
+            LOG(FATAL) << auto_start_defense_session_on_next_send_name
+                       << " makes sense only outside shadow";
+#else
+            CHECK((value == "yes") || (value == "no"))
+                << "use yes or no for " << auto_start_defense_session_on_next_send_name;
+            conf.auto_start_defense_session_on_next_send = (value == "yes");
 #endif
         }
 
@@ -191,6 +248,19 @@ int main(int argc, char **argv)
     myio::TCPServer::UniquePtr tcpServerForIPC;
     IPCServer::UniquePtr ipcserver;
 
+#ifndef IN_SHADOW
+
+    if (conf.auto_start_defense_session_on_next_send) {
+        CHECK(conf.tamaraw_pkt_intvl_ms > 0)
+            << "need to specify " << tamaraw_packet_interval_name << " if using "
+            << auto_start_defense_session_on_next_send_name;
+        CHECK(conf.tamaraw_L > 0)
+            << "need to specify " << tamaraw_L_name << " if using "
+            << auto_start_defense_session_on_next_send_name;
+    }
+
+#endif
+
     string proxy_mode = expcommon::proxy_mode_none;
     bool do_setup_csp = true;
     if (is_client) {
@@ -219,6 +289,7 @@ int main(int argc, char **argv)
                 return 0;
             }
         }
+
 #endif
 
         if (do_setup_csp) {
@@ -265,7 +336,8 @@ int main(int argc, char **argv)
                     evbase.get(), std::move(tcpServerForIPC), std::move(csp)));
 #else
             const auto rv = csp->establish_tunnel(
-                boost::bind(s_on_buflo_channel_ready, _1),
+                boost::bind(s_on_buflo_channel_ready, _1,
+                            conf.auto_start_defense_session_on_next_send),
                 true);
 #endif
 
@@ -284,6 +356,12 @@ int main(int argc, char **argv)
         if (!conf.browser_proxy_mode_spec_file.empty()) {
             LOG(FATAL) << "tproxy ssp does not use browser proxy mode spec file";
         }
+
+#else
+        
+        CHECK(!conf.auto_start_defense_session_on_next_send)
+            << "ssp doesn't support " << auto_start_defense_session_on_next_send_name;
+
 #endif
 
         /* tcpserver to accept connections from CSPs */

@@ -56,6 +56,10 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , useful_recv_byte_count_so_far_(0)
     , myaddr_(INADDR_NONE)
 {
+    static bool initialized = false;
+
+    CHECK(!initialized) << "there should be ONLY one csp per process";
+
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
     CHECK(!stream_server_->is_listening());
 
@@ -66,6 +70,8 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
 
     myaddr_ = ntohl(common::getaddr(myhostname));
     CHECK(myaddr_ && (myaddr_ != INADDR_NONE));
+
+    initialized = true;
 }
 
 ClientSideProxy::EstablishReturnValue
