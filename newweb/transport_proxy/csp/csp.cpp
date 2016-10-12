@@ -74,24 +74,18 @@ ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
 {
     vlogself(2) << "begin";
 
-    CHECK((state_ == State::INITIAL) || (state_ == State::READY));
+    // we can reconnect even if there is already one in
+    // progress... just reset() all the unique ptrs and things SHOULD
+    // work correctly
 
     csp_status_cb_ = status_cb;
 
-    if (state_ == State::READY) {
-        vlogself(2) << "currently ready";
-        if (!forceReconnect) {
-            return EstablishReturnValue::ALREADY_READY;
-        }
+    // currently we expect the driver to always force reconnect
+    CHECK(forceReconnect) << "todo";
 
-        vlogself(2) << "being forced to reestablish";
+    _update_recv_byte_counts();
 
-        _update_recv_byte_counts();
-
-        _reset_to_initial();
-    }
-
-    state_ = State::INITIAL;
+    _reset_to_initial();
 
     // connect to peer first
     if (socks5_addr_) {
@@ -161,9 +155,10 @@ ClientSideProxy::useful_recv_byte_count_so_far() const
 void
 ClientSideProxy::_update_recv_byte_counts()
 {
-    CHECK_NOTNULL(buflo_ch_.get());
-    all_recv_byte_count_so_far_ += buflo_ch_->all_recv_byte_count();
-    useful_recv_byte_count_so_far_ += buflo_ch_->useful_recv_byte_count();
+    if (buflo_ch_) {
+        all_recv_byte_count_so_far_ += buflo_ch_->all_recv_byte_count();
+        useful_recv_byte_count_so_far_ += buflo_ch_->useful_recv_byte_count();
+    }
 }
 
 void
@@ -228,7 +223,7 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
         _on_connected_to_ssp();
     }
     else {
-        logself(FATAL) << "invalid state";
+        logself(FATAL) << "unexpected state " << common::as_integer(state_);
     }
 }
 
@@ -262,7 +257,7 @@ ClientSideProxy::onSocksTargetConnectResult(
         break;
 
     default:
-        logself(FATAL) << "invalid result";
+        logself(FATAL) << "invalid result " << common::as_integer(result);
         break;
     }
 }

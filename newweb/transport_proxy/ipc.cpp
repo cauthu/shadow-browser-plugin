@@ -143,10 +143,13 @@ void
 IPCServer::_handle_EstablishTunnel(const uint32_t& id,
                                    const msgs::EstablishTunnelMsg* msg)
 {
-    vlogself(2) << "tell csp to establish tunnel";
+    vlogself(2) << "tell csp to (re)establish tunnel";
 
     CHECK_GT(id, 0);
-    CHECK_EQ(establish_tunnel_call_id_, 0);
+    if (establish_tunnel_call_id_) {
+        logself(WARNING) << "overtaking an establish call already in progress";
+        CHECK(msg->forceReconnect());
+    }
     establish_tunnel_call_id_ = id;
 
     const auto rv = csp_->establish_tunnel(
