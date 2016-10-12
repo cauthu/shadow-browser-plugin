@@ -285,7 +285,13 @@ Webengine::sched_render_update_scope(const uint32_t scope_id)
     VLOG(2) << "begin, scope:" << scope_id;
 
     CHECK_GT(scope_id, 0);
-    CHECK_EQ(scheduled_render_tree_update_scope_id_, 0);
+    CHECK_NE(scheduled_render_tree_update_scope_id_, scope_id) << scope_id;
+    if (scheduled_render_tree_update_scope_id_) {
+        LOG(WARNING)
+            << "overwriting currently scheduled render update scope id "
+            << scheduled_render_tree_update_scope_id_
+            << " with new one " << scope_id;
+    }
 
     scheduled_render_tree_update_scope_id_ = scope_id;
 
