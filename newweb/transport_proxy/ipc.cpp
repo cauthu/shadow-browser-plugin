@@ -74,11 +74,55 @@ IPCServer::IPCServer(struct event_base* evbase,
     }
 
 void
-IPCServer::_on_buflo_channel_ready(ClientSideProxy* csp)
+IPCServer::_on_buflo_channel_status(ClientSideProxy* csp, bool ok)
 {
+    CHECK_EQ(csp_.get(), csp);
+
+    if (establish_tunnel_call_id_) {
+        vlogself(2) << "got establish result: " << ok;
+        _have_establish_tunnel_result(ok);
+    } else {
+        // typically, if we're not trying to establishing the tunnel,
+        // then csp can only tell us that it has closed/is not ok.
+        //
+        // however, it's possible the we have timed out the establish
+        // command and clear the call id
+        //
+        // so we just ignore if ok==true here
+        if (!ok) {
+            _send_TunnelClosed();
+        }
+    }
+}
+
+void
+IPCServer::_send_TunnelClosed()
+{
+    vlogself(2) << "begin";
+
+    {
+        flatbuffers::FlatBufferBuilder bufbuilder;
+        BEGIN_BUILD_MSG_AND_SEND_AT_END(
+            TunnelClosed, bufbuilder);
+    }
+
+    vlogself(2) << "done";
+}
+
+void
+IPCServer::_have_establish_tunnel_result(const bool& ok)
+{
+    if (ok) {
+        logself(INFO) << "tunnel is now established";
+    } else {
+        logself(WARNING) << "something wrong establishing tunnel";
+    }
+
     CHECK_GT(establish_tunnel_call_id_, 0);
 
-    csp->start_accepting_clients();
+    if (ok) {
+        csp_->start_accepting_clients();
+    }
 
     {
         // send the response
@@ -87,7 +131,7 @@ IPCServer::_on_buflo_channel_ready(ClientSideProxy* csp)
 
         BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
             EstablishTunnelResp, bufbuilder, id);
-        msgbuilder.add_tunnelIsReady(true);
+        msgbuilder.add_tunnelIsReady(ok);
         msgbuilder.add_allRecvByteCountSoFar(csp_->all_recv_byte_count_so_far());
         msgbuilder.add_usefulRecvByteCountSoFar(csp_->useful_recv_byte_count_so_far());
     }
@@ -106,7 +150,7 @@ IPCServer::_handle_EstablishTunnel(const uint32_t& id,
     establish_tunnel_call_id_ = id;
 
     const auto rv = csp_->establish_tunnel(
-        boost::bind(&IPCServer::_on_buflo_channel_ready, this, _1),
+        boost::bind(&IPCServer::_on_buflo_channel_status, this, _1, _2),
         msg->forceReconnect());
     CHECK_EQ(rv, ClientSideProxy::EstablishReturnValue::PENDING);
 }
@@ -117,14 +161,14 @@ IPCServer::_handle_SetAutoStartDefenseOnNextSend(const uint32_t& id,
 {
     CHECK_GT(id, 0);
 
-    csp_->set_auto_start_defense_session_on_next_send();
+    const auto ok = csp_->set_auto_start_defense_session_on_next_send();
 
     {
         // send the response
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_RESP_MSG_AND_SEND_AT_END(
             SetAutoStartDefenseOnNextSendResp, bufbuilder, id);
-        msgbuilder.add_ok(true);
+        msgbuilder.add_ok(ok);
     }
 }
 

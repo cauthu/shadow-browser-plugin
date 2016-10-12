@@ -18,7 +18,7 @@ class ClientHandler;
 class ClientSideProxy;
 
 
-typedef boost::function<void(ClientSideProxy*)> CSPReadyCb;
+typedef boost::function<void(ClientSideProxy*, bool ok)> CSPStatusCb;
 
 
 class ClientSideProxy : public Object
@@ -58,15 +58,15 @@ public:
     enum class EstablishReturnValue
     {
         PENDING /* ok, the reconnect is taking place. will call
-                 * CSPReadyCb when ready */,
+                 * CSPStatusCb when ready */,
         ALREADY_READY /* the tunnel is currently ready, and reconnect
-                       * was not forced. the CSPReadyCb will NOT be
+                       * was not forced. the CSPStatusCb will NOT be
                        * called */,
     };
 
-    EstablishReturnValue establish_tunnel(CSPReadyCb, const bool force_reconnect=true);
+    EstablishReturnValue establish_tunnel(CSPStatusCb, const bool force_reconnect=true);
 
-    void set_auto_start_defense_session_on_next_send();
+    bool set_auto_start_defense_session_on_next_send();
     void stop_defense_session(const bool& right_now);
 
     const uint64_t all_recv_byte_count_so_far() const;
@@ -94,6 +94,9 @@ protected:
 
 
     //////////////
+
+    /* clear the tunnel, the client handlers, pause accepting, etc. */
+    void _reset_to_initial();
 
     void _on_connected_to_ssp();
 
@@ -128,17 +131,23 @@ protected:
 
     enum class State {
         INITIAL,
-        // Connecting to socks5 proxy
+
+        // Connecting to socks5 proxy... the proxy states are optional
+        // and skipped if we connecting directly to ssp
         PROXY_CONNECTING,
         PROXY_CONNECTED,
         PROXY_FAILED,
-        // Connecting to target (either ssp or destination webserver)
-        // -- possibly through socks proxy
+
+        // Connecting to ssp
         CONNECTING,
+            CONNECTED,
+
+            SETTING_UP_BUFLO_CHANNEL,
+
         READY,
     } state_;
 
-    CSPReadyCb ready_cb_;
+    CSPStatusCb csp_status_cb_;
 
     std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
 

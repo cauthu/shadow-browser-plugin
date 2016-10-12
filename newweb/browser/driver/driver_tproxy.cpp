@@ -52,7 +52,7 @@ void
 Driver::_tproxy_on_ipc_msg(GenericIpcChannel*, uint8_t,
                            uint16_t, const uint8_t *)
 {
-    logself(FATAL) << "not reached";
+    logself(WARNING) << "ignoring msgs from tproxy";
 }
 
 void
@@ -79,7 +79,7 @@ Driver::_tproxy_maybe_establish_tunnel()
         BEGIN_BUILD_CALL_MSG_AND_SEND_AT_END(
             EstablishTunnel, bufbuilder,
             boost::bind(&Driver::_tproxy_on_establish_tunnel_resp, this, _2, _3, _4),
-            30);
+            15);
         msgbuilder.add_forceReconnect(true);
     }
 
@@ -95,17 +95,23 @@ Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
     CHECK_EQ(state_, State::ESTABLISH_TPROXY_TUNNEL);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "timed out establishing tunnel";
+        // just warn. we'll just proceed to load the page, and we'll
+        // get the error that way when the csp won't be able to serve
+        // our requests
+        logself(WARNING) << "timed out establishing tunnel";
+    } else {
+        auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
+        if (!msg->tunnelIsReady()) {
+            logself(WARNING) << "tunnel is not ready";
+        }
+
+        logself(INFO) << "CSP allRecvByteCountSoFar: " << msg->allRecvByteCountSoFar()
+                      << " usefulRecvByteCountSoFar: " << msg->usefulRecvByteCountSoFar();
     }
-
-    auto msg = tproxymsgs::GetEstablishTunnelRespMsg(buf);
-    CHECK(msg->tunnelIsReady());
-
-    logself(INFO) << "CSP allRecvByteCountSoFar: " << msg->allRecvByteCountSoFar()
-                  << " usefulRecvByteCountSoFar: " << msg->usefulRecvByteCountSoFar();
 
     state_ = State::DONE_ESTABLISH_TPROXY_TUNNEL;
 
+    // proceed any way, maybe by the time we try this it will be ready
     _tproxy_set_auto_start_defense_on_next_send();
 
     vlogself(2) << "done";
@@ -144,13 +150,15 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
     CHECK_EQ(state_, State::SET_TPROXY_AUTO_START);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
-        logself(FATAL) << "command timed out";
+        logself(WARNING) << "timed out setting tunnel auto start";
+    } else {
+        auto msg = tproxymsgs::GetSetAutoStartDefenseOnNextSendRespMsg(buf);
+        if (!msg->ok()) {
+            logself(WARNING) << "couldn't set tunnel auto start";
+        } else {
+            logself(INFO) << "tproxy is ready";
+        }
     }
-
-    auto msg = tproxymsgs::GetSetAutoStartDefenseOnNextSendRespMsg(buf);
-    CHECK(msg->ok());
-
-    vlogself(2) << "tproxy is ready";
 
     state_ = State::DONE_SET_TPROXY_AUTO_START;
 

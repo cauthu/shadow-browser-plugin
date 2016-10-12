@@ -1,5 +1,6 @@
 
 
+#include <utility>
 #include <boost/bind.hpp>
 
 #include "../../utility/tcp_server.hpp"
@@ -68,14 +69,14 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
 }
 
 ClientSideProxy::EstablishReturnValue
-ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
+ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
                                   const bool forceReconnect)
 {
     vlogself(2) << "begin";
 
     CHECK((state_ == State::INITIAL) || (state_ == State::READY));
 
-    ready_cb_ = ready_cb;
+    csp_status_cb_ = status_cb;
 
     if (state_ == State::READY) {
         vlogself(2) << "currently ready";
@@ -85,26 +86,9 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
 
         vlogself(2) << "being forced to reestablish";
 
-        CHECK(!socks_connector_);
-        CHECK(!peer_channel_);
-
-        auto rv = stream_server_->pause_accepting();
-        CHECK(rv);
-
         _update_recv_byte_counts();
 
-        /* note that this calls destructors of the client handler, and
-         * those destructors used to notify our
-         * _on_client_handler_done() which will retry to delete the
-         * handler again causing double free. the fix we have employed
-         * is to make the handler not notify us when they're being
-         * destroyed. an alternative fix is for us to swap the
-         * client_handlers_ map with a local here that we clear, so
-         * when notified later, our client_handlers_ is empty and so
-         * we won't double free the handler */
-        client_handlers_.clear();
-
-        buflo_ch_.reset();
+        _reset_to_initial();
     }
 
     state_ = State::INITIAL;
@@ -131,21 +115,30 @@ ClientSideProxy::establish_tunnel(CSPReadyCb ready_cb,
     return EstablishReturnValue::PENDING;
 }
 
-void
+bool
 ClientSideProxy::set_auto_start_defense_session_on_next_send()
 {
-    CHECK_EQ(state_, State::READY);
+    if (state_ != State::READY) {
+        logself(WARNING)
+            << "cannot set auto start because channel is not ready";
+        return false;
+    }
+
     CHECK_NOTNULL(buflo_ch_.get());
 
     buflo_ch_->set_auto_start_defense_session_on_next_send();
 
     logself(INFO) << "will start defense on next send";
+    return true;
 }
 
 void
 ClientSideProxy::stop_defense_session(const bool& right_now)
 {
-    CHECK_EQ(state_, State::READY);
+    if (state_ != State::READY) {
+        logself(WARNING) << "channel is not ready";
+        return;
+    }
     CHECK_NOTNULL(buflo_ch_.get());
 
     buflo_ch_->stop_defense_session(right_now);
@@ -178,7 +171,13 @@ ClientSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noe
 {
     vlogself(2) << "a new proxy client";
 
-    CHECK_EQ(state_, State::READY) << "for simplicity, should start client traffic only once the proxy is ready";
+    if (state_ != State::READY) {
+        logself(WARNING) << "reject client traffic since the we're not ready";
+        vlogself(2) << "client channel: " << channel->objId();
+        // don't need to close the "channel" because it's a unique
+        // pointer so it will auto clean up when we return
+        return;
+    }
 
     ClientHandler::UniquePtr chandler(
         new ClientHandler(std::move(channel), buflo_ch_.get(),
@@ -225,7 +224,7 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
     }
     else if (state_ == State::CONNECTING) {
         vlogself(2) << "connected to peer";
-        state_ = State::READY;
+        state_ = State::CONNECTED;
         _on_connected_to_ssp();
     }
     else {
@@ -251,7 +250,7 @@ ClientSideProxy::onSocksTargetConnectResult(
         socks_connector_.reset();
 
         vlogself(2) << "connected to target (thru socks proxy)";
-        state_ = State::READY;
+        state_ = State::CONNECTED;
 
         _on_connected_to_ssp();
 
@@ -276,6 +275,8 @@ ClientSideProxy::_on_connected_to_ssp()
 
     peer_channel_.reset();
 
+    CHECK_EQ(state_, State::CONNECTED);
+
     logself(INFO) << "... connected to ssp at transport level";
 
     buflo_ch_.reset(
@@ -287,29 +288,35 @@ ClientSideProxy::_on_connected_to_ssp()
             NULL
             ));
     CHECK_NOTNULL(buflo_ch_.get());
+
+    state_ = State::SETTING_UP_BUFLO_CHANNEL;
 }
 
 void
 ClientSideProxy::onConnectError(StreamChannel* ch, int errorcode) noexcept
 {
-    LOG(FATAL) << "error connecting to SSP: ["
+    LOG(FATAL) << "error connecting to SSP (or socks proxy): ["
                << evutil_socket_error_to_string(errorcode) << "]";
 }
 
 void
 ClientSideProxy::onConnectTimeout(StreamChannel*) noexcept
 {
-    LOG(FATAL) << "timed out connecting to SSP";
+    LOG(FATAL) << "timed out connecting to SSP (or socks proxy)";
 }
 
 void
 ClientSideProxy::start_accepting_clients()
 {
-    auto rv = stream_server_->start_listening();
-    CHECK(rv);
+    if (!stream_server_->is_listening()) {
+        auto rv = stream_server_->start_listening();
+        CHECK(rv);
+    }
 
-    rv = stream_server_->start_accepting();
-    CHECK(rv);
+    if (!stream_server_->is_accepting()) {
+        auto rv = stream_server_->start_accepting();
+        CHECK(rv);
+    }
 }
 
 void
@@ -324,13 +331,54 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
         // now we can start accepting client connections
         stream_server_->set_observer(this);
 
-        ready_cb_(this);
+        state_ = State::READY;
+
+        csp_status_cb_(this, true);
+
     } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
         _update_recv_byte_counts();
+
+#ifdef IN_SHADOW
+
+        LOG(WARNING) << "buflo channel is closed, so we're resetting to "
+                     << "initial state and then notify user";
+        _reset_to_initial();
+
+        csp_status_cb_(this, false);
+
+#else
         LOG(FATAL) << "buflo channel is closed, so we're exiting";
+#endif
+
     } else {
         LOG(FATAL) << "unknown channel status";
     }
+}
+
+void
+ClientSideProxy::_reset_to_initial()
+{
+    /* note that this calls destructors of the client handler, and
+     * those destructors used to notify our _on_client_handler_done()
+     * which will retry to delete the handler again causing double
+     * free. the fix we have employed is to make the handler not
+     * notify us when they're being destroyed. but to be safe, we also
+     * swap the client_handlers_ map with a local here that we clear,
+     * so when notified later, our client_handlers_ is empty and so we
+     * won't double free the handler */
+    decltype(client_handlers_) tmp;
+    std::swap(tmp, client_handlers_);
+    CHECK(client_handlers_.empty());
+    tmp.clear();
+
+    peer_channel_.reset();
+    socks_connector_.reset();
+    buflo_ch_.reset();
+
+    /* we'll just keep accepting. when clients connect we'll
+     * immediately close if we're not ready */
+    // stream_server_->pause_accepting();
+    state_ = State::INITIAL;
 }
 
 void
