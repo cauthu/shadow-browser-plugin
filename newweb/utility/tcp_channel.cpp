@@ -603,8 +603,11 @@ TCPChannel::_on_eof()
 {
     vlogself(2) << "begin";
     // assuming desctructorguard already set up
-    // close();
-    DCHECK_NOTNULL(observer_);
+#ifndef IN_SHADOW
+    close();
+#endif
+
+    CHECK_NOTNULL(observer_);
     observer_->onEOF(this);
     vlogself(2) << "done";
 }
@@ -614,8 +617,11 @@ TCPChannel::_on_error()
 {
     vlogself(2) << "begin";
     // assuming desctructorguard already set up
-    // close();
-    DCHECK_NOTNULL(observer_);
+#ifndef IN_SHADOW
+    close();
+#endif
+
+    CHECK_NOTNULL(observer_);
     observer_->onError(this, errno);
     vlogself(2) << "done";
 }
