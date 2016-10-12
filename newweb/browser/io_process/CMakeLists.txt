@@ -27,23 +27,31 @@ set(IO_PROCESS_SOURCES
 set(LINK_LIBS ${EVENT2_LIBRARIES} ${SPDYLAY_LIBRARIES})
 
 
-## create and install a shared library that can plug into shadow
-add_definitions(-DIN_SHADOW)
-add_shadow_plugin(shadow-plugin-io_process ${IO_PROCESS_SOURCES})
-target_link_libraries(shadow-plugin-io_process ${LINK_LIBS})
-install(TARGETS shadow-plugin-io_process DESTINATION plugins)
 
-# "add_dependencies(shadow-plugin-io_process" won't work because
-# building the bitcode will fail without the
-# ioservice_messages_generated.h
-add_dependencies(shadow-plugin-io_process-bitcode io_service_ipc_messages_flatbuffers)
+if(NOT "${CMAKE_SKIP_PLUGINS}" STREQUAL "yes")
+
+  ## create and install a shared library that can plug into shadow
+  add_definitions(-DIN_SHADOW)
+  add_shadow_plugin(shadow-plugin-io_process ${IO_PROCESS_SOURCES})
+  target_link_libraries(shadow-plugin-io_process ${LINK_LIBS})
+  install(TARGETS shadow-plugin-io_process DESTINATION plugins)
+
+  # "add_dependencies(shadow-plugin-io_process" won't work because
+  # building the bitcode will fail without the
+  # ioservice_messages_generated.h
+  add_dependencies(shadow-plugin-io_process-bitcode io_service_ipc_messages_flatbuffers)
+
+endif()
 
 
+if("${CMAKE_BUILD_NATIVE_PROCESSES}" STREQUAL "yes")
 
-## create and install an executable that can run outside of shadow
-remove_definitions(-DIN_SHADOW)
-add_executable(io_process ${IO_PROCESS_SOURCES})
-target_link_libraries(io_process ${LINK_LIBS})
-install(TARGETS io_process DESTINATION bin)
+  ## create and install an executable that can run outside of shadow
+  remove_definitions(-DIN_SHADOW)
+  add_executable(io_process ${IO_PROCESS_SOURCES})
+  target_link_libraries(io_process ${LINK_LIBS})
+  install(TARGETS io_process DESTINATION bin)
 
-add_dependencies(io_process io_service_ipc_messages_flatbuffers)
+  add_dependencies(io_process io_service_ipc_messages_flatbuffers)
+
+endif()

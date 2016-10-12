@@ -100,24 +100,34 @@ set(IPC_MSG_BUFS
   renderer_ipc_messages_flatbuffers
 )
 
-## create and install a shared library that can plug into shadow
-add_definitions(-DIN_SHADOW)
-add_shadow_plugin(shadow-plugin-render_process ${RENDER_PROCESS_SOURCES})
-target_link_libraries(shadow-plugin-render_process ${LINK_LIBS})
-install(TARGETS shadow-plugin-render_process DESTINATION plugins)
 
-add_dependencies(
-  shadow-plugin-render_process-bitcode
-  ${IPC_MSG_BUFS}
-)
+if(NOT "${CMAKE_SKIP_PLUGINS}" STREQUAL "yes")
 
-## create and install an executable that can run outside of shadow
-remove_definitions(-DIN_SHADOW)
-add_executable(render_process ${RENDER_PROCESS_SOURCES})
-target_link_libraries(render_process ${LINK_LIBS})
-install(TARGETS render_process DESTINATION bin)
+  ## create and install a shared library that can plug into shadow
+  add_definitions(-DIN_SHADOW)
+  add_shadow_plugin(shadow-plugin-render_process ${RENDER_PROCESS_SOURCES})
+  target_link_libraries(shadow-plugin-render_process ${LINK_LIBS})
+  install(TARGETS shadow-plugin-render_process DESTINATION plugins)
 
-add_dependencies(
-  render_process
-  ${IPC_MSG_BUFS}
-)
+  add_dependencies(
+    shadow-plugin-render_process-bitcode
+    ${IPC_MSG_BUFS}
+    )
+
+endif()
+
+
+if("${CMAKE_BUILD_NATIVE_PROCESSES}" STREQUAL "yes")
+
+  ## create and install an executable that can run outside of shadow
+  remove_definitions(-DIN_SHADOW)
+  add_executable(render_process ${RENDER_PROCESS_SOURCES})
+  target_link_libraries(render_process ${LINK_LIBS})
+  install(TARGETS render_process DESTINATION bin)
+
+  add_dependencies(
+    render_process
+    ${IPC_MSG_BUFS}
+    )
+
+endif()
