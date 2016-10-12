@@ -35,11 +35,14 @@ find_package(OPENSSL REQUIRED)
 # include_directories(AFTER ${CMAKE_CURRENT_BINARY_DIR})
 include_directories(AFTER ${MY_ROOT_BUILD_DIR})
 
-message(STATUS "Disabling easylogging verbose and debug logging\n")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  message(STATUS "Disabling easylogging verbose and debug logging\n")
 
-add_definitions(-DELPP_DISABLE_VERBOSE_LOGS)
+  add_definitions(-DELPP_DISABLE_VERBOSE_LOGS -DELPP_DISABLE_DEBUG_LOGS)
 
-add_definitions(-DELPP_NO_DEFAULT_LOG_FILE -DELPP_DISABLE_DEBUG_LOGS)
+endif()
+
+add_definitions(-DELPP_NO_DEFAULT_LOG_FILE)
 add_definitions(-DELPP_DEBUG_ASSERT_FAILURE -DELPP_STACKTRACE_ON_CRASH)
 
 add_subdirectory(utility)
