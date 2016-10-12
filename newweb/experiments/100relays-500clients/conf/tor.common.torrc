@@ -6,7 +6,7 @@ ServerDNSTestAddresses 4uthority1
 ServerDNSAllowBrokenConfig 1
 ServerDNSDetectHijacking 0
 NumCPUs 1
-Log info stdout
+Log notice stdout
 SafeLogging 0
 WarnUnsafeSocks 0
 ContactInfo shadow-support@cs.umn.edu
