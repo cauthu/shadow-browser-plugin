@@ -358,8 +358,24 @@ TCPChannel::_set_read_monitoring(bool enabled)
 {
     CHECK_EQ(state_, ChannelState::SOCKET_CONNECTED);
     if (enabled) {
+
+        /* poll to check for socket close
+         *
+         * we want to use EV_WRITE to be notified that socket is
+         * closed... but shadow doesn't support edge-triggered event,
+         * so we will repeatedly get the EV_WRITE event for an idle
+         * socket. so we can't use it; same reason we have to use
+         * _maybe_toggle_write_monitoring() -- lack of edge-triggered
+         * event support. so we use a polling method: set a time out
+         * on the read event, and we try to read on timeout, and it
+         * should return no bytes
+         */
+        struct timeval timeout_tv;
+        timeout_tv.tv_sec = 5;
+        timeout_tv.tv_usec = 0;
+
         vlogself(3) << "start monitoring read event for fd= " << fd_;
-        auto rv = event_add(socket_read_ev_.get(), nullptr);
+        auto rv = event_add(socket_read_ev_.get(), &timeout_tv);
         CHECK_EQ(rv, 0);
     } else {
         vlogself(3) << "STOP monitoring read event for fd= " << fd_;
@@ -415,8 +431,18 @@ TCPChannel::_on_socket_readcb(int fd, short what)
                 _handle_non_successful_socket_io("read", rv, true);
             }
         }
+    } else if (what & EV_TIMEOUT) {
+        // check to see if connection is still alive
+        char buf[1];
+        // we assume that we won't get here if there actually is data
+        // to read, i.e., we should have gotten EV_READ
+        // above. therefore read() should return either 0 or error or
+        // EAGAIN
+        const auto rv = ::read(fd_, buf, sizeof buf);
+        CHECK_LE(rv, 0) << "rv= " << rv;
+        _handle_non_successful_socket_io("readToCheckForClose", rv, true);
     } else {
-        CHECK(0) << "invalid events: " << what;
+        CHECK(0) << "invalid events: " << unsigned(what);
     }
 
     vlogself(3) << "done";
@@ -522,7 +548,7 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
                                              const ssize_t rv,
                                              const bool crash_if_EINPROGRESS)
 {
-    vlogself(2) << "begin, io_op_str: " << io_op_str
+    vlogself(3) << "begin, io_op_str: " << io_op_str
                 << ", error: " << strerror(errno);
 
     if (rv == 0) {
@@ -548,7 +574,7 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
         }
     }
 
-    vlogself(2) << "done";
+    vlogself(3) << "done";
 }
 
 void
