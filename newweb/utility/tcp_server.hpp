@@ -25,6 +25,7 @@ public:
     virtual void set_observer(myio::StreamServerObserver*) override;
 
     virtual bool is_listening() const override { return listening_ ;}
+    virtual bool is_accepting() const override { return state_ == ServerState::ACCEPTING; }
 
 protected:
 

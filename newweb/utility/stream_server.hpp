@@ -31,6 +31,7 @@ public:
     virtual void set_observer(StreamServerObserver*) = 0;
 
     virtual bool is_listening() const = 0;
+    virtual bool is_accepting() const = 0;
 };
 
 }
