@@ -98,7 +98,9 @@ protected:
     void _pump_spdy_send();
     void _pump_spdy_recv();
 
+    void _send_my_info();
     void _read_peer_info();
+    void _close_socket_and_events();
 
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_control_cell_to_outbuf() { CHECK(0) << "todo"; return false; }

@@ -71,9 +71,10 @@ using std::bitset;
 
 */
 
+static const uint8_t s_version = 2;
 
-/* 2 bytes for cell size and 4 for address */
-#define PEER_INFO_NUM_BYTES (2 + 4)
+/* 1 byte for version, 2 for cell size, and 4 for address */
+#define PEER_INFO_NUM_BYTES (1 + 2 + 4)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -237,7 +238,8 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         CHECK((tamaraw_L == 0) & (tamaraw_pkt_intvl_ms_ == 0));
     }
 
-    logself(INFO) << "using cell size= " << cell_size_
+    logself(INFO) << "my version= " << unsigned(s_version)
+                  << " using cell size= " << cell_size_
                   << " interval= " << tamaraw_pkt_intvl_ms_
                   << " L= " << tamaraw_L_
                   << " time limit= " << defense_session_time_limit_;
@@ -283,16 +285,24 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         // can confuse our csp when it tells the tcp channel to
         // release the fd (see issue #4
         // https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/4/)
-        const uint16_t cs = htons(cell_size_);
-        rv = write(fd_, (uint8_t*)&cs, 2);
-        CHECK_EQ(rv, 2);
-
-        const in_addr_t addr = htonl(myaddr_);
-        rv = write(fd_, (uint8_t*)&addr, 4);
-        CHECK_EQ(rv, 4);
+        _send_my_info();
     }
 
-    rv = event_add(socket_read_ev_.get(), nullptr);
+    /* poll to check for socket close
+     *
+     * we want to use EV_WRITE to be notified that socket is
+     * closed... but shadow doesn't support edge-triggered event, so
+     * we will repeatedly get the EV_WRITE event for an idle
+     * socket. so we can't use it; same reason we have to use
+     * _maybe_toggle_write_monitoring() -- lack of edge-triggered
+     * event support. so we use a polling method: set a time out on
+     * the read event, and we try to read on timeout, and it should
+     * return no bytes
+     */
+    struct timeval timeout_tv;
+    timeout_tv.tv_sec = 5;
+    timeout_tv.tv_usec = 0;
+    rv = event_add(socket_read_ev_.get(), &timeout_tv);
     CHECK_EQ(rv, 0);
 
     _self_test_bit_manipulation();
@@ -1210,15 +1220,17 @@ BufloMuxChannelImplSpdy::_on_socket_error()
 void
 BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 {
-    vlogself(2) << "begin";
+    vlogself(2) << "begin, what= " << unsigned(what);
 
     DestructorGuard dg(this);
 
     if (what & EV_READ) {
         if (need_to_read_peer_info_) {
-            const auto still_need = PEER_INFO_NUM_BYTES - evbuffer_get_length(peer_info_inbuf_);
+            const auto still_need =
+                PEER_INFO_NUM_BYTES - evbuffer_get_length(peer_info_inbuf_);
             CHECK(still_need > 0);
             const auto rv = evbuffer_read(peer_info_inbuf_, fd_, still_need);
+            CHECK(evbuffer_get_length(peer_info_inbuf_) <= PEER_INFO_NUM_BYTES);
             if (evbuffer_get_length(peer_info_inbuf_) == PEER_INFO_NUM_BYTES) {
                 _read_peer_info();
             }
@@ -1234,8 +1246,18 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
                 _handle_failed_socket_io("read", rv, true);
             }
         }
+    } else if (what & EV_TIMEOUT) {
+        // check to see if connection is still alive
+        char buf[1];
+        // we assume that we won't get here if there actually is data
+        // to read, i.e., we should have gotten EV_READ
+        // above. therefore read() should return either 0 or error or
+        // EAGAIN
+        const auto rv = read(fd_, buf, sizeof buf);
+        CHECK_LE(rv, 0) << "rv= " << rv;
+        _handle_failed_socket_io("readToCheckForClose", rv, true);
     } else {
-        CHECK(0) << "invalid events: " << what;
+        CHECK(0) << "invalid events: " << unsigned(what);
     }
 
     vlogself(2) << "done";
@@ -1287,13 +1309,22 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    auto rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_cell_size_, 2);
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4),
+                  "unexpected PEER_INFO_NUM_BYTES");
+
+    uint8_t peer_version = 0;
+
+    auto rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_version, 1);
+    CHECK_EQ(rv, 1);
+    rv = evbuffer_drain(peer_info_inbuf_, 1);
+    CHECK_EQ(rv, 0);
+
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_cell_size_, 2);
     CHECK_EQ(rv, 2);
     rv = evbuffer_drain(peer_info_inbuf_, 2);
     CHECK_EQ(rv, 0);
 
     peer_cell_size_ = ntohs(peer_cell_size_);
-    vlogself(2) << "peer using cell size: " << peer_cell_size_;
 
     peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
 
@@ -1305,23 +1336,48 @@ BufloMuxChannelImplSpdy::_read_peer_info()
 
     struct in_addr ip_addr;
     ip_addr.s_addr = peeraddr;
-    logself(INFO) << "peer IP is " << inet_ntoa(ip_addr);
+    logself(INFO) << "peer IP is " << inet_ntoa(ip_addr)
+                  << " version= " << unsigned(peer_version)
+                  << " using cell size= " << peer_cell_size_;
 
     if (!is_client_side_) {
         // server-side can now send our cell size
-        const uint16_t cs = htons(cell_size_);
-        rv = write(fd_, (uint8_t*)&cs, 2);
-        CHECK_EQ(rv, 2);
+        _send_my_info();
+    }
 
-        const in_addr_t addr = htonl(myaddr_);
-        rv = write(fd_, (uint8_t*)&addr, 4);
-        CHECK_EQ(rv, 4);
+    if (peer_version != s_version) {
+        logself(WARNING)
+            << "version mismatch: mine is " << unsigned(s_version)
+            << " peer's is " << unsigned(peer_version);
+        if (is_client_side_) {
+            logself(FATAL) << "use correct client version";
+        } else {
+            logself(WARNING) << "tearing down connection with peer";
+            _close_socket_and_events();
+            ch_status_cb_(this, ChannelStatus::CLOSED);
+            return;
+        }
     }
 
     need_to_read_peer_info_ = false;
 
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::READY);
+}
+
+void
+BufloMuxChannelImplSpdy::_send_my_info()
+{
+    auto rv = write(fd_, (uint8_t*)&s_version, 1);
+    CHECK_EQ(rv, 1);
+
+    const uint16_t cs = htons(cell_size_);
+    rv = write(fd_, (uint8_t*)&cs, 2);
+    CHECK_EQ(rv, 2);
+
+    const in_addr_t addr = htonl(myaddr_);
+    rv = write(fd_, (uint8_t*)&addr, 4);
+    CHECK_EQ(rv, 4);
 }
 
 void
@@ -1825,7 +1881,8 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
     return retval;
 }
 
-BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
+void
+BufloMuxChannelImplSpdy::_close_socket_and_events()
 {
     // delete these events BEFORE closing the fd; this seems to fix
     // issue #6
@@ -1836,6 +1893,11 @@ BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
         ::close(fd_);
         fd_ = -1;
     }
+}
+
+BufloMuxChannelImplSpdy::~BufloMuxChannelImplSpdy()
+{
+    _close_socket_and_events();
 
 #define FREE_EVBUF(buf)                         \
     do {                                        \
