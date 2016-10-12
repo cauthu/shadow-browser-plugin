@@ -1223,7 +1223,7 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 
     DestructorGuard dg(this);
 
-    if (what & EV_READ) {
+    if (what & (EV_READ | EV_TIMEOUT)) {
         if (need_to_read_peer_info_) {
             const auto still_need =
                 PEER_INFO_NUM_BYTES - evbuffer_get_length(peer_info_inbuf_);
@@ -1245,16 +1245,6 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
                 _handle_failed_socket_io("read", rv, true);
             }
         }
-    } else if (what & EV_TIMEOUT) {
-        // check to see if connection is still alive
-        char buf[1];
-        // we assume that we won't get here if there actually is data
-        // to read, i.e., we should have gotten EV_READ
-        // above. therefore read() should return either 0 or error or
-        // EAGAIN
-        const auto rv = read(fd_, buf, sizeof buf);
-        CHECK_LE(rv, 0) << "rv= " << rv;
-        _handle_failed_socket_io("readToCheckForClose", rv, true);
     } else {
         CHECK(0) << "invalid events: " << unsigned(what);
     }

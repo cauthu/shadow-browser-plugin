@@ -412,7 +412,7 @@ TCPChannel::_on_socket_readcb(int fd, short what)
 
     DestructorGuard dg(this);
 
-    if (what & EV_READ) {
+    if (what & (EV_READ | EV_TIMEOUT)) {
         if (_maybe_dropread()) {
             // should NOT try to empty the socket's read buffer (e.g.,
             // by looping and reading until EAGAIN) because the user
@@ -431,16 +431,6 @@ TCPChannel::_on_socket_readcb(int fd, short what)
                 _handle_non_successful_socket_io("read", rv, true);
             }
         }
-    } else if (what & EV_TIMEOUT) {
-        // check to see if connection is still alive
-        char buf[1];
-        // we assume that we won't get here if there actually is data
-        // to read, i.e., we should have gotten EV_READ
-        // above. therefore read() should return either 0 or error or
-        // EAGAIN
-        const auto rv = ::read(fd_, buf, sizeof buf);
-        CHECK_LE(rv, 0) << "rv= " << rv;
-        _handle_non_successful_socket_io("readToCheckForClose", rv, true);
     } else {
         CHECK(0) << "invalid events: " << unsigned(what);
     }
