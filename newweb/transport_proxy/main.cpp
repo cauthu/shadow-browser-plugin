@@ -1,6 +1,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
+#include <event2/event.h>
 
 #include "../utility/tcp_server.hpp"
 #include "../utility/common.hpp"
@@ -49,6 +50,17 @@ s_on_buflo_channel_ready(csp::ClientSideProxy* csp,
         LOG(INFO) << "will NOT start any defense session";
     }
 }
+
+static void
+s_on_SIGUSR2(int, short, void *arg)
+{
+    auto csp = (csp::ClientSideProxy*)arg;
+    CHECK_NOTNULL(csp);
+
+    LOG(INFO) << "received SIGUSR2; request csp to stop defense";
+    csp->stop_defense_session(false);
+}
+
 #endif
 
 
@@ -250,6 +262,9 @@ int main(int argc, char **argv)
 
 #ifndef IN_SHADOW
 
+    std::unique_ptr<struct event, void(*)(struct event*)> sigusr2_ev(
+        nullptr, event_free);
+
     if (conf.auto_start_defense_session_on_next_send) {
         CHECK(conf.tamaraw_pkt_intvl_ms > 0)
             << "need to specify " << tamaraw_packet_interval_name << " if using "
@@ -289,7 +304,7 @@ int main(int argc, char **argv)
                 return 0;
             }
         }
-
+        
 #endif
 
         if (do_setup_csp) {
@@ -339,6 +354,17 @@ int main(int argc, char **argv)
                 boost::bind(s_on_buflo_channel_ready, _1,
                             conf.auto_start_defense_session_on_next_send),
                 true);
+
+            LOG(INFO) << "setting up SIGUSR2 handler; "
+                      << "use SIGUSR2 to stop an active defense, if any";
+
+            sigusr2_ev.reset(
+                evsignal_new(evbase.get(), SIGUSR2, s_on_SIGUSR2, csp.get()));
+            CHECK_NOTNULL(sigusr2_ev.get());
+
+            const auto rv2 = event_add(sigusr2_ev.get(), nullptr);
+            CHECK_EQ(rv2, 0);
+
 #endif
 
         } else {
