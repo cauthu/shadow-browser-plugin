@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <boost/bind.hpp>
 
+#include <sys/types.h>
+#include <sys/socket.h>
+
 #include "tcp_channel.hpp"
 #include "easylogging++.h"
 #include "common.hpp"
@@ -329,10 +332,21 @@ TCPChannel::_on_socket_connect_eventcb(int fd, short what)
     CHECK_EQ(rv, 0);
 
     if ((what & EV_WRITE) || (what & EV_READ)) {
-        state_ = ChannelState::SOCKET_CONNECTED;
-        _set_read_monitoring(true);
-        _maybe_toggle_write_monitoring();
-        connect_observer_->onConnected(this);
+        int sockerror = 0;
+        unsigned int optlen = sizeof sockerror;
+
+        const auto rv = getsockopt(fd_, SOL_SOCKET, SO_ERROR, &sockerror, &optlen);
+        if (!rv && !sockerror) {
+            state_ = ChannelState::SOCKET_CONNECTED;
+            _set_read_monitoring(true);
+            _maybe_toggle_write_monitoring();
+            connect_observer_->onConnected(this);
+        } else {
+            vlogself(1) << "getsockopt() rv= " << rv
+                        << " sockerror= " << sockerror;
+            close();
+            connect_observer_->onConnectError(this, sockerror);
+        }
     }
     else if (what & EV_TIMEOUT) {
         close();
