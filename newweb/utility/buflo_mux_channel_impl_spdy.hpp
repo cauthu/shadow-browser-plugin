@@ -45,7 +45,11 @@ public:
      * if 0 is speficied, will use default_defense_session_time_limit
      */
 
+#ifdef IN_SHADOW
     static const uint32_t default_defense_session_time_limit = 180;
+#else
+    static const uint32_t default_defense_session_time_limit = 30;
+#endif
 
     BufloMuxChannelImplSpdy(struct event_base*, int fd, bool is_client_side,
                             const in_addr_t& myaddr,
