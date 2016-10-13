@@ -1,6 +1,6 @@
 <shadow>
   <!-- generated with cmd: /home/nguyen59/shadow-plugin-extras/newweb/tools/generate.py --nauths 1 --nrelays 100 --nclients 500 --nservers 200 --fweb 0.70 --fbulk 0.30 --nperf50k 10 --nperf1m 10 --nperf5m 10 ../alexa-top-1000-ips.csv ../consensuses-2016-03/01/2016-03-01-01-00-00-consensus ../server-descriptors-2016-03 ../extra-infos-2016-03 ../clients.csv -->
-  <kill time="3600"/>
+  <kill time="3300"/>
   <topology path="~/.shadow/share/topology.graphml.xml"/>
   <plugin id="webserver" path="~/.shadow/plugins/libshadow-plugin-webserver.so"/>
   <plugin id="driver" path="~/.shadow/plugins/libshadow-plugin-driver_process.so"/>
