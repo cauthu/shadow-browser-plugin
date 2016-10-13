@@ -210,6 +210,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
                                   ? defense_session_time_limit
                                   : default_defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
+    , num_whole_dummy_cells_avoided_(0)
     , need_to_read_peer_info_(true)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
@@ -1018,6 +1019,7 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
                 << whole_dummy_cell_at_end_outbuf_;
     if (whole_dummy_cell_at_end_outbuf_) {
         vlogself(2) << "no need to add dummy cell";
+        ++num_whole_dummy_cells_avoided_;
         return;
     }
 

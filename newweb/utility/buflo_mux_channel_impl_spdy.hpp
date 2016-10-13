@@ -92,6 +92,7 @@ public:
 
     const uint64_t& all_recv_byte_count() const { return all_recv_byte_count_; }
     const uint64_t& useful_recv_byte_count() const { return all_users_data_recv_byte_count_; }
+    const uint32_t& num_whole_dummy_cells_avoided() const { return num_whole_dummy_cells_avoided_; }
 
 protected:
 
@@ -422,6 +423,11 @@ protected:
 
     // Timer::UniquePtr buflo_timer_;
     bool whole_dummy_cell_at_end_outbuf_;
+    /* number of whole dummy cells we were able to avoid adding (due
+     * to there is already one whole dummy cell at the end of the cell
+     * outbuf)
+     */
+    uint32_t num_whole_dummy_cells_avoided_;
 
     spdylay_session* spdysess_;
 
