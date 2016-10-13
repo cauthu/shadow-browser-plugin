@@ -201,14 +201,11 @@ static void
 check_tamaraw_params(const MyConfig& conf)
 {
     CHECK(conf.tamaraw_pkt_intvl_ms > 0)
-        << "need to specify " << tamaraw_packet_interval_name << " if using "
-        << auto_start_defense_session_on_next_send_name;
+        << "need to specify " << tamaraw_packet_interval_name << " to use tamaraw";
     CHECK(conf.tamaraw_L > 0)
-        << "need to specify " << tamaraw_L_name << " if using "
-        << auto_start_defense_session_on_next_send_name;
+        << "need to specify " << tamaraw_L_name << " to use tamaraw";
     CHECK(conf.tamaraw_time_limit_secs > 0)
-        << "need to specify " << tamaraw_time_limit_secs_name << " if using "
-        << auto_start_defense_session_on_next_send_name;
+        << "need to specify " << tamaraw_time_limit_secs_name << " to use tamaraw";
 
     LOG(INFO) << "tamaraw info:"
               << " packet interval= " << conf.tamaraw_pkt_intvl_ms
