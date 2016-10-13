@@ -164,7 +164,7 @@ Driver::_report_result()
         << ", webmode= vanilla"
         << ", proxyMode= " << browser_proxy_mode_
         << ": loadResult= " << status_str
-        << ": start= " << tpli.load_start_timepoint_
+        << ": startSec= " << (tpli.load_start_timepoint_ / 1000)
         << " plt= " << (pageloadstatus == PageLoadStatus::OK ? plt : 0)
         << " page= [" << page_models_[tpli.page_model_idx_].first << "]"
         << " ttfb= " << (pageloadstatus == PageLoadStatus::OK ? ttfb_ms : 0)
