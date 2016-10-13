@@ -54,6 +54,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , state_(State::INITIAL)
     , all_recv_byte_count_so_far_(0)
     , useful_recv_byte_count_so_far_(0)
+    , num_whole_dummy_cells_avoided_so_far_(0)
     , myaddr_(INADDR_NONE)
 {
     static bool initialized = false;
@@ -89,7 +90,7 @@ ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
     // currently we expect the driver to always force reconnect
     CHECK(forceReconnect) << "todo";
 
-    _update_recv_byte_counts();
+    _update_stats();
 
     _reset_to_initial();
 
@@ -158,12 +159,24 @@ ClientSideProxy::useful_recv_byte_count_so_far() const
     return useful_recv_byte_count_so_far_ + from_channel;
 }
 
+const uint32_t
+ClientSideProxy::num_whole_dummy_cells_avoided_so_far() const
+{
+    const auto from_channel = buflo_ch_ ? buflo_ch_->num_whole_dummy_cells_avoided() : 0;
+    return num_whole_dummy_cells_avoided_so_far_ + from_channel;
+}
+
+/*
+ * this should be called before about to destroy the buflo channel, so
+ * that we can grab its stats
+ */
 void
-ClientSideProxy::_update_recv_byte_counts()
+ClientSideProxy::_update_stats()
 {
     if (buflo_ch_) {
         all_recv_byte_count_so_far_ += buflo_ch_->all_recv_byte_count();
         useful_recv_byte_count_so_far_ += buflo_ch_->useful_recv_byte_count();
+        num_whole_dummy_cells_avoided_so_far_ += buflo_ch_->num_whole_dummy_cells_avoided();
     }
 }
 
@@ -337,7 +350,7 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
         csp_status_cb_(this, true);
 
     } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
-        _update_recv_byte_counts();
+        _update_stats();
 
 #ifdef IN_SHADOW
 
