@@ -46,7 +46,7 @@ public:
      */
 
 #ifdef IN_SHADOW
-    static const uint32_t default_defense_session_time_limit = 180;
+    static const uint32_t default_defense_session_time_limit = 60;
 #else
     static const uint32_t default_defense_session_time_limit = 30;
 #endif
