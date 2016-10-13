@@ -197,6 +197,26 @@ set_my_config(MyConfig& conf,
     }
 }
 
+static void
+check_tamaraw_params(const MyConfig& conf)
+{
+    CHECK(conf.tamaraw_pkt_intvl_ms > 0)
+        << "need to specify " << tamaraw_packet_interval_name << " if using "
+        << auto_start_defense_session_on_next_send_name;
+    CHECK(conf.tamaraw_L > 0)
+        << "need to specify " << tamaraw_L_name << " if using "
+        << auto_start_defense_session_on_next_send_name;
+    CHECK(conf.tamaraw_time_limit_secs > 0)
+        << "need to specify " << tamaraw_time_limit_secs_name << " if using "
+        << auto_start_defense_session_on_next_send_name;
+
+    LOG(INFO) << "tamaraw info:"
+              << " packet interval= " << conf.tamaraw_pkt_intvl_ms
+              << " , L= " << conf.tamaraw_L
+              << " , session time limit= " << conf.tamaraw_time_limit_secs
+        ;
+}
+
 INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char **argv)
@@ -265,22 +285,13 @@ int main(int argc, char **argv)
     std::unique_ptr<struct event, void(*)(struct event*)> sigusr2_ev(
         nullptr, event_free);
 
-    if (conf.auto_start_defense_session_on_next_send) {
-        CHECK(conf.tamaraw_pkt_intvl_ms > 0)
-            << "need to specify " << tamaraw_packet_interval_name << " if using "
-            << auto_start_defense_session_on_next_send_name;
-        CHECK(conf.tamaraw_L > 0)
-            << "need to specify " << tamaraw_L_name << " if using "
-            << auto_start_defense_session_on_next_send_name;
-        CHECK(conf.tamaraw_time_limit_secs > 0)
-            << "need to specify " << tamaraw_time_limit_secs_name << " if using "
-            << auto_start_defense_session_on_next_send_name;
-
-        LOG(INFO) << "tamaraw info:"
-                  << " packet interval= " << conf.tamaraw_pkt_intvl_ms
-                  << " , L= " << conf.tamaraw_L
-                  << " , session time limit= " << conf.tamaraw_time_limit_secs
-            ;
+    /* if either auto start is yes, or any of the tamaraw params is
+     * set, then all must be set
+     */
+    if (conf.auto_start_defense_session_on_next_send ||
+        (conf.tamaraw_pkt_intvl_ms || conf.tamaraw_L || conf.tamaraw_time_limit_secs))
+    {
+        check_tamaraw_params(conf);
     }
 
 #endif
