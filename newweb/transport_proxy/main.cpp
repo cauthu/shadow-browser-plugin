@@ -275,6 +275,12 @@ int main(int argc, char **argv)
         CHECK(conf.tamaraw_time_limit_secs > 0)
             << "need to specify " << tamaraw_time_limit_secs_name << " if using "
             << auto_start_defense_session_on_next_send_name;
+
+        LOG(INFO) << "tamaraw info:"
+                  << " packet interval= " << conf.tamaraw_pkt_intvl_ms
+                  << " , L= " << conf.tamaraw_L
+                  << " , session time limit= " << conf.tamaraw_time_limit_secs
+            ;
     }
 
 #endif
