@@ -180,7 +180,15 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(state_, State::LOADING_PAGE);
+    CHECK_EQ(msg->load_id(), loadnum_)
+        << "expect " << loadnum_ << " got " << msg->load_id();
+
+    if (state_ != State::LOADING_PAGE) {
+        // we're not loading, so just ignore; this can happen when we
+        // time out a page load here, and before we can tell renderer
+        // to stop the page load, it already sent us this msg
+        return;
+    }
 
     logself(INFO) << "DOM \"load\" event has fired; start grace period";
 
@@ -209,6 +217,16 @@ void
 Driver::_renderer_handle_PageLoadFailed(const myipc::renderer::messages::PageLoadFailedMsg* msg)
 {
     vlogself(2) << "begin";
+
+    CHECK_EQ(msg->load_id(), loadnum_)
+        << "expect " << loadnum_ << " got " << msg->load_id();
+
+    if (state_ != State::LOADING_PAGE) {
+        // we're not loading, so just ignore; this can happen when we
+        // time out a page load here, and before we can tell renderer
+        // to stop the page load, it already sent us this msg
+        return;
+    }
 
     logself(WARNING) << "page load has failed";
 
@@ -345,6 +363,7 @@ Driver::_renderer_load_page()
             boost::bind(&Driver::_renderer_on_load_page_resp, this, _2, _3, _4));
 
         msgbuilder.add_model_fpath(model_fpath);
+        msgbuilder.add_load_id(loadnum_);
     }
 
     vlogself(2) << "done";

@@ -18,7 +18,7 @@ class DriverMsgHandler
 {
 
 public:
-    virtual void handle_LoadPage(const char* model_fpath) = 0;
+    virtual void handle_LoadPage(const uint32_t load_id, const char* model_fpath) = 0;
     virtual void handle_Reset() = 0;
 };
 

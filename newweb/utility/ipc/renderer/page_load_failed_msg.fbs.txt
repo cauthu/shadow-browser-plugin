@@ -5,6 +5,8 @@ namespace myipc.renderer.messages;
 
 table PageLoadFailedMsg
 {
+    /* will have the value contained in the LoadPage msg */
+    load_id: uint;
 }
 
 root_type PageLoadFailedMsg;

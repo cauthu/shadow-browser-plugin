@@ -76,7 +76,7 @@ public:
     virtual void handle_RequestComplete(const int& req_id, const bool success) override;
 
     /* DriverMsgHandler interface */
-    void handle_LoadPage(const char* model_fpath) override;
+    void handle_LoadPage(const uint32_t load_id, const char* model_fpath) override;
     void handle_Reset() override;
 
     void msleep(const double ms);
@@ -135,6 +135,8 @@ protected:
             } state_;
 
     uint64_t start_load_time_ms_;
+
+    uint32_t current_load_id_;
 
     /* map from the request id (for IPC!! not the resInstNum) that we
      * generate to the resource for which we're requesting. this is

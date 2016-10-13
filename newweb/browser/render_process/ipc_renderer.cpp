@@ -73,22 +73,25 @@ IPCServer::IPCServer(struct event_base* evbase,
 
 
 void
-IPCServer::send_PageLoaded(const uint64_t ttfb_ms)
+IPCServer::send_PageLoaded(const uint32_t load_id, const uint64_t ttfb_ms)
 {
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(PageLoaded, bufbuilder);
 
+        msgbuilder.add_load_id(load_id);
         msgbuilder.add_ttfb_ms(ttfb_ms);
     }
 }
 
 void
-IPCServer::send_PageLoadFailed()
+IPCServer::send_PageLoadFailed(const uint32_t load_id)
 {
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
         BEGIN_BUILD_MSG_AND_SEND_AT_END(PageLoadFailed, bufbuilder);
+
+        msgbuilder.add_load_id(load_id);
     }
 }
 
@@ -129,7 +132,8 @@ IPCServer::_handle_LoadPage(const uint32_t& id,
     CHECK_EQ(load_call_id_, 0) << load_call_id_;
     load_call_id_ = id;
 
-    driver_msg_handler_->handle_LoadPage(msg->model_fpath()->c_str());
+    driver_msg_handler_->handle_LoadPage(
+        msg->load_id(), msg->model_fpath()->c_str());
 
     {
         // send the response for the call

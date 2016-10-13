@@ -5,6 +5,9 @@ namespace myipc.renderer.messages;
 
 table PageLoadedMsg
 {
+    /* will have the value contained in the LoadPage msg */
+    load_id: uint;
+
     ttfb_ms: ulong;
 }
 

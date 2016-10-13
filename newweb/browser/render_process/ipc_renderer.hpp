@@ -21,8 +21,8 @@ public:
     explicit IPCServer(struct event_base*,
                        myio::StreamServer::UniquePtr);
 
-    void send_PageLoaded(const uint64_t ttfb_ms);
-    void send_PageLoadFailed();
+    void send_PageLoaded(const uint32_t load_id, const uint64_t ttfb_ms);
+    void send_PageLoadFailed(const uint32_t load_id);
     void send_RequestWillBeSent(const uint32_t& resInstNum,
                                 const uint32_t& reqChainIdx);
     void send_RequestFinished(const uint32_t& resInstNum,

@@ -3,6 +3,9 @@ namespace myipc.renderer.messages;
 
 table LoadPageMsg
 {
+    /* will be returned by renderer in the page loaded / failed msg */
+    load_id: uint;
+
     model_fpath: string;
 }
 

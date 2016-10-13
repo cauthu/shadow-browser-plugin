@@ -60,6 +60,7 @@ Webengine::Webengine(
     , as_script_engine_(nullptr)
     , as_script_ctx_(nullptr)
     , start_load_time_ms_(0)
+    , current_load_id_(0)
     , state_(State::IDLE)
     , scheduled_render_tree_update_scope_id_(0)
     , checkCompleted_timer_(
@@ -155,14 +156,21 @@ Webengine::handle_Reset()
 }
 
 void
-Webengine::handle_LoadPage(const char* model_fpath)
+Webengine::handle_LoadPage(const uint32_t load_id,
+                           const char* model_fpath)
 {
     // we are probably doing some of what DocumentLoader does
 
     // tell io service to drop whatever connections, requests, etc. it
     // might have currently
 
-    LOG(INFO) << "start loading page";
+    LOG(INFO) << "start loading page, model [" << model_fpath << "] "
+              << "load id= " << load_id;
+    CHECK_NE(load_id, current_load_id_);
+    CHECK_GT(load_id, 0);
+
+    /* maybe _reset() ?*/
+    // _reset();
 
     page_model_.reset(new PageModel(model_fpath));
 
@@ -179,6 +187,7 @@ Webengine::handle_LoadPage(const char* model_fpath)
     document_->load();
 
     start_load_time_ms_ = common::gettimeofdayMs();
+    current_load_id_ = load_id;
     state_ = State::PAGE_LOADING;
 }
 
@@ -195,6 +204,8 @@ Webengine::_reset_loading_state()
     pending_requests_.clear();
     checkCompleted_timer_->cancel();
     scheduled_render_tree_update_scope_id_ = 0;
+    start_load_time_ms_ = 0;
+    current_load_id_ = 0;
 }
 
 void
@@ -240,8 +251,9 @@ void
 Webengine::_main_resource_failed()
 {
     LOG(WARNING) << "main resource failed to load, so reset and notify user";
+    const auto load_id = current_load_id_;
     _reset();
-    renderer_ipcserver_->send_PageLoadFailed();
+    renderer_ipcserver_->send_PageLoadFailed(load_id);
 }
 
 void
@@ -553,7 +565,7 @@ Webengine::checkCompleted_timer_fired(Timer*)
 
     const auto ttfb_ms = document_->first_byte_time_ms() - start_load_time_ms_;
 
-    renderer_ipcserver_->send_PageLoaded(ttfb_ms);
+    renderer_ipcserver_->send_PageLoaded(current_load_id_, ttfb_ms);
 
     VLOG(2) << "done";
 }
