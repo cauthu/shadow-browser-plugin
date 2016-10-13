@@ -272,6 +272,9 @@ int main(int argc, char **argv)
         CHECK(conf.tamaraw_L > 0)
             << "need to specify " << tamaraw_L_name << " if using "
             << auto_start_defense_session_on_next_send_name;
+        CHECK(conf.tamaraw_time_limit_secs > 0)
+            << "need to specify " << tamaraw_time_limit_secs_name << " if using "
+            << auto_start_defense_session_on_next_send_name;
     }
 
 #endif
