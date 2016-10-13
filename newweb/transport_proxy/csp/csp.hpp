@@ -111,6 +111,9 @@ protected:
      * destroyed, so that we can grab its stats */
     void _update_stats();
 
+    void _log_stats_timer_fired(Timer*);
+    void _schedule_log_timer();
+
     /////////
 
     struct event_base* evbase_;
@@ -160,6 +163,9 @@ protected:
     uint32_t num_whole_dummy_cells_avoided_so_far_;
 
     in_addr_t myaddr_;
+
+    // log stats when current time is a multiple of 30 seconds
+    Timer::UniquePtr log_stats_timer_;
 };
 
 } // namespace csp

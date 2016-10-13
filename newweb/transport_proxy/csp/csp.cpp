@@ -56,6 +56,10 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , useful_recv_byte_count_so_far_(0)
     , num_whole_dummy_cells_avoided_so_far_(0)
     , myaddr_(INADDR_NONE)
+    , log_stats_timer_(
+        new Timer(evbase_, true,
+                  boost::bind(&ClientSideProxy::_log_stats_timer_fired,
+                              this, _1)))
 {
     static bool initialized = false;
 
@@ -71,6 +75,8 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
 
     myaddr_ = ntohl(common::getaddr(myhostname));
     CHECK(myaddr_ && (myaddr_ != INADDR_NONE));
+
+    _schedule_log_timer();
 
     initialized = true;
 }
@@ -400,6 +406,31 @@ ClientSideProxy::_on_client_handler_done(ClientHandler* chandler)
 {
     vlogself(2) << "chandler done; remove it";
     client_handlers_.erase(chandler->objId());
+}
+
+void
+ClientSideProxy::_schedule_log_timer()
+{
+    static const uint64_t interval_ms = 30*1000; // 30 seconds
+    const auto current_time_ms = common::gettimeofdayMs();
+
+    // compute delay so that we'll log when current time is a multiple
+    // of interval
+    const auto delay_ms = (interval_ms - ((current_time_ms) % interval_ms));
+    CHECK(delay_ms <= interval_ms) << "bad delay_ms: " << delay_ms;
+
+    log_stats_timer_->cancel();
+    log_stats_timer_->start(delay_ms);
+}
+
+void
+ClientSideProxy::_log_stats_timer_fired(Timer*)
+{
+    logself(INFO) << "all_recv_byte_count_so_far= " << all_recv_byte_count_so_far()
+                  << " useful_recv_byte_count_so_far= " << useful_recv_byte_count_so_far()
+                  << " num_whole_dummy_cells_avoided_so_far= " << num_whole_dummy_cells_avoided_so_far();
+
+    _schedule_log_timer();
 }
 
 ClientSideProxy::~ClientSideProxy()
