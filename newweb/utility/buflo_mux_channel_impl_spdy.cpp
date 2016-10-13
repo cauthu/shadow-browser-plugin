@@ -1428,7 +1428,7 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_stream_close_cb(spdylay_session *session
 {
     DestructorGuard dg(this);
 
-    vlogself(2) << "begin, sid= " << stream_id;
+    vlogself(2) << "begin, sid= " << stream_id << " code= " << status_code;
     auto *observer = (BufloMuxChannelStreamObserver*)
                      spdylay_session_get_stream_user_data(session, stream_id);
     if (observer) {
