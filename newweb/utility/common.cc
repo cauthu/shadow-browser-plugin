@@ -377,12 +377,26 @@ init_easylogging()
 
    el::Configurations defaultConf;
    defaultConf.setToDefault();
+
+#ifdef IN_SHADOW
+
    defaultConf.setGlobally(
        el::ConfigurationType::Format,
        "%datetime{%h:%m:%s} %level - %fbase :%line, %func ::   %msg");
    defaultConf.set(
        el::Level::Verbose, el::ConfigurationType::Format,
        "%datetime{%h:%m:%s} %level-%vlevel - %fbase :%line, %func ::   %msg");
+
+#else
+
+   defaultConf.setGlobally(
+       el::ConfigurationType::Format,
+       "%datetime %level - %fbase :%line, %func ::   %msg");
+   defaultConf.set(
+       el::Level::Verbose, el::ConfigurationType::Format,
+       "%datetime %level-%vlevel - %fbase :%line, %func ::   %msg");
+
+#endif
 
     // by default easylogging also logs to a default log file
     // "logs/myeasylog.log" every loggable message; we disable that
