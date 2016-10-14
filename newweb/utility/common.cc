@@ -382,10 +382,10 @@ init_easylogging()
 
    defaultConf.setGlobally(
        el::ConfigurationType::Format,
-       "%datetime{%h:%m:%s} %level - %fbase :%line, %func ::   %msg");
+       "%datetime{%h:%m:%s.%g} %level - %fbase :%line, %func ::   %msg");
    defaultConf.set(
        el::Level::Verbose, el::ConfigurationType::Format,
-       "%datetime{%h:%m:%s} %level-%vlevel - %fbase :%line, %func ::   %msg");
+       "%datetime{%h:%m:%s.%g} %level-%vlevel - %fbase :%line, %func ::   %msg");
 
 #else
 
