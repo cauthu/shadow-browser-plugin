@@ -588,16 +588,19 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                       << defense_info_.num_write_attempts;
         buflo_timer_->cancel();
 
-        if (!is_client_side_) {
-            // we are server-side and can just stop -- otherwise might
-            // need to manually send a dummy cell so we can piggyback
-            // the stop flag
-            defense_info_.reset();
-        }
+        // we are finally done according to normal operation
+
+        /* reset so state becomes none so _pump_spdy_send() will
+         * flush. but need to save and restore the
+         * need_stop_flag_in_next_cell
+         */
+
+        const auto saved_bool = defense_info_.need_stop_flag_in_next_cell;
+        defense_info_.reset();
+        defense_info_.need_stop_flag_in_next_cell = saved_bool;
 
         /* this will flush data cells and toggle write monitoring
-         * appropriately since we have reset the defense state to none
-         * above */
+         * appropriately */
         _pump_spdy_send(true);
 
         if (defense_info_.need_stop_flag_in_next_cell) {
@@ -610,22 +613,14 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
             _maybe_drop_whole_dummy_cell_at_end_outbuf(__LINE__, false);
             CHECK(!whole_dummy_cell_at_end_outbuf_);
 
-            /* we could use a control cell, but right now we don't
-             * have any other use for control cells so we don't have
-             * code for creating/handling code for control cells, so
-             * just use dummy
-             */
             _add_ONE_dummy_cell_to_outbuf();
-            CHECK(!defense_info_.need_stop_flag_in_next_cell);
-            defense_info_.reset();
+            CHECK(whole_dummy_cell_at_end_outbuf_);
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         } else {
             vlogself(2) << "the stop flag has been added";
         }
 
-        // reset the defense info --- ok to do blindly; it's
-        // idempotent
-        defense_info_.reset();
+        CHECK(!defense_info_.need_stop_flag_in_next_cell);
 
         goto done;
     } else {
@@ -635,12 +630,17 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                                << "perhaps you forgot to stop defense after "
                                << "you're done with a page load?";
             } else {
+                // we're on ssp
                 logself(WARNING) << "exceeding defense session time limit! "
                                  << "auto-stopping; number of cells sent/attempted: "
                                  << defense_info_.num_write_attempts;
                 buflo_timer_->cancel();
+
+                defense_info_.reset();
                 defense_info_.need_auto_stopped_flag_in_next_cell = true;
+
                 _pump_spdy_send(true);
+
                 if (defense_info_.need_auto_stopped_flag_in_next_cell) {
                     /* the flag could not piggyback on any cell, so we
                      * have to add a control/dummy cell ourselves here
@@ -650,14 +650,11 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                     CHECK(!whole_dummy_cell_at_end_outbuf_);
 
                     _add_ONE_dummy_cell_to_outbuf();
-                    CHECK(!defense_info_.need_auto_stopped_flag_in_next_cell);
-                    defense_info_.reset();
+                    CHECK(whole_dummy_cell_at_end_outbuf_);
                     _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
                 }
 
-                // reset the defense info --- ok to do blindly; it's
-                // idempotent
-                defense_info_.reset();
+                CHECK(!defense_info_.need_auto_stopped_flag_in_next_cell);
 
                 goto done;
             }
@@ -725,7 +722,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
         if (log_flushed_cell_count) {
-            logself(INFO) << "flushed " << num_cells_added << " cells";
+            logself(INFO) << "added " << num_cells_added << " data cells";
         }
     } else if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
         // we want to add only one cell
@@ -1100,17 +1097,20 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
  * returns true if did drop, false if nothing was done
  */
 bool
-BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int from_line,
+BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int called_from_line,
                                                                     const bool do_count)
 {
+#define _WITH_CALLER_CHECK(cond) CHECK(cond) << "(called from line " << called_from_line << ") "
+
     vlogself(2) << "begin";
 
     bool did_drop = false;
 
-    CHECK_NOTNULL(cell_outbuf_);
+    _WITH_CALLER_CHECK(cell_outbuf_);
     auto curbufsize = evbuffer_get_length(cell_outbuf_);
+
     if (whole_dummy_cell_at_end_outbuf_) {
-        CHECK(curbufsize >= cell_size_) << "curbuf size= " << curbufsize;
+        _WITH_CALLER_CHECK(curbufsize >= cell_size_) << "curbuf size= " << curbufsize;
 
         // this is optimization to drop whole dummy cell, because: if
         // at the next timer fired, we have USEFUL data to write, then
@@ -1121,18 +1121,18 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int fr
         // add it again at that time
 
         const auto amnt_to_keep = curbufsize - cell_size_;
-        CHECK(amnt_to_keep >= 0); // just to be sure :D
+        _WITH_CALLER_CHECK(amnt_to_keep >= 0); // just to be sure :D
         if (amnt_to_keep > 0) {
             // there is no api to remove at the end of the
             // buffer, so we replace it
             struct evbuffer* newbuf = evbuffer_new();
-            CHECK_NOTNULL(newbuf);
+            _WITH_CALLER_CHECK(newbuf);
 
             const auto rv = evbuffer_remove_buffer(
                 cell_outbuf_ /* src */,
                 newbuf /* dst */,
                 amnt_to_keep);
-            CHECK_EQ(rv, amnt_to_keep);
+            _WITH_CALLER_CHECK(rv == amnt_to_keep);
 
             evbuffer_free(cell_outbuf_);
             cell_outbuf_ = newbuf;
@@ -1143,14 +1143,17 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int fr
             // whole buf
             vlogself(2) << "drain cell outbuf";
             const auto rv = evbuffer_drain(cell_outbuf_, curbufsize);
-            CHECK_EQ(rv, 0);
+            _WITH_CALLER_CHECK(rv == 0);
         }
 
         curbufsize = evbuffer_get_length(cell_outbuf_);
 
-        CHECK_EQ(curbufsize, amnt_to_keep)
-            << "amnt_to_keep= " << amnt_to_keep;
-        CHECK_LT(curbufsize, cell_size_);
+        _WITH_CALLER_CHECK(curbufsize == amnt_to_keep)
+            << "amnt_to_keep= " << amnt_to_keep << " curbufsize= " << curbufsize;
+        if (defense_info_.state == DefenseState::ACTIVE) {
+            _WITH_CALLER_CHECK(curbufsize < cell_size_)
+                << "curbufsize= " << curbufsize;
+        }
 
         whole_dummy_cell_at_end_outbuf_ = false;
 
@@ -1158,22 +1161,11 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int fr
 
         if (do_count) {
             ++num_whole_dummy_cells_dropped_;
-            vlogself(1) << "woot! dropped a dummy cell, by " << from_line;
+            vlogself(1) << "woot! dropped a dummy cell, by " << called_from_line;
         }
     }
 
-    // // curbufsize must be updated accordingly if dropped dummy cell
-    // // above
-    // if (curbufsize < cell_size_) {
-    //     // need to do this here also because the above drop logic
-    //     // might not have been run if the curbufsize was less than
-    //     // cell_size_ to start with
-    //     whole_dummy_cell_at_end_outbuf_ = false;
-    // } else {
-    //     // if there's at least one whole cell in out buf, there must
-    //     // not be dummy cell at end
-    //     CHECK(!whole_dummy_cell_at_end_outbuf_);
-    // }
+#undef _WITH_CALLER_CHECK
 
     vlogself(2) << "done";
 
