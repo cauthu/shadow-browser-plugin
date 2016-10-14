@@ -325,11 +325,11 @@ protected:
     enum class DefenseState
     {
         NONE = 0,
-            PENDING_FIRST_SOCKET_WRITE /* want to start defense,
+            PENDING_NEXT_SOCKET_SEND /* want to start defense,
                                         * but not until the next
                                         * time we can write to
                                         * socket. i.e., when
-                                        * PENDING_FIRST_SOCKET_WRITE,
+                                        * PENDING_NEXT_SOCKET_SEND,
                                         * the timer is NOT
                                         * running */,
             ACTIVE /* the buflo timer is running */,

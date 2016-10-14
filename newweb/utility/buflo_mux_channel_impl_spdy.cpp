@@ -398,7 +398,7 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
     CHECK_EQ(evbuffer_get_length(spdy_outbuf_), 0);
     CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
 
-    defense_info_.state = DefenseState::PENDING_FIRST_SOCKET_WRITE;
+    defense_info_.state = DefenseState::PENDING_NEXT_SOCKET_SEND;
     CHECK(!defense_info_.need_start_flag_in_next_cell);
     defense_info_.need_start_flag_in_next_cell = true;
 }
@@ -721,7 +721,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
             // there is definitely in out buf so just force enable
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
-    } else if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+    } else if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
         // we want to add only one cell
         const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
         // must have added
@@ -786,7 +786,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
          * socket write or when we're active and has not been
          * requested to stop (presumably because the ssp has
          * auto-stopped and we want it to start again) */
-        CHECK((defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE)
+        CHECK((defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND)
               || (defense_info_.state == DefenseState::ACTIVE && !defense_info_.stop_requested));
         logself(INFO) << "setting the START flag, in a " << cell_type << " cell";
         SET_CELL_START_FLAG(*type_n_flags);
@@ -874,7 +874,7 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
         vlogself(2) << "no need for padding";
     }
 
-    if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+    if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
         ++defense_info_.num_data_cells_added;
         CHECK_EQ(defense_info_.num_data_cells_added, 1);
         // we expect that we are in the pending state only until the
@@ -1428,7 +1428,7 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
             CHECK(!my_peer_info_outbuf_);
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
         } else {
-            if (defense_info_.state == DefenseState::PENDING_FIRST_SOCKET_WRITE) {
+            if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
                 // for now, to keep logic simple, we insist that the
                 // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
                 // check that cell_outbuf_ has one cell
