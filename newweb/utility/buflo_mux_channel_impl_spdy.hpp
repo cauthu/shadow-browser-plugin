@@ -92,7 +92,7 @@ public:
 
     const uint64_t& all_recv_byte_count() const { return all_recv_byte_count_; }
     const uint64_t& useful_recv_byte_count() const { return all_users_data_recv_byte_count_; }
-    const uint32_t& num_whole_dummy_cells_avoided() const { return num_whole_dummy_cells_avoided_; }
+    const uint32_t& num_whole_dummy_cells_dropped() const { return num_whole_dummy_cells_dropped_; }
 
 protected:
 
@@ -113,6 +113,8 @@ protected:
     /* return true if it did add a cell to cell outbuf */
     bool _maybe_add_ONE_data_cell_to_outbuf();
     void _add_ONE_dummy_cell_to_outbuf();
+    bool _maybe_drop_whole_dummy_cell_at_end_outbuf(const int from_line,
+                                                    const bool=true);
 
     void _maybe_set_cell_flags(uint8_t* type_n_flags,
                                const char* cell_type);
@@ -423,11 +425,13 @@ protected:
 
     // Timer::UniquePtr buflo_timer_;
     bool whole_dummy_cell_at_end_outbuf_;
-    /* number of whole dummy cells we were able to avoid adding (due
-     * to there is already one whole dummy cell at the end of the cell
-     * outbuf)
+
+    /* count of those we really dropped, i.e., that are not to be
+     * immediately replaced by a dummy cell.... something we have to
+     * do sometimes if we want to send a flag but there's no data to
+     * piggy-back on
      */
-    uint32_t num_whole_dummy_cells_avoided_;
+    uint32_t num_whole_dummy_cells_dropped_;
 
     spdylay_session* spdysess_;
 

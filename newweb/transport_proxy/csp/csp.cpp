@@ -54,7 +54,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , state_(State::INITIAL)
     , all_recv_byte_count_so_far_(0)
     , useful_recv_byte_count_so_far_(0)
-    , num_whole_dummy_cells_avoided_so_far_(0)
+    , num_whole_dummy_cells_dropped_so_far_(0)
     , myaddr_(INADDR_NONE)
     , log_stats_timer_(
         new Timer(evbase_, true,
@@ -166,10 +166,10 @@ ClientSideProxy::useful_recv_byte_count_so_far() const
 }
 
 const uint32_t
-ClientSideProxy::num_whole_dummy_cells_avoided_so_far() const
+ClientSideProxy::num_whole_dummy_cells_dropped_so_far() const
 {
-    const auto from_channel = buflo_ch_ ? buflo_ch_->num_whole_dummy_cells_avoided() : 0;
-    return num_whole_dummy_cells_avoided_so_far_ + from_channel;
+    const auto from_channel = buflo_ch_ ? buflo_ch_->num_whole_dummy_cells_dropped() : 0;
+    return num_whole_dummy_cells_dropped_so_far_ + from_channel;
 }
 
 /*
@@ -182,7 +182,7 @@ ClientSideProxy::_update_stats()
     if (buflo_ch_) {
         all_recv_byte_count_so_far_ += buflo_ch_->all_recv_byte_count();
         useful_recv_byte_count_so_far_ += buflo_ch_->useful_recv_byte_count();
-        num_whole_dummy_cells_avoided_so_far_ += buflo_ch_->num_whole_dummy_cells_avoided();
+        num_whole_dummy_cells_dropped_so_far_ += buflo_ch_->num_whole_dummy_cells_dropped();
     }
 }
 
@@ -428,7 +428,7 @@ ClientSideProxy::_log_stats_timer_fired(Timer*)
 {
     logself(INFO) << "all_recv_byte_count_so_far= " << all_recv_byte_count_so_far()
                   << " useful_recv_byte_count_so_far= " << useful_recv_byte_count_so_far()
-                  << " num_whole_dummy_cells_avoided_so_far= " << num_whole_dummy_cells_avoided_so_far();
+                  << " num_whole_dummy_cells_dropped_so_far= " << num_whole_dummy_cells_dropped_so_far();
 
     _schedule_log_timer();
 }

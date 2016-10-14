@@ -71,7 +71,7 @@ public:
 
     const uint64_t all_recv_byte_count_so_far() const;
     const uint64_t useful_recv_byte_count_so_far() const;
-    const uint32_t num_whole_dummy_cells_avoided_so_far() const;
+    const uint32_t num_whole_dummy_cells_dropped_so_far() const;
 
     void start_accepting_clients();
 
@@ -160,7 +160,7 @@ protected:
      */
     uint64_t all_recv_byte_count_so_far_;
     uint64_t useful_recv_byte_count_so_far_;
-    uint32_t num_whole_dummy_cells_avoided_so_far_;
+    uint32_t num_whole_dummy_cells_dropped_so_far_;
 
     in_addr_t myaddr_;
 

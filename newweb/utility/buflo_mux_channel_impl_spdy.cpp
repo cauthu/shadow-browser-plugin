@@ -210,7 +210,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
                                   ? defense_session_time_limit
                                   : default_defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
-    , num_whole_dummy_cells_avoided_(0)
+    , num_whole_dummy_cells_dropped_(0)
     , need_to_read_peer_info_(true)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
@@ -378,6 +378,10 @@ BufloMuxChannelImplSpdy::start_defense_session()
     buflo_timer_->start(&intvl_tv);
 
     defense_info_.state = DefenseState::ACTIVE;
+
+    /* force disable the write event because we will write when timer
+     * fires */
+    _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
 
     logself(INFO) << "defense started";
 
@@ -603,6 +607,9 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
              * have to add a control/dummy cell ourselves here
              */
 
+            _maybe_drop_whole_dummy_cell_at_end_outbuf(__LINE__, false);
+            CHECK(!whole_dummy_cell_at_end_outbuf_);
+
             /* we could use a control cell, but right now we don't
              * have any other use for control cells so we don't have
              * code for creating/handling code for control cells, so
@@ -638,6 +645,10 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                     /* the flag could not piggyback on any cell, so we
                      * have to add a control/dummy cell ourselves here
                      */
+
+                    _maybe_drop_whole_dummy_cell_at_end_outbuf(__LINE__, false);
+                    CHECK(!whole_dummy_cell_at_end_outbuf_);
+
                     _add_ONE_dummy_cell_to_outbuf();
                     CHECK(!defense_info_.need_auto_stopped_flag_in_next_cell);
                     defense_info_.reset();
@@ -664,18 +675,14 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 
     // need to add another cell to cell outbuf
 
-    // // control has priority over data
-    // if (!_maybe_add_control_cell_to_outbuf()) {
-        // no control things to add, so we can add spdy data
-        _pump_spdy_send();
-        if (!_maybe_add_ONE_data_cell_to_outbuf()) {
-            // not even data, so add dummy
-            _ensure_a_whole_dummy_cell_at_end_outbuf();
-        }
-    // }
+    _pump_spdy_send();
+    if (!_maybe_add_ONE_data_cell_to_outbuf()) {
+        // could not add data, so add dummy
+        _ensure_a_whole_dummy_cell_at_end_outbuf();
+    }
 
     // there must be at least one cell's worth of bytes in the outbuf
-    DCHECK_GE(evbuffer_get_length(cell_outbuf_), cell_size_);
+    CHECK_GE(evbuffer_get_length(cell_outbuf_), cell_size_);
 
     _send_cell_outbuf();
 
@@ -819,6 +826,17 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
         return false;
     }
 
+    /*
+     * there is data so we do want to add
+     */
+
+    // first, maybe we can drop a whole dummy cell
+    if (_maybe_drop_whole_dummy_cell_at_end_outbuf(__LINE__)) {
+        vlogself(2) << "replacing a dummy cell with a data cell";
+    }
+
+    CHECK(!whole_dummy_cell_at_end_outbuf_);
+
     // add type and length
     uint8_t type_n_flags = 0;
     SET_CELL_TYPE(type_n_flags, CellType::DATA);
@@ -877,43 +895,82 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 {
     vlogself(2) << "begin";
 
+    auto curbufsize = evbuffer_get_length(cell_outbuf_);
+
+    int rv = 0;
+    bool did_attempt_write = false;
+
     if (defense_info_.state == DefenseState::ACTIVE) {
         // there must be at least one cell in outbuf
-        auto curbufsize = evbuffer_get_length(cell_outbuf_);
         CHECK_GE(curbufsize, cell_size_);
         // but strictly less than two cells
         CHECK_LT(curbufsize, (2*cell_size_));
 
         vlogself(2) << "tell socket to write ONE cell's worth of bytes";
-        const auto rv = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
+        rv = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
         vlogself(2) << "evbuffer_write_atmost() return: " << rv;
+
+        did_attempt_write = true;
 
         defense_info_.increment_send_attempt();
 
-        if (rv > 0) {
-            // rv is number of bytes written
-            curbufsize -= rv;
-            vlogself(2) << "remaining buf size: " << curbufsize;
-            if (curbufsize < cell_size_) {
-                // we can blindly clear this flag: if there was one
-                // whole dummy cell, then it's no longer true because
-                // cur buf size is less than one whole cell
-                whole_dummy_cell_at_end_outbuf_ = false;
-            }
-        } else {
-            _handle_failed_socket_io("write", rv, false);
-        }
+        curbufsize = evbuffer_get_length(cell_outbuf_);
+        vlogself(2) << "remaining in outbuf: " << curbufsize;
 
+        if (curbufsize < cell_size_) {
+            // we can blindly clear this flag: whether or not there
+            // was one whole dummy cell, it's no longer true because
+            // cur buf size is less than one whole cell
+            whole_dummy_cell_at_end_outbuf_ = false;
+        } else {
+            // there's at least one whole cell remaining in out buf
+            if (whole_dummy_cell_at_end_outbuf_) {
+                // we logically want to drop this whole dummy cell at
+                // the end of out buf, but to avoid potentially
+                // repeatedly dropping now and adding at the next time
+                // (e.g., if the cell in front of this dummy cell is
+                // slowly being written, while there is no new data to
+                // add in the future)
+                //
+                // so do nothing here
+            }
+        }
     } else {
         // not actively defending
 
-        vlogself(2) << "tell socket to write as much as possible";
-        const auto rv = evbuffer_write_atmost(cell_outbuf_, fd_, -1);
-        vlogself(2) << "evbuffer_write_atmost() return: " << rv;
-        _maybe_toggle_write_monitoring(ForceToggleMode::NONE);
-        if (rv <= 0) {
-            _handle_failed_socket_io("write", rv, true);
+        auto amnt_to_write = curbufsize;
+        if (whole_dummy_cell_at_end_outbuf_) {
+            // don't need to write the dummy cell
+            amnt_to_write = curbufsize - cell_size_;
+            // amount to write could be zero if the only thing in the
+            // out buf is a dummy cell
+            CHECK_GE(amnt_to_write, 0) << amnt_to_write;
         }
+
+        if (amnt_to_write > 0) {
+            vlogself(2) << "tell socket to write " << amnt_to_write << " bytes";
+            rv = evbuffer_write_atmost(cell_outbuf_, fd_, amnt_to_write);
+            vlogself(2) << "evbuffer_write_atmost() return: " << rv;
+
+            did_attempt_write = true;
+
+            // if there's only a whole dummy cell left, then disable write
+            // event, because the dummy cell will be dropped below
+            _maybe_toggle_write_monitoring(
+                ((rv == amnt_to_write) && whole_dummy_cell_at_end_outbuf_)
+                ? ForceToggleMode::FORCE_DISABLE
+                : ForceToggleMode::NONE);
+        } else {
+            CHECK(whole_dummy_cell_at_end_outbuf_);
+            _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
+        }
+
+        _maybe_drop_whole_dummy_cell_at_end_outbuf(__LINE__);
+        CHECK(!whole_dummy_cell_at_end_outbuf_);
+    }
+
+    if (did_attempt_write && rv <= 0) {
+        _handle_failed_socket_io("write", rv, false);
     }
 
     vlogself(2) << "done";
@@ -927,8 +984,10 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 void
 BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(ForceToggleMode forcemode)
 {
-    // can be either pending or
-    CHECK_NE(defense_info_.state, DefenseState::ACTIVE);
+    /* defense must NOT be active, otherwise must be forcing
+     * disable */
+    CHECK((defense_info_.state != DefenseState::ACTIVE)
+          || (forcemode == ForceToggleMode::FORCE_DISABLE));
 
     auto rv = 0;
 
@@ -981,16 +1040,14 @@ BufloMuxChannelImplSpdy::_handle_failed_socket_io(
     }
 }
 
-/*
- * blindly add a dummy cell to cell_outbuf_ without asserting on any
- * state
- */
 void
 BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
 {
     uint8_t type_n_flags = 0;
     SET_CELL_TYPE(type_n_flags, CellType::DUMMY);
     static const uint16_t len_field = 0;
+
+    CHECK(!whole_dummy_cell_at_end_outbuf_);
 
     _maybe_set_cell_flags(&type_n_flags, "dummy");
 
@@ -1006,6 +1063,8 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
         cell_outbuf_, common::static_bytes->c_str(),
         cell_body_size_, nullptr, nullptr);
     CHECK_EQ(rv, 0);
+
+    whole_dummy_cell_at_end_outbuf_ = true;
 }
 
 void
@@ -1019,15 +1078,98 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
                 << whole_dummy_cell_at_end_outbuf_;
     if (whole_dummy_cell_at_end_outbuf_) {
         vlogself(2) << "no need to add dummy cell";
-        ++num_whole_dummy_cells_avoided_;
         return;
     }
 
     _add_ONE_dummy_cell_to_outbuf();
 
-    whole_dummy_cell_at_end_outbuf_ = true;
+    CHECK(whole_dummy_cell_at_end_outbuf_);
 
     vlogself(2) << "added one dummy cell";
+}
+
+/*
+ * returns true if did drop, false if nothing was done
+ */
+bool
+BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int from_line,
+                                                                    const bool do_count)
+{
+    vlogself(2) << "begin";
+
+    bool did_drop = false;
+
+    CHECK_NOTNULL(cell_outbuf_);
+    auto curbufsize = evbuffer_get_length(cell_outbuf_);
+    if (whole_dummy_cell_at_end_outbuf_) {
+        CHECK(curbufsize >= cell_size_) << "curbuf size= " << curbufsize;
+
+        // this is optimization to drop whole dummy cell, because: if
+        // at the next timer fired, we have USEFUL data to write, then
+        // we will be able to write it instead of being blocked by the
+        // dummy cell. (if on the other hand at the next timer fired,
+        // we have no useful data to write, then removing the whole
+        // dummy cell here does not help anything, since we'll have to
+        // add it again at that time
+
+        const auto amnt_to_keep = curbufsize - cell_size_;
+        CHECK(amnt_to_keep >= 0); // just to be sure :D
+        if (amnt_to_keep > 0) {
+            // there is no api to remove at the end of the
+            // buffer, so we replace it
+            struct evbuffer* newbuf = evbuffer_new();
+            CHECK_NOTNULL(newbuf);
+
+            const auto rv = evbuffer_remove_buffer(
+                cell_outbuf_ /* src */,
+                newbuf /* dst */,
+                amnt_to_keep);
+            CHECK_EQ(rv, amnt_to_keep);
+
+            evbuffer_free(cell_outbuf_);
+            cell_outbuf_ = newbuf;
+            newbuf = nullptr;
+            vlogself(2) << "keep " << amnt_to_keep << " of cell outbuf";
+        } else {
+            // should be rare, but we can just drain the
+            // whole buf
+            vlogself(2) << "drain cell outbuf";
+            const auto rv = evbuffer_drain(cell_outbuf_, curbufsize);
+            CHECK_EQ(rv, 0);
+        }
+
+        curbufsize = evbuffer_get_length(cell_outbuf_);
+
+        CHECK_EQ(curbufsize, amnt_to_keep)
+            << "amnt_to_keep= " << amnt_to_keep;
+        CHECK_LT(curbufsize, cell_size_);
+
+        whole_dummy_cell_at_end_outbuf_ = false;
+
+        did_drop = true;
+
+        if (do_count) {
+            ++num_whole_dummy_cells_dropped_;
+            vlogself(1) << "woot! dropped a dummy cell, by " << from_line;
+        }
+    }
+
+    // // curbufsize must be updated accordingly if dropped dummy cell
+    // // above
+    // if (curbufsize < cell_size_) {
+    //     // need to do this here also because the above drop logic
+    //     // might not have been run if the curbufsize was less than
+    //     // cell_size_ to start with
+    //     whole_dummy_cell_at_end_outbuf_ = false;
+    // } else {
+    //     // if there's at least one whole cell in out buf, there must
+    //     // not be dummy cell at end
+    //     CHECK(!whole_dummy_cell_at_end_outbuf_);
+    // }
+
+    vlogself(2) << "done";
+
+    return did_drop;
 }
 
 void
@@ -1161,11 +1303,13 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
         CHECK(! (start_defense && stop_defense));
 
         if (start_defense) {
+            CHECK(!is_client_side_);
             logself(INFO) << "start defending as requested by csp";
             start_defense_session();
         }
 
         if (stop_defense) {
+            CHECK(!is_client_side_);
             logself(INFO) << "schedule to stop defense requested by csp";
             stop_defense_session();
         }
@@ -1289,11 +1433,6 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
                 // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
                 // check that cell_outbuf_ has one cell
                 CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
-
-                /* disable write monitoring because we will start the
-                 * defense, which will write when timer fires
-                 */
-                _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
 
                 vlogself(2) << "automatically starting the defense";
                 // start_defense_session() will set to ACTIVE
