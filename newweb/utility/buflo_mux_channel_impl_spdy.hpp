@@ -100,7 +100,7 @@ protected:
 
     void _setup_spdylay_session();
     void _buflo_timer_fired(Timer* timer);
-    void _pump_spdy_send();
+    void _pump_spdy_send(const bool log_flushed_cell_count=false);
     void _pump_spdy_recv();
 
     void _fill_my_peer_info_outbuf();
@@ -121,7 +121,7 @@ protected:
 
     /* WILL move all data into cell outbuf. the current defense state
      * must be NONE */
-    bool _maybe_flush_data_to_cell_outbuf();
+    size_t _maybe_flush_data_to_cell_outbuf();
 
     /* this will add a dummy cell if there is not already a WHOLE
      * dummy cell at the end of cell outbuf. if there's only a partial

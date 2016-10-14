@@ -598,7 +598,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         /* this will flush data cells and toggle write monitoring
          * appropriately since we have reset the defense state to none
          * above */
-        _pump_spdy_send();
+        _pump_spdy_send(true);
 
         if (defense_info_.need_stop_flag_in_next_cell) {
             vlogself(2) << "still need to send the stop flag, so we send a dummy cell";
@@ -640,7 +640,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
                                  << defense_info_.num_write_attempts;
                 buflo_timer_->cancel();
                 defense_info_.need_auto_stopped_flag_in_next_cell = true;
-                _pump_spdy_send();
+                _pump_spdy_send(true);
                 if (defense_info_.need_auto_stopped_flag_in_next_cell) {
                     /* the flag could not piggyback on any cell, so we
                      * have to add a control/dummy cell ourselves here
@@ -697,7 +697,7 @@ done:
  * monitoring so we can actually send to peer asap
  */
 void
-BufloMuxChannelImplSpdy::_pump_spdy_send()
+BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
 {
     vlogself(2) << "begin";
 
@@ -715,17 +715,23 @@ BufloMuxChannelImplSpdy::_pump_spdy_send()
         return;
     }
 
+    size_t num_cells_added = 0;
+
     if (defense_info_.state == DefenseState::NONE) {
         vlogself(2) << "maybe flush to cell outbuf";
-        if (_maybe_flush_data_to_cell_outbuf()) {
+        num_cells_added = _maybe_flush_data_to_cell_outbuf();
+        if (num_cells_added) {
             // there is definitely in out buf so just force enable
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
+        if (log_flushed_cell_count) {
+            logself(INFO) << "flushed " << num_cells_added << " cells";
+        }
     } else if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
         // we want to add only one cell
-        const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
+        num_cells_added = _maybe_add_ONE_data_cell_to_outbuf();
         // must have added
-        CHECK(rv);
+        CHECK(num_cells_added == 1) << "num_cells_added: " << num_cells_added;
         _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
     } else {
         // defense is active, we don't enable write monitoring
@@ -758,23 +764,25 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
 }
 
 /* will call _maybe_add_ONE_data_cell_to_outbuf()
+ *
+ * returns the number of cells that we added to outbuf
  */
-bool
+size_t
 BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
 {
     CHECK(   (defense_info_.state == DefenseState::NONE)
         );
-    bool did_write = false;
+    size_t num_added = 0;
     vlogself(2) << "begin, spdy outbuf len: "
                 << evbuffer_get_length(spdy_outbuf_);
 
     while (evbuffer_get_length(spdy_outbuf_)) {
         const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
         CHECK(rv);
-        did_write = true;
+        ++num_added;
     }
-    vlogself(2) << "done, returning " << did_write;
-    return did_write;
+    vlogself(2) << "done, returning " << num_added;
+    return num_added;
 }
 
 void
