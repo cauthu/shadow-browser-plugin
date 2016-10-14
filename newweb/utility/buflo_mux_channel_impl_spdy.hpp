@@ -371,6 +371,7 @@ protected:
             CHECK_EQ(state, DefenseState::ACTIVE);
             CHECK(!stop_requested);
             stop_requested = true;
+            need_start_flag_in_next_cell = false;
         }
 
         DefenseState state;
