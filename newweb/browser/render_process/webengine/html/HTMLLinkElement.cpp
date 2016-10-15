@@ -18,7 +18,10 @@ HTMLLinkElement::HTMLLinkElement(
     CHECK_EQ(rel_, "stylesheet") << "rel \"" << rel_ << "\" not yet supported";
 
     if (is_blocking_stylesheet_) {
-        document->addPendingSheet(this);
+        const auto resource = document->fetcher()->getResource(resInstNum_);
+        if (resource && !resource->isFinished()) {
+            document->addPendingSheet(this);
+        }
     }
 }
 
