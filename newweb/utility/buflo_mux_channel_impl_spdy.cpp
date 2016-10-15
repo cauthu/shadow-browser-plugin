@@ -305,10 +305,10 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
      * the read event, and we try to read on timeout, and it should
      * return no bytes
      */
-    // struct timeval timeout_tv;
-    // timeout_tv.tv_sec = 5;
-    // timeout_tv.tv_usec = 0;
-    rv = event_add(socket_read_ev_.get(), nullptr);
+    struct timeval timeout_tv;
+    timeout_tv.tv_sec = 5;
+    timeout_tv.tv_usec = 0;
+    rv = event_add(socket_read_ev_.get(), &timeout_tv);
     CHECK_EQ(rv, 0);
 
     _self_test_bit_manipulation();
@@ -1376,7 +1376,7 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
 
     DestructorGuard dg(this);
 
-    if (what & (EV_READ)) {
+    if (what & (EV_READ | EV_TIMEOUT)) {
         if (need_to_read_peer_info_) {
             vlogself(2) << "read peer info";
             const auto still_need =
