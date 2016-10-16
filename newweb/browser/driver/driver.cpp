@@ -134,6 +134,7 @@ Driver::_read_page_models_file(const string& page_models_list_file)
         const auto page_name = token;
         auto ret = page_names.insert(page_name);
         CHECK(ret.second) << "duplicated page name [" << page_name << "]";
+        CHECK(page_name.length() > 0);
 
         std::getline(iss, token, ' '); // now get the model file path
         boost::algorithm::trim(token);
