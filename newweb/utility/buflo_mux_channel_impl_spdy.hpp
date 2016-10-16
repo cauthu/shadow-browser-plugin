@@ -90,9 +90,17 @@ public:
     // virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
 
+    std::string peer_ip() const;
+
     const uint64_t& all_recv_byte_count() const { return all_recv_byte_count_; }
     const uint64_t& useful_recv_byte_count() const { return all_users_data_recv_byte_count_; }
-    const uint32_t& num_whole_dummy_cells_dropped() const { return num_whole_dummy_cells_dropped_; }
+    const uint32_t& dummy_recv_cell_count() const { return dummy_recv_cell_count_; }
+
+    const uint64_t& all_send_byte_count() const { return all_send_byte_count_; }
+    const uint64_t& useful_send_byte_count() const { return all_users_data_send_byte_count_; }
+    const uint32_t& dummy_send_cell_count() const { return dummy_send_cell_count_; }
+
+    const uint32_t& num_dummy_cells_avoided() const { return num_dummy_cells_avoided_; }
 
 protected:
 
@@ -142,6 +150,8 @@ protected:
     void _on_socket_error();
     void _init_stream_state(const int&);
     void _init_stream_data_provider(const int& sid);
+
+    void _update_send_stats(int num_written);
 
     /* shadow doesn't support edge-triggered (epoll) monitoring, so we
      * have to disable write monitoring if we don't have data to
@@ -319,6 +329,7 @@ protected:
 
     /* in host byte order */
     const in_addr_t myaddr_;
+    in_addr_t peeraddr_;
 
     const uint32_t defense_session_time_limit_;
 
@@ -427,12 +438,12 @@ protected:
     // Timer::UniquePtr buflo_timer_;
     bool whole_dummy_cell_at_end_outbuf_;
 
-    /* count of those we really dropped, i.e., that are not to be
+    /* count of those we really avoided, i.e., that are not to be
      * immediately replaced by a dummy cell.... something we have to
      * do sometimes if we want to send a flag but there's no data to
      * piggy-back on
      */
-    uint32_t num_whole_dummy_cells_dropped_;
+    uint32_t num_dummy_cells_avoided_;
 
     spdylay_session* spdysess_;
 
@@ -485,6 +496,21 @@ protected:
      * user connections
      */
     uint64_t all_users_data_recv_byte_count_;
+
+    uint32_t dummy_recv_cell_count_;
+
+
+    // how much of the cell at front of cell_outbuf_ we have written
+    // into socket
+    size_t front_cell_sent_progress_;
+    /* describes how much useful data is contained in the cells that
+     * are in the cell_outbuf_ */
+    std::vector<uint16_t> output_cells_data_bytes_info_;
+
+    uint64_t all_send_byte_count_;
+    uint64_t all_users_data_send_byte_count_;
+    uint32_t dummy_send_cell_count_;
+
 };
 
 }

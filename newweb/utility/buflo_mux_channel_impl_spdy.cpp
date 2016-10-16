@@ -210,10 +210,15 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
                                   ? defense_session_time_limit
                                   : default_defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
-    , num_whole_dummy_cells_dropped_(0)
+    , num_dummy_cells_avoided_(0)
+    , front_cell_sent_progress_(0)
     , need_to_read_peer_info_(true)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
+    , dummy_recv_cell_count_(0)
+    , all_send_byte_count_(0)
+    , all_users_data_send_byte_count_(0)
+    , dummy_send_cell_count_(0)
 {
     /* the value used by tamaraw paper */
     CHECK(cell_size == 750);
@@ -888,7 +893,54 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
         // first cell has been written and the the state switches to
         // acitive.
     }
+
+    output_cells_data_bytes_info_.push_back(payload_len);
+
     return true;
+}
+
+
+void
+BufloMuxChannelImplSpdy::_update_send_stats(int num_written)
+{
+    CHECK(num_written > 0) << num_written;
+
+    vlogself(2) << "begin, num_written: " << num_written;
+
+    while (num_written > 0) {
+        vlogself(2) << "num_written: " << num_written
+                    << " front_cell_sent_progress_: " << front_cell_sent_progress_;
+
+        {
+            const size_t new_progress = std::min(
+                front_cell_sent_progress_ + num_written, cell_size_);
+            CHECK(new_progress > front_cell_sent_progress_);
+            const size_t sent_now = new_progress - front_cell_sent_progress_;
+            vlogself(2) << "sent just now: " << sent_now;
+
+            num_written = num_written - sent_now;
+            front_cell_sent_progress_ = new_progress;
+            vlogself(2) << "new front_cell_sent_progress_: " << front_cell_sent_progress_;
+        }
+
+        if (front_cell_sent_progress_ == cell_size_) {
+            vlogself(2) << "done sending front cell";
+            const auto& num_data_bytes_in_front_cell = output_cells_data_bytes_info_.at(0);
+            if (num_data_bytes_in_front_cell > 0) {
+                all_users_data_send_byte_count_ += num_data_bytes_in_front_cell;
+            } else {
+                ++dummy_send_cell_count_;
+            }
+
+            // reset progress
+            front_cell_sent_progress_ = 0;
+        } else {
+            // do nothing
+            CHECK(num_written == 0);
+        }
+    }
+
+    vlogself(2) << "done";
 }
 
 /* will send the appropriate number of bytes based on whether a
@@ -904,7 +956,7 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 
     auto curbufsize = evbuffer_get_length(cell_outbuf_);
 
-    int rv = 0;
+    int num_written = 0;
     bool did_attempt_write = false;
 
     if (defense_info_.state == DefenseState::ACTIVE) {
@@ -914,8 +966,8 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
         CHECK_LT(curbufsize, (2*cell_size_));
 
         vlogself(2) << "tell socket to write ONE cell's worth of bytes";
-        rv = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
-        vlogself(2) << "evbuffer_write_atmost() return: " << rv;
+        num_written = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
+        vlogself(2) << "evbuffer_write_atmost() return: " << num_written;
 
         did_attempt_write = true;
 
@@ -956,15 +1008,15 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 
         if (amnt_to_write > 0) {
             vlogself(2) << "tell socket to write " << amnt_to_write << " bytes";
-            rv = evbuffer_write_atmost(cell_outbuf_, fd_, amnt_to_write);
-            vlogself(2) << "evbuffer_write_atmost() return: " << rv;
+            num_written = evbuffer_write_atmost(cell_outbuf_, fd_, amnt_to_write);
+            vlogself(2) << "evbuffer_write_atmost() return: " << num_written;
 
             did_attempt_write = true;
 
             // if there's only a whole dummy cell left, then disable write
             // event, because the dummy cell will be dropped below
             _maybe_toggle_write_monitoring(
-                ((rv == amnt_to_write) && whole_dummy_cell_at_end_outbuf_)
+                ((num_written == amnt_to_write) && whole_dummy_cell_at_end_outbuf_)
                 ? ForceToggleMode::FORCE_DISABLE
                 : ForceToggleMode::NONE);
         } else {
@@ -976,8 +1028,13 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
         CHECK(!whole_dummy_cell_at_end_outbuf_);
     }
 
-    if (did_attempt_write && rv <= 0) {
-        _handle_failed_socket_io("write", rv, false);
+    if (num_written > 0) {
+        all_send_byte_count_ += num_written;
+        _update_send_stats(num_written);
+    }
+
+    if (did_attempt_write && num_written <= 0) {
+        _handle_failed_socket_io("write", num_written, false);
     }
 
     vlogself(2) << "done";
@@ -1072,6 +1129,7 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
     CHECK_EQ(rv, 0);
 
     whole_dummy_cell_at_end_outbuf_ = true;
+    output_cells_data_bytes_info_.push_back(0);
 }
 
 void
@@ -1158,12 +1216,15 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int ca
         }
 
         whole_dummy_cell_at_end_outbuf_ = false;
+        CHECK(!output_cells_data_bytes_info_.empty());
+        CHECK(output_cells_data_bytes_info_.back() == 0);
+        output_cells_data_bytes_info_.pop_back();
 
         did_drop = true;
 
         if (do_count) {
-            ++num_whole_dummy_cells_dropped_;
-            vlogself(1) << "woot! dropped a dummy cell, by " << called_from_line;
+            ++num_dummy_cells_avoided_;
+            vlogself(1) << "woot! avoided a dummy cell, by " << called_from_line;
         }
     }
 
@@ -1327,12 +1388,16 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
     case CellType::DATA: {
         auto rv = evbuffer_add(spdy_inbuf_, ptr+CELL_HEADER_SIZE, payload_len);
         CHECK_EQ(rv, 0);
+
+        all_users_data_recv_byte_count_ += payload_len;
+
         _pump_spdy_recv();
         break;
     }
 
     case CellType::DUMMY: {
         // do nothing
+        ++dummy_recv_cell_count_;
         break;
     }
 
@@ -1477,15 +1542,13 @@ BufloMuxChannelImplSpdy::_read_peer_info()
 
     peer_cell_body_size_ = peer_cell_size_ - CELL_HEADER_SIZE;
 
-    in_addr_t peeraddr = 0;
-    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peeraddr, 4);
+    peeraddr_ = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peeraddr_, 4);
     CHECK_EQ(rv, 4);
     rv = evbuffer_drain(peer_info_inbuf_, 4);
     CHECK_EQ(rv, 0);
 
-    struct in_addr ip_addr;
-    ip_addr.s_addr = peeraddr;
-    logself(INFO) << "peer IP is " << inet_ntoa(ip_addr)
+    logself(INFO) << "peer IP is " << peer_ip()
                   << " version= " << unsigned(peer_version)
                   << " using cell size= " << peer_cell_size_;
 
@@ -1514,6 +1577,15 @@ BufloMuxChannelImplSpdy::_read_peer_info()
 
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::READY);
+}
+
+std::string
+BufloMuxChannelImplSpdy::peer_ip() const
+{
+    struct in_addr ip_addr;
+    ip_addr.s_addr = peeraddr_;
+    string s = inet_ntoa(ip_addr);
+    return s;
 }
 
 void
@@ -1945,10 +2017,6 @@ BufloMuxChannelImplSpdy::_on_spdylay_on_data_chunk_recv_cb(
     DestructorGuard dg(this);
 
     vlogself(2) << "got chunk of " << len << " bytes from inner";
-
-    // yay! we have data for user. we count this even if the stream
-    // might have been deleted
-    all_users_data_recv_byte_count_ += len;
 
     MAYBE_GET_STREAMSTATE(stream_id, true, );
 

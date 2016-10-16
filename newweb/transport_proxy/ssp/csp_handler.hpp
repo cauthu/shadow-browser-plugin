@@ -15,7 +15,7 @@
 
 #include "../../utility/tcp_channel.hpp"
 #include "../../utility/stream_channel.hpp"
-#include "../../utility/buflo_mux_channel.hpp"
+#include "../../utility/buflo_mux_channel_impl_spdy.hpp"
 
 #include "stream_handler.hpp"
 
@@ -42,7 +42,7 @@ public:
 
 protected:
 
-    virtual ~CSPHandler() = default;
+    virtual ~CSPHandler();
 
     ////////////
 
@@ -52,9 +52,13 @@ protected:
         myio::buflo::BufloMuxChannel*, int, const char*, uint16_t);
     void _on_stream_handler_done(StreamHandler*);
 
+    void _report_stats() const;
+
+    //////////
+
     struct event_base* evbase_;
     // myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
-    myio::buflo::BufloMuxChannel::UniquePtr buflo_channel_;
+    myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
 
     CSPHandlerDoneCb handler_done_cb_;
 

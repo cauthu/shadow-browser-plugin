@@ -71,7 +71,13 @@ public:
 
     const uint64_t all_recv_byte_count_so_far() const;
     const uint64_t useful_recv_byte_count_so_far() const;
-    const uint32_t num_whole_dummy_cells_dropped_so_far() const;
+    const uint32_t dummy_recv_cell_count_so_far() const;
+
+    const uint64_t all_send_byte_count_so_far() const;
+    const uint64_t useful_send_byte_count_so_far() const;
+    const uint32_t dummy_send_cell_count_so_far() const;
+
+    const uint32_t num_dummy_cells_avoided_so_far() const;
 
     void start_accepting_clients();
 
@@ -158,9 +164,15 @@ protected:
     /* we get these from the buflo channel but also take a note of
      * them ourselves when the buflo channel goes away
      */
-    uint64_t all_recv_byte_count_so_far_;
-    uint64_t useful_recv_byte_count_so_far_;
-    uint32_t num_whole_dummy_cells_dropped_so_far_;
+    uint64_t all_recv_byte_count_so_far_ = 0;
+    uint64_t useful_recv_byte_count_so_far_ = 0;
+    uint32_t dummy_recv_cell_count_so_far_ = 0;
+
+    uint64_t all_send_byte_count_so_far_ = 0;
+    uint64_t useful_send_byte_count_so_far_ = 0;
+    uint32_t dummy_send_cell_count_so_far_ = 0;
+
+    uint32_t num_dummy_cells_avoided_so_far_ = 0;
 
     in_addr_t myaddr_;
 

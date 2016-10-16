@@ -94,4 +94,25 @@ CSPHandler::_on_stream_handler_done(StreamHandler* shandler)
     shandlers_.erase(shid);
 }
 
+void
+CSPHandler::_report_stats() const
+{
+    if (buflo_channel_) {
+        logself(INFO)
+            << "with peer " << buflo_channel_->peer_ip()
+            << " recv: all_bytes= " << buflo_channel_->all_recv_byte_count()
+                  << " useful_bytes= " << buflo_channel_->useful_recv_byte_count()
+                  << " dummy_cells= " << buflo_channel_->dummy_recv_cell_count()
+                  << " ; send: all_bytes= " << buflo_channel_->all_send_byte_count()
+                  << " useful_bytes= " << buflo_channel_->useful_send_byte_count()
+                  << " dummy_cells= " << buflo_channel_->dummy_send_cell_count()
+                  << " dummy_cells_avoided= " << buflo_channel_->num_dummy_cells_avoided();
+    }
+}
+
+CSPHandler::~CSPHandler()
+{
+    _report_stats();
+}
+
 }
