@@ -1,2 +1,4 @@
 cnn ../../../page_models/cnn_page_model.json
 nytimes ../../../page_models/nytimes_page_model.json
+bing ../../../page_models/bing-page_model-10152016.json
+ebay ../../../page_models/ebay_page_model-10142016.json
