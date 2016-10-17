@@ -109,11 +109,9 @@ HTMLDocumentParser::notifyFinished(Resource* resource, bool success)
         executeScriptsWaitingForLoad();
         if (!isWaitingForScripts()) {
             resumeParsingAfterScriptExecution();
-        } else {
-            CHECK(0) << "todo";
         }
     } else {
-        CHECK(0) << "todo";
+        CHECK(0) << "todo " << resource->instNum() << " " << num_bytes_parsed_;
     }
 
     vlogself(2) << "done";
