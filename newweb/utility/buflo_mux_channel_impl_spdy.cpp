@@ -52,6 +52,21 @@ using std::bitset;
   to tell ssp to stop, but because cell has been put into the
   cell_outbuf_ it's hard to update its flags.
 
+  UPDATE!!!! the above is no longer true for two reasons: 1) we are
+  keeping track of the progress of individual cells inside the
+  cell_outbuf_ (originally for stats purposes), so we can know where
+  the cell boundaries are, and thus can update the flags if needed, 2)
+  say the ssp auto-stops, and it flushes and thus there are hundreds
+  of cells in the cell outbuf, then csp quickly tells ssp to 'start'
+  defense again, so ssp starts defense, but it still has a lot of
+  cells queued up in the cell outbuf. then any new control info it
+  needs to send will be queued behind all those cells. however right
+  now the only control flag ssp needs to send is AUTO_STOPPED, and it
+  only does that when it stops the defense, which means it will send
+  as quick as possible, so even if the auto_stopped is stuck behind a
+  bunch of cells (e.g., this is the second time it has to auto stop
+  during a page load) it won't have to wait too long.
+
 
   XXX/the way we have it right now, we don't really need the DUMMY
   cell type because we can just have a DATA cell with a zero payload
@@ -905,7 +920,7 @@ BufloMuxChannelImplSpdy::_maybe_add_ONE_data_cell_to_outbuf()
 
 
 void
-BufloMuxChannelImplSpdy::_update_send_stats(int num_written)
+BufloMuxChannelImplSpdy::_update_output_cell_progress(int num_written)
 {
     CHECK(num_written > 0) << num_written;
 
@@ -1033,7 +1048,7 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 
     if (num_written > 0) {
         all_send_byte_count_ += num_written;
-        _update_send_stats(num_written);
+        _update_output_cell_progress(num_written);
     }
 
     if (did_attempt_write && num_written <= 0) {

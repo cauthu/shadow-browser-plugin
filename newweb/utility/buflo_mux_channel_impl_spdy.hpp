@@ -152,7 +152,7 @@ protected:
     void _init_stream_state(const int&);
     void _init_stream_data_provider(const int& sid);
 
-    void _update_send_stats(int num_written);
+    void _update_output_cell_progress(int num_written);
 
     /* shadow doesn't support edge-triggered (epoll) monitoring, so we
      * have to disable write monitoring if we don't have data to
