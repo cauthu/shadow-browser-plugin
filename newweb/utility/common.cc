@@ -252,7 +252,8 @@ getaddr(const char *hostname)
             struct addrinfo* info;
             int result = getaddrinfo(hostname, nullptr, &hints, &info);
             if(result != 0) {
-                VLOG(1) << "error: " << gai_strerror(result);
+                LOG(WARNING) << "failed to resolve [" << hostname
+                             << "] error: " << gai_strerror(result);
                 return INADDR_NONE;
             }
 
