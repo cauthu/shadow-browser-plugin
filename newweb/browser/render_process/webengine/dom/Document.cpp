@@ -222,6 +222,7 @@ Document::removePendingSheet(Element* element)
         return;
     }
 
+    vlogself(2) << "schedule timer to execute scripts";
     _didLoadAllScriptBlockingResources();
 }
 
@@ -246,14 +247,11 @@ Document::_didLoadAllScriptBlockingResources()
 void
 Document::_executeScriptsWaitingForResourcesTimerFired(Timer*)
 {
-    // for now assert that we only reach here if there's not pending
-    // sheet. although real browser silently return if
-    // pendingStylesheets_ > 0. because after the timer is scheduled
-    // but before it fires, more blocking style sheets can be added
-    // (e.g., by script)
-    CHECK_EQ(pendingStylesheets_, 0);
-
-    parser_->executeScriptsWaitingForResources();
+    // after the timer is scheduled but before it fires, more blocking
+    // style sheets can be added (e.g., by script)
+    if (pendingStylesheets_ == 0) {
+        parser_->executeScriptsWaitingForResources();
+    }
 }
 
 void
