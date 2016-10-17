@@ -257,6 +257,7 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
         vlogself(2) << "now tell proxy to connect to peer";
         CHECK(!socks_connector_);
 
+#ifdef IN_SHADOW
         /* due to issue
          * https://bitbucket.org/hatswitch/shadow-plugin-extras/issues/3/
          * we do local lookup of the ssp's ip address here, even we'd
@@ -269,6 +270,12 @@ ClientSideProxy::onConnected(StreamChannel* ch) noexcept
         socks_connector_.reset(
             new Socks5Connector(std::move(peer_channel_),
                                 peer_addr, peer_port_));
+#else
+        socks_connector_.reset(
+            new Socks5Connector(std::move(peer_channel_),
+                                peer_host_.c_str(), peer_port_));
+#endif
+
         auto rv = socks_connector_->start_connecting(this);
         CHECK(!rv);
         state_ = State::CONNECTING;
