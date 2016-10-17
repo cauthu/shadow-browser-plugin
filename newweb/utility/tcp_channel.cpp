@@ -156,42 +156,42 @@ TCPChannel::set_observer(StreamChannelObserver* observer)
 int
 TCPChannel::read(uint8_t *data, size_t len)
 {
-    DCHECK(input_evb_);
+    CHECK(input_evb_);
     return evbuffer_remove(input_evb_.get(), data, len);
 }
 
 int
 TCPChannel::read_buffer(struct evbuffer* buf, size_t len)
 {
-    DCHECK(input_evb_);
+    CHECK(input_evb_);
     return evbuffer_remove_buffer(input_evb_.get(), buf, len);
 }
 
 int
 TCPChannel::drain(size_t len)
 {
-    DCHECK(input_evb_);
+    CHECK(input_evb_);
     return evbuffer_drain(input_evb_.get(), len);
 }
 
 uint8_t*
 TCPChannel::peek(ssize_t len)
 {
-    DCHECK(input_evb_);
+    CHECK(input_evb_);
     return evbuffer_pullup(input_evb_.get(), len);
 }
 
 size_t
 TCPChannel::get_avail_input_length() const
 {
-    DCHECK(input_evb_);
+    CHECK(input_evb_);
     return evbuffer_get_length(input_evb_.get());
 }
 
 size_t
 TCPChannel::get_output_length() const
 {
-    DCHECK(output_evb_);
+    CHECK(output_evb_);
     return evbuffer_get_length(output_evb_.get());
 }
 
@@ -206,7 +206,7 @@ TCPChannel::set_read_watermark(size_t lowmark, size_t highmark)
 int
 TCPChannel::write(const uint8_t *data, size_t size)
 {
-    DCHECK(output_evb_);
+    CHECK(output_evb_);
     const auto rv = evbuffer_add(output_evb_.get(), data, size);
     if (!rv) {
         _maybe_toggle_write_monitoring(true);
@@ -217,7 +217,7 @@ TCPChannel::write(const uint8_t *data, size_t size)
 int
 TCPChannel::write_buffer(struct evbuffer* buf)
 {
-    DCHECK(output_evb_);
+    CHECK(output_evb_) _LOG_PREFIX(this);
     const auto rv = evbuffer_add_buffer(output_evb_.get(), buf);
     if (!rv) {
         _maybe_toggle_write_monitoring(true);
@@ -558,7 +558,7 @@ TCPChannel::_handle_non_successful_socket_io(const char* io_op_str,
     if (rv == 0) {
         _on_eof();
     } else {
-        DCHECK_EQ(rv, -1);
+        CHECK_EQ(rv, -1);
         if (errno == EAGAIN) {
             // can safely ingore
         } else if (errno == EINPROGRESS) {
@@ -655,7 +655,7 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , output_evb_(evbuffer_new(), evbuffer_free)
     , read_lw_mark_(0)
 {
-    DCHECK_EQ(observer_, observer);
+    CHECK_EQ(observer_, observer);
     input_drop_.reset();
 }
 

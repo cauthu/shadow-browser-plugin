@@ -108,7 +108,17 @@ void
 InnerOuterHandler::onEOF(myio::StreamChannel*) noexcept
 {
     vlogself(2) << "outer stream EOF, tell buflo channel about that";
+#ifdef IN_SHADOW
     buflo_channel_->set_write_eof(inner_sid_);
+#else
+    /* we've run into issue where chrome closes its connection to us,
+     * and we tell buflo channel that the inner stream has seen
+     * eof. however, buflo still sends us data to forward to
+     * chrome... so what we'll do is, outside shadow, on close of
+     * either side, we'll "be done"
+    */
+    _be_done(false);
+#endif
 }
 
 void
