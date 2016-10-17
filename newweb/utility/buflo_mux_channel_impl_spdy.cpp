@@ -934,6 +934,7 @@ BufloMuxChannelImplSpdy::_update_send_stats(int num_written)
 
             // reset progress
             front_cell_sent_progress_ = 0;
+            output_cells_data_bytes_info_.pop_front();
         } else {
             // do nothing
             CHECK(num_written == 0);

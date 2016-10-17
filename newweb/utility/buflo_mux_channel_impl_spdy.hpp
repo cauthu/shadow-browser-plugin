@@ -11,6 +11,7 @@
 #include <list>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <deque>
 
 #include "object.hpp"
 #include "buflo_mux_channel.hpp"
@@ -505,7 +506,7 @@ protected:
     size_t front_cell_sent_progress_;
     /* describes how much useful data is contained in the cells that
      * are in the cell_outbuf_ */
-    std::vector<uint16_t> output_cells_data_bytes_info_;
+    std::deque<uint16_t> output_cells_data_bytes_info_;
 
     uint64_t all_send_byte_count_;
     uint64_t all_users_data_send_byte_count_;
