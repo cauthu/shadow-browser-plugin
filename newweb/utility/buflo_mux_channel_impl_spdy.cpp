@@ -1149,6 +1149,17 @@ BufloMuxChannelImplSpdy::_ensure_a_whole_dummy_cell_at_end_outbuf()
         return;
     }
 
+    // if there's at least one cell in outbuf already, then we
+    // shouldn't reach here... this might crash if there is a lot of
+    // data in cell buf, but since we now want to send a flag and
+    // there's no need data cell to be added, then we need to add a
+    // dummy cell... unless we implement the better strategy of
+    // setting flags in cells that are already in the cell_outbuf_. we
+    // didn't do that because it would require book keeping to know
+    // the boundaries of every cell in the cell outbuf, but now we
+    // have that anyway with the front_cell_sent_progress_
+    CHECK(evbuffer_get_length(cell_outbuf_) < cell_size_);
+
     _add_ONE_dummy_cell_to_outbuf();
 
     CHECK(whole_dummy_cell_at_end_outbuf_);
