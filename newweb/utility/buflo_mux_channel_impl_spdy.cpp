@@ -925,7 +925,7 @@ BufloMuxChannelImplSpdy::_update_send_stats(int num_written)
 
         if (front_cell_sent_progress_ == cell_size_) {
             vlogself(2) << "done sending front cell";
-            const auto& num_data_bytes_in_front_cell = output_cells_data_bytes_info_.at(0);
+            const auto num_data_bytes_in_front_cell = output_cells_data_bytes_info_.at(0);
             if (num_data_bytes_in_front_cell > 0) {
                 all_users_data_send_byte_count_ += num_data_bytes_in_front_cell;
             } else {
