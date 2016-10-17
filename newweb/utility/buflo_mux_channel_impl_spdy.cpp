@@ -686,24 +686,19 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
         // there is already one or more cell's worth of bytes waiting
         // to be sent, so we just try to send it and return
-        goto send_cell_outbuf;
+        _send_cell_outbuf();
+        goto done;
     }
 
     // need to add another cell to cell outbuf
 
-    _pump_spdy_send();
-
-    if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
-        goto send_cell_outbuf;
+    if (!_maybe_add_ONE_data_cell_to_outbuf()) {
+        // could not add data, so add dummy
+        _ensure_a_whole_dummy_cell_at_end_outbuf();
     }
-
-    // could not add data, so add dummy
-    _ensure_a_whole_dummy_cell_at_end_outbuf();
 
     // there must be at least one cell's worth of bytes in the outbuf
     CHECK_GE(evbuffer_get_length(cell_outbuf_), cell_size_);
-
-send_cell_outbuf:
 
     _send_cell_outbuf();
 
