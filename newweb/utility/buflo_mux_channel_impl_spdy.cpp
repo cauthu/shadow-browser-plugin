@@ -671,20 +671,24 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
         // there is already one or more cell's worth of bytes waiting
         // to be sent, so we just try to send it and return
-        _send_cell_outbuf();
-        goto done;
+        goto send_cell_outbuf;
     }
 
     // need to add another cell to cell outbuf
 
     _pump_spdy_send();
-    if (!_maybe_add_ONE_data_cell_to_outbuf()) {
-        // could not add data, so add dummy
-        _ensure_a_whole_dummy_cell_at_end_outbuf();
+
+    if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
+        goto send_cell_outbuf;
     }
+
+    // could not add data, so add dummy
+    _ensure_a_whole_dummy_cell_at_end_outbuf();
 
     // there must be at least one cell's worth of bytes in the outbuf
     CHECK_GE(evbuffer_get_length(cell_outbuf_), cell_size_);
+
+send_cell_outbuf:
 
     _send_cell_outbuf();
 
@@ -963,8 +967,6 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
     if (defense_info_.state == DefenseState::ACTIVE) {
         // there must be at least one cell in outbuf
         CHECK_GE(curbufsize, cell_size_);
-        // but strictly less than two cells
-        CHECK_LT(curbufsize, (2*cell_size_));
 
         vlogself(2) << "tell socket to write ONE cell's worth of bytes";
         num_written = evbuffer_write_atmost(cell_outbuf_, fd_, cell_size_);
@@ -1211,14 +1213,10 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int ca
 
         _WITH_CALLER_CHECK(curbufsize == amnt_to_keep)
             << "amnt_to_keep= " << amnt_to_keep << " curbufsize= " << curbufsize;
-        if (defense_info_.state == DefenseState::ACTIVE) {
-            _WITH_CALLER_CHECK(curbufsize < cell_size_)
-                << "curbufsize= " << curbufsize;
-        }
 
         whole_dummy_cell_at_end_outbuf_ = false;
-        CHECK(!output_cells_data_bytes_info_.empty());
-        CHECK(output_cells_data_bytes_info_.back() == 0);
+        _WITH_CALLER_CHECK(!output_cells_data_bytes_info_.empty());
+        _WITH_CALLER_CHECK(output_cells_data_bytes_info_.back() == 0);
         output_cells_data_bytes_info_.pop_back();
 
         did_drop = true;
