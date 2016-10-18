@@ -813,21 +813,21 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         CHECK((defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND)
               || (defense_info_.state == DefenseState::ACTIVE && !defense_info_.stop_requested));
         CHECK(is_client_side_);
-        logself(INFO) << "setting the START flag, in a " << cell_type << " cell";
+        vlogself(1) << "setting the START flag, in a " << cell_type << " cell";
         SET_CELL_START_FLAG(*type_n_flags);
         defense_info_.need_start_flag_in_next_cell = false;
     }
 
     if (defense_info_.need_stop_flag_in_next_cell) {
         // CHECK(defense_info_.stop_requested);
-        logself(INFO) << "setting the STOP flag, in a " << cell_type << " cell";
+        vlogself(1) << "setting the STOP flag, in a " << cell_type << " cell";
         SET_CELL_STOP_FLAG(*type_n_flags);
         defense_info_.need_stop_flag_in_next_cell = false;
     }
 
     if (defense_info_.need_auto_stopped_flag_in_next_cell) {
         CHECK(!is_client_side_);
-        logself(INFO) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
+        vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
         SET_CELL_AUTO_STOPPED_FLAG(*type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
     }
