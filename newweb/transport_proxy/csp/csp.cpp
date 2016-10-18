@@ -464,6 +464,13 @@ ClientSideProxy::_schedule_log_timer()
 void
 ClientSideProxy::_log_stats_timer_fired(Timer*)
 {
+    log_stats();
+    _schedule_log_timer();
+}
+
+void
+ClientSideProxy::log_stats() const
+{
     logself(INFO) << "recv_so_far: all_bytes= " << all_recv_byte_count_so_far()
                   << " useful_bytes= " << useful_recv_byte_count_so_far()
                   << " dummy_cells= " << dummy_recv_cell_count_so_far()
@@ -471,8 +478,6 @@ ClientSideProxy::_log_stats_timer_fired(Timer*)
                   << " useful_bytes= " << useful_send_byte_count_so_far()
                   << " dummy_cells= " << dummy_send_cell_count_so_far()
                   << " dummy_cells_avoided_so_far= " << num_dummy_cells_avoided_so_far();
-
-    _schedule_log_timer();
 }
 
 ClientSideProxy::~ClientSideProxy()

@@ -81,6 +81,8 @@ public:
 
     void start_accepting_clients();
 
+    void log_stats() const;
+
 protected:
 
     virtual ~ClientSideProxy();

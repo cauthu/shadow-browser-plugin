@@ -61,6 +61,19 @@ s_on_SIGUSR2(int, short, void *arg)
     csp->stop_defense_session(false);
 }
 
+static void
+s_on_SIGTERM_SIGINT(int, short, void *arg)
+{
+    auto csp = (csp::ClientSideProxy*)arg;
+    CHECK_NOTNULL(csp);
+
+    LOG(INFO) << "received SIGTERM or SIGINT... logging stats";
+    csp->log_stats();
+
+    LOG(INFO) << "exiting now";
+    exit(0);
+}
+
 #endif
 
 
@@ -281,6 +294,10 @@ int main(int argc, char **argv)
 
     std::unique_ptr<struct event, void(*)(struct event*)> sigusr2_ev(
         nullptr, event_free);
+    std::unique_ptr<struct event, void(*)(struct event*)> sigterm_ev(
+        nullptr, event_free);
+    std::unique_ptr<struct event, void(*)(struct event*)> sigint_ev(
+        nullptr, event_free);
 
     /* if either auto start is yes, or any of the tamaraw params is
      * set, then all must be set
@@ -379,7 +396,21 @@ int main(int argc, char **argv)
                 evsignal_new(evbase.get(), SIGUSR2, s_on_SIGUSR2, csp.get()));
             CHECK_NOTNULL(sigusr2_ev.get());
 
-            const auto rv2 = event_add(sigusr2_ev.get(), nullptr);
+            auto rv2 = event_add(sigusr2_ev.get(), nullptr);
+            CHECK_EQ(rv2, 0);
+
+            sigterm_ev.reset(
+                evsignal_new(evbase.get(), SIGTERM, s_on_SIGTERM_SIGINT, csp.get()));
+            CHECK_NOTNULL(sigterm_ev.get());
+
+            rv2 = event_add(sigterm_ev.get(), nullptr);
+            CHECK_EQ(rv2, 0);
+
+            sigint_ev.reset(
+                evsignal_new(evbase.get(), SIGINT, s_on_SIGTERM_SIGINT, csp.get()));
+            CHECK_NOTNULL(sigint_ev.get());
+
+            rv2 = event_add(sigint_ev.get(), nullptr);
             CHECK_EQ(rv2, 0);
 
 #endif
