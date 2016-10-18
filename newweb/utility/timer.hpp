@@ -41,8 +41,8 @@ public:
      *
      * cancel() and restart() can be called anytime.
      */
-    void start(const struct timeval *tv);
-    void start(const uint32_t msec);
+    bool start(const struct timeval *tv, const bool assert_not_running=true);
+    bool start(const uint32_t msec, const bool assert_not_running=true);
     void cancel();
     void restart(const struct timeval *tv);
 

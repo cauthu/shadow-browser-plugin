@@ -34,8 +34,8 @@ Timer::Timer(struct event_base *evbase,
     vlogself(2) << "timer constructed";
 }
 
-void
-Timer::start(const struct timeval *tv)
+bool
+Timer::start(const struct timeval *tv, const bool assert_not_running)
 {
     CHECK_NOTNULL(tv);
 
@@ -43,16 +43,24 @@ Timer::start(const struct timeval *tv)
         CHECK(timerisset(tv)) << "a repeating timer with 0 delay??";
     }
 
-    CHECK(!is_running()) << "timer is pending/firing; maybe you want restart()?";
+    if (is_running()) {
+        if (assert_not_running) {
+            logself(FATAL)
+                << "timer is pending/firing; maybe you want restart()?";
+        } else {
+            return false;
+        }
+    }
 
     auto rv = event_add(ev_.get(), tv);
     CHECK_EQ(rv, 0);
 
     vlogself(2) << "timer started";
+    return true;
 }
 
-void
-Timer::start(const uint32_t msec)
+bool
+Timer::start(const uint32_t msec, const bool assert_not_running)
 {
     struct timeval tv;
     // get the whole seconds
@@ -60,7 +68,7 @@ Timer::start(const uint32_t msec)
     // mod-1000 to get the sub-second in millisecond, then multiply
     // 1000 to get microseconds
     tv.tv_usec = (msec % 1000) * 1000;
-    start(&tv);
+    return start(&tv, assert_not_running);
 }
 
 void
