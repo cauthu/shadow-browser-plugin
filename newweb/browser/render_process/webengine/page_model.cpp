@@ -147,6 +147,23 @@ PageModel::get_resource_info(const uint32_t& resInstNum,
 
 }
 
+void
+PageModel::get_all_resource_instNums(std::vector<uint32_t>& res_instNums) const
+{
+    json::Value::ConstMemberIterator itr = model_json.FindMember("resources");
+    CHECK(itr != model_json.MemberEnd());
+
+    const json::Value& resources = itr->value;
+    CHECK(resources.IsObject());
+
+    for (json::Value::ConstMemberIterator i = resources.MemberBegin();
+         i != resources.MemberEnd(); ++i)
+    {
+        auto const instNum = boost::lexical_cast<uint32_t>(i->name.GetString());
+        res_instNums.push_back(instNum);
+    }
+}
+
 bool
 PageModel::get_element_info(const uint32_t& elemInstNum,
                             ElementInfo& info) const

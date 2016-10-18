@@ -103,6 +103,8 @@ protected:
 
     void _do_end_of_task_work();
 
+    void _maybe_load_unloaded_resources();
+
     // reset to prepare for new page load, including clearing any
     // state that might be existing from the last page load
     void _reset_loading_state();

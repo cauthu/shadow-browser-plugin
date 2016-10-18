@@ -90,6 +90,8 @@ public:
     bool get_resource_info(const uint32_t& resInstNum,
                            ResourceInfo& res_info) const;
 
+    void get_all_resource_instNums(std::vector<uint32_t>&) const;
+
     /* popuplate "elem_info" with information about the element
      */
     bool get_element_info(const uint32_t& elemInstNum,

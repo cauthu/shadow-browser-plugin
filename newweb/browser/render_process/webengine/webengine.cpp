@@ -567,6 +567,56 @@ Webengine::checkCompleted_timer_fired(Timer*)
 
     renderer_ipcserver_->send_PageLoaded(current_load_id_, ttfb_ms);
 
+    _maybe_load_unloaded_resources();
+    
+    VLOG(2) << "done";
+}
+
+void
+Webengine::_maybe_load_unloaded_resources()
+{
+    // if the page has absolutely no more activity then we go through
+    // the page model and load any resources that have not been loaded
+    //
+    // TODO: currently only checkCompleted_timer_fired() calls us;
+
+    VLOG(2) << "begin";
+
+    if (state_ != State::IDLE) {
+        VLOG(2) << "not idle";
+        return;
+    }
+
+    for (const auto& kv : dom_timers_) {
+        const auto& domtimer = kv.second;
+        if (domtimer->is_running()) {
+            VLOG(2) << "timer:" << domtimer->timerID() << " is still running";
+            return;
+        }
+    }
+
+    if (!pending_requests_.empty()) {
+        VLOG(2) << "some requests are pending";
+        return;
+    }
+
+    if (checkCompleted_timer_->is_running()) {
+        VLOG(2) << "check complete timer is still scheduled";
+        return;
+    }
+
+    std::vector<uint32_t> resInstNums;
+    page_model_->get_all_resource_instNums(resInstNums);
+
+    for (auto resInstNum : resInstNums) {
+        auto resource = resource_fetcher_->getResource(resInstNum);
+        CHECK(resource);
+        if (!resource->isLoading() && !resource->isFinished()) {
+            LOG(INFO) << "force load of res:" << resInstNum;
+            resource->load();
+        }
+    }
+
     VLOG(2) << "done";
 }
 
