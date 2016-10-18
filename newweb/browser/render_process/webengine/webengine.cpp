@@ -321,6 +321,7 @@ Webengine::cancel_timer(const uint32_t timerID)
         DOMTimer::UniquePtr timer = std::move(it->second);
         CHECK_NOTNULL(timer.get());
         timer->cancel();
+        dom_timers_.erase(it);
     } else {
         LOG(WARNING) << "timer:" << timerID << " does not (yet) exist";
     }
