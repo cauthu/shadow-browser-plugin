@@ -239,9 +239,12 @@ Document::finishedParsing()
 void
 Document::_didLoadAllScriptBlockingResources()
 {
-    // fire asap
-    static const uint32_t delayMs = 0;
-    executeScriptsWaitingForResourcesTimer_->start(delayMs);
+    if (!executeScriptsWaitingForResourcesTimer_->is_running()) {
+        // fire asap
+        static const uint32_t delayMs = 0;
+        const auto rv = executeScriptsWaitingForResourcesTimer_->start(delayMs, false);
+        CHECK(rv);
+    }
 }
 
 void
