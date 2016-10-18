@@ -1,0 +1,42 @@
+<shadow>
+  <kill time="1800"/>
+  <topology path="~/.shadow/share/topology.graphml.xml"/>
+  <plugin id="webserver" path="~/.shadow/plugins/libshadow-plugin-webserver.so"/>
+  <plugin id="driver" path="~/.shadow/plugins/libshadow-plugin-driver_process.so"/>
+  <plugin id="renderer" path="~/.shadow/plugins/libshadow-plugin-render_process.so"/>
+  <plugin id="ioservice" path="~/.shadow/plugins/libshadow-plugin-io_process.so"/>
+  <plugin id="tproxy" path="~/.shadow/plugins/libshadow-plugin-transport_proxy.so"/>
+
+  <node id="server1" geocodehint="US" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="webserver" starttime="1" arguments="--port=80 --port=443 --v=0"/>
+  </node>
+
+  <node id="server2" geocodehint="US" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="webserver" starttime="1" arguments="--port=80 --port=443 --v=0"/>
+  </node>
+
+  <node id="server3" geocodehint="US" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="webserver" starttime="1" arguments="--port=80 --port=443 --v=1"/>
+  </node>
+
+  <node id="server4" geocodehint="US" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="webserver" starttime="1" arguments="--port=80 --port=443 --v=0"/>
+  </node>
+
+  <node id="server5" geocodehint="US" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="webserver" starttime="1" arguments="--port=80 --port=443 --v=0"/>
+  </node>
+
+  <node id="ssp.com" iphint="220.181.57.217" geocodehint="CN" typehint="server" bandwidthup="102400" bandwidthdown="102400" quantity="1" cpufrequency="10000000">
+    <application plugin="tproxy" starttime="1" arguments="--conf=tproxy_ssp.conf --v=1"/>
+  </node>
+
+  <node id="webclient1" geocodehint="US" typehint="client" quantity="1" cpufrequency="2400000">
+    <application plugin="ioservice" starttime="1000" arguments="--conf=ioservice.conf --v=1"/>
+    <application plugin="renderer" starttime="1001" arguments="--conf=renderer.conf --v=1"/>
+    <application plugin="tproxy" starttime="1" arguments="--conf=tproxy_csp.conf --v=1"/>
+    <application plugin="driver" starttime="1002" arguments="--conf=driver.conf --v=1"/>
+  </node>
+
+</shadow>
+
