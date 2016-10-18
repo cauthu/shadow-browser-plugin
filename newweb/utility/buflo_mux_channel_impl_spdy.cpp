@@ -1360,7 +1360,7 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
     const auto cell_flags = GET_CELL_FLAGS(cell_read_info_.type_n_flags_);
     if (cell_flags) {
         const bitset<CELL_FLAGS_WIDTH> flags_bs(cell_flags);
-        logself(INFO) << "received cell flags: " << flags_bs;
+        vlogself(1) << "received cell flags: " << flags_bs;
 
         const auto start_defense = flags_bs.test(CELL_FLAGS_START_DEFENSE_POSITION);
         const auto stop_defense = flags_bs.test(CELL_FLAGS_STOP_DEFENSE_POSITION);
