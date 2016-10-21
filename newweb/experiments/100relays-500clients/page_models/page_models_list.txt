@@ -3,3 +3,4 @@ nytimes ../../../page_models/nytimes_page_model.json
 bing ../../../page_models/bing-page_model-10152016.json
 ebay ../../../page_models/ebay_page_model-10142016.json
 alibaba ../../../page_models/alibaba-page_model-10152016.json
+baidu ../../../page_models/baidu-page_model-10152016.json
