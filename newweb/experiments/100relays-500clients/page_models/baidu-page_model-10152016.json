@@ -468,7 +468,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server159",
           "method": "GET",
           "port": 80,
           "priority": 4,
@@ -483,7 +483,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server159",
           "method": "GET",
           "port": 80,
           "priority": 0,
@@ -498,7 +498,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server159",
           "method": "GET",
           "port": 80,
           "priority": 0,
@@ -513,7 +513,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 2,
@@ -528,7 +528,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 0,
@@ -543,7 +543,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 0,
@@ -558,7 +558,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 0,
@@ -573,7 +573,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 2,
@@ -588,7 +588,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 0,
