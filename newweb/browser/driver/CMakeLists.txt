@@ -45,7 +45,7 @@ endif()
 
 
 
-if("${CMAKE_BUILD_NATIVE_PROCESSES}" STREQUAL "yes")
+if("${CMAKE_BUILD_NATIVE_BINARIES}" STREQUAL "yes")
 
   ## create and install an executable that can run outside of shadow
   remove_definitions(-DIN_SHADOW)
