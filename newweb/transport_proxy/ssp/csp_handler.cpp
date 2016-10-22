@@ -46,10 +46,12 @@ CSPHandler::CSPHandler(struct event_base* evbase,
     const auto rv = gethostname(myhostname, (sizeof myhostname) - 1);
     CHECK_EQ(rv, 0);
 
+    const uint32_t cell_size = tamaraw_pkt_intvl_ms ? 750 : 0;
+
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
             evbase, fd, false, ntohl(common::getaddr(myhostname)),
-            750, tamaraw_pkt_intvl_ms, tamaraw_L, tamaraw_time_limit_secs,
+            cell_size, tamaraw_pkt_intvl_ms, tamaraw_L, tamaraw_time_limit_secs,
             boost::bind(&CSPHandler::_on_buflo_channel_status,
                         this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,

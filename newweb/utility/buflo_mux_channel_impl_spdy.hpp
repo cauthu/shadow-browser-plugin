@@ -31,8 +31,16 @@ public:
     // AsyncTransport.h for example)
     typedef std::unique_ptr<BufloMuxChannelImplSpdy, Destructor> UniquePtr;
 
-    /* right now only one cell size == 750 is supported. that is what
-     * the tamaraw paper used
+    /* "cell_size" can be two values:
+     *
+     * * 0 means we are not sending cells at all, i.e., no buflo
+     * stuff. just a straight spdy proxy. NOTE that this applies only
+     * to our sending; the other peer can still send cells, and we
+     * still receive them correctly.
+     *
+     * * 750 means we will be sending cells of 750 bytes, with padding
+     * if necessary. again, the peer can independently choose to use 0
+     * or 750
      *
      * "myaddr" will be sent to the other end, to help
      * troublingshooting. should be in host-byte order
@@ -474,13 +482,16 @@ protected:
 
     struct {
         ReadState state_;
-        uint8_t type_n_flags_;
+        uint8_t cell_type_;
+        uint8_t cell_flags_;
         uint16_t payload_len_;
 
         void reset()
         {
             state_ = ReadState::READ_HEADER;
             payload_len_ = 0;
+            cell_type_ = CellType::DATA;
+            cell_flags_ = 0;
         }
     } cell_read_info_;
     bool need_to_read_peer_info_;

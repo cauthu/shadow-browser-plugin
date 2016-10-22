@@ -86,7 +86,7 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 2;
+static const uint8_t s_version = 3;
 
 /* 1 byte for version, 2 for cell size, and 4 for address */
 #define PEER_INFO_NUM_BYTES (1 + 2 + 4)
@@ -221,9 +221,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
     , myaddr_(myaddr)
-    , defense_session_time_limit_(defense_session_time_limit
-                                  ? defense_session_time_limit
-                                  : default_defense_session_time_limit)
+    , defense_session_time_limit_(defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
     , num_dummy_cells_avoided_(0)
     , front_cell_sent_progress_(0)
@@ -236,10 +234,12 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , dummy_send_cell_count_(0)
 {
     /* the value used by tamaraw paper */
-    CHECK(cell_size == 750);
+    CHECK((cell_size == 750)
+          || (cell_size == 0));
 
-    CHECK_GT(defense_session_time_limit_, 1);
-    CHECK_LE(defense_session_time_limit_, 60 * 3);
+    if (defense_session_time_limit_) {
+        CHECK_LE(defense_session_time_limit_, 60 * 3);
+    }
 
     // hardcoding this for now. this is what the tamaraw paper used
     CHECK(   (tamaraw_L_ == 0)
@@ -259,6 +259,13 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         // if either is 0, then both must be 0
         CHECK((tamaraw_L == 0) && (tamaraw_pkt_intvl_ms_ == 0));
     }
+
+    if (cell_size_ || tamaraw_L_ || tamaraw_pkt_intvl_ms_ || defense_session_time_limit_)
+    {
+        // if using any of these, then all have to be specified
+        CHECK(cell_size_ && tamaraw_L_ && tamaraw_pkt_intvl_ms_ && defense_session_time_limit_);
+    }
+
 
     logself(INFO) << "my version= " << unsigned(s_version)
                   << " using cell size= " << cell_size_
@@ -731,6 +738,12 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
         return;
     }
 
+    if (!cell_size_) {
+        // we're not using cells
+        _maybe_toggle_write_monitoring(ForceToggleMode::NONE);
+        return;
+    }
+
     size_t num_cells_added = 0;
 
     if (defense_info_.state == DefenseState::NONE) {
@@ -969,6 +982,7 @@ BufloMuxChannelImplSpdy::_send_cell_outbuf()
 {
     vlogself(2) << "begin";
 
+    CHECK(cell_size_ > 0);
     auto curbufsize = evbuffer_get_length(cell_outbuf_);
 
     int num_written = 0;
@@ -1076,7 +1090,10 @@ BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(ForceToggleMode forcemod
         CHECK_EQ(forcemode, ForceToggleMode::NONE);
     }
 
-    if (evbuffer_get_length(cell_outbuf_) > 0) {
+    /* if we're not using cells, i.e., cell_size_ == 0, then check the
+     * spdy_outbuf_
+     */
+    if (evbuffer_get_length(cell_size_ ? cell_outbuf_ : spdy_outbuf_) > 0) {
         goto enable;
     } else {
         goto disable;
@@ -1259,6 +1276,7 @@ void
 BufloMuxChannelImplSpdy::_read_cells()
 {
     vlogself(2) << "begin";
+    CHECK(peer_cell_size_ > 0);
 
     // todo: maybe limit how much time we spend in here, i.e., yield
     // after X ms, so that we can send cells on time and not miss the
@@ -1290,11 +1308,15 @@ BufloMuxChannelImplSpdy::_read_cells()
                 auto buf = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE);
                 CHECK_NOTNULL(buf);
 
-                memcpy((uint8_t*)&cell_read_info_.type_n_flags_,
+                uint8_t type_n_flags = 0;
+                memcpy((uint8_t*)&type_n_flags,
                        buf, CELL_TYPE_AND_FLAGS_FIELD_SIZE);
                 memcpy((uint8_t*)&cell_read_info_.payload_len_,
                        buf + CELL_TYPE_AND_FLAGS_FIELD_SIZE,
                        CELL_PAYLOAD_LEN_FIELD_SIZE);
+
+                cell_read_info_.cell_type_ = GET_CELL_TYPE(type_n_flags);
+                cell_read_info_.cell_flags_ = GET_CELL_FLAGS(type_n_flags);
 
                 // convert to host byte order
                 cell_read_info_.payload_len_ =
@@ -1303,14 +1325,10 @@ BufloMuxChannelImplSpdy::_read_cells()
                 // update state
                 cell_read_info_.state_ = ReadState::READ_BODY;
                 vlogself(2) << "got type= "
-                            << unsigned(cell_read_info_.type_n_flags_)
+                            << unsigned(cell_read_info_.cell_type_)
                             << ", payload len= "
                             << cell_read_info_.payload_len_;
 
-                // TODO: optimize: if cell type is dummy, do the
-                // drain/dropread logic here
-
-                // not draining input buf here!
             } else {
                 vlogself(2) << "not enough bytes yet";
                 keep_consuming = false; // to break out of loop
@@ -1357,7 +1375,7 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
     auto ptr = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE + payload_len);
 
     // handle any flags
-    const auto cell_flags = GET_CELL_FLAGS(cell_read_info_.type_n_flags_);
+    const auto cell_flags = (cell_read_info_.cell_flags_);
     if (cell_flags) {
         const bitset<CELL_FLAGS_WIDTH> flags_bs(cell_flags);
         vlogself(1) << "received cell flags: " << flags_bs;
@@ -1399,9 +1417,9 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
     }
 
     // handle data
-    const auto cell_type = GET_CELL_TYPE(cell_read_info_.type_n_flags_);
+    const auto cell_type = (cell_read_info_.cell_type_);
 
-    vlogself(2) << "type: " << cell_type << " payload_len: " << payload_len;
+    vlogself(2) << "type: " << unsigned(cell_type) << " payload_len: " << payload_len;
 
     switch (cell_type) {
 
@@ -1477,13 +1495,22 @@ BufloMuxChannelImplSpdy::_on_socket_readcb(int fd, short what)
                 _handle_failed_socket_io("readPeerInfo", rv, true);
             }
         } else {
-            // let buffer decide how much to read
-            const auto rv = evbuffer_read(cell_inbuf_, fd_, -1);
+            // let buffer decide how much to read. if peer is not
+            // sending cells, then we read directly into spdy buf
+            const auto rv = evbuffer_read(
+                peer_cell_size_ ? cell_inbuf_ : spdy_inbuf_, fd_, -1);
             vlogself(2) << "evbuffer_read() returns: " << rv;
             if (rv > 0) {
                 // there's new data
                 all_recv_byte_count_ += rv;
-                _read_cells();
+
+                if (peer_cell_size_) {
+                    _read_cells();
+                } else {
+                    all_users_data_recv_byte_count_ += rv;
+
+                    _pump_spdy_recv();
+                }
             } else {
                 _handle_failed_socket_io("read", rv, true);
             }
@@ -1515,20 +1542,44 @@ BufloMuxChannelImplSpdy::_on_socket_writecb(int fd, short what)
             CHECK(!my_peer_info_outbuf_);
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
         } else {
-            if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
-                // for now, to keep logic simple, we insist that the
-                // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
-                // check that cell_outbuf_ has one cell
-                CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
 
-                vlogself(2) << "automatically starting the defense";
-                // start_defense_session() will set to ACTIVE
-                defense_info_.state = DefenseState::NONE;
-                start_defense_session();
-                // we have only started the timer. we will fall through to
-                // do the first write here
+            if (cell_size_) {
+                if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
+                    // for now, to keep logic simple, we insist that the
+                    // cell_outbuf_ has EXACTLY ONE DATA cell; but we can only
+                    // check that cell_outbuf_ has one cell
+                    CHECK_EQ(evbuffer_get_length(cell_outbuf_), cell_size_);
+
+                    vlogself(2) << "automatically starting the defense";
+                    // start_defense_session() will set to ACTIVE
+                    defense_info_.state = DefenseState::NONE;
+                    start_defense_session();
+                    // we have only started the timer. we will fall through to
+                    // do the first write here
+                }
+                _send_cell_outbuf();
+
+            } else {
+                const auto curbufsize = evbuffer_get_length(spdy_outbuf_);
+                vlogself(2) << "curbufsize= " << curbufsize;
+                CHECK(curbufsize > 0) << "curbufsize= " << curbufsize;
+
+                const auto num_written = evbuffer_write(spdy_outbuf_, fd_);
+                vlogself(2) << "evbuffer_write() return: " << num_written;
+
+                if (num_written > 0) {
+                    all_send_byte_count_ += num_written;
+                    all_users_data_send_byte_count_ += num_written;
+                    if (num_written == curbufsize) {
+                        // we have fully emptied the output buffer, so
+                        // we can disable write event
+                        _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_DISABLE);
+                    }
+                } else {
+                    _handle_failed_socket_io("write", num_written, true);
+                }
+
             }
-            _send_cell_outbuf();
         }
     } else {
         CHECK(0) << "invalid events: " << unsigned(what);

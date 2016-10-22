@@ -41,14 +41,15 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
                                  const in_port_t& peer_port,
                                  const in_addr_t& socks5_addr,
                                  const in_port_t& socks5_port,
-                                 const uint32_t& buflo_frequencyMs,
+                                 const uint32_t& buflo_packet_intvl_ms,
                                  const uint32_t& buflo_L,
                                  const uint32_t& buflo_time_limit_secs)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
     , peer_host_(peer_host), peer_port_(peer_port)
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
-    , buflo_frequencyMs_(buflo_frequencyMs)
+    , buflo_cell_size_(0)
+    , buflo_packet_intvl_ms_(buflo_packet_intvl_ms)
     , buflo_L_(buflo_L)
     , buflo_time_limit_secs_(buflo_time_limit_secs)
     , state_(State::INITIAL)
@@ -74,6 +75,8 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     CHECK(myaddr_ && (myaddr_ != INADDR_NONE));
 
     _schedule_log_timer();
+
+    buflo_cell_size_ = buflo_packet_intvl_ms_ ? 750 : 0;
 
     initialized = true;
 }
@@ -122,6 +125,8 @@ ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
 bool
 ClientSideProxy::set_auto_start_defense_session_on_next_send()
 {
+    CHECK(buflo_cell_size_ > 0) << "i'm not configured for buflo";
+
     if (state_ != State::READY) {
         logself(WARNING)
             << "cannot set auto start because channel is not ready";
@@ -139,6 +144,11 @@ ClientSideProxy::set_auto_start_defense_session_on_next_send()
 void
 ClientSideProxy::stop_defense_session(const bool& right_now)
 {
+    if (buflo_cell_size_ == 0) {
+        logself(WARNING) << "i'm not configured for buflo";
+        return;
+    }
+
     if (state_ != State::READY) {
         logself(WARNING) << "channel is not ready";
         return;
@@ -339,7 +349,8 @@ ClientSideProxy::_on_connected_to_ssp()
 
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
-            evbase_, peer_fd, true, myaddr_, 750, buflo_frequencyMs_, buflo_L_,
+            evbase_, peer_fd, true, myaddr_,
+            buflo_cell_size_, buflo_packet_intvl_ms_, buflo_L_,
             buflo_time_limit_secs_,
             boost::bind(&ClientSideProxy::_on_buflo_channel_status,
                         this, _1, _2),
