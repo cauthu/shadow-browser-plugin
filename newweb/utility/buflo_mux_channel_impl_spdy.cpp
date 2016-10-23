@@ -606,6 +606,8 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
 {
     CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
 
+    vlogself(2) << "begin +++";
+
     struct timeval current_tv;
     const auto rv = gettimeofday(&current_tv, nullptr);
     CHECK_EQ(rv, 0);
@@ -688,7 +690,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         }
     }
 
-    vlogself(2) << "begin";
+    vlogself(2) << "defense is still on-going";
 
     if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
         // there is already one or more cell's worth of bytes waiting
@@ -710,7 +712,7 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     _send_cell_outbuf();
 
 done:
-    vlogself(2) << "done";
+    vlogself(2) << "done ---";
 }
 
 /*
@@ -739,7 +741,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
     }
 
     if (!cell_size_) {
-        // we're not using cells
+        vlogself(2) << "we're not using cells";
         _maybe_toggle_write_monitoring(ForceToggleMode::NONE);
         return;
     }
@@ -757,13 +759,13 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
             logself(INFO) << "added " << num_cells_added << " data cells";
         }
     } else if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
-        // we want to add only one cell
+        vlogself(2) << "we want to add only one cell";
         num_cells_added = _maybe_add_ONE_data_cell_to_outbuf();
         // must have added
         CHECK(num_cells_added == 1) << "num_cells_added: " << num_cells_added;
         _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
     } else {
-        // defense is active, we don't enable write monitoring
+        vlogself(2) << "defense is active, we don't enable write monitoring";
         CHECK_EQ(defense_info_.state, DefenseState::ACTIVE);
     }
 
@@ -951,11 +953,14 @@ BufloMuxChannelImplSpdy::_update_output_cell_progress(int num_written)
         }
 
         if (front_cell_sent_progress_ == cell_size_) {
-            vlogself(2) << "done sending front cell";
+            vlogself(2) << "done sending front cell...";
             const auto num_data_bytes_in_front_cell = output_cells_data_bytes_info_.at(0);
             if (num_data_bytes_in_front_cell > 0) {
+                vlogself(2) << "   ... with num_data_bytes_in_front_cell= "
+                            << num_data_bytes_in_front_cell;
                 all_users_data_send_byte_count_ += num_data_bytes_in_front_cell;
             } else {
+                vlogself(2) << "   ... it was a whole dummy cell";
                 ++dummy_send_cell_count_;
             }
 
@@ -1100,11 +1105,13 @@ BufloMuxChannelImplSpdy::_maybe_toggle_write_monitoring(ForceToggleMode forcemod
     }
 
 enable:
+    vlogself(2) << "REALLY enable write event";
     rv = event_add(socket_write_ev_.get(), nullptr);
     CHECK_EQ(rv, 0);
     return;
 
 disable:
+    vlogself(2) << "REALLY disable write event";
     rv = event_del(socket_write_ev_.get());
     CHECK_EQ(rv, 0);
     return;
