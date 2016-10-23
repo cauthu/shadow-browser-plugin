@@ -50,6 +50,10 @@ public:
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) override;
 
+#ifndef IN_SHADOW
+    virtual int start_ssl(SSL_CTX*) override;
+#endif
+
     virtual int read(uint8_t *data, size_t len) override;
     virtual int read_buffer(struct evbuffer* buf, size_t len) override;
     virtual int drain(size_t len) override;
@@ -77,6 +81,9 @@ protected:
         INIT,
         CONNECTING_SOCKET,
         SOCKET_CONNECTED,
+#ifndef IN_SHADOW
+        SSL_HANDSHAKING,
+#endif
         CLOSED /* after either eof or error; can still read buffered
                 * input */
     };
@@ -100,6 +107,12 @@ protected:
     void _handle_non_successful_socket_io(const char* io_op_str,
                                           const ssize_t rv,
                                           const bool crash_if_EINPROGRESS);
+
+#ifndef IN_SHADOW
+    void _maybe_enable_socket_io_for_ssl(const int& ssl_err);
+    void _do_ssl_read();
+    void _do_ssl_write();
+#endif
 
     void _on_eof();
     void _on_error();
@@ -200,6 +213,10 @@ protected:
                                       // in progress updates
     } input_drop_;
 
+#ifndef IN_SHADOW
+    SSL_CTX* ssl_ctx_ = nullptr;
+    std::unique_ptr<SSL, void(*)(SSL* ssl)> ssl_;
+#endif
 };
 
 

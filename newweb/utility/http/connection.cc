@@ -55,7 +55,7 @@ Connection::Connection(
     ConnectionErrorCb error_cb, ConnectionEOFCb eof_cb,
     PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
     PushedBodyDoneCb pushed_body_done_cb,
-    void *cb_data, const bool& use_spdy
+    void *cb_data, const bool& use_spdy, SSL_CTX* ssl_ctx
     )
     : use_spdy_(use_spdy), evbase_(evbase)
     , state_(State::DISCONNECTED)
@@ -70,6 +70,7 @@ Connection::Connection(
     , http_rsp_state_(HTTPRespState::HTTP_RSP_STATE_STATUS_LINE)
     , http_rsp_status_(-1), remaining_resp_body_len_(0)
     , cumulative_num_sent_bytes_(0), cumulative_num_recv_bytes_(0)
+    , ssl_ctx_(ssl_ctx)
 {
     /* ssp acts as an http proxy, only it uses spdy to transport. so
      * if ssp is used, then we don't need the actual address of the
@@ -664,6 +665,7 @@ Connection::onSocksTargetConnectResult(
         socks_connector_.reset();
 
         vlogself(2) << "connected to target (thru socks proxy)";
+#ifdef IN_SHADOW
         state_ = State::CONNECTED;
 
         // need to set ourselves as observer again because
@@ -671,6 +673,20 @@ Connection::onSocksTargetConnectResult(
         transport_->set_observer(this);
 
         _maybe_send();
+
+#else
+        if (ssl_ctx_ && (port_ == 443)) {
+            transport_->start_ssl(ssl_ctx_);
+            state_ = State::SSL_HANDSHAKING;
+        } else {
+            state_ = State::CONNECTED;
+            // need to set ourselves as observer again because
+            // socks5connector overtook us
+            transport_->set_observer(this);
+
+            _maybe_send();
+        }
+#endif
 
         break;
     }
@@ -730,8 +746,24 @@ Connection::onConnected(StreamChannel* ch) noexcept
     }
     else if (state_ == State::CONNECTING) {
         vlogself(2) << "connected to target";
+
+#ifdef IN_SHADOW
+
         state_ = State::CONNECTED;
         _maybe_send();
+
+#else
+        if (ssl_ctx_ && (port_ == 443)) {
+            vlogself(2) << "start ssl";
+            transport_->start_ssl(ssl_ctx_);
+            state_ = State::SSL_HANDSHAKING;
+        } else {
+            state_ = State::CONNECTED;
+            _maybe_send();
+        }
+
+#endif
+
     }
     else {
         logself(FATAL) << "invalid state";
@@ -760,7 +792,7 @@ Connection::initiate_connection()
     vlogself(2) << "socks5 " << socks5_addr_ << ":" << socks5_port_;
 
     if (state_ == State::DISCONNECTED && socks5_addr_ && socks5_port_) {
-        vlogself(2) << "first, connect to socks proxy";
+        vlogself(2) << "first, connect to socks proxy port " << socks5_port_;
 
         CHECK(!transport_);
         transport_.reset(new TCPChannel(evbase_, socks5_addr_, socks5_port_, this));

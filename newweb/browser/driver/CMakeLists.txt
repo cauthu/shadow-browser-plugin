@@ -19,7 +19,7 @@ set(DRIVER_PROCESS_SOURCES
   ${UTILITY_DIR}/ipc/generic_ipc_channel.cpp
 )
 
-set(LINK_LIBS ${EVENT2_LIBRARIES})
+set(LINK_LIBS ${EVENT2_LIBRARIES} ${OPENSSL_LIBRARIES})
 
 set(IPC_MSG_BUFS
   transport_proxy_ipc_messages_flatbuffers

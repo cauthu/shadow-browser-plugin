@@ -24,6 +24,8 @@ namespace common
  */
 void init_common();
 
+void init_openssl();
+
 /* 16K */
 const size_t static_bytes_length = 0xffff;
 extern std::string* static_bytes;

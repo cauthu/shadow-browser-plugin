@@ -23,6 +23,10 @@ TCPServer::TCPServer(
     , state_(ServerState::INIT)
     , evlistener_(nullptr, evconnlistener_free)
     , listening_(false)
+
+#ifndef IN_SHADOW
+    , ssl_ctx_(nullptr)
+#endif
 {
 
     /* create socket and manually bind so that we don't specify
@@ -67,6 +71,27 @@ TCPServer::start_accepting()
     return !!evlistener_;
 }
 
+#ifndef IN_SHADOW
+bool
+TCPServer::start_accepting_ssl(SSL_CTX* ssl_ctx)
+{
+    CHECK(listening_);
+    CHECK(!ssl_ctx_ || (ssl_ctx_ == ssl_ctx));
+
+    ssl_ctx_ = ssl_ctx;
+
+    CHECK((state_ == ServerState::INIT) || (state_ == ServerState::PAUSED));
+
+    auto rv = evconnlistener_enable(evlistener_.get());
+    CHECK_EQ(rv, 0);
+
+    state_ = ServerState::ACCEPTING;
+
+    vlogself(2) << "tcpserver have started accepting";
+    return !!evlistener_;
+}
+#endif
+
 bool
 TCPServer::pause_accepting()
 {
@@ -98,8 +123,27 @@ TCPServer::on_conn_accepted(
     auto rv = evutil_make_socket_nonblocking(fd);
     CHECK_EQ(rv, 0);
 
+#ifdef IN_SHADOW
+
     TCPChannel::UniquePtr channel(new TCPChannel(evbase_, fd));
     observer_->onAccepted(this, std::move(channel));
+
+#else
+    if (!ssl_ctx_) {
+        TCPChannel::UniquePtr channel(new TCPChannel(evbase_, fd));
+        observer_->onAccepted(this, std::move(channel));
+    } else {
+        std::shared_ptr<TCPChannel> channel(new TCPChannel(evbase_, fd),
+                                            folly::DelayedDestruction::Destructor());
+
+        const auto ret = in_ssl_handshakes_.insert(
+            std::make_pair(channel->objId(), channel));
+        CHECK(ret.second);
+
+        channel->start_ssl(ssl_ctx_);
+    }
+#endif
+
 }
 
 void

@@ -10,7 +10,9 @@
 #include <memory>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
-
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
 #include "common.hpp"
 #include "easylogging++.h"
 
@@ -359,6 +361,14 @@ dispatch_evbase(struct event_base* evbase)
     // if (dummy_work_ev) {
     //     event_free(dummy_work_ev);
     // }
+}
+
+void
+init_openssl()
+{
+    SSL_load_error_strings();
+    SSL_library_init();
+    OpenSSL_add_all_algorithms();
 }
 
 void

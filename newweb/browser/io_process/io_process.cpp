@@ -94,6 +94,10 @@ int main(int argc, char **argv)
     common::init_common();
     common::init_easylogging();
 
+#ifndef IN_SHADOW
+    common::init_openssl();
+#endif
+
     START_EASYLOGGINGPP(argc, argv);
 
     MyConfig conf;

@@ -1,6 +1,8 @@
 #ifndef stream_server_hpp
 #define stream_server_hpp
 
+#include <openssl/ssl.h>
+
 #include "object.hpp"
 #include "stream_channel.hpp"
 
@@ -32,6 +34,11 @@ public:
 
     virtual bool is_listening() const = 0;
     virtual bool is_accepting() const = 0;
+
+#ifndef IN_SHADOW
+    virtual bool start_accepting_ssl(SSL_CTX*) = 0;
+#endif
+
 };
 
 }

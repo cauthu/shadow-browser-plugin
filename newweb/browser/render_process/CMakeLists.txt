@@ -1,5 +1,7 @@
 set(CMAKE_VERBOSE_MAKEFILE on)
 
+include_directories(AFTER ${OPENSSL_INCLUDES})
+
 include_directories(AFTER ${SPDYLAY_INCLUDES} ${OPENSSL_INCLUDES} ${EVENT2_INCLUDES})
 
 include_directories(AFTER ${UTILITY_DIR})
@@ -93,7 +95,7 @@ set(RENDER_PROCESS_SOURCES "${RENDER_PROCESS_SOURCES}"
 
 )
 
-set(LINK_LIBS ${EVENT2_LIBRARIES})
+set(LINK_LIBS ${EVENT2_LIBRARIES} ${OPENSSL_LIBRARIES})
 
 set(IPC_MSG_BUFS
   io_service_ipc_messages_flatbuffers

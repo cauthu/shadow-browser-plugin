@@ -3,6 +3,7 @@
 
 #include <event2/buffer.h>
 #include <memory>
+#include <openssl/ssl.h>
 
 #include "object.hpp"
 #include "folly/DelayedDestruction.h"
@@ -82,6 +83,10 @@ public:
      */
     virtual int start_connecting(StreamChannelConnectObserver*,
                                  struct timeval *connect_timeout=nullptr) = 0;
+
+#ifndef IN_SHADOW
+    virtual int start_ssl(SSL_CTX*) = 0;
+#endif
 
     virtual void set_observer(StreamChannelObserver* o) { observer_ = o; }
     virtual StreamChannelObserver* observer(StreamChannelObserver* o) const { return observer_; }

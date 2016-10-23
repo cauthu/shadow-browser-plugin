@@ -21,12 +21,32 @@ using myio::StreamServer;
 using myio::StreamChannel;
 
 
-Webserver::Webserver(StreamServer::UniquePtr streamserver)
+Webserver::Webserver(StreamServer::UniquePtr streamserver,
+                     const uint16_t& listenport)
     : stream_server_(std::move(streamserver))
+    , ssl_ctx_(nullptr, SSL_CTX_free)
 {
     stream_server_->set_observer(this);
     VLOG(2) << "tell stream server to start accepting";
+
+#ifdef IN_SHADOW
+
     stream_server_->start_accepting();
+
+#else
+
+    if (listenport != 443) {
+        stream_server_->start_accepting();
+    } else {
+        auto ssl_method = TLSv1_2_server_method();
+        ssl_ctx_.reset(SSL_CTX_new(ssl_method));
+        CHECK_NOTNULL(ssl_ctx_.get());
+        // SSL_CTX_set_verify(ssl_ctx_.get(), SSL_VERIFY_NONE, nullptr);
+        stream_server_->start_accepting_ssl(ssl_ctx_.get());
+    }
+
+#endif
+
 }
 
 void
@@ -94,6 +114,10 @@ int main(int argc, char **argv)
     common::init_common();
     common::init_easylogging();
 
+#ifndef IN_SHADOW
+    common::init_openssl();
+#endif
+
     START_EASYLOGGINGPP(argc, argv);
 
     MyConfig conf;
@@ -133,7 +157,7 @@ int main(int argc, char **argv)
         LOG(INFO) << "listening on port " << listenport;
         myio::TCPServer::UniquePtr tcpserver(
             new myio::TCPServer(evbase.get(), INADDR_ANY, listenport, nullptr));
-        Webserver::UniquePtr webserver(new Webserver(std::move(tcpserver)));
+        Webserver::UniquePtr webserver(new Webserver(std::move(tcpserver), listenport));
         webservers.push_back(std::move(webserver));
     }
 

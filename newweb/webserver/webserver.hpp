@@ -11,7 +11,7 @@ class Webserver : public Object
 public:
     typedef std::unique_ptr<Webserver, /*folly::*/Destructor> UniquePtr;
 
-    explicit Webserver(myio::StreamServer::UniquePtr);
+    explicit Webserver(myio::StreamServer::UniquePtr, const uint16_t& listenport);
 
 private:
 
@@ -27,6 +27,7 @@ private:
 
     myio::StreamServer::UniquePtr stream_server_;
     std::map<uint32_t, Handler::UniquePtr> handlers_;
+    std::unique_ptr<SSL_CTX, void(*)(SSL_CTX*)> ssl_ctx_;
 };
 
 #endif /* WEBSERVER_HPP */

@@ -14,6 +14,7 @@
 #include <event2/buffer.h>
 
 #include <boost/function.hpp>
+#include <openssl/ssl.h>
 
 #include "../object.hpp"
 #include "../common.hpp"
@@ -101,7 +102,8 @@ public:
                PushedMetaCb pushed_meta_cb, PushedBodyDataCb pushed_body_data_cb,
                PushedBodyDoneCb pushed_body_done_cb,
                void *cb_data /* for error_cb and eof_cb */,
-               const bool& use_spdy
+               const bool& use_spdy,
+               SSL_CTX* ssl_ctx
         );
 
     /* !!!! NOTE: this request will not be copied, so the caller must
@@ -247,6 +249,11 @@ private:
         // -- possibly through socks proxy
         CONNECTING,
         CONNECTED,
+
+#ifndef IN_SHADOW
+        SSL_HANDSHAKING,
+#endif
+
         NO_LONGER_USABLE,
         // was connected and now destroyed, so don't use
         DESTROYED,
@@ -306,6 +313,7 @@ private:
     size_t cumulative_num_sent_bytes_;
     size_t cumulative_num_recv_bytes_;
 
+    SSL_CTX* ssl_ctx_ = nullptr;
 };
 
 } // namespace http

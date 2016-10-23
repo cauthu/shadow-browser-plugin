@@ -2,8 +2,10 @@
 #define tcp_server_hpp
 
 #include <event2/listener.h>
+#include <map>
 
 #include "stream_server.hpp"
+#include "tcp_channel.hpp"
 
 namespace myio
 {
@@ -26,6 +28,10 @@ public:
 
     virtual bool is_listening() const override { return listening_ ;}
     virtual bool is_accepting() const override { return state_ == ServerState::ACCEPTING; }
+
+#ifndef IN_SHADOW
+    virtual bool start_accepting_ssl(SSL_CTX*) override;
+#endif
 
 protected:
 
@@ -60,6 +66,11 @@ protected:
     bool listening_;
 
     std::unique_ptr<struct evconnlistener, void(*)(struct evconnlistener*)> evlistener_;
+
+#ifndef IN_SHADOW
+    SSL_CTX* ssl_ctx_ = nullptr;
+    std::map<uint32_t, std::shared_ptr<TCPChannel> > in_ssl_handshakes_;
+#endif
 };
 
 }

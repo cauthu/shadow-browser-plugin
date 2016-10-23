@@ -9,6 +9,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#include <openssl/bio.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+
 #include "tcp_channel.hpp"
 #include "easylogging++.h"
 #include "common.hpp"
@@ -109,6 +113,135 @@ TCPChannel::start_connecting(StreamChannelConnectObserver* observer,
 
     return 0;
 }
+
+#ifndef IN_SHADOW
+int
+TCPChannel::start_ssl(SSL_CTX* ssl_ctx)
+{
+    vlogself(2) << "begin, ssl_ctx= " << ssl_ctx;
+
+    CHECK(state_ == ChannelState::SOCKET_CONNECTED);
+    CHECK(ssl_ctx_ == nullptr);
+
+    ssl_ctx_ = ssl_ctx;
+    CHECK_NOTNULL(ssl_ctx_);
+
+    state_ = ChannelState::SSL_HANDSHAKING;
+
+    ssl_.reset(SSL_new(ssl_ctx_));
+    auto rv = SSL_set_fd(ssl_.get(), fd_);
+    CHECK(rv == 1) << "rv= " << rv;
+
+    if (is_client_) {
+        SSL_set_connect_state(ssl_.get());
+    } else {
+        SSL_set_accept_state(ssl_.get());
+    }
+
+    rv = SSL_do_handshake(ssl_.get());
+    CHECK(rv == -1) << "rv= " << rv;
+    const auto ssl_err = SSL_get_error(ssl_.get(), rv);
+
+    vlogself(2) << "ssl_err= " << ssl_err;
+    _maybe_enable_socket_io_for_ssl(ssl_err);
+
+    vlogself(2) << "done";
+
+    return 0;
+}
+
+void
+TCPChannel::_maybe_enable_socket_io_for_ssl(const int& ssl_err)
+{
+    vlogself(2) << "begin, err= " << ssl_err;
+    switch (ssl_err) {
+    case SSL_ERROR_WANT_READ:
+        vlogself(2) << "ssl wants read";
+        _set_read_monitoring(true);
+        // no "break" here, to fall through to enable write if
+        // necessary
+    case SSL_ERROR_WANT_WRITE:
+        vlogself(2) << "ssl wants write";
+        _maybe_toggle_write_monitoring(true);
+        break;
+    default:
+        CHECK(false);
+        break;
+    }
+    vlogself(2) << "done";
+}
+
+void
+TCPChannel::_do_ssl_read()
+{
+    // char buf[1024];
+    // const auto rv = SSL_read(ssl_.get(), buf, sizeof buf);
+
+    // CHECK(false) << rv;
+
+    if (state_ == ChannelState::SSL_HANDSHAKING) {
+        auto rv = SSL_do_handshake(ssl_.get());
+        vlogself(2) << "rv= " << rv;
+        if (rv == 1) {
+
+        } else if (rv == 2) {
+
+        } else {
+            const auto ssl_err = SSL_get_error(ssl_.get(), rv);
+
+            vlogself(2) << "ssl_err= " << ssl_err;
+            _maybe_enable_socket_io_for_ssl(ssl_err);
+        }
+    }
+}
+
+void
+TCPChannel::_do_ssl_write()
+{
+    return;
+    vlogself(2) << "begin";
+
+    if (state_ == ChannelState::SSL_HANDSHAKING) {
+        auto rv = SSL_do_handshake(ssl_.get());
+        const auto ssl_err = SSL_get_error(ssl_.get(), rv);
+
+        vlogself(2) << "ssl_err= " << ssl_err;
+        _maybe_enable_socket_io_for_ssl(ssl_err);
+    }
+    
+    // struct evbuffer_iovec *v;
+    // size_t written = 0;
+    // int n, i, r;
+
+    // /* determine how many chunks we need. */
+    // n = evbuffer_peek(buf, 4096, NULL, NULL, 0);
+    // /* Allocate space for the chunks.  This would be a good time to use
+    //    alloca() if you have it. */
+    // v = malloc(sizeof(struct evbuffer_iovec)*n);
+    // /* Actually fill up v. */
+    // n = evbuffer_peek(buf, 4096, NULL, v, n);
+    // for (i=0; i<n; ++i) {
+    //     size_t len = v[i].iov_len;
+    //     if (written + len > 4096)
+    //         len = 4096 - written;
+    //     r = write(1 /* stdout */, v[i].iov_base, len);
+    //     if (r<=0)
+    //         break;
+    //     /* We keep track of the bytes written separately; if we don't,
+    //        we may write more than 4096 bytes if the last chunk puts
+    //        us over the limit. */
+    //     written += len;
+    // }
+    // free(v);
+    
+    // const auto rv = SSL_read(ssl_.get(), buf, sizeof buf);
+
+    // CHECK(false) << rv;
+
+    vlogself(2) << "done";
+}
+
+#endif
 
 void
 TCPChannel::get_peer_name(std::string& address, uint16_t& port) const
@@ -654,6 +787,9 @@ TCPChannel::TCPChannel(struct event_base *evbase, int fd,
     , input_evb_(evbuffer_new(), evbuffer_free)
     , output_evb_(evbuffer_new(), evbuffer_free)
     , read_lw_mark_(0)
+#ifndef IN_SHADOW
+    , ssl_(nullptr, SSL_free)
+#endif
 {
     CHECK_EQ(observer_, observer);
     input_drop_.reset();
