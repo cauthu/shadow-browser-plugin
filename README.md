@@ -14,6 +14,16 @@ make install
 
 Replace `N` with the number of cores you want to use for a parallel build.
 
+```
+# for newweb: by default build only plugins; to also build native binaries
+CC=`which clang` CXX=`which clang++` cmake .. -DCMAKE_INSTALL_PREFIX=`readlink -f ~`/.shadow -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_NATIVE_BINARIES=yes
+
+# to build only native binaries, skipping plugins, use
+
+-DCMAKE_SKIP_PLUGINS=yes
+
+```
+
 # cmake options
 
 The `cmake` command above takes multiple options, specified as
