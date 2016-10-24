@@ -108,7 +108,7 @@ private:
     //////////
 
     void _on_page_load_timeout(Timer*);
-    void _on_grace_period_timer_fired(Timer*);
+    void _on_wait_for_more_requests_timer_fired(Timer*);
     void _on_think_time_timer_fired(Timer*);
 
     void _read_page_models_file(const std::string&);
@@ -147,13 +147,13 @@ private:
          * for a little bit to catch (some of) these requests before
          * reporting page load result
          */
-            GRACE_PERIOD_AFTER_DOM_LOAD_EVENT,
+            WAIT_FOR_MORE_REQUESTS_AFTER_DOM_LOAD_EVENT,
 
             THINKING,
     } state_;
 
     Timer::UniquePtr page_load_timeout_timer_;
-    Timer::UniquePtr grace_period_timer_;
+    Timer::UniquePtr wait_for_more_requests_timer_;
     Timer::UniquePtr think_time_timer_;
 
     enum class PageLoadStatus {

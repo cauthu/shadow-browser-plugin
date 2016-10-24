@@ -16,6 +16,8 @@ using renderermsgs::type;
 
 static const uint8_t s_ipc_cmd_resp_timeout_secs = 5;
 
+static const auto wait_for_more_requests_ms = 2*1000;
+
 
 #define _LOG_PREFIX(inst) << "driver= " << (inst)->objId() << ": "
 
@@ -96,6 +98,9 @@ Driver::_renderer_handle_RequestWillBeSent(
         ++this_page_load_info_.num_after_DOM_load_event_reqs_;
     }
 
+    vlogself(2) << "cancel wait_for_more_requests_timer_";
+    wait_for_more_requests_timer_->cancel();
+
     vlogself(2) << "done";
 }
 
@@ -124,6 +129,11 @@ Driver::_renderer_handle_RequestFinished(
         vlogself(1) << "request " << resInstNum << ":" << reqChainIdx
                     << " finished successfully; new num_succes_reqs_: "
                     << this_page_load_info_.num_succes_reqs_;
+    }
+
+    if (this_page_load_info_.DOM_load_event_fired_timepoint_ > 0) {
+        wait_for_more_requests_timer_->cancel();
+        wait_for_more_requests_timer_->start(wait_for_more_requests_ms);
     }
 
     vlogself(2) << "done";
@@ -190,9 +200,9 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
         return;
     }
 
-    logself(INFO) << "DOM \"load\" event has fired; start grace period";
+    logself(INFO) << "DOM \"load\" event has fired; start waiting for more requests";
 
-    state_ = State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT;
+    state_ = State::WAIT_FOR_MORE_REQUESTS_AFTER_DOM_LOAD_EVENT;
 
     page_load_timeout_timer_->cancel();
 
@@ -206,9 +216,7 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
     this_page_load_info_.page_load_status_ = PageLoadStatus::OK;
     this_page_load_info_.ttfb_ms_ = msg->ttfb_ms();
 
-    static const auto grace_period_ms = 3*1000;
-
-    grace_period_timer_->start(grace_period_ms);
+    wait_for_more_requests_timer_->start(wait_for_more_requests_ms);
 
     vlogself(2) << "done";
 }
@@ -348,6 +356,8 @@ Driver::_renderer_load_page()
     tpli.page_model_idx_ = (*page_model_rand_idx_gen_)();
     CHECK_GE(tpli.page_model_idx_, 0);
     CHECK_LT(tpli.page_model_idx_, page_models_.size());
+
+    wait_for_more_requests_timer_.cancel();
 
     vlogself(1) << "picked new page_model_idx_= " << tpli.page_model_idx_;
 

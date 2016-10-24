@@ -86,9 +86,9 @@ Driver::Driver(struct event_base* evbase,
         new Timer(evbase_, true,
                   boost::bind(&Driver::_on_page_load_timeout, this, _1)));
 
-    grace_period_timer_.reset(
+    wait_for_more_requests_timer_.reset(
         new Timer(evbase_, true,
-                  boost::bind(&Driver::_on_grace_period_timer_fired, this, _1)));
+                  boost::bind(&Driver::_on_wait_for_more_requests_timer_fired, this, _1)));
 
     think_time_timer_.reset(
         new Timer(evbase_, true,
@@ -168,15 +168,15 @@ Driver::_read_page_models_file(const string& page_models_list_file)
 }
 
 void
-Driver::_on_grace_period_timer_fired(Timer* timer)
+Driver::_on_wait_for_more_requests_timer_fired(Timer* timer)
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(timer, grace_period_timer_.get());
+    CHECK_EQ(timer, wait_for_more_requests_timer_.get());
 
-    logself(INFO) << "done grace period";
+    logself(INFO) << "done waiting for more requests";
 
-    CHECK_EQ(state_, State::GRACE_PERIOD_AFTER_DOM_LOAD_EVENT);
+    CHECK_EQ(state_, State::WAIT_FOR_MORE_REQUESTS_AFTER_DOM_LOAD_EVENT);
 
     CHECK_NE(this_page_load_info_.page_load_status_,
 	     PageLoadStatus::PENDING);
@@ -186,9 +186,9 @@ Driver::_on_grace_period_timer_fired(Timer* timer)
 #ifndef IN_SHADOW
 
     // running outside shadow, so exit after one page load
-    CHECK(0) << "need testing";
     CHECK_EQ(loadnum_, 1);
     logself(INFO) << "exiting";
+    exit(0);
 
 #endif
 
