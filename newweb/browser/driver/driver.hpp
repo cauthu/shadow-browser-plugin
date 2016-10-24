@@ -35,10 +35,16 @@
  * 3. sleep for random "think time" amount if this is not the first load
  *
  * 4. start loading page
- * --> if timed out (TODO: also if failed), go back to step 1.
+ * --> if timed out, go back to step 1.
  * --> if success go to 5.
  *
- * 5. wait for a few seconds "grace period"
+ * 5. wait for more requests that might be sent: whenever there are
+ * pending requests, we are patient and continue to wait. when a
+ * request is finished (closed or success), if there is no more
+ * pending requests, and the dom load event has fired, then we start
+ * timer to wait a few seconds before fully stopping this page
+ * load. while we wait, any new requests will reset the waiting logic
+ *
  * --> when done go back to 1.
  * 
  *
@@ -176,6 +182,7 @@ private:
         uint32_t num_succes_reqs_;
         uint32_t num_failed_reqs_;
         uint32_t num_after_DOM_load_event_reqs_;
+        int32_t num_pending_reqs_;
 
         PageLoadStatus page_load_status_;
         uint32_t ttfb_ms_;

@@ -94,6 +94,8 @@ Driver::_renderer_handle_RequestWillBeSent(
 
     ++this_page_load_info_.num_reqs_;
 
+    ++this_page_load_info_.num_pending_reqs_;
+
     if (this_page_load_info_.DOM_load_event_fired_timepoint_ > 0) {
         ++this_page_load_info_.num_after_DOM_load_event_reqs_;
     }
@@ -131,7 +133,18 @@ Driver::_renderer_handle_RequestFinished(
                     << this_page_load_info_.num_succes_reqs_;
     }
 
-    if (this_page_load_info_.DOM_load_event_fired_timepoint_ > 0) {
+    --this_page_load_info_.num_pending_reqs_;
+    if (this_page_load_info_.num_pending_reqs_ < 0) {
+        logself(WARNING) << "negative num_pending_reqs_; set to 0";
+        this_page_load_info_.num_pending_reqs_ = 0;
+    }
+
+    if ((this_page_load_info_.DOM_load_event_fired_timepoint_ > 0)
+        && (this_page_load_info_.num_pending_reqs_ == 0))
+    {
+        /* if page load event has fired and there are no pending
+         * requests, then wait a little bit before stopping
+         */
         wait_for_more_requests_timer_->cancel();
         wait_for_more_requests_timer_->start(wait_for_more_requests_ms);
     }
@@ -145,6 +158,7 @@ Driver::_reset_this_page_load_info()
     this_page_load_info_.num_failed_reqs_ = 0;
     this_page_load_info_.num_succes_reqs_ = 0;
     this_page_load_info_.num_reqs_ = 0;
+    this_page_load_info_.num_pending_reqs_ = 0;
     this_page_load_info_.num_after_DOM_load_event_reqs_ = 0;
     this_page_load_info_.load_start_timepoint_ = 0;
     this_page_load_info_.DOM_load_event_fired_timepoint_ = 0;
@@ -204,8 +218,6 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
 
     state_ = State::WAIT_FOR_MORE_REQUESTS_AFTER_DOM_LOAD_EVENT;
 
-    page_load_timeout_timer_->cancel();
-
     if (using_tproxy_) {
         _tproxy_stop_defense(false);
     }
@@ -216,7 +228,9 @@ Driver::_renderer_handle_PageLoaded(const myipc::renderer::messages::PageLoadedM
     this_page_load_info_.page_load_status_ = PageLoadStatus::OK;
     this_page_load_info_.ttfb_ms_ = msg->ttfb_ms();
 
-    wait_for_more_requests_timer_->start(wait_for_more_requests_ms);
+    if (this_page_load_info_.num_pending_reqs_ == 0) {
+        wait_for_more_requests_timer_->start(wait_for_more_requests_ms);
+    }
 
     vlogself(2) << "done";
 }
@@ -357,7 +371,7 @@ Driver::_renderer_load_page()
     CHECK_GE(tpli.page_model_idx_, 0);
     CHECK_LT(tpli.page_model_idx_, page_models_.size());
 
-    wait_for_more_requests_timer_.cancel();
+    wait_for_more_requests_timer_->cancel();
 
     vlogself(1) << "picked new page_model_idx_= " << tpli.page_model_idx_;
 

@@ -206,13 +206,16 @@ Driver::_on_page_load_timeout(Timer* timer)
 
     CHECK_EQ(timer, page_load_timeout_timer_.get());
 
-    logself(WARNING) << "page load has timed out";
-
     CHECK_EQ(state_, State::LOADING_PAGE);
 
     auto& tpli = this_page_load_info_;
     CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
-    tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
+
+    if (tpli.DOM_load_event_fired_timepoint_ == 0) {
+        logself(WARNING) << "page load has timed out";
+
+        tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
+    }
 
     _report_result();
 
