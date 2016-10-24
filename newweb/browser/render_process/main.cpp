@@ -80,12 +80,12 @@ s_on_io_service_ipc_client_status(IOServiceIPCClient::ChannelStatus status,
 {
     CHECK_EQ(status, IOServiceIPCClient::ChannelStatus::READY);
 
-    VLOG(2) << "ioservice ipc client is ready";
+    LOG(INFO) << "ioservice ipc client is ready";
 
     /// set up my ipc server
     myio::TCPServer::UniquePtr tcpServerForIPC;
 
-    VLOG(2) << "my ipc server listens on " << renderer_ipcport;
+    LOG(INFO) << "my ipc server listens on " << renderer_ipcport;
     tcpServerForIPC.reset(
         new myio::TCPServer(
             evbase, common::getaddr("localhost"),

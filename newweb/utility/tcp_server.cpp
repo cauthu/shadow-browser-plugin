@@ -44,7 +44,8 @@ TCPServer::TCPServer(
     server.sin_port = htons(port_);
 
 	rv = bind(fd_, (struct sockaddr *) &server, sizeof(server));
-	CHECK_EQ(rv, 0);
+	CHECK_EQ(rv, 0) << "errno= " << errno
+                    << " (" << strerror(errno) << ")";
 
     if (start_listening) {
         _start_listening();

@@ -179,6 +179,8 @@ int main(int argc, char **argv)
         netconf.set_socks5_port(conf.socks5_port);
     }
 
+    LOG(INFO) << "my ipc server listens on " << conf.ioservice_ipcport;
+
     myio::TCPServer::UniquePtr tcpServerForIPC(
         new myio::TCPServer(evbase.get(), common::getaddr("localhost"),
                             conf.ioservice_ipcport, nullptr));
