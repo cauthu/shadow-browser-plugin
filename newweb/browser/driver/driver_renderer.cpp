@@ -367,7 +367,20 @@ Driver::_renderer_load_page()
     tpli.page_load_status_ = PageLoadStatus::PENDING;
     ++loadnum_;
 
-    tpli.page_model_idx_ = (*page_model_rand_idx_gen_)();
+    // select which page to load
+    if (!sequential_page_selection_) {
+        tpli.page_model_idx_ = (*page_model_rand_idx_gen_)();
+    } else {
+        // very first page load has loadnum = 1, not 0
+        if (loadnum_ == 1) {
+            // this is first page load, use first page model
+            tpli.page_model_idx_ = 0;
+        } else {
+            tpli.page_model_idx_ =
+                (prev_page_model_idx_ + 1) % page_models_.size();
+        }
+        prev_page_model_idx_ = tpli.page_model_idx_;
+    }
     CHECK_GE(tpli.page_model_idx_, 0);
     CHECK_LT(tpli.page_model_idx_, page_models_.size());
 
@@ -404,6 +417,7 @@ Driver::_renderer_on_load_page_resp(GenericIpcChannel::RespStatus status,
 
     // 120 seconds
     static const uint32_t page_load_timeout_ms = 120*1000;
+    page_load_timeout_timer_->cancel();
     page_load_timeout_timer_->start(page_load_timeout_ms);
 }
 

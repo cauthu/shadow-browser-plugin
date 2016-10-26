@@ -38,10 +38,12 @@ namespace json = rapidjson;
 
 Driver::Driver(struct event_base* evbase,
                const string& page_models_list_file,
+               const bool& sequential_page_selection,
                const string& browser_proxy_mode,
                const uint16_t tproxy_ipc_port,
                const uint16_t renderer_ipc_port)
     : evbase_(evbase)
+    , sequential_page_selection_(sequential_page_selection)
     , using_tproxy_(tproxy_ipc_port > 0)
     , tproxy_ipc_ch_ready_(false)
     , browser_proxy_mode_(browser_proxy_mode)
@@ -85,6 +87,9 @@ Driver::Driver(struct event_base* evbase,
     page_load_timeout_timer_.reset(
         new Timer(evbase_, true,
                   boost::bind(&Driver::_on_page_load_timeout, this, _1)));
+
+    vlogself(2) << "page load timeout timer= "
+                << page_load_timeout_timer_->objId();
 
     wait_for_more_requests_timer_.reset(
         new Timer(evbase_, true,

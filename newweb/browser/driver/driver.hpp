@@ -58,6 +58,7 @@ public:
 
     explicit Driver(struct event_base*,
                     const std::string& page_models_list_file,
+                    const bool& sequential_page_selection,
                     const std::string& browser_proxy_mode,
                     const uint16_t tproxy_ipc_port,
                     const uint16_t renderer_ipc_port);
@@ -128,6 +129,7 @@ private:
 
     /* list of <page name, file path to the page model> pairs */
     std::vector<std::pair<std::string, std::string> > page_models_;
+    const bool sequential_page_selection_;
     bool using_tproxy_;
     bool tproxy_ipc_ch_ready_;
     const std::string browser_proxy_mode_;
@@ -187,6 +189,9 @@ private:
         PageLoadStatus page_load_status_;
         uint32_t ttfb_ms_;
     } this_page_load_info_;
+
+    // so that we can do sequential page selection
+    uint32_t prev_page_model_idx_ = 0;
 
     void _start_thinking();
     void _report_result();

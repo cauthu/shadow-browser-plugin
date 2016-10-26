@@ -35,6 +35,10 @@ struct MyConfig
         std::string path;
     } page_models_list_file;
 
+    /* if true, then select pages to load sequentially from the page
+     * models file */
+    bool sequential_page_selection = false;
+
 #ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
 #endif
@@ -60,6 +64,11 @@ set_my_config(MyConfig& conf,
         else if (name == "page-models-list-file") {
             conf.page_models_list_file.found = true;
             conf.page_models_list_file.path = value;
+        }
+
+        else if (name == "sequential-page-selection") {
+            CHECK(value.empty()); // no value expected
+            conf.sequential_page_selection = true;
         }
 
 //         else if (name == "load-page-then-exit") {
@@ -161,6 +170,7 @@ int main(int argc, char **argv)
 
     Driver::UniquePtr driver(
         new Driver(evbase.get(), conf.page_models_list_file.path,
+                   conf.sequential_page_selection,
                    proxy_mode,
                    conf.tproxy_ipcport, conf.renderer_ipcport));
 
