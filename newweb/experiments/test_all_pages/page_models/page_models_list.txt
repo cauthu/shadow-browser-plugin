@@ -1,0 +1,20 @@
+alibaba page_models/alibaba-page_model.json
+alipay.com page_models/alipay.com-page_model.json
+ask.com page_models/ask.com-page_model.json
+baidu page_models/baidu-page_model.json
+# berkeley page_models/berkeley-page_model.json
+bing page_models/bing-page_model.json
+cnn page_models/cnn-page_model.json
+# ebay page_models/ebay-page_model.json
+go.com page_models/go.com-page_model.json
+google.com page_models/google.com-page_model.json
+hao123.com page_models/hao123.com-page_model.json
+nytimes.com page_models/nytimes.com-page_model.json
+paypal.com page_models/paypal.com-page_model.json
+pixnet.net page_models/pixnet.net-page_model.json
+popads.net page_models/popads.net-page_model.json
+tianya.cn page_models/tianya.cn-page_model.json
+uol.com.br page_models/uol.com.br-page_model.json
+vk.com page_models/vk.com-page_model.json
+wikipedia.org page_models/wikipedia.org-page_model.json
+zillow.com page_models/zillow.com-page_model.json

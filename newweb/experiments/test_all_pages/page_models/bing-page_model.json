@@ -1,0 +1,193 @@
+{
+  "elements": {
+    "12": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 8,
+      "tag": "script"
+    },
+    "15": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 11,
+      "tag": "script"
+    },
+    "19": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 16,
+      "tag": "script"
+    },
+    "29": {
+      "tag": "body"
+    },
+    "30": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 19,
+      "tag": "script"
+    },
+    "167": {
+      "tag": "img"
+    },
+    "215": {
+      "tag": "img"
+    },
+    "217": {
+      "tag": "img"
+    },
+    "272": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 35,
+      "tag": "script"
+    },
+    "284": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 50,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "8": [
+      "  /* [64.05, 64.18] scopeStart= 1477427777189.403076 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "11": [
+      "  /* [64.43, 64.58] scopeStart= 1477427777189.775879 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);"
+    ],
+    "16": [
+      "  /* [68.62, 74.09] scopeStart= 1477427777193.973145 type= ScriptControllerRunScriptScope */",
+      "  __msleep(5.47);"
+    ],
+    "19": [
+      "  /* [74.6, 76.71] scopeStart= 1477427777199.948975 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.11);"
+    ],
+    "29": [
+      "  /* [77.9, 92.95] scopeStart= 1477427777203.248047 type= RenderTreeUpdateScope */",
+      "  __msleep(15.05);"
+    ],
+    "35": [
+      "  /* [108.38, 122.2] scopeStart= 1477427777233.732910 type= ScriptControllerRunScriptScope */",
+      "  __msleep(13.82);"
+    ],
+    "50": [
+      "  /* [123.37, 123.44] scopeStart= 1477427777248.718018 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.07);"
+    ],
+    "56": [
+      "  /* [123.71, 123.78] scopeStart= 1477427777249.059814 type= RenderTreeUpdateScope */",
+      "  __msleep(0.07);"
+    ],
+    "59": [
+      "  /* [124.59, 124.61] scopeStart= 1477427777249.937988 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.02);"
+    ],
+    "60": [
+      "  /* [124.63, 125.8] scopeStart= 1477427777249.979980 type= DocOnLoadEventScope */",
+      "  __msleep(1.12);",
+      "  __msleep(0.05);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        94,
+        12
+      ],
+      [
+        319,
+        15
+      ],
+      [
+        16203,
+        19
+      ],
+      [
+        16382,
+        29
+      ],
+      [
+        16699,
+        30
+      ],
+      [
+        19033,
+        167
+      ],
+      [
+        20505,
+        215
+      ],
+      [
+        20668,
+        217
+      ],
+      [
+        30364,
+        272
+      ],
+      [
+        37004,
+        284
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "load",
+        60
+      ],
+      [
+        "readystatechange_complete",
+        59
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "www.bing.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server10",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 334,
+          "resp_body_size": 37007,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server10",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 604,
+          "resp_body_size": 6700,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {}
+}

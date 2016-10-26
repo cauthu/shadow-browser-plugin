@@ -1,0 +1,496 @@
+{
+  "elements": {
+    "21": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 9,
+      "tag": "script"
+    },
+    "24": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 12,
+      "tag": "script"
+    },
+    "47": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "122": {
+      "tag": "body"
+    },
+    "124": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 21,
+      "tag": "script"
+    },
+    "131": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 25,
+      "tag": "script"
+    },
+    "135": {
+      "initial_resInstNum": 3,
+      "tag": "img"
+    },
+    "391": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 41,
+      "tag": "script"
+    },
+    "470": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 77,
+      "tag": "script"
+    },
+    "473": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 83,
+      "tag": "script"
+    },
+    "476": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 87,
+      "tag": "script"
+    },
+    "479": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 6,
+      "is_parser_blocking": true,
+      "run_scope_id": 91,
+      "tag": "script"
+    },
+    "481": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 94,
+      "tag": "script"
+    },
+    "483": {
+      "event_handling_scopes": [
+        [
+          "error",
+          161
+        ]
+      ],
+      "tag": "img"
+    },
+    "485": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 99,
+      "tag": "script"
+    },
+    "488": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 102,
+      "tag": "script"
+    },
+    "492": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 106,
+      "tag": "script"
+    },
+    "499": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 110,
+      "tag": "script"
+    },
+    "503": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 114,
+      "tag": "script"
+    },
+    "506": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 117,
+      "tag": "script"
+    },
+    "527": {
+      "event_handling_scopes": [
+        [
+          "error",
+          177
+        ]
+      ],
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "9": [
+      "  /* [139.38, 139.92] scopeStart= 1477428129063.539062 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.54);"
+    ],
+    "12": [
+      "  /* [140.35, 140.46] scopeStart= 1477428129064.509033 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.11);"
+    ],
+    "21": [
+      "  /* [146.83, 147.06] scopeStart= 1477428129070.986084 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.23);"
+    ],
+    "25": [
+      "  /* [147.49, 150.65] scopeStart= 1477428129071.647949 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.78);",
+      "  __msleep(0.10);",
+      "  __msleep(0.28);"
+    ],
+    "35": [
+      "  /* [155.04, 171.59] scopeStart= 1477428129079.194092 type= RenderTreeUpdateScope */",
+      "  __msleep(16.55);"
+    ],
+    "41": [
+      "  /* [197.89, 244.17] scopeStart= 1477428129122.047852 type= ScriptControllerRunScriptScope */",
+      "  __msleep(20.41);",
+      "  __msleep(10.72);",
+      "  __msleep(8.65);",
+      "  __msleep(6.50);"
+    ],
+    "77": [
+      "  /* [244.52, 244.65] scopeStart= 1477428129168.678955 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "83": [
+      "  /* [245.67, 245.75] scopeStart= 1477428129169.832031 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.08);"
+    ],
+    "87": [
+      "  /* [246.02, 246.15] scopeStart= 1477428129170.182861 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "91": [
+      "  /* [246.65, 253.03] scopeStart= 1477428129170.804932 type= ScriptControllerRunScriptScope */",
+      "  __msleep(6.38);"
+    ],
+    "94": [
+      "  /* [253.37, 258.12] scopeStart= 1477428129177.527832 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.11);",
+      "  add_elem(483);",
+      "  __msleep(0.10);",
+      "  set_elem_res(483, 7);",
+      "  __msleep(0.54);"
+    ],
+    "99": [
+      "  /* [258.37, 259.31] scopeStart= 1477428129182.526123 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.94);"
+    ],
+    "102": [
+      "  /* [259.57, 259.99] scopeStart= 1477428129183.731934 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.25);",
+      "  __msleep(0.03);",
+      "  __msleep(0.14);"
+    ],
+    "106": [
+      "  /* [260.21, 260.51] scopeStart= 1477428129184.372070 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.08);",
+      "  __msleep(0.06);"
+    ],
+    "110": [
+      "  /* [260.77, 261.12] scopeStart= 1477428129184.931885 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.03);",
+      "  __msleep(0.14);"
+    ],
+    "114": [
+      "  /* [261.35, 261.63] scopeStart= 1477428129185.506104 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.28);"
+    ],
+    "117": [
+      "  /* [261.85, 261.98] scopeStart= 1477428129186.010986 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "122": [
+      "  /* [262.2, 285.63] scopeStart= 1477428129186.355957 type= EventTargetInvokingListenersScope */",
+      "  __msleep(23.43);"
+    ],
+    "160": [
+      "  /* [293.79, 293.82] scopeStart= 1477428129217.953857 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.03);"
+    ],
+    "161": [
+      "  /* [293.86, 294.02] scopeStart= 1477428129218.017090 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.16);"
+    ],
+    "164": [
+      "  /* [294.04, 295.37] scopeStart= 1477428129218.197021 type= DocOnLoadEventScope */",
+      "  __msleep(1.23);",
+      "  __msleep(0.10);"
+    ],
+    "172": [
+      "  /* [296.78, 301.48] scopeStart= 1477428129220.937012 type= DOMTimerFiredScope */",
+      "  __msleep(4.04);",
+      "  add_elem(527);",
+      "  __msleep(0.17);",
+      "  set_elem_res(527, 8);",
+      "  __msleep(0.49);"
+    ],
+    "177": [
+      "  /* [337.07, 337.41] scopeStart= 1477428129261.225098 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.34);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 35,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        382,
+        21
+      ],
+      [
+        398,
+        24
+      ],
+      [
+        789,
+        47
+      ],
+      [
+        2345,
+        122
+      ],
+      [
+        2413,
+        124
+      ],
+      [
+        2608,
+        131
+      ],
+      [
+        2642,
+        135
+      ],
+      [
+        5381,
+        391
+      ],
+      [
+        5481,
+        470
+      ],
+      [
+        5510,
+        473
+      ],
+      [
+        5679,
+        476
+      ],
+      [
+        5712,
+        479
+      ],
+      [
+        7145,
+        481
+      ],
+      [
+        7499,
+        485
+      ],
+      [
+        8275,
+        488
+      ],
+      [
+        8426,
+        492
+      ],
+      [
+        8650,
+        499
+      ],
+      [
+        8934,
+        503
+      ],
+      [
+        9141,
+        506
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        122
+      ],
+      [
+        "load",
+        164
+      ],
+      [
+        "readystatechange_complete",
+        160
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "sp.ask.com",
+    "www.ask.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 9149,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 1.7299999999999898,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 626,
+          "resp_body_size": 3060,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server1",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 630,
+          "resp_body_size": 7154,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 609,
+          "resp_body_size": 43141,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server1",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 589,
+          "resp_body_size": 196,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 612,
+          "resp_body_size": 4897,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 923,
+          "resp_body_size": 22,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server6",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 1754,
+          "resp_body_size": 22,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        172
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    }
+  },
+  "xhrs": {}
+}
