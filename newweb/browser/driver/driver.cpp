@@ -224,6 +224,8 @@ Driver::_on_page_load_timeout(Timer* timer)
         tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
     }
 
+    wait_for_more_requests_timer_->cancel();
+
     _report_result();
 
 #ifndef IN_SHADOW
