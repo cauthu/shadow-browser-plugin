@@ -16,3 +16,4 @@ uol ../../../page_models/uol.com.br-page_model-10252016.json
 vk ../../../page_models/vk.com-page_model-10252016.json
 wikipedia ../../../page_models/wikipedia.org-page_model-10252016.json
 zillow ../../../page_models/zillow.com-page_model-10252016.json
+aws.amazon.com ../../../page_models/aws.amazon.com-page_model-10252016.json
