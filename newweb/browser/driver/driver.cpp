@@ -186,6 +186,8 @@ Driver::_on_wait_for_more_requests_timer_fired(Timer* timer)
     CHECK_NE(this_page_load_info_.page_load_status_,
 	     PageLoadStatus::PENDING);
 
+    page_load_timeout_timer_->cancel();
+
     _report_result();
 
 #ifndef IN_SHADOW
@@ -211,12 +213,12 @@ Driver::_on_page_load_timeout(Timer* timer)
 
     CHECK_EQ(timer, page_load_timeout_timer_.get());
 
-    CHECK_EQ(state_, State::LOADING_PAGE);
-
     auto& tpli = this_page_load_info_;
-    CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
 
     if (tpli.DOM_load_event_fired_timepoint_ == 0) {
+        CHECK_EQ(state_, State::LOADING_PAGE);
+        CHECK_EQ(tpli.page_load_status_, PageLoadStatus::PENDING);
+
         logself(WARNING) << "page load has timed out";
 
         tpli.page_load_status_ = PageLoadStatus::TIMEDOUT;
