@@ -464,6 +464,10 @@ Connection::_maybe_http_consume_input()
             vlogself(2) << "get rsp body, remaining_resp_body_len_ "
                         << remaining_resp_body_len_;
 
+            const auto current_req = active_req_queue_.front();
+            CHECK_NOTNULL(current_req);
+            const auto current_req_objId = current_req->objId();
+
             const auto buflen = evbuffer_get_length(inbuf);
             const auto drain_len = std::min(buflen, remaining_resp_body_len_);
             vlogself(2) << buflen << ", " << remaining_resp_body_len_ << ", "
@@ -506,7 +510,17 @@ Connection::_maybe_http_consume_input()
                  * thus only it can check the remaining_resp_body_len_
                  * and know when the response is done.
                  */
-                CHECK(active_req_queue_.empty());
+
+                /* _got_a_chunk_of_resp_body() could have notified
+                 * various callbacks, which could have submitted a new
+                 * request onto our active_req_queue_ */
+                if (!active_req_queue_.empty()) {
+                    /* just checking things are as expected */
+                    const auto current_req = active_req_queue_.front();
+                    CHECK_NOTNULL(current_req);
+                    const auto req_ObjId = current_req->objId();
+                    CHECK_NE(req_ObjId, current_req_objId);
+                }
             }
 
             break;
