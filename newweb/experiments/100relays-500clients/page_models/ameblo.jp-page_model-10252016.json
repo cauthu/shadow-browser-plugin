@@ -1,0 +1,2067 @@
+{
+  "elements": {
+    "62": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "64": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "66": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "69": {
+      "tag": "body"
+    },
+    "74": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 27,
+      "tag": "script"
+    },
+    "88": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "114": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "125": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "136": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "333": {
+      "event_handling_scopes": [
+        [
+          "load",
+          171
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "344": {
+      "event_handling_scopes": [
+        [
+          "load",
+          174
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "355": {
+      "event_handling_scopes": [
+        [
+          "load",
+          177
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "366": {
+      "event_handling_scopes": [
+        [
+          "load",
+          168
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "377": {
+      "event_handling_scopes": [
+        [
+          "load",
+          162
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "388": {
+      "event_handling_scopes": [
+        [
+          "load",
+          165
+        ]
+      ],
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "411": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "422": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "433": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "444": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "455": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "466": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "489": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "500": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "511": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "522": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "533": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "544": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "567": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "578": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "589": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "600": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "611": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "622": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "645": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "656": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "667": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "678": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "689": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "700": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "734": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "760": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "786": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "828": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "854": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "880": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "922": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "948": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "974": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "1009": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "1011": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "1013": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "1015": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 18,
+      "is_parser_blocking": true,
+      "run_scope_id": 35,
+      "tag": "script"
+    },
+    "1173": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 47,
+      "tag": "script"
+    },
+    "1176": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 19,
+      "is_parser_blocking": true,
+      "run_scope_id": 55,
+      "tag": "script"
+    },
+    "1329": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 20,
+      "is_parser_blocking": true,
+      "run_scope_id": 92,
+      "tag": "script"
+    },
+    "1331": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 21,
+      "is_parser_blocking": true,
+      "run_scope_id": 100,
+      "tag": "script"
+    },
+    "1394": {
+      "tag": "img"
+    },
+    "1405": {
+      "tag": "img"
+    },
+    "1416": {
+      "tag": "img"
+    },
+    "1427": {
+      "tag": "img"
+    },
+    "1438": {
+      "tag": "img"
+    },
+    "1449": {
+      "tag": "img"
+    },
+    "1471": {
+      "tag": "img"
+    },
+    "1482": {
+      "tag": "img"
+    },
+    "1493": {
+      "tag": "img"
+    },
+    "1504": {
+      "tag": "img"
+    },
+    "1515": {
+      "tag": "img"
+    },
+    "1526": {
+      "tag": "img"
+    },
+    "1561": {
+      "tag": "img"
+    },
+    "1569": {
+      "tag": "img"
+    },
+    "1577": {
+      "tag": "img"
+    },
+    "1585": {
+      "tag": "img"
+    },
+    "1593": {
+      "tag": "img"
+    },
+    "1601": {
+      "tag": "img"
+    },
+    "1609": {
+      "tag": "img"
+    },
+    "1617": {
+      "tag": "img"
+    },
+    "1625": {
+      "tag": "img"
+    },
+    "1633": {
+      "tag": "img"
+    },
+    "1641": {
+      "tag": "img"
+    },
+    "1649": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "27": [
+      "  /* [707.53, 710.6] scopeStart= 1477428931476.718018 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.66);",
+      "  __msleep(0.11);",
+      "  __msleep(0.30);"
+    ],
+    "35": [
+      "  /* [724.38, 728.81] scopeStart= 1477428931493.566895 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.29);",
+      "  __msleep(0.06);",
+      "  __msleep(0.08);"
+    ],
+    "47": [
+      "  /* [729.18, 729.39] scopeStart= 1477428931498.369873 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.21);"
+    ],
+    "51": [
+      "  /* [729.99, 757.23] scopeStart= 1477428931499.181152 type= RenderTreeUpdateScope */",
+      "  __msleep(27.24);"
+    ],
+    "55": [
+      "  /* [1030.45, 1083.73] scopeStart= 1477428931799.634033 type= ScriptControllerRunScriptScope */",
+      "  __msleep(25.08);",
+      "  __msleep(6.54);",
+      "  __msleep(2.57);",
+      "  __msleep(0.42);",
+      "  __msleep(0.70);",
+      "  __msleep(2.86);",
+      "  __msleep(15.11);"
+    ],
+    "92": [
+      "  /* [1084.35, 1086.34] scopeStart= 1477428931853.543945 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.99);"
+    ],
+    "100": [
+      "  /* [1087.58, 1115.16] scopeStart= 1477428931856.765869 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.20);",
+      "  __msleep(0.16);",
+      "  send_xhr(1332);",
+      "  __msleep(15.06);",
+      "  __msleep(6.18);",
+      "  __msleep(0.03);",
+      "  send_xhr(1372);",
+      "  __msleep(0.98);",
+      "  __msleep(0.07);",
+      "  __msleep(0.05);",
+      "  __msleep(0.48);",
+      "  __msleep(0.01);",
+      "  send_xhr(1374);",
+      "  __msleep(0.36);"
+    ],
+    "147": [
+      "  /* [1115.38, 1118.06] scopeStart= 1477428931884.566162 type= EventTargetInvokingListenersScope */",
+      "  __msleep(2.68);"
+    ],
+    "162": [
+      "  /* [1124.27, 1125.75] scopeStart= 1477428931893.461914 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.48);"
+    ],
+    "165": [
+      "  /* [1125.81, 1126.3] scopeStart= 1477428931895.000000 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.49);"
+    ],
+    "168": [
+      "  /* [1126.36, 1126.52] scopeStart= 1477428931895.548096 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.16);"
+    ],
+    "171": [
+      "  /* [1126.55, 1126.69] scopeStart= 1477428931895.736084 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.14);"
+    ],
+    "174": [
+      "  /* [1126.75, 1126.9] scopeStart= 1477428931895.937012 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.15);"
+    ],
+    "177": [
+      "  /* [1126.92, 1136.31] scopeStart= 1477428931896.107910 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.60);",
+      "  add_elem(1394);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1394, 7);",
+      "  __msleep(0.11);",
+      "  add_elem(1405);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1405, 7);",
+      "  __msleep(0.07);",
+      "  add_elem(1416);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1416, 7);",
+      "  __msleep(0.05);",
+      "  add_elem(1427);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1427, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1438);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1438, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1449);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1449, 7);",
+      "  __msleep(0.30);",
+      "  add_elem(1471);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1471, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1482);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1482, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1493);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1493, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1504);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1504, 7);",
+      "  __msleep(0.05);",
+      "  add_elem(1515);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1515, 7);",
+      "  __msleep(0.06);",
+      "  add_elem(1526);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1526, 7);",
+      "  __msleep(7.08);",
+      "  sched_render_update_scope(188);",
+      "  __msleep(0.53);"
+    ],
+    "188": [
+      "  /* [1147.89, 1148.1] scopeStart= 1477428931917.078125 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "203": [
+      "  /* [1476.84, 1479.0] scopeStart= 1477428932246.031982 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.51);",
+      "  __msleep(1.65);"
+    ],
+    "213": [
+      "  /* [1480.1, 1482.85] scopeStart= 1477428932249.289062 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.23);",
+      "  __msleep(2.14);",
+      "  sched_render_update_scope(220);",
+      "  __msleep(0.38);"
+    ],
+    "220": [
+      "  /* [1483.02, 1483.44] scopeStart= 1477428932252.209961 type= RenderTreeUpdateScope */",
+      "  __msleep(0.42);"
+    ],
+    "248": [
+      "  /* [1844.07, 1857.07] scopeStart= 1477428932613.255127 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.21);",
+      "  __msleep(1.31);",
+      "  add_elem(1561);",
+      "  __msleep(0.05);",
+      "  set_elem_res(1561, 64);",
+      "  __msleep(0.87);",
+      "  sched_render_update_scope(301);",
+      "  __msleep(0.55);",
+      "  add_elem(1569);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1569, 64);",
+      "  __msleep(0.80);",
+      "  add_elem(1577);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1577, 64);",
+      "  __msleep(0.74);",
+      "  add_elem(1585);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1585, 64);",
+      "  __msleep(0.73);",
+      "  add_elem(1593);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1593, 64);",
+      "  __msleep(0.72);",
+      "  add_elem(1601);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1601, 64);",
+      "  __msleep(0.71);",
+      "  add_elem(1609);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1609, 64);",
+      "  __msleep(0.74);",
+      "  add_elem(1617);",
+      "  __msleep(0.05);",
+      "  set_elem_res(1617, 64);",
+      "  __msleep(0.70);",
+      "  add_elem(1625);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1625, 64);",
+      "  __msleep(0.71);",
+      "  add_elem(1633);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1633, 64);",
+      "  __msleep(0.69);",
+      "  add_elem(1641);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1641, 64);",
+      "  __msleep(0.70);",
+      "  add_elem(1649);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1649, 64);",
+      "  __msleep(2.37);"
+    ],
+    "301": [
+      "  /* [1857.2, 1861.8] scopeStart= 1477428932626.389893 type= RenderTreeUpdateScope */",
+      "  __msleep(4.60);"
+    ],
+    "336": [
+      "  /* [3046.2, 3046.24] scopeStart= 1477428933815.385986 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "337": [
+      "  /* [3046.35, 3046.36] scopeStart= 1477428933815.535156 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ],
+    "339": [
+      "  /* [6115.0, 6116.16] scopeStart= 1477428936884.185059 type= DOMTimerFiredScope */",
+      "  __msleep(0.51);",
+      "  __msleep(0.65);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 51,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        388,
+        62
+      ],
+      [
+        411,
+        64
+      ],
+      [
+        433,
+        66
+      ],
+      [
+        436,
+        69
+      ],
+      [
+        536,
+        74
+      ],
+      [
+        605,
+        88
+      ],
+      [
+        780,
+        114
+      ],
+      [
+        879,
+        125
+      ],
+      [
+        979,
+        136
+      ],
+      [
+        2008,
+        333
+      ],
+      [
+        2108,
+        344
+      ],
+      [
+        2207,
+        355
+      ],
+      [
+        2307,
+        366
+      ],
+      [
+        2407,
+        377
+      ],
+      [
+        2507,
+        388
+      ],
+      [
+        2662,
+        411
+      ],
+      [
+        2761,
+        422
+      ],
+      [
+        2861,
+        433
+      ],
+      [
+        2960,
+        444
+      ],
+      [
+        3059,
+        455
+      ],
+      [
+        3159,
+        466
+      ],
+      [
+        3315,
+        489
+      ],
+      [
+        3414,
+        500
+      ],
+      [
+        3514,
+        511
+      ],
+      [
+        3614,
+        522
+      ],
+      [
+        3713,
+        533
+      ],
+      [
+        3813,
+        544
+      ],
+      [
+        3968,
+        567
+      ],
+      [
+        4068,
+        578
+      ],
+      [
+        4167,
+        589
+      ],
+      [
+        4266,
+        600
+      ],
+      [
+        4366,
+        611
+      ],
+      [
+        4465,
+        622
+      ],
+      [
+        4621,
+        645
+      ],
+      [
+        4721,
+        656
+      ],
+      [
+        4820,
+        667
+      ],
+      [
+        4920,
+        678
+      ],
+      [
+        5019,
+        689
+      ],
+      [
+        5118,
+        700
+      ],
+      [
+        5278,
+        734
+      ],
+      [
+        5435,
+        760
+      ],
+      [
+        5590,
+        786
+      ],
+      [
+        5801,
+        828
+      ],
+      [
+        5956,
+        854
+      ],
+      [
+        6109,
+        880
+      ],
+      [
+        6319,
+        922
+      ],
+      [
+        6477,
+        948
+      ],
+      [
+        6631,
+        974
+      ],
+      [
+        6803,
+        1009
+      ],
+      [
+        6824,
+        1011
+      ],
+      [
+        6843,
+        1013
+      ],
+      [
+        6866,
+        1015
+      ],
+      [
+        6912,
+        1173
+      ],
+      [
+        6927,
+        1176
+      ],
+      [
+        6943,
+        1329
+      ],
+      [
+        6959,
+        1331
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        147
+      ],
+      [
+        "load",
+        337
+      ],
+      [
+        "readystatechange_complete",
+        336
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "act.ameba.jp",
+    "ad.pr.ameba.jp",
+    "ameblo.jp",
+    "ln.ameba.jp",
+    "ssl-stat.amebame.com",
+    "stat.profile.ameba.jp",
+    "stat100.ameba.jp",
+    "sy.ameba.jp",
+    "sy.amebame.com",
+    "sy.ameblo.jp",
+    "usrattr.ameba.jp"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server70",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 331,
+          "resp_body_size": 6963,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 1.0600000000000023,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 1585,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 2.5399999999999636,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 344,
+          "resp_body_size": 3456,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 0.2900000000000773,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 343,
+          "resp_body_size": 670,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 349,
+          "resp_body_size": 1519,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 353,
+          "resp_body_size": 265,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 353,
+          "resp_body_size": 259,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 8170,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 41230,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 45875,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 28663,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 352,
+          "resp_body_size": 114295,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 5737,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server18",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 19971,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server156",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 416,
+          "resp_body_size": 200,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server55",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 334,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server70",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 330,
+          "resp_body_size": 0,
+          "resp_meta_size": 147
+        },
+        {
+          "host": "server156",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 329,
+          "resp_body_size": 0,
+          "resp_meta_size": 150
+        },
+        {
+          "host": "server58",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 332,
+          "resp_body_size": 0,
+          "resp_meta_size": 140
+        },
+        {
+          "host": "server70",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 322,
+          "resp_body_size": 77,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "server70",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 0,
+          "resp_meta_size": 160
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 342,
+          "resp_body_size": 2267,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 320,
+          "resp_body_size": 53268,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 326,
+          "resp_body_size": 6112,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 327,
+          "resp_body_size": 2027,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 357,
+          "resp_body_size": 81015,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 357,
+          "resp_body_size": 94590,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 357,
+          "resp_body_size": 75794,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 319,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 403,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 29362,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 45738,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 60659,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 61415,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 53905,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 91592,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 41044,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 66839,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 35149,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 61568,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 49973,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 31547,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 22162,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 230492,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 27187,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 82538,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 55166,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 27605,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 20223,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 55958,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 38387,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 15750,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 66326,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 60236,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 73702,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 120793,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 79703,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 194056,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 70946,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 358,
+          "resp_body_size": 57525,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 402,
+          "resp_body_size": 4221,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 414,
+          "resp_body_size": 6642,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server55",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 377,
+          "resp_body_size": 136,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "60": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server58",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 459,
+          "resp_body_size": 14619,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "61": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server58",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 3464,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 445,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "63": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 426,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "64": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server193",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 353,
+          "resp_body_size": 274,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "65": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 104240,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 94036,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 50201,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 104607,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 65969,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 46674,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 49636,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 159033,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 58310,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 45520,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 34195,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "76": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server95",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 33985,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70003": {
+      "fired_scope_ids": [
+        339
+      ],
+      "interval_ms": 5000,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "1332": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          203
+        ]
+      ],
+      "res_chain": [
+        59
+      ]
+    },
+    "1372": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          248
+        ]
+      ],
+      "res_chain": [
+        60
+      ]
+    },
+    "1374": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          213
+        ]
+      ],
+      "res_chain": [
+        61
+      ]
+    }
+  }
+}

@@ -1,0 +1,3765 @@
+{
+  "elements": {
+    "22": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "24": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "30": {
+      "tag": "body"
+    },
+    "32": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 29,
+      "tag": "script"
+    },
+    "279": {
+      "initial_resInstNum": 4,
+      "tag": "img"
+    },
+    "291": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "310": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "329": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "344": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "362": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "378": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "396": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "414": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "430": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "448": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "466": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "485": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "503": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "523": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "551": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "563": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "575": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "587": {
+      "initial_resInstNum": 21,
+      "tag": "img"
+    },
+    "598": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "610": {
+      "initial_resInstNum": 22,
+      "tag": "img"
+    },
+    "621": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "633": {
+      "initial_resInstNum": 23,
+      "tag": "img"
+    },
+    "644": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "656": {
+      "initial_resInstNum": 24,
+      "tag": "img"
+    },
+    "665": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "677": {
+      "initial_resInstNum": 25,
+      "tag": "img"
+    },
+    "695": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "712": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "729": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "763": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "783": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "807": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "830": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "852": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "877": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "899": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "922": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "944": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "975": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "986": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "997": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1008": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1019": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1030": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1041": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1093": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1111": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1131": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1152": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1172": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1193": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1213": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1234": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1254": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1283": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1296": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1307": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1318": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1329": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1342": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1353": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1364": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1377": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1390": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1443": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1460": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1477": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1494": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1511": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1528": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1545": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1562": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1579": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1596": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1613": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1630": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1722": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1742": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1762": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1785": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1805": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1826": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1848": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1869": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1889": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1952": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1969": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1986": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2003": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2020": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2037": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2054": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2071": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2088": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2105": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2122": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2139": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2156": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2173": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2190": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2207": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2224": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2241": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2258": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2277": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2296": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2315": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2334": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2353": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2372": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2508": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2525": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2542": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2588": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2605": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2627": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2648": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2670": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2686": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2708": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2731": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2753": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2979": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "2999": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3012": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3033": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3053": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3074": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3094": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3115": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3135": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3169": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3184": {
+      "initial_resInstNum": 36,
+      "tag": "img"
+    },
+    "3196": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3211": {
+      "initial_resInstNum": 37,
+      "tag": "img"
+    },
+    "3223": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3238": {
+      "initial_resInstNum": 38,
+      "tag": "img"
+    },
+    "3250": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3265": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "3277": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3292": {
+      "initial_resInstNum": 39,
+      "tag": "img"
+    },
+    "3304": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3319": {
+      "initial_resInstNum": 40,
+      "tag": "img"
+    },
+    "3337": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3354": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3371": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3411": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3423": {
+      "initial_resInstNum": 41,
+      "tag": "img"
+    },
+    "3435": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3447": {
+      "initial_resInstNum": 41,
+      "tag": "img"
+    },
+    "3459": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3471": {
+      "initial_resInstNum": 42,
+      "tag": "img"
+    },
+    "3480": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3492": {
+      "initial_resInstNum": 43,
+      "tag": "img"
+    },
+    "3503": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3515": {
+      "initial_resInstNum": 44,
+      "tag": "img"
+    },
+    "3524": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3536": {
+      "initial_resInstNum": 45,
+      "tag": "img"
+    },
+    "3567": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3582": {
+      "initial_resInstNum": 46,
+      "tag": "img"
+    },
+    "3591": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3606": {
+      "initial_resInstNum": 47,
+      "tag": "img"
+    },
+    "3618": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3633": {
+      "initial_resInstNum": 48,
+      "tag": "img"
+    },
+    "3645": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3660": {
+      "initial_resInstNum": 49,
+      "tag": "img"
+    },
+    "3672": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3687": {
+      "initial_resInstNum": 50,
+      "tag": "img"
+    },
+    "3699": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3714": {
+      "initial_resInstNum": 51,
+      "tag": "img"
+    },
+    "3729": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3746": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3763": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3802": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3817": {
+      "initial_resInstNum": 52,
+      "tag": "img"
+    },
+    "3829": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3844": {
+      "initial_resInstNum": 53,
+      "tag": "img"
+    },
+    "3855": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3870": {
+      "initial_resInstNum": 54,
+      "tag": "img"
+    },
+    "3881": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3896": {
+      "initial_resInstNum": 55,
+      "tag": "img"
+    },
+    "3907": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3922": {
+      "initial_resInstNum": 54,
+      "tag": "img"
+    },
+    "3933": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "3948": {
+      "initial_resInstNum": 52,
+      "tag": "img"
+    },
+    "3992": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4007": {
+      "initial_resInstNum": 56,
+      "tag": "img"
+    },
+    "4015": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4030": {
+      "initial_resInstNum": 57,
+      "tag": "img"
+    },
+    "4042": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4057": {
+      "initial_resInstNum": 58,
+      "tag": "img"
+    },
+    "4066": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4081": {
+      "initial_resInstNum": 59,
+      "tag": "img"
+    },
+    "4090": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4105": {
+      "initial_resInstNum": 60,
+      "tag": "img"
+    },
+    "4113": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4128": {
+      "initial_resInstNum": 61,
+      "tag": "img"
+    },
+    "4138": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4153": {
+      "initial_resInstNum": 62,
+      "tag": "img"
+    },
+    "4161": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4176": {
+      "initial_resInstNum": 63,
+      "tag": "img"
+    },
+    "4185": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4200": {
+      "initial_resInstNum": 64,
+      "tag": "img"
+    },
+    "4208": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4223": {
+      "initial_resInstNum": 65,
+      "tag": "img"
+    },
+    "4232": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4247": {
+      "initial_resInstNum": 66,
+      "tag": "img"
+    },
+    "4255": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4270": {
+      "initial_resInstNum": 67,
+      "tag": "img"
+    },
+    "4489": {
+      "initial_resInstNum": 68,
+      "tag": "img"
+    },
+    "4514": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4532": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4550": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4568": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4586": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4604": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4624": {
+      "initial_resInstNum": 69,
+      "tag": "img"
+    },
+    "4649": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4667": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4685": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4703": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4721": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "4739": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "5028": {
+      "initial_resInstNum": 70,
+      "tag": "img"
+    },
+    "5031": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 71,
+      "is_parser_blocking": true,
+      "run_scope_id": 190,
+      "tag": "script"
+    },
+    "5088": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 214,
+      "tag": "script"
+    },
+    "5090": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 72,
+      "is_parser_blocking": true,
+      "run_scope_id": 220,
+      "tag": "script"
+    },
+    "5092": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 224,
+      "tag": "script"
+    },
+    "5095": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 227,
+      "tag": "script"
+    },
+    "5101": {
+      "tag": "img"
+    },
+    "5103": {
+      "tag": "img"
+    },
+    "5183": {
+      "tag": "img"
+    },
+    "5184": {
+      "event_handling_scopes": [
+        [
+          "load",
+          500
+        ]
+      ],
+      "tag": "img"
+    },
+    "5185": {
+      "tag": "img"
+    },
+    "5379": {
+      "tag": "img"
+    },
+    "5391": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 509,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "29": [
+      "  /* [2071.75, 2079.73] scopeStart= 1477428848576.862061 type= ScriptControllerRunScriptScope */",
+      "  __msleep(7.87);",
+      "  sched_render_update_scope(38);",
+      "  __msleep(0.11);"
+    ],
+    "38": [
+      "  /* [2101.11, 2143.89] scopeStart= 1477428848606.216797 type= RenderTreeUpdateScope */",
+      "  __msleep(42.78);"
+    ],
+    "76": [
+      "  /* [2363.65, 2385.73] scopeStart= 1477428848868.760986 type= RenderTreeUpdateScope */",
+      "  __msleep(22.08);"
+    ],
+    "85": [
+      "  /* [2572.82, 2575.78] scopeStart= 1477428849077.933105 type= RenderTreeUpdateScope */",
+      "  __msleep(2.96);"
+    ],
+    "128": [
+      "  /* [2820.26, 2833.77] scopeStart= 1477428849325.370117 type= RenderTreeUpdateScope */",
+      "  __msleep(13.51);"
+    ],
+    "168": [
+      "  /* [2892.76, 2895.6] scopeStart= 1477428849397.873047 type= RenderTreeUpdateScope */",
+      "  __msleep(2.84);"
+    ],
+    "190": [
+      "  /* [4256.64, 4305.84] scopeStart= 1477428850761.746826 type= ScriptControllerRunScriptScope */",
+      "  __msleep(25.48);",
+      "  __msleep(13.46);",
+      "  __msleep(6.73);",
+      "  __msleep(3.53);"
+    ],
+    "214": [
+      "  /* [4306.25, 4306.77] scopeStart= 1477428850811.356934 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.52);"
+    ],
+    "220": [
+      "  /* [4309.3, 4334.3] scopeStart= 1477428850814.410889 type= ScriptControllerRunScriptScope */",
+      "  __msleep(24.93);",
+      "  __msleep(0.07);"
+    ],
+    "224": [
+      "  /* [4336.04, 4344.03] scopeStart= 1477428850841.146973 type= ScriptControllerRunScriptScope */",
+      "  __msleep(7.95);",
+      "  __msleep(0.04);"
+    ],
+    "227": [
+      "  /* [4344.42, 4350.65] scopeStart= 1477428850849.524902 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.41);",
+      "  add_elem(5101);",
+      "  __msleep(0.03);",
+      "  set_elem_res(5101, 75);",
+      "  __msleep(0.72);",
+      "  add_elem(5103);",
+      "  __msleep(0.02);",
+      "  set_elem_res(5103, 75);",
+      "  __msleep(1.05);"
+    ],
+    "240": [
+      "  /* [4350.92, 4361.73] scopeStart= 1477428850856.029053 type= EventTargetInvokingListenersScope */",
+      "  __msleep(10.81);"
+    ],
+    "282": [
+      "  /* [4369.06, 4420.77] scopeStart= 1477428850874.166992 type= DOMTimerFiredScope */",
+      "  __msleep(15.70);",
+      "  __msleep(0.43);",
+      "  __msleep(25.21);",
+      "  sched_render_update_scope(309);",
+      "  __msleep(10.37);"
+    ],
+    "309": [
+      "  /* [4421.18, 4421.43] scopeStart= 1477428850926.287842 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "312": [
+      "  /* [4430.05, 4575.3] scopeStart= 1477428850935.162109 type= DOMTimerFiredScope */",
+      "  __msleep(8.88);",
+      "  __msleep(0.46);",
+      "  __msleep(1.10);",
+      "  add_elem(5183);",
+      "  __msleep(0.10);",
+      "  set_elem_res(5183, 79);",
+      "  __msleep(2.39);",
+      "  add_elem(5184);",
+      "  __msleep(0.19);",
+      "  set_elem_res(5184, 80);",
+      "  __msleep(2.18);",
+      "  add_elem(5185);",
+      "  __msleep(0.19);",
+      "  set_elem_res(5185, 81);",
+      "  __msleep(1.52);",
+      "  __msleep(0.15);",
+      "  __msleep(3.70);",
+      "  __msleep(0.09);",
+      "  __msleep(1.07);",
+      "  __msleep(0.15);",
+      "  __msleep(12.70);",
+      "  __msleep(4.52);",
+      "  __msleep(0.31);",
+      "  __msleep(2.71);",
+      "  __msleep(0.30);",
+      "  __msleep(2.55);",
+      "  __msleep(7.23);",
+      "  __msleep(15.60);",
+      "  __msleep(21.56);",
+      "  set_elem_res(551, 82);",
+      "  __msleep(1.06);",
+      "  set_elem_res(575, 83);",
+      "  __msleep(0.50);",
+      "  set_elem_res(598, 84);",
+      "  __msleep(0.38);",
+      "  set_elem_res(621, 85);",
+      "  __msleep(0.36);",
+      "  set_elem_res(644, 86);",
+      "  __msleep(0.51);",
+      "  set_elem_res(665, 87);",
+      "  __msleep(0.39);",
+      "  set_elem_res(695, 88);",
+      "  __msleep(0.35);",
+      "  set_elem_res(712, 89);",
+      "  __msleep(0.35);",
+      "  set_elem_res(729, 90);",
+      "  __msleep(0.42);",
+      "  set_elem_res(763, 91);",
+      "  __msleep(0.38);",
+      "  set_elem_res(783, 92);",
+      "  __msleep(0.36);",
+      "  set_elem_res(830, 93);",
+      "  __msleep(0.33);",
+      "  set_elem_res(852, 94);",
+      "  __msleep(0.33);",
+      "  set_elem_res(877, 95);",
+      "  __msleep(0.35);",
+      "  set_elem_res(899, 96);",
+      "  __msleep(0.32);",
+      "  set_elem_res(922, 97);",
+      "  __msleep(0.37);",
+      "  set_elem_res(807, 98);",
+      "  __msleep(0.36);",
+      "  set_elem_res(944, 99);",
+      "  __msleep(0.35);",
+      "  set_elem_res(975, 100);",
+      "  __msleep(0.37);",
+      "  set_elem_res(986, 101);",
+      "  __msleep(0.38);",
+      "  set_elem_res(997, 102);",
+      "  __msleep(0.36);",
+      "  set_elem_res(1008, 103);",
+      "  __msleep(0.35);",
+      "  set_elem_res(1019, 104);",
+      "  __msleep(0.35);",
+      "  set_elem_res(1030, 105);",
+      "  __msleep(0.35);",
+      "  set_elem_res(1041, 106);",
+      "  __msleep(40.97);",
+      "  send_xhr(5378);",
+      "  __msleep(5.00);"
+    ],
+    "481": [
+      "  /* [4842.75, 4845.0] scopeStart= 1477428851347.855957 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.35);",
+      "  add_elem(5379);",
+      "  __msleep(0.23);",
+      "  set_elem_res(5379, 107);",
+      "  __msleep(0.67);"
+    ],
+    "500": [
+      "  /* [5474.35, 5474.55] scopeStart= 1477428851979.459961 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.20);"
+    ],
+    "509": [
+      "  /* [5708.82, 5709.87] scopeStart= 1477428852213.928955 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.05);"
+    ],
+    "519": [
+      "  /* [5733.02, 5733.05] scopeStart= 1477428852238.127930 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.03);"
+    ],
+    "520": [
+      "  /* [5733.12, 5733.26] scopeStart= 1477428852238.226807 type= DocOnLoadEventScope */",
+      "  __msleep(0.14);"
+    ],
+    "524": [
+      "  /* [5733.32, 5733.39] scopeStart= 1477428852238.431885 type= RenderTreeUpdateScope */",
+      "  __msleep(0.07);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        88,
+        22
+      ],
+      [
+        108,
+        24
+      ],
+      [
+        446,
+        30
+      ],
+      [
+        581,
+        32
+      ],
+      [
+        1732,
+        279
+      ],
+      [
+        1830,
+        291
+      ],
+      [
+        1974,
+        310
+      ],
+      [
+        2116,
+        329
+      ],
+      [
+        2232,
+        344
+      ],
+      [
+        2372,
+        362
+      ],
+      [
+        2501,
+        378
+      ],
+      [
+        2636,
+        396
+      ],
+      [
+        2774,
+        414
+      ],
+      [
+        2896,
+        430
+      ],
+      [
+        3030,
+        448
+      ],
+      [
+        3164,
+        466
+      ],
+      [
+        3304,
+        485
+      ],
+      [
+        3444,
+        503
+      ],
+      [
+        3583,
+        523
+      ],
+      [
+        3761,
+        551
+      ],
+      [
+        3854,
+        563
+      ],
+      [
+        3962,
+        575
+      ],
+      [
+        4052,
+        587
+      ],
+      [
+        4160,
+        598
+      ],
+      [
+        4250,
+        610
+      ],
+      [
+        4358,
+        621
+      ],
+      [
+        4446,
+        633
+      ],
+      [
+        4555,
+        644
+      ],
+      [
+        4648,
+        656
+      ],
+      [
+        4737,
+        665
+      ],
+      [
+        4829,
+        677
+      ],
+      [
+        4981,
+        695
+      ],
+      [
+        5129,
+        712
+      ],
+      [
+        5278,
+        729
+      ],
+      [
+        5520,
+        763
+      ],
+      [
+        5665,
+        783
+      ],
+      [
+        5826,
+        807
+      ],
+      [
+        5989,
+        830
+      ],
+      [
+        6147,
+        852
+      ],
+      [
+        6316,
+        877
+      ],
+      [
+        6470,
+        899
+      ],
+      [
+        6627,
+        922
+      ],
+      [
+        6784,
+        944
+      ],
+      [
+        6989,
+        975
+      ],
+      [
+        7087,
+        986
+      ],
+      [
+        7184,
+        997
+      ],
+      [
+        7282,
+        1008
+      ],
+      [
+        7377,
+        1019
+      ],
+      [
+        7473,
+        1030
+      ],
+      [
+        7571,
+        1041
+      ],
+      [
+        7902,
+        1093
+      ],
+      [
+        8058,
+        1111
+      ],
+      [
+        8217,
+        1131
+      ],
+      [
+        8388,
+        1152
+      ],
+      [
+        8547,
+        1172
+      ],
+      [
+        8712,
+        1193
+      ],
+      [
+        8878,
+        1213
+      ],
+      [
+        9047,
+        1234
+      ],
+      [
+        9210,
+        1254
+      ],
+      [
+        9414,
+        1283
+      ],
+      [
+        9527,
+        1296
+      ],
+      [
+        9630,
+        1307
+      ],
+      [
+        9736,
+        1318
+      ],
+      [
+        9840,
+        1329
+      ],
+      [
+        9959,
+        1342
+      ],
+      [
+        10065,
+        1353
+      ],
+      [
+        10169,
+        1364
+      ],
+      [
+        10288,
+        1377
+      ],
+      [
+        10405,
+        1390
+      ],
+      [
+        10708,
+        1443
+      ],
+      [
+        10823,
+        1460
+      ],
+      [
+        10937,
+        1477
+      ],
+      [
+        11053,
+        1494
+      ],
+      [
+        11172,
+        1511
+      ],
+      [
+        11287,
+        1528
+      ],
+      [
+        11402,
+        1545
+      ],
+      [
+        11515,
+        1562
+      ],
+      [
+        11631,
+        1579
+      ],
+      [
+        11746,
+        1596
+      ],
+      [
+        11861,
+        1613
+      ],
+      [
+        11974,
+        1630
+      ],
+      [
+        20992,
+        1722
+      ],
+      [
+        21133,
+        1742
+      ],
+      [
+        21286,
+        1762
+      ],
+      [
+        21445,
+        1785
+      ],
+      [
+        21591,
+        1805
+      ],
+      [
+        21744,
+        1826
+      ],
+      [
+        21897,
+        1848
+      ],
+      [
+        22051,
+        1869
+      ],
+      [
+        22210,
+        1889
+      ],
+      [
+        22647,
+        1952
+      ],
+      [
+        22768,
+        1969
+      ],
+      [
+        22890,
+        1986
+      ],
+      [
+        23011,
+        2003
+      ],
+      [
+        23133,
+        2020
+      ],
+      [
+        23257,
+        2037
+      ],
+      [
+        23383,
+        2054
+      ],
+      [
+        23514,
+        2071
+      ],
+      [
+        23643,
+        2088
+      ],
+      [
+        23771,
+        2105
+      ],
+      [
+        23895,
+        2122
+      ],
+      [
+        24020,
+        2139
+      ],
+      [
+        24145,
+        2156
+      ],
+      [
+        24267,
+        2173
+      ],
+      [
+        24389,
+        2190
+      ],
+      [
+        24512,
+        2207
+      ],
+      [
+        24634,
+        2224
+      ],
+      [
+        24757,
+        2241
+      ],
+      [
+        24881,
+        2258
+      ],
+      [
+        25011,
+        2277
+      ],
+      [
+        25146,
+        2296
+      ],
+      [
+        25283,
+        2315
+      ],
+      [
+        25420,
+        2334
+      ],
+      [
+        25555,
+        2353
+      ],
+      [
+        25689,
+        2372
+      ],
+      [
+        47416,
+        2508
+      ],
+      [
+        47564,
+        2525
+      ],
+      [
+        47712,
+        2542
+      ],
+      [
+        48020,
+        2588
+      ],
+      [
+        48167,
+        2605
+      ],
+      [
+        48314,
+        2627
+      ],
+      [
+        48467,
+        2648
+      ],
+      [
+        48612,
+        2670
+      ],
+      [
+        48738,
+        2686
+      ],
+      [
+        48882,
+        2708
+      ],
+      [
+        49033,
+        2731
+      ],
+      [
+        49182,
+        2753
+      ],
+      [
+        54945,
+        2979
+      ],
+      [
+        55099,
+        2999
+      ],
+      [
+        55208,
+        3012
+      ],
+      [
+        55371,
+        3033
+      ],
+      [
+        55531,
+        3053
+      ],
+      [
+        55691,
+        3074
+      ],
+      [
+        55846,
+        3094
+      ],
+      [
+        56007,
+        3115
+      ],
+      [
+        56163,
+        3135
+      ],
+      [
+        56373,
+        3169
+      ],
+      [
+        56480,
+        3184
+      ],
+      [
+        56591,
+        3196
+      ],
+      [
+        56698,
+        3211
+      ],
+      [
+        56807,
+        3223
+      ],
+      [
+        56910,
+        3238
+      ],
+      [
+        57020,
+        3250
+      ],
+      [
+        57130,
+        3265
+      ],
+      [
+        57243,
+        3277
+      ],
+      [
+        57353,
+        3292
+      ],
+      [
+        57461,
+        3304
+      ],
+      [
+        57568,
+        3319
+      ],
+      [
+        57720,
+        3337
+      ],
+      [
+        57867,
+        3354
+      ],
+      [
+        58012,
+        3371
+      ],
+      [
+        58257,
+        3411
+      ],
+      [
+        58345,
+        3423
+      ],
+      [
+        58461,
+        3435
+      ],
+      [
+        58551,
+        3447
+      ],
+      [
+        58665,
+        3459
+      ],
+      [
+        58753,
+        3471
+      ],
+      [
+        58848,
+        3480
+      ],
+      [
+        58938,
+        3492
+      ],
+      [
+        59045,
+        3503
+      ],
+      [
+        59133,
+        3515
+      ],
+      [
+        59219,
+        3524
+      ],
+      [
+        59307,
+        3536
+      ],
+      [
+        59502,
+        3567
+      ],
+      [
+        59606,
+        3582
+      ],
+      [
+        59698,
+        3591
+      ],
+      [
+        59807,
+        3606
+      ],
+      [
+        59913,
+        3618
+      ],
+      [
+        60018,
+        3633
+      ],
+      [
+        60127,
+        3645
+      ],
+      [
+        60232,
+        3660
+      ],
+      [
+        60344,
+        3672
+      ],
+      [
+        60448,
+        3687
+      ],
+      [
+        60560,
+        3699
+      ],
+      [
+        60658,
+        3714
+      ],
+      [
+        60787,
+        3729
+      ],
+      [
+        60928,
+        3746
+      ],
+      [
+        61066,
+        3763
+      ],
+      [
+        61306,
+        3802
+      ],
+      [
+        61417,
+        3817
+      ],
+      [
+        61526,
+        3829
+      ],
+      [
+        61636,
+        3844
+      ],
+      [
+        61745,
+        3855
+      ],
+      [
+        61856,
+        3870
+      ],
+      [
+        61966,
+        3881
+      ],
+      [
+        62078,
+        3896
+      ],
+      [
+        62188,
+        3907
+      ],
+      [
+        62299,
+        3922
+      ],
+      [
+        62415,
+        3933
+      ],
+      [
+        62527,
+        3948
+      ],
+      [
+        62782,
+        3992
+      ],
+      [
+        62894,
+        4007
+      ],
+      [
+        62980,
+        4015
+      ],
+      [
+        63088,
+        4030
+      ],
+      [
+        63203,
+        4042
+      ],
+      [
+        63319,
+        4057
+      ],
+      [
+        63407,
+        4066
+      ],
+      [
+        63523,
+        4081
+      ],
+      [
+        63613,
+        4090
+      ],
+      [
+        63721,
+        4105
+      ],
+      [
+        63807,
+        4113
+      ],
+      [
+        63919,
+        4128
+      ],
+      [
+        64012,
+        4138
+      ],
+      [
+        64125,
+        4153
+      ],
+      [
+        64209,
+        4161
+      ],
+      [
+        64316,
+        4176
+      ],
+      [
+        64409,
+        4185
+      ],
+      [
+        64521,
+        4200
+      ],
+      [
+        64607,
+        4208
+      ],
+      [
+        64718,
+        4223
+      ],
+      [
+        64811,
+        4232
+      ],
+      [
+        64924,
+        4247
+      ],
+      [
+        65010,
+        4255
+      ],
+      [
+        65119,
+        4270
+      ],
+      [
+        79355,
+        4489
+      ],
+      [
+        79533,
+        4514
+      ],
+      [
+        79672,
+        4532
+      ],
+      [
+        79811,
+        4550
+      ],
+      [
+        79947,
+        4568
+      ],
+      [
+        80085,
+        4586
+      ],
+      [
+        80223,
+        4604
+      ],
+      [
+        80360,
+        4624
+      ],
+      [
+        80532,
+        4649
+      ],
+      [
+        80664,
+        4667
+      ],
+      [
+        80796,
+        4685
+      ],
+      [
+        80930,
+        4703
+      ],
+      [
+        81064,
+        4721
+      ],
+      [
+        81196,
+        4739
+      ],
+      [
+        82762,
+        5028
+      ],
+      [
+        82793,
+        5031
+      ],
+      [
+        82850,
+        5088
+      ],
+      [
+        82865,
+        5090
+      ],
+      [
+        93519,
+        5092
+      ],
+      [
+        94457,
+        5095
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        240
+      ],
+      [
+        "load",
+        520
+      ],
+      [
+        "readystatechange_complete",
+        519
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "b.scorecardresearch.com",
+    "cmc.tanx.com",
+    "css.tudouui.com",
+    "csstest.tudouui.com",
+    "g1.tdimg.com",
+    "g2.tdimg.com",
+    "g3.tdimg.com",
+    "g4.tdimg.com",
+    "i1.tdimg.com",
+    "i3.tdimg.com",
+    "js.tudouui.com",
+    "p.l.youku.com",
+    "stats.tudou.com",
+    "u1.tdimg.com",
+    "u2.tdimg.com",
+    "u3.tdimg.com",
+    "u4.tdimg.com",
+    "ui.tudou.com",
+    "www.tudou.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server138",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 335,
+          "resp_body_size": 94472,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 16.279999999999973,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 20477,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 4.689999999999827,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 340,
+          "resp_body_size": 6190,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 82958,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 369,
+          "resp_body_size": 29439,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 27993,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 24872,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 15218,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 13150,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 28340,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 17766,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 23499,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 22571,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 23234,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 24905,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 12716,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 9273,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 27269,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 338,
+          "resp_body_size": 438,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 7346,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 7145,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5135,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 4191,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 3216,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 5189,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 24080,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 394,
+          "resp_body_size": 36396,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 3583,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server132",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 360,
+          "resp_body_size": 2085,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server30",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 360,
+          "resp_body_size": 740,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 2248,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 372,
+          "resp_body_size": 17860,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 5195,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5176,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 361,
+          "resp_body_size": 4936,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 5839,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 6243,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 3270,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5013,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 5916,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 18661,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5250,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 3515,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5867,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 361,
+          "resp_body_size": 5449,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 3335,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 5235,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 322,
+          "resp_body_size": 9416,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5596,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 5226,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 5262,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 3171,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 4437,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 4925,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 3768,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 6505,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 4281,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "61": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 4814,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 4534,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "63": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 4551,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "64": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 5721,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "65": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 362,
+          "resp_body_size": 6366,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 4848,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 4360,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 6950,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 4703,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 342,
+          "resp_body_size": 186,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server56",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 316,
+          "resp_body_size": 36778,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server56",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 316,
+          "resp_body_size": 54379,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 19285,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server195",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 2546,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 11627,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "76": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server161",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 484,
+          "resp_body_size": 1030,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "77": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [],
+      "type": "img"
+    },
+    "78": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server138",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 659,
+          "resp_body_size": 225,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "79": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server31",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 762,
+          "resp_body_size": 774,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "server31",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 827,
+          "resp_body_size": 48,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "80": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server88",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 885,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "server69",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 357,
+          "resp_body_size": 29,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "81": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server19",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 619,
+          "resp_body_size": 0,
+          "resp_meta_size": 127
+        }
+      ],
+      "type": "img"
+    },
+    "82": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server147",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 50055,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "83": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server147",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 43089,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "84": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server175",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 23239,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "85": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server96",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 35989,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "86": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server147",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 36044,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "87": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server21",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 333,
+          "resp_body_size": 55297,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "88": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 17318,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "89": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 15289,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "90": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 29058,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "91": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 21569,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "92": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 11990,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "93": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 13044,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "94": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 12448,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "95": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 8606,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "96": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 24059,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "97": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 7285,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "98": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 12030,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "99": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server94",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 9676,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "100": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 11754,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "101": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 34876,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "102": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 23433,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "103": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server110",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 10284,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "104": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 366,
+          "resp_body_size": 33742,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "105": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server85",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 17498,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "106": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server72",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 10139,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "107": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server138",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 656,
+          "resp_body_size": 114,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        282
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70002": {
+      "fired_scope_ids": [
+        312
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "5378": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          481
+        ]
+      ],
+      "res_chain": [
+        78
+      ]
+    }
+  }
+}

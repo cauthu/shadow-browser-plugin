@@ -21,3 +21,15 @@ aws.amazon.com ../../../page_models/aws.amazon.com-page_model-10252016.json
 twitter ../../../page_models/twitter-page_model-10252016.json
 jd.com ../../../page_models/jd.com-page_model-10252016.json
 bankofamerica ../../../page_models/bankofamerica-page_model-10252016.json
+ameblo.jp ../../../page_models/ameblo.jp-page_model-10252016.json
+english.china.com ../../../page_models/english.china.com-page_model-10252016.json
+stackoverflow.com ../../../page_models/stackoverflow.com-page_model-10252016.json
+wordpress.com ../../../page_models/wordpress.com-page_model-10252016.json
+www.alibaba.com ../../../page_models/www.alibaba.com-page_model-10252016.json
+www.amazon.com ../../../page_models/www.amazon.com-page_model-10252016.json
+www.chase.com ../../../page_models/www.chase.com-page_model-10252016.json
+www.microsoft.com ../../../page_models/www.microsoft.com-page_model-10252016.json
+www.so.com ../../../page_models/www.so.com-page_model-10252016.json
+www.sogou.com ../../../page_models/www.sogou.com-page_model-10252016.json
+www.tudou.com ../../../page_models/www.tudou.com-page_model-10252016.json
+www.youku.com ../../../page_models/www.youku.com-page_model-10252016.json
