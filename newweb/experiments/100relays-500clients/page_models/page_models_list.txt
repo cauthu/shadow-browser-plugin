@@ -20,3 +20,4 @@ aws.amazon.com ../../../page_models/aws.amazon.com-page_model-10252016.json
 360.com ../../../page_models/360.com-page_model-10252016.json
 twitter ../../../page_models/twitter-page_model-10252016.json
 jd.com ../../../page_models/jd.com-page_model-10252016.json
+bankofamerica ../../../page_models/bankofamerica-page_model-10252016.json
