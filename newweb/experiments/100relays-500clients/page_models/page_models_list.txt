@@ -37,3 +37,4 @@ www.wellsfargo.com ../../../page_models/www.wellsfargo.com-page_model-10282016.j
 www.craigslist.org_about_sites ../../../page_models/www.craigslist.org_about_sites-page_model-10282016.json
 www.yandex.ru ../../../page_models/www.yandex.ru-page_model-10282016.json
 pixnet.net ../../../page_models/pixnet.net-page_model-10252016.json
+imgur.com ../../../page_models/imgur.com-page_model-10282016.json
