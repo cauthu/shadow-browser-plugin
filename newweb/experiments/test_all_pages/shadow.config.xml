@@ -1,5 +1,5 @@
 <shadow>
-  <kill time="300"/>
+  <kill time="150"/>
   <topology path="~/.shadow/share/topology.graphml.xml"/>
   <plugin id="webserver" path="~/.shadow/plugins/libshadow-plugin-webserver.so"/>
   <plugin id="driver" path="~/.shadow/plugins/libshadow-plugin-driver_process.so"/>
