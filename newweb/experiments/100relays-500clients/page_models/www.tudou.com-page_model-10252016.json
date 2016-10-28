@@ -2594,11 +2594,6 @@
       ],
       "type": "img"
     },
-    "32": {
-      "part_of_page_loaded_check": true,
-      "req_chain": [],
-      "type": "img"
-    },
     "33": {
       "part_of_page_loaded_check": true,
       "req_chain": [
@@ -3258,11 +3253,6 @@
         }
       ],
       "type": "main"
-    },
-    "77": {
-      "part_of_page_loaded_check": true,
-      "req_chain": [],
-      "type": "img"
     },
     "78": {
       "part_of_page_loaded_check": false,
