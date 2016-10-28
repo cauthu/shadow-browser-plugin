@@ -32,6 +32,7 @@
       "tag": "script"
     },
     "302": {
+      "initial_resInstNum": 20,
       "is_blocking_css": true,
       "rel": "stylesheet",
       "tag": "link"
