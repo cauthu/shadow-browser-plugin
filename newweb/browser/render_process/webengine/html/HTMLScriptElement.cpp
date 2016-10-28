@@ -40,7 +40,7 @@ HTMLScriptElement::setResInstNum(const uint32_t& resInstNum)
 {
     vlogself(2) << "begin, res:" << resInstNum;
 
-    if (this->resInstNum() > 0) {
+    if ((this->resInstNum() > 0) && (this->resInstNum() != resInstNum)) {
         logself(FATAL) << "we don't support changing a script's resource "
                        << "after it has already been set";
     }
