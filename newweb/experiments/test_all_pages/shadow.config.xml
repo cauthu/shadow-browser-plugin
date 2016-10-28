@@ -1,5 +1,5 @@
 <shadow>
-  <kill time="900"/>
+  <kill time="300"/>
   <topology path="~/.shadow/share/topology.graphml.xml"/>
   <plugin id="webserver" path="~/.shadow/plugins/libshadow-plugin-webserver.so"/>
   <plugin id="driver" path="~/.shadow/plugins/libshadow-plugin-driver_process.so"/>
@@ -13,7 +13,7 @@
 
   <node id="webclient1" geocodehint="US" typehint="client" quantity="1" cpufrequency="2400000">
     <application plugin="ioservice" starttime="60" arguments="--conf=ioservice.conf --v=1"/>
-    <application plugin="renderer" starttime="61" arguments="--conf=renderer.conf --v=1"/>
+    <application plugin="renderer" starttime="61" arguments="--conf=renderer.conf --v=2"/>
     <application plugin="tproxy" starttime="1" arguments="--conf=tproxy_csp.conf --v=1"/>
     <application plugin="driver" starttime="62" arguments="--conf=driver.conf --v=1"/>
   </node>
