@@ -118,6 +118,7 @@ protected:
     void cancel_timer(const uint32_t timerID);
     void set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum);
     void send_xhr(const uint32_t xhrInstNum);
+    void fetch_res(const uint32_t resInstNum);
 
     /////
 

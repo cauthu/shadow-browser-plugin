@@ -92,12 +92,17 @@ PageModel::get_resource_info(const uint32_t& resInstNum,
                       resource, "part_of_page_loaded_check", true, Bool);
 
     if (info.type == "css") {
-        double parse_dur_ms = 0;
+        double parse_dur_ms = -1;
         GET_OBJECT_MEMBER(parse_dur_ms,
-                          resource, "parse_dur_ms", true, Double);
-        info.css_parse_dur_ms = (uint32_t)parse_dur_ms;
-    } else {
-        info.css_parse_dur_ms = 0;
+                          resource, "parse_dur_ms", false, Double);
+        if (parse_dur_ms != -1) {
+            info.css_parse_dur_ms = (int32_t)parse_dur_ms;
+            CHECK(info.css_parse_dur_ms >= 0);
+        } else {
+            GET_OBJECT_MEMBER(info.css_parse_scope_id,
+                              resource, "parse_scope_id", true, Uint);
+            CHECK(info.css_parse_scope_id > 0);
+        }
     }
 
     itr = resource.FindMember("req_chain");

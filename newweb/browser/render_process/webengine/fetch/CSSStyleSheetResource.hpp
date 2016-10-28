@@ -14,7 +14,8 @@ public:
 
     CSSStyleSheetResource(const PageModel::ResourceInfo& res_info,
                           Webengine* webengine, ResourceFetcher*,
-                          const uint32_t& parse_dur_ms);
+                          const int32_t& parse_dur_ms,
+                          const uint32_t& parse_scope_id);
 
     // const uint32_t& parse_duration_ms() const { return parse_duration_ms_; }
 
@@ -26,7 +27,8 @@ protected:
 
     /////////////
 
-    const uint32_t parse_dur_ms_;
+    const int32_t parse_dur_ms_;
+    const uint32_t parse_scope_id_;
 };
 
 }

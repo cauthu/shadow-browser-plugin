@@ -138,6 +138,9 @@ Webengine::_init_angelscript_engine()
 
     REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
         "void send_xhr(uint)", send_xhr);
+
+    REGISTER_MY_METHOD_AS_GLOBAL_FUNC(
+        "void fetch_res(uint)", fetch_res);
 }
 
 void
@@ -363,6 +366,20 @@ Webengine::send_xhr(const uint32_t instNum)
 
     const auto ret = xhrs_.insert(make_pair(instNum, std::move(xhr)));
     CHECK(ret.second);
+
+    VLOG(2) << "done";
+}
+
+void
+Webengine::fetch_res(const uint32_t instNum)
+{
+    VLOG(2) << "begin, res:" << instNum;
+
+    std::shared_ptr<Resource> resource =
+        resource_fetcher_->getResource(instNum);
+    if (!resource->isLoading() && !resource->isFinished()) {
+        resource->load();
+    }
 
     VLOG(2) << "done";
 }

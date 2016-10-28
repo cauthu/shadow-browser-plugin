@@ -36,7 +36,12 @@ public:
         std::string type;
 
         // valid only if "type" is "css"
-        uint32_t css_parse_dur_ms;
+
+        // only one of parse dur and parse scope will be valid. check
+        // parse duration first because it's common case; if it's -1,
+        // then use parse scope
+        int32_t css_parse_dur_ms = -1;
+        uint32_t css_parse_scope_id = 0;
     };
 
     struct ElementInfo

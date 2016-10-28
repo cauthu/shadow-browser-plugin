@@ -58,7 +58,8 @@ ResourceFetcher::getResource(const uint32_t& instNum)
     } else {
         resource.reset(
             new CSSStyleSheetResource(
-                res_info, webengine_, this, res_info.css_parse_dur_ms),
+                res_info, webengine_, this,
+                res_info.css_parse_dur_ms, res_info.css_parse_scope_id),
             [](CSSStyleSheetResource* res) { res->destroy(); }
             );
     }
