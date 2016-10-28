@@ -22,3 +22,5 @@ zillow.com page_models/zillow.com-page_model.json
 wordpress page_models/wordpress.com-page_model-10252016.json
 www.sogou.com page_models/www.sogou.com-page_model-10252016.json
 www.tudou.com page_models/www.tudou.com-page_model-10252016.json
+www.craigslist.org_about_sites page_models/www.craigslist.org_about_sites-page_model-10282016.json
+www.wellsfargo.com page_models/www.wellsfargo.com-page_model-10282016.json
