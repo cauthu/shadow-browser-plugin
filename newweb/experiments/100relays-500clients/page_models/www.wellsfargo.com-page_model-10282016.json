@@ -218,6 +218,7 @@
     "2430": {
       "asyncExec": false,
       "exec_immediately": false,
+      "initial_resInstNum": 58,
       "is_parser_blocking": true,
       "run_scope_id": 156,
       "tag": "script"
