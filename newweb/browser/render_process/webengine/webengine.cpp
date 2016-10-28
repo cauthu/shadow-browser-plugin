@@ -173,6 +173,8 @@ Webengine::handle_LoadPage(const uint32_t load_id,
     // _reset();
 
     page_model_.reset(new PageModel(model_fpath));
+    initial_render_tree_update_scope_id_ =
+        page_model_->get_initial_render_tree_update_scope_id();
 
     resource_fetcher_.reset(
         new ResourceFetcher(this, page_model_.get()));
@@ -204,6 +206,7 @@ Webengine::_reset_loading_state()
     pending_requests_.clear();
     checkCompleted_timer_->cancel();
     scheduled_render_tree_update_scope_id_ = 0;
+    initial_render_tree_update_scope_id_ = 0;
     start_load_time_ms_ = 0;
     current_load_id_ = 0;
 }
@@ -297,6 +300,13 @@ Webengine::sched_render_update_scope(const uint32_t scope_id)
     VLOG(2) << "begin, scope:" << scope_id;
 
     CHECK_GT(scope_id, 0);
+
+    if (scope_id == initial_render_tree_update_scope_id_) {
+        // don't need to schedule it, because the initial render
+        // update scope will be scheduled by document
+        return;
+    }
+
     CHECK_NE(scheduled_render_tree_update_scope_id_, scope_id) << scope_id;
     if (scheduled_render_tree_update_scope_id_) {
         LOG(WARNING)

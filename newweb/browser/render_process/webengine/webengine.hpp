@@ -152,6 +152,8 @@ protected:
     ResourceFetcher::UniquePtr resource_fetcher_;
     Document::UniquePtr document_;
 
+    uint32_t initial_render_tree_update_scope_id_ = 0;
+
     /* timer to do the checkCompleted() on our own stack, not while
      * being called back by some resource finish for example
      */
