@@ -26,3 +26,4 @@ www.craigslist.org_about_sites page_models/www.craigslist.org_about_sites-page_m
 www.wellsfargo.com page_models/www.wellsfargo.com-page_model-10282016.json
 imgur.com page_models/imgur.com-page_model.json
 www.dropbox.com page_models/www.dropbox.com-page_model.json
+www.ok.ru page_models/www.ok.ru-page_model.json
