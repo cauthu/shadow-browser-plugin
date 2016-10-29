@@ -289,7 +289,7 @@ Handler::_serve_response()
     } else {
         // need to write at least one byte for dummy header value
         rv = evbuffer_add_printf(buf.get(), "n/a");
-        CHECK_EQ(rv, 0);
+        CHECK_EQ(rv, 3) << "rv= " << rv;
     }
 
     // end the dummy header and overall resp meta info

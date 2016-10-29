@@ -117,11 +117,11 @@ Connection::_maybe_http_write_to_transport()
         return;
     }
 
-    vlogself(2) << "let's write a pending req";
-
     auto req = submitted_req_queue_.front();
     CHECK_NOTNULL(req);
     submitted_req_queue_.pop();
+
+    vlogself(2) << "let's write a pending req, res:" << req->webkit_resInstNum_;
 
     std::unique_ptr<struct evbuffer, void(*)(struct evbuffer*)> buf(
         evbuffer_new(), evbuffer_free);
@@ -165,9 +165,11 @@ Connection::_maybe_http_write_to_transport()
 
     active_req_queue_.push(req);
 
-    // set the read size hint to the approximate expected size of meta
-    // info of the response
-    transport_->set_read_size_hint(req->exp_resp_meta_size());
+    if (req->exp_resp_meta_size()) {
+        // set the read size hint to the approximate expected size of meta
+        // info of the response
+        transport_->set_read_size_hint(req->exp_resp_meta_size());
+    }
 
     vlogself(2) << "done";
     return;
