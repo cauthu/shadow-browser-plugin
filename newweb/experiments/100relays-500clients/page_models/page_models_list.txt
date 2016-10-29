@@ -40,3 +40,4 @@ pixnet.net ../../../page_models/pixnet.net-page_model-10252016.json
 imgur.com ../../../page_models/imgur.com-page_model-10282016.json
 www.dropbox.com ../../../page_models/www.dropbox.com-page_model-10282016.json
 www.ok.ru ../../../page_models/www.ok.ru-page_model-10282016.json
+www.ettoday.net ../../../page_models/www.ettoday.net-page_model-10282016.json
