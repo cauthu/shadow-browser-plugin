@@ -100,6 +100,10 @@ Driver::_renderer_handle_RequestWillBeSent(
         ++this_page_load_info_.num_after_DOM_load_event_reqs_;
     }
 
+    if (msg->forced()) {
+        this_page_load_info_.forced_load_resInstNums_.insert(resInstNum);
+    }
+
     vlogself(2) << "cancel wait_for_more_requests_timer_";
     wait_for_more_requests_timer_->cancel();
 
@@ -166,6 +170,8 @@ Driver::_reset_this_page_load_info()
 
     this_page_load_info_.page_load_status_ = PageLoadStatus::NONE;
     this_page_load_info_.ttfb_ms_ = 0;
+
+    this_page_load_info_.forced_load_resInstNums_.clear();
 }
 
 void
@@ -196,6 +202,7 @@ Driver::_report_result()
         << " numSuccess= " << tpli.num_succes_reqs_
         << " numFailed= " << tpli.num_failed_reqs_
         << " numAfterDOMLoadEvent= " << tpli.num_after_DOM_load_event_reqs_
+        << " numForced= " << tpli.forced_load_resInstNums_.size()
         ;
 }
 

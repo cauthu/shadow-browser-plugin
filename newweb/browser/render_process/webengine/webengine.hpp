@@ -170,6 +170,8 @@ protected:
 
     std::map<uint32_t, DOMTimer::UniquePtr> dom_timers_;
     std::map<uint32_t, XMLHttpRequest::UniquePtr> xhrs_;
+
+    std::set<uint32_t> forced_load_resInstNums_;
 };
 
 }

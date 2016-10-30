@@ -212,6 +212,7 @@ Webengine::_reset_loading_state()
     initial_render_tree_update_scope_id_ = 0;
     start_load_time_ms_ = 0;
     current_load_id_ = 0;
+    forced_load_resInstNums_.clear();
 }
 
 void
@@ -238,7 +239,8 @@ Webengine::renderer_notify_RequestWillBeSent(const uint32_t& resInstNum,
     if (!renderer_ipcserver_) {
         return;
     }
-    renderer_ipcserver_->send_RequestWillBeSent(resInstNum, reqChainIdx);
+    const auto forced = inSet(forced_load_resInstNums_, resInstNum);
+    renderer_ipcserver_->send_RequestWillBeSent(resInstNum, reqChainIdx, forced);
 }
 
 void
@@ -641,6 +643,7 @@ Webengine::_maybe_load_unloaded_resources()
         CHECK(resource);
         if (!resource->isLoading() && !resource->isFinished()) {
             LOG(INFO) << "force load of res:" << resInstNum;
+            forced_load_resInstNums_.insert(resInstNum);
             resource->load();
         }
     }

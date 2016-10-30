@@ -9,6 +9,9 @@ table RequestWillBeSentMsg
 
     /* 0-based index in the redirect chain */
     reqChainIdx: uint;
+
+    /* whether the load of this resource was forced */
+    forced: bool;
 }
 
 root_type RequestWillBeSentMsg;

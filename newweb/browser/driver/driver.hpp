@@ -188,6 +188,8 @@ private:
 
         PageLoadStatus page_load_status_;
         uint32_t ttfb_ms_;
+
+        std::set<uint32_t> forced_load_resInstNums_;
     } this_page_load_info_;
 
     // so that we can do sequential page selection

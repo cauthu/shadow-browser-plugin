@@ -97,7 +97,8 @@ IPCServer::send_PageLoadFailed(const uint32_t load_id)
 
 void
 IPCServer::send_RequestWillBeSent(const uint32_t& resInstNum,
-                                  const uint32_t& reqChainIdx)
+                                  const uint32_t& reqChainIdx,
+                                  const bool& forced)
 {
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
@@ -105,6 +106,7 @@ IPCServer::send_RequestWillBeSent(const uint32_t& resInstNum,
 
         msgbuilder.add_resInstNum(resInstNum);
         msgbuilder.add_reqChainIdx(reqChainIdx);
+        msgbuilder.add_forced(forced);
     }
 }
 
