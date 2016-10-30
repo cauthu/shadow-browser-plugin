@@ -534,6 +534,8 @@ Webengine::handle_RequestComplete(const int& req_id, const bool success)
         //////
         _do_end_of_task_work();
     }
+
+    _maybe_load_unloaded_resources();
 }
 
 void
