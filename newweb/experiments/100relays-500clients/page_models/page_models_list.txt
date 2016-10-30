@@ -47,3 +47,4 @@ www.reddit.com ../../../page_models/www.reddit.com-page_model-10282016.json
 www.linkedin.com ../../../page_models/www.linkedin.com-page_model-10282016.json
 www.naver.com ../../../page_models/www.naver.com-page_model-10282016.json
 mail.ru ../../../page_models/mail.ru-page_model-10282016.json
+www.outbrain.com ../../../page_models/www.outbrain.com-page_model-10282016.json
