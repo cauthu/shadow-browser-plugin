@@ -637,6 +637,10 @@ Webengine::_maybe_load_unloaded_resources()
         return;
     }
 
+    if (!page_model_) {
+        return;
+    }
+
     std::vector<uint32_t> resInstNums;
     page_model_->get_all_resource_instNums(resInstNums);
 
