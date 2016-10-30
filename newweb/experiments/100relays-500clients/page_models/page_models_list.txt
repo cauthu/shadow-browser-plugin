@@ -44,3 +44,5 @@ www.ettoday.net ../../../page_models/www.ettoday.net-page_model-10282016.json
 www.huffingtonpost.com ../../../page_models/www.huffingtonpost.com-page_model-10282016.json
 www.instagram.com ../../../page_models/www.instagram.com-page_model-10282016.json
 www.reddit.com ../../../page_models/www.reddit.com-page_model-10282016.json
+www.linkedin.com ../../../page_models/www.linkedin.com-page_model-10282016.json
+www.naver.com ../../../page_models/www.naver.com-page_model-10282016.json
