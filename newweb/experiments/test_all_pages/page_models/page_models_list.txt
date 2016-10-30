@@ -31,3 +31,5 @@ www.ettoday.net page_models/www.ettoday.net-page_model.json
 www.huffingtonpost.com page_models/www.huffingtonpost.com-page_model.json
 www.instagram.com page_models/www.instagram.com-page_model.json
 www.reddit.com page_models/www.reddit.com-page_model.json
+www.naver.com page_models/www.naver.com-page_model.json
+www.linkedin.com page_models/www.linkedin.com-page_model.json
