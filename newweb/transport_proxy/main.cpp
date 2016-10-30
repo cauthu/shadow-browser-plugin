@@ -97,7 +97,7 @@ struct MyConfig
         , tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
         , tamaraw_time_limit_secs(0)
-        , log_outer_connect_latency(false)
+        , ssp_log_outer_connect_latency(false)
 #ifndef IN_SHADOW
         , auto_start_defense_session_on_next_send(false)
 #endif
@@ -113,7 +113,7 @@ struct MyConfig
     uint16_t tamaraw_pkt_intvl_ms;
     uint16_t tamaraw_L;
     uint32_t tamaraw_time_limit_secs;
-    bool log_outer_connect_latency;
+    bool ssp_log_outer_connect_latency;
 
 #ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
@@ -186,8 +186,8 @@ set_my_config(MyConfig& conf,
             }
         }
 
-        else if (name == "log-outer-connect-latency") {
-            conf.log_outer_connect_latency = true;
+        else if (name == "ssp-log-outer-connect-latency") {
+            conf.ssp_log_outer_connect_latency = true;
         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
@@ -454,7 +454,7 @@ int main(int argc, char **argv)
                                            conf.tamaraw_pkt_intvl_ms,
                                            conf.tamaraw_L,
                                            conf.tamaraw_time_limit_secs,
-                                           conf.log_outer_connect_latency));
+                                           conf.ssp_log_outer_connect_latency));
     }
 
     /* ***************************************** */
