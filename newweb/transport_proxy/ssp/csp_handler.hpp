@@ -38,6 +38,7 @@ public:
                         const uint32_t& tamaraw_L,
                         const uint32_t& tamaraw_time_limit_secs,
                         myio::StreamChannel::UniquePtr csp_channel,
+                        const bool& log_outer_connect_latency,
                         CSPHandlerDoneCb);
 
 protected:
@@ -59,6 +60,8 @@ protected:
     struct event_base* evbase_;
     // myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
     myio::buflo::BufloMuxChannelImplSpdy::UniquePtr buflo_channel_;
+
+    const bool log_outer_connect_latency_;
 
     CSPHandlerDoneCb handler_done_cb_;
 

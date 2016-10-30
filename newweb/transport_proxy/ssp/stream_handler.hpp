@@ -25,6 +25,7 @@ public:
                              const int sid,
                              const char* target_host,
                              const uint16_t& port,
+                           const bool& log_connect_latency,
                              StreamHandlerDoneCb);
 
 protected:
@@ -75,6 +76,7 @@ protected:
         CLOSED
     } state_;
 
+    uint64_t connect_start_time_ms_ = 0;
 };
 
 }

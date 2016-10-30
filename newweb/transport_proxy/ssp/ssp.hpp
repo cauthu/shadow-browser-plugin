@@ -23,7 +23,8 @@ public:
                              myio::StreamServer::UniquePtr,
                              const uint32_t& tamaraw_pkt_intvl_ms,
                              const uint32_t& tamaraw_L,
-                             const uint32_t& tamaraw_time_limit_secs);
+                             const uint32_t& tamaraw_time_limit_secs,
+                             const bool& log_outer_connect_latency);
 
 protected:
 
@@ -49,6 +50,8 @@ protected:
     const uint32_t tamaraw_pkt_intvl_ms_;
     const uint32_t tamaraw_L_;
     const uint32_t tamaraw_time_limit_secs_;
+
+    const bool log_outer_connect_latency_;
 };
 
 }

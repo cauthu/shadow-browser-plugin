@@ -97,6 +97,7 @@ struct MyConfig
         , tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
         , tamaraw_time_limit_secs(0)
+        , log_outer_connect_latency(false)
 #ifndef IN_SHADOW
         , auto_start_defense_session_on_next_send(false)
 #endif
@@ -112,10 +113,10 @@ struct MyConfig
     uint16_t tamaraw_pkt_intvl_ms;
     uint16_t tamaraw_L;
     uint32_t tamaraw_time_limit_secs;
+    bool log_outer_connect_latency;
 
 #ifdef IN_SHADOW
     std::string browser_proxy_mode_spec_file;
-
 #else
 
     /* automatically start the defense the next time we send stuff to
@@ -183,6 +184,10 @@ set_my_config(MyConfig& conf,
             catch (...) {
                 LOG(FATAL) << "bad value for " << tamaraw_time_limit_secs_name;
             }
+        }
+
+        else if (name == "log-outer-connect-latency") {
+            conf.log_outer_connect_latency = true;
         }
 
         else if (name == expcommon::conf_names::browser_proxy_mode_spec_file) {
@@ -448,7 +453,8 @@ int main(int argc, char **argv)
                                            std::move(tcpserver),
                                            conf.tamaraw_pkt_intvl_ms,
                                            conf.tamaraw_L,
-                                           conf.tamaraw_time_limit_secs));
+                                           conf.tamaraw_time_limit_secs,
+                                           conf.log_outer_connect_latency));
     }
 
     /* ***************************************** */

@@ -35,12 +35,14 @@ ServerSideProxy::ServerSideProxy(struct event_base* evbase,
                                  StreamServer::UniquePtr streamserver,
                                  const uint32_t& tamaraw_pkt_intvl_ms,
                                  const uint32_t& tamaraw_L,
-                                 const uint32_t& tamaraw_time_limit_secs)
+                                 const uint32_t& tamaraw_time_limit_secs,
+                                 const bool& log_outer_connect_latency)
     : evbase_(evbase)
     , stream_server_(std::move(streamserver))
     , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms)
     , tamaraw_L_(tamaraw_L)
     , tamaraw_time_limit_secs_(tamaraw_time_limit_secs)
+    , log_outer_connect_latency_(log_outer_connect_latency)
 {
     stream_server_->set_observer(this);
     const auto rv = stream_server_->start_accepting();
@@ -67,6 +69,7 @@ ServerSideProxy::onAccepted(StreamServer*, StreamChannel::UniquePtr channel) noe
                        tamaraw_L_,
                        tamaraw_time_limit_secs_,
                        std::move(channel),
+                       log_outer_connect_latency_,
                        boost::bind(&ServerSideProxy::_on_csp_handler_done,
                                    this, _1)));
     const auto chid = chandler->objId();

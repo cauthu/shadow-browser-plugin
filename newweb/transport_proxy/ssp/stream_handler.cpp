@@ -1,5 +1,6 @@
 
 #include <boost/bind.hpp>
+#include <fstream>      // std::ofstream
 
 #include "stream_handler.hpp"
 #include "../../utility/common.hpp"
@@ -36,6 +37,7 @@ StreamHandler::StreamHandler(struct event_base* evbase,
                              const int sid,
                              const char* target_host,
                              const uint16_t& port,
+                             const bool& log_connect_latency,
                              StreamHandlerDoneCb handler_done_cb)
     : evbase_(evbase)
     , buflo_channel_(buflo_ch)
@@ -51,7 +53,21 @@ StreamHandler::StreamHandler(struct event_base* evbase,
     vlogself(2) << "stream handler will connect to target ["
                 << target_host << "]:" << port;
 
+    uint64_t resolve_start_time_ms = 0;
+    if (log_connect_latency) {
+        resolve_start_time_ms = common::gettimeofdayMs();
+    }
+
     const auto addr = common::getaddr(target_host);
+
+    if (log_connect_latency) {
+        const auto resolv_done_time = common::gettimeofdayMs();
+        CHECK(resolv_done_time >= resolve_start_time_ms);
+        std::ofstream ofs;
+        ofs.open("outer_connect_latencies.txt", std::ofstream::out | std::ofstream::app);
+        ofs << target_host_ << " resolve "
+            << (resolv_done_time - resolve_start_time_ms) << " ms\n";
+    }
 
     struct timeval timeout = {0};
     timeout.tv_sec = 3;
@@ -61,6 +77,11 @@ StreamHandler::StreamHandler(struct event_base* evbase,
         new TCPChannel(evbase_, addr, port, nullptr));
     auto rv = target_channel_->start_connecting(this, &timeout);
     CHECK_EQ(rv, 0);
+
+    if (log_connect_latency) {
+        connect_start_time_ms_ = common::gettimeofdayMs();
+        CHECK(connect_start_time_ms_ > 0);
+    }
 
     state_ = State::CONNECTING_TARGET;
 }
@@ -72,6 +93,15 @@ StreamHandler::onConnected(StreamChannel*) noexcept
 
     vlogself(2) << "connected to target";
     if (buflo_channel_->set_stream_connected(sid_)) {
+        if (connect_start_time_ms_) {
+            auto const connect_done_time = common::gettimeofdayMs();
+            CHECK(connect_done_time >= connect_start_time_ms_);
+            std::ofstream ofs;
+            ofs.open("outer_connect_latencies.txt", std::ofstream::out | std::ofstream::app);
+            ofs << target_host_ << " connect "
+                << (connect_done_time - connect_start_time_ms_) << " ms\n";
+        }
+
         vlogself(2) << "linked!";
         state_ = State::FORWARDING;
 

@@ -34,8 +34,10 @@ CSPHandler::CSPHandler(struct event_base* evbase,
                        const uint32_t& tamaraw_L,
                        const uint32_t& tamaraw_time_limit_secs,
                        StreamChannel::UniquePtr csp_channel,
+                       const bool& log_outer_connect_latency,
                        CSPHandlerDoneCb handler_done_cb)
     : evbase_(evbase)
+    , log_outer_connect_latency_(log_outer_connect_latency)
     , handler_done_cb_(handler_done_cb)
 {
     const auto fd = csp_channel->release_fd();
@@ -81,7 +83,7 @@ CSPHandler::_on_buflo_new_stream_connect_request(
 
     StreamHandler::UniquePtr shandler(
         new StreamHandler(
-            evbase_, buflo_channel_.get(), sid, host, port,
+            evbase_, buflo_channel_.get(), sid, host, port, log_outer_connect_latency_,
             boost::bind(&CSPHandler::_on_stream_handler_done, this, _1)));
     const auto shid = shandler->objId();
     const auto ret = shandlers_.insert(
