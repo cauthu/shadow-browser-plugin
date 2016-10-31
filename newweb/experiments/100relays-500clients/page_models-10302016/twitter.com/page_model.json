@@ -1,0 +1,1837 @@
+{
+  "elements": {
+    "18": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 13,
+      "tag": "script"
+    },
+    "21": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 17,
+      "tag": "script"
+    },
+    "24": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 20,
+      "tag": "script"
+    },
+    "27": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 23,
+      "tag": "script"
+    },
+    "30": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 26,
+      "tag": "script"
+    },
+    "33": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "35": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "37": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "141": {
+      "asyncExec": true,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": false,
+      "run_scope_id": 147,
+      "tag": "script"
+    },
+    "145": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 53,
+      "tag": "script"
+    },
+    "332": {
+      "tag": "img"
+    },
+    "376": {
+      "tag": "img"
+    },
+    "410": {
+      "tag": "img"
+    },
+    "509": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "519": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "527": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "539": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "793": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "803": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "1046": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "1056": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "1313": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "1339": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "1555": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "1565": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "1593": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1594": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1595": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1604": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1831": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "1841": {
+      "initial_resInstNum": 21,
+      "tag": "img"
+    },
+    "2096": {
+      "initial_resInstNum": 22,
+      "tag": "img"
+    },
+    "2106": {
+      "initial_resInstNum": 23,
+      "tag": "img"
+    },
+    "2364": {
+      "initial_resInstNum": 24,
+      "tag": "img"
+    },
+    "2374": {
+      "initial_resInstNum": 25,
+      "tag": "img"
+    },
+    "2382": {
+      "initial_resInstNum": 26,
+      "tag": "img"
+    },
+    "2390": {
+      "initial_resInstNum": 27,
+      "tag": "img"
+    },
+    "2402": {
+      "initial_resInstNum": 28,
+      "tag": "img"
+    },
+    "2652": {
+      "initial_resInstNum": 29,
+      "tag": "img"
+    },
+    "2660": {
+      "initial_resInstNum": 30,
+      "tag": "img"
+    },
+    "2671": {
+      "initial_resInstNum": 31,
+      "tag": "img"
+    },
+    "2914": {
+      "initial_resInstNum": 32,
+      "tag": "img"
+    },
+    "2924": {
+      "initial_resInstNum": 33,
+      "tag": "img"
+    },
+    "2952": {
+      "initial_resInstNum": 34,
+      "tag": "img"
+    },
+    "3168": {
+      "initial_resInstNum": 35,
+      "tag": "img"
+    },
+    "3178": {
+      "initial_resInstNum": 36,
+      "tag": "img"
+    },
+    "3213": {
+      "initial_resInstNum": 37,
+      "tag": "img"
+    },
+    "3431": {
+      "initial_resInstNum": 38,
+      "tag": "img"
+    },
+    "3439": {
+      "initial_resInstNum": 39,
+      "tag": "img"
+    },
+    "3450": {
+      "initial_resInstNum": 40,
+      "tag": "img"
+    },
+    "3695": {
+      "initial_resInstNum": 41,
+      "tag": "img"
+    },
+    "3705": {
+      "initial_resInstNum": 42,
+      "tag": "img"
+    },
+    "3955": {
+      "initial_resInstNum": 43,
+      "tag": "img"
+    },
+    "3963": {
+      "initial_resInstNum": 44,
+      "tag": "img"
+    },
+    "3974": {
+      "initial_resInstNum": 45,
+      "tag": "img"
+    },
+    "4008": {
+      "initial_resInstNum": 46,
+      "tag": "img"
+    },
+    "4010": {
+      "initial_resInstNum": 47,
+      "tag": "img"
+    },
+    "4270": {
+      "initial_resInstNum": 48,
+      "tag": "img"
+    },
+    "4305": {
+      "initial_resInstNum": 49,
+      "tag": "img"
+    },
+    "4521": {
+      "initial_resInstNum": 50,
+      "tag": "img"
+    },
+    "4531": {
+      "initial_resInstNum": 51,
+      "tag": "img"
+    },
+    "4572": {
+      "initial_resInstNum": 52,
+      "tag": "img"
+    },
+    "4802": {
+      "initial_resInstNum": 53,
+      "tag": "img"
+    },
+    "5051": {
+      "initial_resInstNum": 54,
+      "tag": "img"
+    },
+    "5061": {
+      "initial_resInstNum": 55,
+      "tag": "img"
+    },
+    "5318": {
+      "initial_resInstNum": 56,
+      "tag": "img"
+    },
+    "5328": {
+      "initial_resInstNum": 57,
+      "tag": "img"
+    },
+    "5571": {
+      "initial_resInstNum": 58,
+      "tag": "img"
+    },
+    "5581": {
+      "initial_resInstNum": 59,
+      "tag": "img"
+    },
+    "5824": {
+      "initial_resInstNum": 60,
+      "tag": "img"
+    },
+    "5834": {
+      "initial_resInstNum": 61,
+      "tag": "img"
+    },
+    "6354": {
+      "tag": "img"
+    },
+    "6398": {
+      "tag": "img"
+    },
+    "6432": {
+      "tag": "img"
+    },
+    "6572": {
+      "tag": "img"
+    },
+    "6616": {
+      "tag": "img"
+    },
+    "6650": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "13": [
+      "  /* [1191.76, 1192.25] scopeStart= 1477877174460.690918 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.49);"
+    ],
+    "17": [
+      "  /* [1192.99, 1196.24] scopeStart= 1477877174461.919922 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.25);"
+    ],
+    "20": [
+      "  /* [1196.69, 1197.77] scopeStart= 1477877174465.619141 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.00);",
+      "  __msleep(0.08);"
+    ],
+    "23": [
+      "  /* [1198.11, 1198.3] scopeStart= 1477877174467.041992 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.19);"
+    ],
+    "26": [
+      "  /* [1198.63, 1198.83] scopeStart= 1477877174467.564209 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.20);"
+    ],
+    "53": [
+      "  /* [1798.51, 1799.26] scopeStart= 1477877175067.439941 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.75);"
+    ],
+    "113": [
+      "  /* [1855.93, 1903.07] scopeStart= 1477877175124.857910 type= RenderTreeUpdateScope */",
+      "  __msleep(14.68);",
+      "  fetch_res(62);",
+      "  __msleep(2.74);",
+      "  fetch_res(64);",
+      "  __msleep(3.30);",
+      "  fetch_res(65);",
+      "  __msleep(11.48);",
+      "  fetch_res(66);",
+      "  __msleep(4.39);",
+      "  fetch_res(67);",
+      "  __msleep(2.97);",
+      "  fetch_res(68);",
+      "  __msleep(6.75);",
+      "  fetch_res(69);",
+      "  __msleep(0.83);"
+    ],
+    "114": [
+      "  /* [1903.66, 1903.78] scopeStart= 1477877175172.585938 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "116": [
+      "  /* [2034.73, 2034.92] scopeStart= 1477877175303.658936 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "119": [
+      "  /* [2039.8, 2040.0] scopeStart= 1477877175308.728027 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "147": [
+      "  /* [2066.4, 2118.9] scopeStart= 1477877175335.332031 type= ScriptControllerRunScriptScope */",
+      "  __msleep(32.28);",
+      "  sched_render_update_scope(167);",
+      "  __msleep(5.71);",
+      "  __msleep(4.47);",
+      "  __msleep(1.01);",
+      "  __msleep(9.03);"
+    ],
+    "167": [
+      "  /* [2120.47, 2141.48] scopeStart= 1477877175389.395020 type= RenderTreeUpdateScope */",
+      "  __msleep(21.01);"
+    ],
+    "168": [
+      "  /* [2141.8, 2141.92] scopeStart= 1477877175410.732910 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "173": [
+      "  /* [2163.18, 2176.87] scopeStart= 1477877175432.110107 type= DOMTimerFiredScope */",
+      "  __msleep(9.20);",
+      "  __msleep(2.78);",
+      "  __msleep(0.14);",
+      "  __msleep(0.13);",
+      "  sched_render_update_scope(179);",
+      "  __msleep(1.44);"
+    ],
+    "179": [
+      "  /* [2179.12, 2179.39] scopeStart= 1477877175448.050049 type= RenderTreeUpdateScope */",
+      "  __msleep(0.27);"
+    ],
+    "184": [
+      "  /* [2218.2, 2218.4] scopeStart= 1477877175487.126953 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "190": [
+      "  /* [2337.17, 2337.43] scopeStart= 1477877175606.096924 type= RenderTreeUpdateScope */",
+      "  __msleep(0.26);"
+    ],
+    "197": [
+      "  /* [2436.21, 2459.09] scopeStart= 1477877175705.143066 type= RenderTreeUpdateScope */",
+      "  __msleep(22.88);"
+    ],
+    "198": [
+      "  /* [2459.43, 2459.53] scopeStart= 1477877175728.355957 type= RenderTreeUpdateScope */",
+      "  __msleep(0.10);"
+    ],
+    "202": [
+      "  /* [2488.4, 2488.64] scopeStart= 1477877175757.329834 type= RenderTreeUpdateScope */",
+      "  __msleep(0.24);"
+    ],
+    "206": [
+      "  /* [2549.97, 2550.15] scopeStart= 1477877175818.895020 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "211": [
+      "  /* [2599.84, 2600.09] scopeStart= 1477877175868.770996 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "213": [
+      "  /* [2650.13, 2650.35] scopeStart= 1477877175919.055908 type= RenderTreeUpdateScope */",
+      "  __msleep(0.22);"
+    ],
+    "221": [
+      "  /* [2749.93, 2750.13] scopeStart= 1477877176018.858887 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "223": [
+      "  /* [2766.65, 2766.86] scopeStart= 1477877176035.581055 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "227": [
+      "  /* [2833.16, 2833.34] scopeStart= 1477877176102.087891 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "231": [
+      "  /* [2883.21, 2883.4] scopeStart= 1477877176152.142090 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "238": [
+      "  /* [3038.47, 3038.51] scopeStart= 1477877176307.401855 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "239": [
+      "  /* [3038.55, 3038.56] scopeStart= 1477877176307.479004 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 113,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        61,
+        18
+      ],
+      [
+        232,
+        21
+      ],
+      [
+        596,
+        24
+      ],
+      [
+        644,
+        27
+      ],
+      [
+        715,
+        30
+      ],
+      [
+        729,
+        33
+      ],
+      [
+        742,
+        35
+      ],
+      [
+        755,
+        37
+      ],
+      [
+        6909,
+        141
+      ],
+      [
+        6952,
+        145
+      ],
+      [
+        7836,
+        332
+      ],
+      [
+        8031,
+        376
+      ],
+      [
+        8164,
+        410
+      ],
+      [
+        8717,
+        509
+      ],
+      [
+        8776,
+        519
+      ],
+      [
+        8828,
+        527
+      ],
+      [
+        8880,
+        539
+      ],
+      [
+        9898,
+        793
+      ],
+      [
+        9947,
+        803
+      ],
+      [
+        10933,
+        1046
+      ],
+      [
+        10981,
+        1056
+      ],
+      [
+        12030,
+        1313
+      ],
+      [
+        12170,
+        1339
+      ],
+      [
+        13032,
+        1555
+      ],
+      [
+        13080,
+        1565
+      ],
+      [
+        13214,
+        1593
+      ],
+      [
+        13234,
+        1594
+      ],
+      [
+        13253,
+        1595
+      ],
+      [
+        13303,
+        1604
+      ],
+      [
+        14199,
+        1831
+      ],
+      [
+        14247,
+        1841
+      ],
+      [
+        15264,
+        2096
+      ],
+      [
+        15313,
+        2106
+      ],
+      [
+        16366,
+        2364
+      ],
+      [
+        16425,
+        2374
+      ],
+      [
+        16477,
+        2382
+      ],
+      [
+        16529,
+        2390
+      ],
+      [
+        16580,
+        2402
+      ],
+      [
+        17580,
+        2652
+      ],
+      [
+        17630,
+        2660
+      ],
+      [
+        17679,
+        2671
+      ],
+      [
+        18673,
+        2914
+      ],
+      [
+        18722,
+        2924
+      ],
+      [
+        18869,
+        2952
+      ],
+      [
+        19731,
+        3168
+      ],
+      [
+        19779,
+        3178
+      ],
+      [
+        19943,
+        3213
+      ],
+      [
+        20814,
+        3431
+      ],
+      [
+        20864,
+        3439
+      ],
+      [
+        20914,
+        3450
+      ],
+      [
+        21914,
+        3695
+      ],
+      [
+        21962,
+        3705
+      ],
+      [
+        22965,
+        3955
+      ],
+      [
+        23016,
+        3963
+      ],
+      [
+        23066,
+        3974
+      ],
+      [
+        23229,
+        4008
+      ],
+      [
+        23252,
+        4010
+      ],
+      [
+        24299,
+        4270
+      ],
+      [
+        24470,
+        4305
+      ],
+      [
+        25333,
+        4521
+      ],
+      [
+        25380,
+        4531
+      ],
+      [
+        25569,
+        4572
+      ],
+      [
+        26512,
+        4802
+      ],
+      [
+        27528,
+        5051
+      ],
+      [
+        27577,
+        5061
+      ],
+      [
+        28604,
+        5318
+      ],
+      [
+        28652,
+        5328
+      ],
+      [
+        29636,
+        5571
+      ],
+      [
+        29685,
+        5581
+      ],
+      [
+        30670,
+        5824
+      ],
+      [
+        30717,
+        5834
+      ],
+      [
+        32420,
+        6354
+      ],
+      [
+        32616,
+        6398
+      ],
+      [
+        32749,
+        6432
+      ],
+      [
+        33278,
+        6572
+      ],
+      [
+        33474,
+        6616
+      ],
+      [
+        33607,
+        6650
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "load",
+        239
+      ],
+      [
+        "readystatechange_complete",
+        238
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "abs.twimg.com",
+    "pbs.twimg.com",
+    "twitter.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "twitter.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 371,
+          "resp_body_size": 37006,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 26.529999999999973,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 37598,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 24.289999999999964,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 47374,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 21.980000000000018,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 38398,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 192083,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 165284,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 49464,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 12899,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3542,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 194030,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 2652,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 35679,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3009,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 4077,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 1068,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 210215,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3365,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 1397,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 3110,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 182062,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3009,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 77083,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 404,
+          "resp_body_size": 3720,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 141419,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 209176,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 185399,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 127629,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3187,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 166582,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 149030,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 394,
+          "resp_body_size": 16691,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 97241,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 2830,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 1635,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 62765,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 4254,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 7690,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 42404,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 41965,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 404,
+          "resp_body_size": 2830,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 107829,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3365,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 82046,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 203179,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3543,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 1048,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 1413,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3186,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 5147,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 139376,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3364,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 441,
+          "resp_body_size": 5108,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3365,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 67102,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3009,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 177511,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3721,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 292177,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 12443,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 142674,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "61": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 3543,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 451,
+          "resp_body_size": 31845,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "64": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 446,
+          "resp_body_size": 11894,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "65": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 25732,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 1413,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 43902,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pbs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 12711,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "abs.twimg.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 445,
+          "resp_body_size": 8962,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70002": {
+      "fired_scope_ids": [
+        173
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    }
+  },
+  "xhrs": {}
+}

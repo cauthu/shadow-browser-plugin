@@ -1,0 +1,6656 @@
+{
+  "elements": {
+    "102": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "106": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 34,
+      "tag": "script"
+    },
+    "114": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 3,
+      "is_parser_blocking": true,
+      "run_scope_id": 39,
+      "tag": "script"
+    },
+    "183": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 68,
+      "tag": "script"
+    },
+    "185": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 71,
+      "tag": "script"
+    },
+    "188": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 75,
+      "tag": "script"
+    },
+    "199": {
+      "tag": "body"
+    },
+    "6218": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "6259": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "6297": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "6308": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "6343": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "6381": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "6467": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 87,
+      "tag": "script"
+    },
+    "6475": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 90,
+      "tag": "script"
+    },
+    "6482": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 93,
+      "tag": "script"
+    },
+    "6535": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "6606": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "6677": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "6748": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "6794": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 96,
+      "tag": "script"
+    },
+    "7707": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 99,
+      "tag": "script"
+    },
+    "7763": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "7815": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "7867": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "8050": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "8095": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "8115": {
+      "initial_resInstNum": 21,
+      "tag": "img"
+    },
+    "8135": {
+      "initial_resInstNum": 22,
+      "tag": "img"
+    },
+    "8155": {
+      "initial_resInstNum": 23,
+      "tag": "img"
+    },
+    "8186": {
+      "initial_resInstNum": 24,
+      "tag": "img"
+    },
+    "8231": {
+      "initial_resInstNum": 25,
+      "tag": "img"
+    },
+    "8251": {
+      "initial_resInstNum": 26,
+      "tag": "img"
+    },
+    "8271": {
+      "initial_resInstNum": 27,
+      "tag": "img"
+    },
+    "8291": {
+      "initial_resInstNum": 28,
+      "tag": "img"
+    },
+    "8322": {
+      "initial_resInstNum": 29,
+      "tag": "img"
+    },
+    "8367": {
+      "initial_resInstNum": 30,
+      "tag": "img"
+    },
+    "8387": {
+      "initial_resInstNum": 31,
+      "tag": "img"
+    },
+    "8407": {
+      "initial_resInstNum": 32,
+      "tag": "img"
+    },
+    "8427": {
+      "initial_resInstNum": 33,
+      "tag": "img"
+    },
+    "8458": {
+      "initial_resInstNum": 34,
+      "tag": "img"
+    },
+    "8503": {
+      "initial_resInstNum": 35,
+      "tag": "img"
+    },
+    "8523": {
+      "initial_resInstNum": 36,
+      "tag": "img"
+    },
+    "8543": {
+      "initial_resInstNum": 37,
+      "tag": "img"
+    },
+    "8563": {
+      "initial_resInstNum": 38,
+      "tag": "img"
+    },
+    "8594": {
+      "initial_resInstNum": 39,
+      "tag": "img"
+    },
+    "8639": {
+      "initial_resInstNum": 40,
+      "tag": "img"
+    },
+    "8659": {
+      "initial_resInstNum": 41,
+      "tag": "img"
+    },
+    "8679": {
+      "initial_resInstNum": 42,
+      "tag": "img"
+    },
+    "8699": {
+      "initial_resInstNum": 43,
+      "tag": "img"
+    },
+    "8730": {
+      "initial_resInstNum": 44,
+      "tag": "img"
+    },
+    "8775": {
+      "initial_resInstNum": 45,
+      "tag": "img"
+    },
+    "8795": {
+      "initial_resInstNum": 46,
+      "tag": "img"
+    },
+    "8815": {
+      "initial_resInstNum": 47,
+      "tag": "img"
+    },
+    "8835": {
+      "initial_resInstNum": 48,
+      "tag": "img"
+    },
+    "8866": {
+      "initial_resInstNum": 49,
+      "tag": "img"
+    },
+    "8911": {
+      "initial_resInstNum": 50,
+      "tag": "img"
+    },
+    "8931": {
+      "initial_resInstNum": 51,
+      "tag": "img"
+    },
+    "8951": {
+      "initial_resInstNum": 52,
+      "tag": "img"
+    },
+    "8971": {
+      "initial_resInstNum": 53,
+      "tag": "img"
+    },
+    "9002": {
+      "initial_resInstNum": 54,
+      "tag": "img"
+    },
+    "9045": {
+      "initial_resInstNum": 55,
+      "tag": "img"
+    },
+    "9065": {
+      "initial_resInstNum": 56,
+      "tag": "img"
+    },
+    "9085": {
+      "initial_resInstNum": 57,
+      "tag": "img"
+    },
+    "9105": {
+      "initial_resInstNum": 58,
+      "tag": "img"
+    },
+    "9121": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 102,
+      "tag": "script"
+    },
+    "9225": {
+      "initial_resInstNum": 59,
+      "tag": "img"
+    },
+    "9245": {
+      "initial_resInstNum": 60,
+      "tag": "img"
+    },
+    "9265": {
+      "initial_resInstNum": 61,
+      "tag": "img"
+    },
+    "9285": {
+      "initial_resInstNum": 62,
+      "tag": "img"
+    },
+    "9294": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 105,
+      "tag": "script"
+    },
+    "9314": {
+      "initial_resInstNum": 63,
+      "tag": "img"
+    },
+    "9334": {
+      "initial_resInstNum": 64,
+      "tag": "img"
+    },
+    "9354": {
+      "initial_resInstNum": 65,
+      "tag": "img"
+    },
+    "9374": {
+      "initial_resInstNum": 66,
+      "tag": "img"
+    },
+    "9383": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 108,
+      "tag": "script"
+    },
+    "9403": {
+      "initial_resInstNum": 67,
+      "tag": "img"
+    },
+    "9423": {
+      "initial_resInstNum": 68,
+      "tag": "img"
+    },
+    "9443": {
+      "initial_resInstNum": 69,
+      "tag": "img"
+    },
+    "9463": {
+      "initial_resInstNum": 70,
+      "tag": "img"
+    },
+    "9472": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 111,
+      "tag": "script"
+    },
+    "9517": {
+      "initial_resInstNum": 71,
+      "tag": "img"
+    },
+    "9537": {
+      "initial_resInstNum": 72,
+      "tag": "img"
+    },
+    "9557": {
+      "initial_resInstNum": 73,
+      "tag": "img"
+    },
+    "9577": {
+      "initial_resInstNum": 74,
+      "tag": "img"
+    },
+    "9586": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 114,
+      "tag": "script"
+    },
+    "9606": {
+      "initial_resInstNum": 75,
+      "tag": "img"
+    },
+    "9626": {
+      "initial_resInstNum": 76,
+      "tag": "img"
+    },
+    "9646": {
+      "initial_resInstNum": 77,
+      "tag": "img"
+    },
+    "9666": {
+      "initial_resInstNum": 78,
+      "tag": "img"
+    },
+    "9675": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 117,
+      "tag": "script"
+    },
+    "9695": {
+      "initial_resInstNum": 79,
+      "tag": "img"
+    },
+    "9715": {
+      "initial_resInstNum": 80,
+      "tag": "img"
+    },
+    "9735": {
+      "initial_resInstNum": 81,
+      "tag": "img"
+    },
+    "9755": {
+      "initial_resInstNum": 82,
+      "tag": "img"
+    },
+    "9764": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 120,
+      "tag": "script"
+    },
+    "9809": {
+      "initial_resInstNum": 83,
+      "tag": "img"
+    },
+    "9829": {
+      "initial_resInstNum": 84,
+      "tag": "img"
+    },
+    "9849": {
+      "initial_resInstNum": 85,
+      "tag": "img"
+    },
+    "9869": {
+      "initial_resInstNum": 86,
+      "tag": "img"
+    },
+    "9878": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 123,
+      "tag": "script"
+    },
+    "9898": {
+      "initial_resInstNum": 87,
+      "tag": "img"
+    },
+    "9918": {
+      "initial_resInstNum": 88,
+      "tag": "img"
+    },
+    "9938": {
+      "initial_resInstNum": 89,
+      "tag": "img"
+    },
+    "9958": {
+      "initial_resInstNum": 90,
+      "tag": "img"
+    },
+    "9967": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 126,
+      "tag": "script"
+    },
+    "9987": {
+      "initial_resInstNum": 91,
+      "tag": "img"
+    },
+    "10007": {
+      "initial_resInstNum": 92,
+      "tag": "img"
+    },
+    "10027": {
+      "initial_resInstNum": 93,
+      "tag": "img"
+    },
+    "10047": {
+      "initial_resInstNum": 94,
+      "tag": "img"
+    },
+    "10056": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 129,
+      "tag": "script"
+    },
+    "10078": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 132,
+      "tag": "script"
+    },
+    "10139": {
+      "initial_resInstNum": 95,
+      "tag": "img"
+    },
+    "10236": {
+      "initial_resInstNum": 96,
+      "tag": "img"
+    },
+    "10298": {
+      "initial_resInstNum": 97,
+      "tag": "img"
+    },
+    "10360": {
+      "initial_resInstNum": 98,
+      "tag": "img"
+    },
+    "10422": {
+      "initial_resInstNum": 99,
+      "tag": "img"
+    },
+    "10465": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 135,
+      "tag": "script"
+    },
+    "10496": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 138,
+      "tag": "script"
+    },
+    "10509": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 141,
+      "tag": "script"
+    },
+    "10525": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 144,
+      "tag": "script"
+    },
+    "10531": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 147,
+      "tag": "script"
+    },
+    "11000": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 150,
+      "tag": "script"
+    },
+    "11003": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 100,
+      "is_parser_blocking": true,
+      "run_scope_id": 160,
+      "tag": "script"
+    },
+    "11693": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 164,
+      "tag": "script"
+    },
+    "11695": {
+      "event_handling_scopes": [
+        [
+          "load",
+          462
+        ]
+      ],
+      "tag": "img"
+    },
+    "11697": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 169,
+      "tag": "script"
+    },
+    "11710": {
+      "tag": "img"
+    },
+    "11724": {
+      "tag": "img"
+    },
+    "11725": {
+      "tag": "img"
+    },
+    "11726": {
+      "tag": "img"
+    },
+    "11727": {
+      "tag": "img"
+    },
+    "11728": {
+      "tag": "img"
+    },
+    "11729": {
+      "tag": "img"
+    },
+    "11730": {
+      "tag": "img"
+    },
+    "11731": {
+      "tag": "img"
+    },
+    "11732": {
+      "tag": "img"
+    },
+    "11733": {
+      "tag": "img"
+    },
+    "11734": {
+      "tag": "img"
+    },
+    "11737": {
+      "tag": "img"
+    },
+    "11738": {
+      "tag": "img"
+    },
+    "11739": {
+      "tag": "img"
+    },
+    "11740": {
+      "tag": "img"
+    },
+    "11742": {
+      "tag": "img"
+    },
+    "11743": {
+      "tag": "img"
+    },
+    "11745": {
+      "tag": "img"
+    },
+    "11746": {
+      "tag": "img"
+    },
+    "11750": {
+      "tag": "img"
+    },
+    "11751": {
+      "tag": "img"
+    },
+    "11752": {
+      "tag": "img"
+    },
+    "11753": {
+      "tag": "img"
+    },
+    "11754": {
+      "tag": "img"
+    },
+    "11755": {
+      "tag": "img"
+    },
+    "11756": {
+      "tag": "img"
+    },
+    "11757": {
+      "tag": "img"
+    },
+    "11758": {
+      "tag": "img"
+    },
+    "11843": {
+      "tag": "img"
+    },
+    "11864": {
+      "tag": "img"
+    },
+    "11924": {
+      "tag": "img"
+    },
+    "11964": {
+      "tag": "img"
+    },
+    "11989": {
+      "tag": "img"
+    },
+    "12049": {
+      "tag": "img"
+    },
+    "12093": {
+      "tag": "img"
+    },
+    "12102": {
+      "tag": "img"
+    },
+    "12133": {
+      "tag": "img"
+    },
+    "12174": {
+      "tag": "img"
+    },
+    "12212": {
+      "tag": "img"
+    },
+    "12223": {
+      "tag": "img"
+    },
+    "12258": {
+      "tag": "img"
+    },
+    "12296": {
+      "tag": "img"
+    },
+    "12453": {
+      "tag": "img"
+    },
+    "12639": {
+      "tag": "img"
+    },
+    "12678": {
+      "tag": "img"
+    },
+    "12738": {
+      "tag": "img"
+    },
+    "12778": {
+      "tag": "img"
+    },
+    "12803": {
+      "tag": "img"
+    },
+    "12863": {
+      "tag": "img"
+    },
+    "12910": {
+      "tag": "img"
+    },
+    "12911": {
+      "tag": "img"
+    },
+    "12992": {
+      "event_handling_scopes": [
+        [
+          "load",
+          937
+        ]
+      ],
+      "tag": "img"
+    },
+    "12993": {
+      "tag": "img"
+    },
+    "12994": {
+      "event_handling_scopes": [
+        [
+          "load",
+          992
+        ]
+      ],
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "34": [
+      "  /* [1774.58, 1774.87] scopeStart= 1477877238845.102051 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.29);"
+    ],
+    "39": [
+      "  /* [1776.26, 1838.3] scopeStart= 1477877238846.775146 type= ScriptControllerRunScriptScope */",
+      "  __msleep(50.27);",
+      "  __msleep(10.88);",
+      "  __msleep(0.83);",
+      "  __msleep(0.04);",
+      "  __msleep(0.02);"
+    ],
+    "68": [
+      "  /* [1839.25, 1850.46] scopeStart= 1477877238909.769043 type= ScriptControllerRunScriptScope */",
+      "  __msleep(11.21);"
+    ],
+    "71": [
+      "  /* [1850.75, 1850.85] scopeStart= 1477877238921.269043 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.10);"
+    ],
+    "75": [
+      "  /* [1851.58, 1876.73] scopeStart= 1477877238922.104980 type= ScriptControllerRunScriptScope */",
+      "  __msleep(12.44);",
+      "  __msleep(1.86);",
+      "  send_xhr(189);",
+      "  __msleep(1.13);",
+      "  __msleep(5.70);",
+      "  __msleep(4.02);"
+    ],
+    "87": [
+      "  /* [1923.55, 1923.86] scopeStart= 1477877238994.064941 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.28);",
+      "  __msleep(0.03);"
+    ],
+    "90": [
+      "  /* [1924.19, 1924.39] scopeStart= 1477877238994.712158 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.03);"
+    ],
+    "93": [
+      "  /* [1924.71, 1924.88] scopeStart= 1477877238995.228027 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.03);"
+    ],
+    "96": [
+      "  /* [1927.73, 1927.9] scopeStart= 1477877238998.246826 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.03);"
+    ],
+    "99": [
+      "  /* [1933.55, 1933.73] scopeStart= 1477877239004.070068 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.03);"
+    ],
+    "102": [
+      "  /* [1947.23, 1947.4] scopeStart= 1477877239017.746094 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.03);"
+    ],
+    "105": [
+      "  /* [1949.05, 1949.21] scopeStart= 1477877239019.570068 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "108": [
+      "  /* [1950.35, 1950.51] scopeStart= 1477877239020.865967 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "111": [
+      "  /* [1951.64, 1951.78] scopeStart= 1477877239022.159180 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.02);"
+    ],
+    "114": [
+      "  /* [1953.09, 1953.25] scopeStart= 1477877239023.611084 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "117": [
+      "  /* [1954.39, 1954.53] scopeStart= 1477877239024.904053 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.11);",
+      "  __msleep(0.03);"
+    ],
+    "120": [
+      "  /* [1955.68, 1955.83] scopeStart= 1477877239026.197998 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.02);"
+    ],
+    "123": [
+      "  /* [1957.14, 1957.3] scopeStart= 1477877239027.661133 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "126": [
+      "  /* [1958.45, 1958.6] scopeStart= 1477877239028.965088 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.03);"
+    ],
+    "129": [
+      "  /* [1959.69, 1959.83] scopeStart= 1477877239030.209961 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.02);"
+    ],
+    "132": [
+      "  /* [1960.2, 1960.36] scopeStart= 1477877239030.723145 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "135": [
+      "  /* [1963.35, 1963.5] scopeStart= 1477877239033.865967 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.02);"
+    ],
+    "138": [
+      "  /* [1963.94, 1964.1] scopeStart= 1477877239034.458008 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "141": [
+      "  /* [1964.4, 1964.54] scopeStart= 1477877239034.917969 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.02);"
+    ],
+    "144": [
+      "  /* [1964.86, 1965.01] scopeStart= 1477877239035.382080 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.03);"
+    ],
+    "147": [
+      "  /* [1965.28, 1965.42] scopeStart= 1477877239035.795898 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.02);"
+    ],
+    "150": [
+      "  /* [1968.33, 1968.47] scopeStart= 1477877239038.853027 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.02);"
+    ],
+    "155": [
+      "  /* [1969.33, 2100.64] scopeStart= 1477877239039.848145 type= RenderTreeUpdateScope */",
+      "  __msleep(2.92);",
+      "  fetch_res(101);",
+      "  __msleep(0.24);",
+      "  fetch_res(109);",
+      "  __msleep(0.40);",
+      "  fetch_res(112);",
+      "  __msleep(0.21);",
+      "  fetch_res(107);",
+      "  __msleep(62.81);",
+      "  fetch_res(113);",
+      "  __msleep(0.60);",
+      "  fetch_res(105);",
+      "  __msleep(0.44);",
+      "  fetch_res(114);",
+      "  __msleep(0.68);",
+      "  fetch_res(115);",
+      "  __msleep(0.77);",
+      "  fetch_res(116);",
+      "  __msleep(0.65);",
+      "  fetch_res(117);",
+      "  __msleep(6.35);",
+      "  fetch_res(118);",
+      "  __msleep(40.73);",
+      "  fetch_res(119);",
+      "  __msleep(12.51);",
+      "  fetch_res(120);",
+      "  __msleep(2.00);"
+    ],
+    "160": [
+      "  /* [2326.79, 2370.1] scopeStart= 1477877239397.313232 type= ScriptControllerRunScriptScope */",
+      "  __msleep(43.31);"
+    ],
+    "164": [
+      "  /* [2370.43, 2383.93] scopeStart= 1477877239440.949951 type= ScriptControllerRunScriptScope */",
+      "  __msleep(11.50);",
+      "  __msleep(0.32);",
+      "  add_elem(11695);",
+      "  __msleep(0.32);",
+      "  set_elem_res(11695, 121);",
+      "  __msleep(1.24);",
+      "  fetch_res(121);",
+      "  __msleep(0.12);"
+    ],
+    "169": [
+      "  /* [2384.15, 2384.25] scopeStart= 1477877239454.673096 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.10);"
+    ],
+    "174": [
+      "  /* [2384.48, 2384.79] scopeStart= 1477877239454.996094 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.31);"
+    ],
+    "181": [
+      "  /* [2387.54, 2388.59] scopeStart= 1477877239458.054932 type= DOMTimerFiredScope */",
+      "  __msleep(0.74);",
+      "  __msleep(0.29);",
+      "  __msleep(0.02);"
+    ],
+    "185": [
+      "  /* [2388.77, 2389.21] scopeStart= 1477877239459.291992 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11710);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11710, 122);",
+      "  __msleep(0.22);",
+      "  fetch_res(122);",
+      "  __msleep(0.09);"
+    ],
+    "189": [
+      "  /* [2389.25, 2390.61] scopeStart= 1477877239459.764893 type= DOMTimerFiredScope */",
+      "  __msleep(0.48);",
+      "  __msleep(0.23);",
+      "  __msleep(0.06);",
+      "  sched_render_update_scope(251);",
+      "  __msleep(0.41);",
+      "  __msleep(0.12);",
+      "  __msleep(0.06);"
+    ],
+    "198": [
+      "  /* [2391.12, 2392.2] scopeStart= 1477877239461.644043 type= DOMTimerFiredScope */",
+      "  __msleep(0.27);",
+      "  __msleep(0.37);",
+      "  __msleep(0.16);",
+      "  __msleep(0.15);",
+      "  __msleep(0.13);"
+    ],
+    "202": [
+      "  /* [2392.21, 2392.45] scopeStart= 1477877239462.729980 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.08);"
+    ],
+    "224": [
+      "  /* [2394.04, 2396.76] scopeStart= 1477877239464.559082 type= DOMTimerFiredScope */",
+      "  __msleep(2.68);",
+      "  __msleep(0.04);"
+    ],
+    "251": [
+      "  /* [2403.42, 2403.48] scopeStart= 1477877239473.937988 type= RenderTreeUpdateScope */",
+      "  __msleep(0.06);"
+    ],
+    "268": [
+      "  /* [2413.52, 2431.12] scopeStart= 1477877239484.044189 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(2.01);",
+      "  __msleep(2.01);",
+      "  __msleep(1.01);",
+      "  send_xhr(11714);",
+      "  __msleep(1.32);",
+      "  __msleep(0.90);",
+      "  send_xhr(11715);",
+      "  __msleep(1.04);",
+      "  __msleep(0.72);",
+      "  send_xhr(11716);",
+      "  __msleep(0.98);",
+      "  __msleep(0.30);",
+      "  send_xhr(11717);",
+      "  __msleep(0.64);",
+      "  __msleep(0.29);",
+      "  send_xhr(11718);",
+      "  __msleep(0.61);",
+      "  __msleep(0.28);",
+      "  send_xhr(11719);",
+      "  __msleep(0.61);",
+      "  __msleep(0.44);",
+      "  send_xhr(11720);",
+      "  __msleep(0.77);",
+      "  __msleep(0.28);",
+      "  send_xhr(11721);",
+      "  __msleep(0.59);",
+      "  __msleep(0.30);",
+      "  send_xhr(11722);",
+      "  __msleep(0.66);",
+      "  __msleep(0.69);",
+      "  send_xhr(11723);",
+      "  __msleep(1.15);"
+    ],
+    "302": [
+      "  /* [2432.98, 2433.57] scopeStart= 1477877239503.501953 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  add_elem(11724);",
+      "  __msleep(0.08);",
+      "  set_elem_res(11724, 133);",
+      "  __msleep(0.22);",
+      "  fetch_res(133);",
+      "  __msleep(0.10);"
+    ],
+    "306": [
+      "  /* [2433.58, 2433.94] scopeStart= 1477877239504.094971 type= DOMTimerFiredScope */",
+      "  __msleep(0.04);",
+      "  add_elem(11725);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11725, 134);",
+      "  __msleep(0.18);",
+      "  fetch_res(134);",
+      "  __msleep(0.10);"
+    ],
+    "310": [
+      "  /* [2433.95, 2434.09] scopeStart= 1477877239504.463867 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11726);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11726, 134);",
+      "  __msleep(0.07);"
+    ],
+    "312": [
+      "  /* [2434.1, 2434.23] scopeStart= 1477877239504.617920 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11727);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11727, 134);",
+      "  __msleep(0.06);"
+    ],
+    "314": [
+      "  /* [2434.24, 2434.39] scopeStart= 1477877239504.759033 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11728);",
+      "  __msleep(0.05);",
+      "  set_elem_res(11728, 134);",
+      "  __msleep(0.07);"
+    ],
+    "316": [
+      "  /* [2434.39, 2434.53] scopeStart= 1477877239504.913086 type= DOMTimerFiredScope */",
+      "  __msleep(0.04);",
+      "  add_elem(11729);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11729, 134);",
+      "  __msleep(0.06);"
+    ],
+    "318": [
+      "  /* [2434.54, 2434.67] scopeStart= 1477877239505.058105 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11730);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11730, 134);",
+      "  __msleep(0.06);"
+    ],
+    "320": [
+      "  /* [2434.68, 2434.81] scopeStart= 1477877239505.196045 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11731);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11731, 134);",
+      "  __msleep(0.06);"
+    ],
+    "322": [
+      "  /* [2434.82, 2434.95] scopeStart= 1477877239505.337891 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11732);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11732, 134);",
+      "  __msleep(0.06);"
+    ],
+    "324": [
+      "  /* [2434.96, 2435.09] scopeStart= 1477877239505.480957 type= DOMTimerFiredScope */",
+      "  __msleep(0.04);",
+      "  add_elem(11733);",
+      "  __msleep(0.03);",
+      "  set_elem_res(11733, 134);",
+      "  __msleep(0.06);"
+    ],
+    "326": [
+      "  /* [2435.1, 2435.23] scopeStart= 1477877239505.618164 type= DOMTimerFiredScope */",
+      "  __msleep(0.03);",
+      "  add_elem(11734);",
+      "  __msleep(0.05);",
+      "  set_elem_res(11734, 134);",
+      "  __msleep(0.05);"
+    ],
+    "330": [
+      "  /* [2443.85, 2444.1] scopeStart= 1477877239514.368164 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.04);"
+    ],
+    "332": [
+      "  /* [2445.23, 2538.3] scopeStart= 1477877239515.750977 type= RenderTreeUpdateScope */",
+      "  __msleep(93.07);"
+    ],
+    "334": [
+      "  /* [2581.25, 2581.41] scopeStart= 1477877239651.772949 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "336": [
+      "  /* [2581.42, 2581.66] scopeStart= 1477877239651.941895 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.03);"
+    ],
+    "346": [
+      "  /* [2588.14, 2680.92] scopeStart= 1477877239658.662109 type= RenderTreeUpdateScope */",
+      "  __msleep(92.78);"
+    ],
+    "348": [
+      "  /* [2722.91, 2723.1] scopeStart= 1477877239793.431152 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.03);"
+    ],
+    "350": [
+      "  /* [2723.11, 2733.38] scopeStart= 1477877239793.625977 type= DOMTimerFiredScope */",
+      "  __msleep(10.21);",
+      "  __msleep(0.06);"
+    ],
+    "358": [
+      "  /* [2737.41, 2827.68] scopeStart= 1477877239807.926025 type= RenderTreeUpdateScope */",
+      "  __msleep(90.27);"
+    ],
+    "360": [
+      "  /* [2836.93, 2837.22] scopeStart= 1477877239907.450928 type= DOMTimerFiredScope */",
+      "  __msleep(0.25);",
+      "  __msleep(0.04);"
+    ],
+    "362": [
+      "  /* [2837.24, 2837.36] scopeStart= 1477877239907.759033 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.03);"
+    ],
+    "374": [
+      "  /* [2890.07, 2890.24] scopeStart= 1477877239960.592041 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.03);"
+    ],
+    "379": [
+      "  /* [2937.62, 2937.85] scopeStart= 1477877240008.140137 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.04);"
+    ],
+    "381": [
+      "  /* [2940.96, 2941.14] scopeStart= 1477877240011.475098 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.04);"
+    ],
+    "388": [
+      "  /* [2958.57, 2964.32] scopeStart= 1477877240029.094971 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.44);",
+      "  __msleep(2.48);",
+      "  __msleep(0.88);",
+      "  send_xhr(11735);",
+      "  __msleep(0.95);"
+    ],
+    "397": [
+      "  /* [2964.92, 2967.3] scopeStart= 1477877240035.436035 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.65);",
+      "  __msleep(0.71);",
+      "  __msleep(0.29);",
+      "  send_xhr(11736);",
+      "  __msleep(0.73);"
+    ],
+    "403": [
+      "  /* [2967.47, 2968.01] scopeStart= 1477877240037.987061 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11737);",
+      "  __msleep(0.09);",
+      "  set_elem_res(11737, 137);",
+      "  __msleep(0.24);",
+      "  fetch_res(137);",
+      "  __msleep(0.14);"
+    ],
+    "407": [
+      "  /* [2968.02, 2968.45] scopeStart= 1477877240038.536133 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(11738);",
+      "  __msleep(0.05);",
+      "  set_elem_res(11738, 138);",
+      "  __msleep(0.21);",
+      "  fetch_res(138);",
+      "  __msleep(0.12);"
+    ],
+    "411": [
+      "  /* [2968.53, 2968.94] scopeStart= 1477877240039.050049 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(11739);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11739, 139);",
+      "  __msleep(0.19);",
+      "  fetch_res(139);",
+      "  __msleep(0.11);"
+    ],
+    "415": [
+      "  /* [2968.95, 2969.15] scopeStart= 1477877240039.474854 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(11740);",
+      "  __msleep(0.07);",
+      "  set_elem_res(11740, 138);",
+      "  __msleep(0.08);"
+    ],
+    "420": [
+      "  /* [2969.67, 2971.24] scopeStart= 1477877240040.191895 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.45);",
+      "  __msleep(0.20);",
+      "  __msleep(0.25);",
+      "  send_xhr(11741);",
+      "  __msleep(0.67);"
+    ],
+    "426": [
+      "  /* [2971.4, 2971.87] scopeStart= 1477877240041.917969 type= DOMTimerFiredScope */",
+      "  __msleep(0.06);",
+      "  add_elem(11742);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11742, 141);",
+      "  __msleep(0.22);",
+      "  fetch_res(141);",
+      "  __msleep(0.13);"
+    ],
+    "430": [
+      "  /* [2971.92, 2972.11] scopeStart= 1477877240042.443115 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(11743);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11743, 138);",
+      "  __msleep(0.08);"
+    ],
+    "432": [
+      "  /* [2991.28, 2991.44] scopeStart= 1477877240061.802002 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.04);"
+    ],
+    "443": [
+      "  /* [3019.38, 3021.29] scopeStart= 1477877240089.900879 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.48);",
+      "  __msleep(0.19);",
+      "  __msleep(0.24);",
+      "  send_xhr(11744);",
+      "  __msleep(1.00);"
+    ],
+    "449": [
+      "  /* [3021.46, 3022.07] scopeStart= 1477877240091.974854 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  add_elem(11745);",
+      "  __msleep(0.07);",
+      "  set_elem_res(11745, 143);",
+      "  __msleep(0.25);",
+      "  fetch_res(143);",
+      "  __msleep(0.13);"
+    ],
+    "453": [
+      "  /* [3022.08, 3022.27] scopeStart= 1477877240092.597900 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(11746);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11746, 138);",
+      "  __msleep(0.08);"
+    ],
+    "455": [
+      "  /* [3038.45, 3038.72] scopeStart= 1477877240108.969971 type= DOMTimerFiredScope */",
+      "  __msleep(0.23);",
+      "  __msleep(0.04);"
+    ],
+    "457": [
+      "  /* [3041.81, 3041.97] scopeStart= 1477877240112.327148 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.04);"
+    ],
+    "459": [
+      "  /* [3092.22, 3092.36] scopeStart= 1477877240162.734131 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  __msleep(0.03);"
+    ],
+    "462": [
+      "  /* [3124.33, 3124.78] scopeStart= 1477877240194.854980 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.45);"
+    ],
+    "468": [
+      "  /* [3125.55, 3127.9] scopeStart= 1477877240196.072998 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.62);",
+      "  __msleep(0.31);",
+      "  __msleep(0.36);",
+      "  send_xhr(11747);",
+      "  __msleep(1.06);"
+    ],
+    "477": [
+      "  /* [3128.78, 3130.85] scopeStart= 1477877240199.296875 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.51);",
+      "  __msleep(0.25);",
+      "  __msleep(0.33);",
+      "  send_xhr(11748);",
+      "  __msleep(0.98);"
+    ],
+    "486": [
+      "  /* [3131.71, 3135.09] scopeStart= 1477877240202.227051 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.11);",
+      "  __msleep(0.27);",
+      "  __msleep(0.35);",
+      "  send_xhr(11749);",
+      "  __msleep(1.65);"
+    ],
+    "492": [
+      "  /* [3135.34, 3136.03] scopeStart= 1477877240205.854004 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  add_elem(11750);",
+      "  __msleep(0.09);",
+      "  set_elem_res(11750, 147);",
+      "  __msleep(0.35);",
+      "  fetch_res(147);",
+      "  __msleep(0.17);"
+    ],
+    "496": [
+      "  /* [3136.04, 3136.48] scopeStart= 1477877240206.562988 type= DOMTimerFiredScope */",
+      "  __msleep(0.23);",
+      "  add_elem(11751);",
+      "  __msleep(0.09);",
+      "  set_elem_res(11751, 138);",
+      "  __msleep(0.12);"
+    ],
+    "498": [
+      "  /* [3136.6, 3137.22] scopeStart= 1477877240207.115967 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11752);",
+      "  __msleep(0.07);",
+      "  set_elem_res(11752, 148);",
+      "  __msleep(0.32);",
+      "  fetch_res(148);",
+      "  __msleep(0.16);"
+    ],
+    "502": [
+      "  /* [3137.24, 3137.5] scopeStart= 1477877240207.760010 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11753);",
+      "  __msleep(0.08);",
+      "  set_elem_res(11753, 138);",
+      "  __msleep(0.11);"
+    ],
+    "507": [
+      "  /* [3137.78, 3138.4] scopeStart= 1477877240208.301025 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11754);",
+      "  __msleep(0.08);",
+      "  set_elem_res(11754, 149);",
+      "  __msleep(0.30);",
+      "  fetch_res(149);",
+      "  __msleep(0.17);"
+    ],
+    "511": [
+      "  /* [3138.42, 3138.68] scopeStart= 1477877240208.939941 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11755);",
+      "  __msleep(0.07);",
+      "  set_elem_res(11755, 138);",
+      "  __msleep(0.12);"
+    ],
+    "513": [
+      "  /* [3138.8, 3138.99] scopeStart= 1477877240209.322998 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.05);"
+    ],
+    "515": [
+      "  /* [3143.08, 3143.3] scopeStart= 1477877240213.604004 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "526": [
+      "  /* [3193.48, 3193.72] scopeStart= 1477877240264.002197 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.05);"
+    ],
+    "532": [
+      "  /* [3234.18, 3236.71] scopeStart= 1477877240304.702148 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.62);",
+      "  __msleep(0.41);",
+      "  sched_render_update_scope(541);",
+      "  __msleep(1.16);",
+      "  __msleep(0.34);"
+    ],
+    "538": [
+      "  /* [3237.37, 3238.96] scopeStart= 1477877240307.886963 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.39);",
+      "  __msleep(0.91);",
+      "  __msleep(0.29);"
+    ],
+    "541": [
+      "  /* [3239.08, 3262.2] scopeStart= 1477877240309.604004 type= RenderTreeUpdateScope */",
+      "  __msleep(23.12);"
+    ],
+    "542": [
+      "  /* [3268.86, 3269.56] scopeStart= 1477877240339.381836 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  add_elem(11756);",
+      "  __msleep(0.08);",
+      "  set_elem_res(11756, 150);",
+      "  __msleep(0.32);",
+      "  fetch_res(150);",
+      "  __msleep(0.16);"
+    ],
+    "546": [
+      "  /* [3269.65, 3270.15] scopeStart= 1477877240340.174072 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  add_elem(11757);",
+      "  __msleep(0.06);",
+      "  set_elem_res(11757, 151);",
+      "  __msleep(0.24);",
+      "  fetch_res(151);",
+      "  __msleep(0.13);"
+    ],
+    "550": [
+      "  /* [3270.16, 3270.33] scopeStart= 1477877240340.683105 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.04);"
+    ],
+    "552": [
+      "  /* [3270.34, 3270.5] scopeStart= 1477877240340.862061 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.04);"
+    ],
+    "556": [
+      "  /* [3321.02, 3321.25] scopeStart= 1477877240391.532959 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.05);"
+    ],
+    "567": [
+      "  /* [3370.75, 3370.96] scopeStart= 1477877240441.266113 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "569": [
+      "  /* [3372.05, 3372.46] scopeStart= 1477877240442.564941 type= DOMTimerFiredScope */",
+      "  __msleep(0.37);",
+      "  __msleep(0.04);"
+    ],
+    "574": [
+      "  /* [3404.16, 3405.64] scopeStart= 1477877240474.679932 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.77);",
+      "  __msleep(0.16);",
+      "  sched_render_update_scope(577);",
+      "  __msleep(0.34);",
+      "  __msleep(0.21);"
+    ],
+    "577": [
+      "  /* [3405.82, 3406.19] scopeStart= 1477877240476.342041 type= RenderTreeUpdateScope */",
+      "  __msleep(0.37);"
+    ],
+    "578": [
+      "  /* [3409.83, 3410.66] scopeStart= 1477877240480.346924 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  add_elem(11758);",
+      "  __msleep(0.09);",
+      "  set_elem_res(11758, 152);",
+      "  __msleep(0.41);",
+      "  fetch_res(152);",
+      "  __msleep(0.20);"
+    ],
+    "582": [
+      "  /* [3422.8, 3423.02] scopeStart= 1477877240493.321777 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "593": [
+      "  /* [3471.25, 3471.45] scopeStart= 1477877240541.766846 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.04);"
+    ],
+    "597": [
+      "  /* [3475.21, 3475.42] scopeStart= 1477877240545.730225 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.04);"
+    ],
+    "602": [
+      "  /* [3499.78, 3505.0] scopeStart= 1477877240570.297852 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.70);",
+      "  __msleep(2.67);",
+      "  sched_render_update_scope(609);",
+      "  __msleep(0.85);",
+      "  __msleep(1.00);"
+    ],
+    "609": [
+      "  /* [3505.21, 3506.76] scopeStart= 1477877240575.723877 type= RenderTreeUpdateScope */",
+      "  __msleep(1.55);"
+    ],
+    "611": [
+      "  /* [3511.17, 3511.83] scopeStart= 1477877240581.685059 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  add_elem(11843);",
+      "  __msleep(0.09);",
+      "  set_elem_res(11843, 153);",
+      "  __msleep(0.32);",
+      "  fetch_res(153);",
+      "  __msleep(0.14);"
+    ],
+    "620": [
+      "  /* [3525.55, 3525.77] scopeStart= 1477877240596.065918 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.04);"
+    ],
+    "623": [
+      "  /* [3572.03, 3572.31] scopeStart= 1477877240642.548096 type= DOMTimerFiredScope */",
+      "  __msleep(0.24);",
+      "  __msleep(0.04);"
+    ],
+    "625": [
+      "  /* [3576.45, 3576.62] scopeStart= 1477877240646.964111 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.05);"
+    ],
+    "636": [
+      "  /* [3627.38, 3627.62] scopeStart= 1477877240697.896973 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.04);"
+    ],
+    "642": [
+      "  /* [3673.21, 3673.45] scopeStart= 1477877240743.731934 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.05);"
+    ],
+    "644": [
+      "  /* [3678.59, 3678.81] scopeStart= 1477877240749.109863 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "649": [
+      "  /* [3704.21, 3713.34] scopeStart= 1477877240774.728027 type= DOMTimerFiredScope */",
+      "  __msleep(9.13);"
+    ],
+    "653": [
+      "  /* [3729.9, 3730.14] scopeStart= 1477877240800.420898 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.05);"
+    ],
+    "658": [
+      "  /* [3773.71, 3773.94] scopeStart= 1477877240844.225830 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.05);"
+    ],
+    "662": [
+      "  /* [3786.98, 3787.25] scopeStart= 1477877240857.498779 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.06);"
+    ],
+    "667": [
+      "  /* [3838.02, 3838.23] scopeStart= 1477877240908.539062 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.04);"
+    ],
+    "672": [
+      "  /* [3843.94, 3849.53] scopeStart= 1477877240914.463135 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.71);",
+      "  __msleep(0.22);",
+      "  add_elem(11864);",
+      "  __msleep(0.05);",
+      "  set_elem_res(11864, 12);",
+      "  __msleep(2.21);",
+      "  add_elem(11924);",
+      "  __msleep(0.04);",
+      "  set_elem_res(11924, 154);",
+      "  __msleep(1.13);",
+      "  fetch_res(154);",
+      "  __msleep(0.13);",
+      "  sched_render_update_scope(686);",
+      "  __msleep(0.59);",
+      "  __msleep(0.51);"
+    ],
+    "681": [
+      "  /* [3849.77, 3850.38] scopeStart= 1477877240920.293945 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  add_elem(11964);",
+      "  __msleep(0.08);",
+      "  set_elem_res(11964, 155);",
+      "  __msleep(0.29);",
+      "  fetch_res(155);",
+      "  __msleep(0.16);"
+    ],
+    "686": [
+      "  /* [3851.0, 3852.43] scopeStart= 1477877240921.520020 type= RenderTreeUpdateScope */",
+      "  __msleep(1.43);"
+    ],
+    "690": [
+      "  /* [3874.89, 3875.14] scopeStart= 1477877240945.403076 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.06);"
+    ],
+    "695": [
+      "  /* [3888.3, 3888.52] scopeStart= 1477877240958.822021 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "704": [
+      "  /* [3912.8, 3916.69] scopeStart= 1477877240983.319092 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.49);",
+      "  __msleep(0.11);",
+      "  add_elem(11989);",
+      "  __msleep(0.03);",
+      "  set_elem_res(11989, 15);",
+      "  __msleep(1.15);",
+      "  add_elem(12049);",
+      "  __msleep(0.04);",
+      "  set_elem_res(12049, 156);",
+      "  __msleep(1.02);",
+      "  fetch_res(156);",
+      "  __msleep(0.15);",
+      "  sched_render_update_scope(713);",
+      "  __msleep(0.49);",
+      "  __msleep(0.41);"
+    ],
+    "713": [
+      "  /* [3916.93, 3918.24] scopeStart= 1477877240987.449951 type= RenderTreeUpdateScope */",
+      "  __msleep(1.31);"
+    ],
+    "715": [
+      "  /* [3930.64, 3931.3] scopeStart= 1477877241001.163086 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  add_elem(12093);",
+      "  __msleep(0.09);",
+      "  set_elem_res(12093, 157);",
+      "  __msleep(0.31);",
+      "  fetch_res(157);",
+      "  __msleep(0.14);"
+    ],
+    "720": [
+      "  /* [3939.25, 3939.48] scopeStart= 1477877241009.769043 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.03);"
+    ],
+    "726": [
+      "  /* [3951.84, 3953.62] scopeStart= 1477877241022.364014 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.43);",
+      "  __msleep(0.61);",
+      "  sched_render_update_scope(737);",
+      "  __msleep(0.44);",
+      "  __msleep(0.30);"
+    ],
+    "733": [
+      "  /* [3953.75, 3954.26] scopeStart= 1477877241024.266846 type= DOMTimerFiredScope */",
+      "  __msleep(0.06);",
+      "  add_elem(12102);",
+      "  __msleep(0.06);",
+      "  set_elem_res(12102, 158);",
+      "  __msleep(0.27);",
+      "  fetch_res(158);",
+      "  __msleep(0.12);"
+    ],
+    "737": [
+      "  /* [3962.05, 3962.47] scopeStart= 1477877241032.569824 type= RenderTreeUpdateScope */",
+      "  __msleep(0.42);"
+    ],
+    "739": [
+      "  /* [3975.38, 3975.6] scopeStart= 1477877241045.893799 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "741": [
+      "  /* [3989.73, 3989.88] scopeStart= 1477877241060.246826 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  __msleep(0.04);"
+    ],
+    "746": [
+      "  /* [3991.73, 4000.08] scopeStart= 1477877241062.250000 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.40);",
+      "  __msleep(0.11);",
+      "  add_elem(12133);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12133, 6);",
+      "  __msleep(0.16);",
+      "  add_elem(12174);",
+      "  __msleep(0.02);",
+      "  set_elem_res(12174, 7);",
+      "  __msleep(0.11);",
+      "  add_elem(12212);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12212, 8);",
+      "  __msleep(0.06);",
+      "  add_elem(12223);",
+      "  __msleep(0.02);",
+      "  set_elem_res(12223, 9);",
+      "  __msleep(0.11);",
+      "  add_elem(12258);",
+      "  __msleep(0.02);",
+      "  set_elem_res(12258, 10);",
+      "  __msleep(0.11);",
+      "  add_elem(12296);",
+      "  __msleep(0.02);",
+      "  set_elem_res(12296, 11);",
+      "  __msleep(0.20);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(3.34);",
+      "  add_elem(12453);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12453, 159);",
+      "  __msleep(0.11);",
+      "  __msleep(0.62);",
+      "  __msleep(1.05);",
+      "  fetch_res(159);",
+      "  __msleep(0.12);",
+      "  sched_render_update_scope(759);",
+      "  __msleep(0.72);",
+      "  __msleep(0.21);",
+      "  __msleep(0.34);",
+      "  __msleep(0.35);"
+    ],
+    "755": [
+      "  /* [4000.31, 4000.78] scopeStart= 1477877241070.826172 type= DOMTimerFiredScope */",
+      "  __msleep(0.06);",
+      "  add_elem(12639);",
+      "  __msleep(0.06);",
+      "  set_elem_res(12639, 160);",
+      "  __msleep(0.24);",
+      "  fetch_res(160);",
+      "  __msleep(0.11);"
+    ],
+    "759": [
+      "  /* [4000.92, 4004.82] scopeStart= 1477877241071.441895 type= RenderTreeUpdateScope */",
+      "  __msleep(0.39);",
+      "  fetch_res(161);",
+      "  __msleep(3.51);"
+    ],
+    "770": [
+      "  /* [4027.81, 4030.75] scopeStart= 1477877241098.331055 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.41);",
+      "  __msleep(0.10);",
+      "  add_elem(12678);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12678, 13);",
+      "  __msleep(0.70);",
+      "  add_elem(12738);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12738, 162);",
+      "  __msleep(0.85);",
+      "  fetch_res(162);",
+      "  __msleep(0.08);",
+      "  sched_render_update_scope(783);",
+      "  __msleep(0.42);",
+      "  __msleep(0.32);"
+    ],
+    "779": [
+      "  /* [4030.93, 4031.37] scopeStart= 1477877241101.444092 type= DOMTimerFiredScope */",
+      "  __msleep(0.05);",
+      "  add_elem(12778);",
+      "  __msleep(0.06);",
+      "  set_elem_res(12778, 163);",
+      "  __msleep(0.22);",
+      "  fetch_res(163);",
+      "  __msleep(0.11);"
+    ],
+    "783": [
+      "  /* [4031.48, 4032.55] scopeStart= 1477877241102.004150 type= RenderTreeUpdateScope */",
+      "  __msleep(1.07);"
+    ],
+    "785": [
+      "  /* [4040.85, 4041.11] scopeStart= 1477877241111.368896 type= DOMTimerFiredScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.04);"
+    ],
+    "790": [
+      "  /* [4043.77, 4051.78] scopeStart= 1477877241114.291016 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.42);",
+      "  __msleep(0.08);",
+      "  add_elem(12803);",
+      "  __msleep(0.03);",
+      "  set_elem_res(12803, 14);",
+      "  __msleep(0.68);",
+      "  add_elem(12863);",
+      "  __msleep(0.02);",
+      "  set_elem_res(12863, 164);",
+      "  __msleep(0.82);",
+      "  fetch_res(164);",
+      "  __msleep(0.47);",
+      "  __msleep(4.62);",
+      "  __msleep(0.11);",
+      "  __msleep(0.05);",
+      "  __msleep(0.03);",
+      "  __msleep(0.04);",
+      "  __msleep(0.64);"
+    ],
+    "807": [
+      "  /* [4051.97, 4052.43] scopeStart= 1477877241122.490967 type= DOMTimerFiredScope */",
+      "  __msleep(0.06);",
+      "  add_elem(12910);",
+      "  __msleep(0.05);",
+      "  set_elem_res(12910, 165);",
+      "  __msleep(0.24);",
+      "  fetch_res(165);",
+      "  __msleep(0.11);"
+    ],
+    "813": [
+      "  /* [4052.55, 4052.98] scopeStart= 1477877241123.069092 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  add_elem(12911);",
+      "  __msleep(0.06);",
+      "  set_elem_res(12911, 166);",
+      "  __msleep(0.19);",
+      "  fetch_res(166);",
+      "  __msleep(0.10);"
+    ],
+    "827": [
+      "  /* [4092.08, 4092.24] scopeStart= 1477877241162.594971 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.03);"
+    ],
+    "834": [
+      "  /* [4142.65, 4142.94] scopeStart= 1477877241213.170898 type= DOMTimerFiredScope */",
+      "  __msleep(0.23);",
+      "  __msleep(0.06);"
+    ],
+    "838": [
+      "  /* [4193.28, 4193.47] scopeStart= 1477877241263.803955 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.04);"
+    ],
+    "848": [
+      "  /* [4243.68, 4243.91] scopeStart= 1477877241314.198975 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.05);"
+    ],
+    "850": [
+      "  /* [4247.06, 4263.91] scopeStart= 1477877241317.573975 type= DOMTimerFiredScope */",
+      "  __msleep(8.31);",
+      "  __msleep(7.86);",
+      "  __msleep(0.68);"
+    ],
+    "854": [
+      "  /* [4294.25, 4294.53] scopeStart= 1477877241364.770020 type= DOMTimerFiredScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.06);"
+    ],
+    "858": [
+      "  /* [4345.12, 4345.4] scopeStart= 1477877241415.644043 type= DOMTimerFiredScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.06);"
+    ],
+    "864": [
+      "  /* [4403.7, 4403.97] scopeStart= 1477877241474.216064 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.07);"
+    ],
+    "871": [
+      "  /* [4455.37, 4455.59] scopeStart= 1477877241525.885010 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.04);"
+    ],
+    "878": [
+      "  /* [4505.99, 4506.24] scopeStart= 1477877241576.510010 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.04);"
+    ],
+    "882": [
+      "  /* [4556.53, 4556.74] scopeStart= 1477877241627.049805 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "890": [
+      "  /* [4607.12, 4607.3] scopeStart= 1477877241677.635986 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.03);"
+    ],
+    "893": [
+      "  /* [4657.99, 4658.2] scopeStart= 1477877241728.509033 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.03);"
+    ],
+    "897": [
+      "  /* [4708.54, 4708.73] scopeStart= 1477877241779.062012 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.03);"
+    ],
+    "901": [
+      "  /* [4759.23, 4759.43] scopeStart= 1477877241829.745117 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.04);"
+    ],
+    "903": [
+      "  /* [4809.56, 4809.76] scopeStart= 1477877241880.073975 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "909": [
+      "  /* [4851.76, 4862.18] scopeStart= 1477877241922.275146 type= DOMTimerFiredScope */",
+      "  __msleep(7.05);",
+      "  __msleep(1.94);",
+      "  __msleep(1.43);"
+    ],
+    "917": [
+      "  /* [4871.85, 4872.01] scopeStart= 1477877241942.365967 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  __msleep(0.05);"
+    ],
+    "919": [
+      "  /* [4872.02, 4884.08] scopeStart= 1477877241942.540039 type= DOMTimerFiredScope */",
+      "  __msleep(10.31);",
+      "  add_elem(12992);",
+      "  __msleep(0.33);",
+      "  set_elem_res(12992, 167);",
+      "  __msleep(1.24);",
+      "  fetch_res(167);",
+      "  __msleep(0.18);"
+    ],
+    "925": [
+      "  /* [4922.42, 4922.65] scopeStart= 1477877241992.929932 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.04);"
+    ],
+    "927": [
+      "  /* [4972.76, 4972.98] scopeStart= 1477877242043.281982 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "930": [
+      "  /* [5023.26, 5023.47] scopeStart= 1477877242093.779053 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "936": [
+      "  /* [5061.05, 5061.09] scopeStart= 1477877242131.567871 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "937": [
+      "  /* [5061.14, 5061.37] scopeStart= 1477877242131.655029 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.23);"
+    ],
+    "940": [
+      "  /* [5061.4, 5103.65] scopeStart= 1477877242131.922852 type= DocOnLoadEventScope */",
+      "  __msleep(1.55);",
+      "  __msleep(40.70);"
+    ],
+    "948": [
+      "  /* [5108.58, 5109.31] scopeStart= 1477877242179.102783 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  add_elem(12993);",
+      "  __msleep(0.11);",
+      "  set_elem_res(12993, 168);",
+      "  __msleep(0.35);",
+      "  fetch_res(168);",
+      "  __msleep(0.16);"
+    ],
+    "952": [
+      "  /* [5109.33, 5109.92] scopeStart= 1477877242179.848877 type= DOMTimerFiredScope */",
+      "  __msleep(0.54);",
+      "  __msleep(0.05);"
+    ],
+    "954": [
+      "  /* [5160.19, 5160.4] scopeStart= 1477877242230.708984 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "956": [
+      "  /* [5210.54, 5210.75] scopeStart= 1477877242281.058105 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "958": [
+      "  /* [5261.13, 5261.42] scopeStart= 1477877242331.648193 type= DOMTimerFiredScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.07);"
+    ],
+    "961": [
+      "  /* [5312.16, 5312.41] scopeStart= 1477877242382.675049 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.05);"
+    ],
+    "963": [
+      "  /* [5362.55, 5362.73] scopeStart= 1477877242433.068115 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.05);"
+    ],
+    "965": [
+      "  /* [5412.87, 5413.08] scopeStart= 1477877242483.383789 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "967": [
+      "  /* [5463.2, 5463.4] scopeStart= 1477877242533.718018 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "969": [
+      "  /* [5513.54, 5513.74] scopeStart= 1477877242584.058105 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "971": [
+      "  /* [5563.89, 5564.1] scopeStart= 1477877242634.407959 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "973": [
+      "  /* [5614.24, 5614.51] scopeStart= 1477877242684.755127 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.06);"
+    ],
+    "975": [
+      "  /* [5664.65, 5664.86] scopeStart= 1477877242735.166992 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "977": [
+      "  /* [5715.0, 5715.22] scopeStart= 1477877242785.512939 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "979": [
+      "  /* [5765.47, 5765.68] scopeStart= 1477877242835.983887 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "981": [
+      "  /* [5815.81, 5816.04] scopeStart= 1477877242886.328857 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.06);"
+    ],
+    "983": [
+      "  /* [5861.17, 5870.91] scopeStart= 1477877242931.690918 type= DOMTimerFiredScope */",
+      "  __msleep(8.22);",
+      "  add_elem(12994);",
+      "  __msleep(0.26);",
+      "  set_elem_res(12994, 169);",
+      "  __msleep(1.05);",
+      "  fetch_res(169);",
+      "  __msleep(0.21);"
+    ],
+    "987": [
+      "  /* [5871.0, 5871.18] scopeStart= 1477877242941.513916 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.05);"
+    ],
+    "989": [
+      "  /* [5921.32, 5921.54] scopeStart= 1477877242991.836182 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "992": [
+      "  /* [5960.57, 5960.73] scopeStart= 1477877243031.089111 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.16);"
+    ],
+    "995": [
+      "  /* [5971.88, 5972.1] scopeStart= 1477877243042.397949 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "997": [
+      "  /* [6022.21, 6022.45] scopeStart= 1477877243092.731934 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.05);"
+    ],
+    "999": [
+      "  /* [6072.58, 6072.8] scopeStart= 1477877243143.102783 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1001": [
+      "  /* [6122.94, 6123.14] scopeStart= 1477877243193.461914 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "1003": [
+      "  /* [6173.28, 6173.97] scopeStart= 1477877243243.803955 type= DOMTimerFiredScope */",
+      "  __msleep(0.63);",
+      "  __msleep(0.06);"
+    ],
+    "1005": [
+      "  /* [6224.11, 6224.31] scopeStart= 1477877243294.630127 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "1007": [
+      "  /* [6274.43, 6274.65] scopeStart= 1477877243344.950928 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1009": [
+      "  /* [6324.79, 6324.99] scopeStart= 1477877243395.307129 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.06);"
+    ],
+    "1011": [
+      "  /* [6375.13, 6375.33] scopeStart= 1477877243445.646973 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "1013": [
+      "  /* [6425.47, 6425.68] scopeStart= 1477877243495.986084 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1015": [
+      "  /* [6475.81, 6476.02] scopeStart= 1477877243546.329102 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1017": [
+      "  /* [6526.14, 6526.34] scopeStart= 1477877243596.656982 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.05);"
+    ],
+    "1019": [
+      "  /* [6576.48, 6576.71] scopeStart= 1477877243647.000000 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.07);"
+    ],
+    "1021": [
+      "  /* [6626.82, 6627.03] scopeStart= 1477877243697.339111 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1023": [
+      "  /* [6677.17, 6677.38] scopeStart= 1477877243747.685059 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "1025": [
+      "  /* [6727.5, 6727.71] scopeStart= 1477877243798.022949 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1027": [
+      "  /* [6777.83, 6778.05] scopeStart= 1477877243848.352051 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1029": [
+      "  /* [6828.18, 6828.41] scopeStart= 1477877243898.696777 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.06);"
+    ],
+    "1031": [
+      "  /* [6878.52, 6878.74] scopeStart= 1477877243949.041992 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1033": [
+      "  /* [6928.85, 6929.07] scopeStart= 1477877243999.364014 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1035": [
+      "  /* [6979.2, 6979.42] scopeStart= 1477877244049.719971 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1037": [
+      "  /* [7029.55, 7029.76] scopeStart= 1477877244100.070068 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1039": [
+      "  /* [7079.9, 7080.12] scopeStart= 1477877244150.413086 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.07);"
+    ],
+    "1041": [
+      "  /* [7130.25, 7130.48] scopeStart= 1477877244200.769043 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.06);"
+    ],
+    "1043": [
+      "  /* [7180.62, 7180.83] scopeStart= 1477877244251.133057 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "1045": [
+      "  /* [7230.96, 7231.17] scopeStart= 1477877244301.479980 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.05);"
+    ],
+    "1047": [
+      "  /* [7281.31, 7281.53] scopeStart= 1477877244351.833984 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1049": [
+      "  /* [7331.66, 7331.89] scopeStart= 1477877244402.178955 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.07);"
+    ],
+    "1051": [
+      "  /* [7382.03, 7382.25] scopeStart= 1477877244452.547119 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1053": [
+      "  /* [7432.38, 7432.62] scopeStart= 1477877244502.902100 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.06);"
+    ],
+    "1055": [
+      "  /* [7482.76, 7482.98] scopeStart= 1477877244553.282959 type= DOMTimerFiredScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.05);"
+    ],
+    "1057": [
+      "  /* [7533.09, 7533.31] scopeStart= 1477877244603.611084 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1059": [
+      "  /* [7583.44, 7583.66] scopeStart= 1477877244653.956787 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.07);"
+    ],
+    "1061": [
+      "  /* [7633.8, 7634.01] scopeStart= 1477877244704.313965 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.06);"
+    ],
+    "1063": [
+      "  /* [7684.14, 7684.36] scopeStart= 1477877244754.662109 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "1065": [
+      "  /* [7734.47, 7734.71] scopeStart= 1477877244804.987793 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.06);"
+    ],
+    "1067": [
+      "  /* [7784.84, 7785.08] scopeStart= 1477877244855.360107 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.06);"
+    ],
+    "1069": [
+      "  /* [7835.23, 7835.43] scopeStart= 1477877244905.742920 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.06);"
+    ],
+    "1071": [
+      "  /* [7885.57, 7885.77] scopeStart= 1477877244956.085938 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.06);"
+    ],
+    "1073": [
+      "  /* [7935.88, 7936.1] scopeStart= 1477877245006.393799 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        522,
+        102
+      ],
+      [
+        674,
+        106
+      ],
+      [
+        701,
+        114
+      ],
+      [
+        713,
+        183
+      ],
+      [
+        735,
+        185
+      ],
+      [
+        745,
+        188
+      ],
+      [
+        749,
+        199
+      ],
+      [
+        19046,
+        6218
+      ],
+      [
+        19228,
+        6259
+      ],
+      [
+        19418,
+        6297
+      ],
+      [
+        19466,
+        6308
+      ],
+      [
+        19637,
+        6343
+      ],
+      [
+        19812,
+        6381
+      ],
+      [
+        20145,
+        6467
+      ],
+      [
+        20194,
+        6475
+      ],
+      [
+        20234,
+        6482
+      ],
+      [
+        20430,
+        6535
+      ],
+      [
+        20693,
+        6606
+      ],
+      [
+        20957,
+        6677
+      ],
+      [
+        21222,
+        6748
+      ],
+      [
+        21389,
+        6794
+      ],
+      [
+        23766,
+        7707
+      ],
+      [
+        23972,
+        7763
+      ],
+      [
+        24139,
+        7815
+      ],
+      [
+        24301,
+        7867
+      ],
+      [
+        24913,
+        8050
+      ],
+      [
+        25077,
+        8095
+      ],
+      [
+        25158,
+        8115
+      ],
+      [
+        25240,
+        8135
+      ],
+      [
+        25321,
+        8155
+      ],
+      [
+        25446,
+        8186
+      ],
+      [
+        25608,
+        8231
+      ],
+      [
+        25690,
+        8251
+      ],
+      [
+        25772,
+        8271
+      ],
+      [
+        25851,
+        8291
+      ],
+      [
+        25980,
+        8322
+      ],
+      [
+        26146,
+        8367
+      ],
+      [
+        26225,
+        8387
+      ],
+      [
+        26305,
+        8407
+      ],
+      [
+        26385,
+        8427
+      ],
+      [
+        26511,
+        8458
+      ],
+      [
+        26677,
+        8503
+      ],
+      [
+        26762,
+        8523
+      ],
+      [
+        26845,
+        8543
+      ],
+      [
+        26928,
+        8563
+      ],
+      [
+        27057,
+        8594
+      ],
+      [
+        27222,
+        8639
+      ],
+      [
+        27311,
+        8659
+      ],
+      [
+        27394,
+        8679
+      ],
+      [
+        27476,
+        8699
+      ],
+      [
+        27599,
+        8730
+      ],
+      [
+        27759,
+        8775
+      ],
+      [
+        27839,
+        8795
+      ],
+      [
+        27922,
+        8815
+      ],
+      [
+        28004,
+        8835
+      ],
+      [
+        28128,
+        8866
+      ],
+      [
+        28297,
+        8911
+      ],
+      [
+        28377,
+        8931
+      ],
+      [
+        28457,
+        8951
+      ],
+      [
+        28538,
+        8971
+      ],
+      [
+        28665,
+        9002
+      ],
+      [
+        28834,
+        9045
+      ],
+      [
+        28920,
+        9065
+      ],
+      [
+        29008,
+        9085
+      ],
+      [
+        29092,
+        9105
+      ],
+      [
+        29160,
+        9121
+      ],
+      [
+        29507,
+        9225
+      ],
+      [
+        29584,
+        9245
+      ],
+      [
+        29658,
+        9265
+      ],
+      [
+        29734,
+        9285
+      ],
+      [
+        29771,
+        9294
+      ],
+      [
+        29848,
+        9314
+      ],
+      [
+        29923,
+        9334
+      ],
+      [
+        30000,
+        9354
+      ],
+      [
+        30075,
+        9374
+      ],
+      [
+        30112,
+        9383
+      ],
+      [
+        30190,
+        9403
+      ],
+      [
+        30265,
+        9423
+      ],
+      [
+        30339,
+        9443
+      ],
+      [
+        30414,
+        9463
+      ],
+      [
+        30451,
+        9472
+      ],
+      [
+        30615,
+        9517
+      ],
+      [
+        30689,
+        9537
+      ],
+      [
+        30764,
+        9557
+      ],
+      [
+        30838,
+        9577
+      ],
+      [
+        30875,
+        9586
+      ],
+      [
+        30951,
+        9606
+      ],
+      [
+        31027,
+        9626
+      ],
+      [
+        31103,
+        9646
+      ],
+      [
+        31179,
+        9666
+      ],
+      [
+        31216,
+        9675
+      ],
+      [
+        31293,
+        9695
+      ],
+      [
+        31367,
+        9715
+      ],
+      [
+        31442,
+        9735
+      ],
+      [
+        31523,
+        9755
+      ],
+      [
+        31560,
+        9764
+      ],
+      [
+        31726,
+        9809
+      ],
+      [
+        31799,
+        9829
+      ],
+      [
+        31873,
+        9849
+      ],
+      [
+        31951,
+        9869
+      ],
+      [
+        31988,
+        9878
+      ],
+      [
+        32063,
+        9898
+      ],
+      [
+        32137,
+        9918
+      ],
+      [
+        32211,
+        9938
+      ],
+      [
+        32286,
+        9958
+      ],
+      [
+        32323,
+        9967
+      ],
+      [
+        32405,
+        9987
+      ],
+      [
+        32479,
+        10007
+      ],
+      [
+        32554,
+        10027
+      ],
+      [
+        32630,
+        10047
+      ],
+      [
+        32668,
+        10056
+      ],
+      [
+        32750,
+        10078
+      ],
+      [
+        32991,
+        10139
+      ],
+      [
+        33303,
+        10236
+      ],
+      [
+        33562,
+        10298
+      ],
+      [
+        33817,
+        10360
+      ],
+      [
+        34088,
+        10422
+      ],
+      [
+        34237,
+        10465
+      ],
+      [
+        34372,
+        10496
+      ],
+      [
+        34415,
+        10509
+      ],
+      [
+        34473,
+        10525
+      ],
+      [
+        34508,
+        10531
+      ],
+      [
+        35793,
+        11000
+      ],
+      [
+        35802,
+        11003
+      ],
+      [
+        35830,
+        11693
+      ],
+      [
+        35849,
+        11697
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        174
+      ],
+      [
+        "load",
+        940
+      ],
+      [
+        "readystatechange_complete",
+        936
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "a0.awsstatic.com",
+    "amazonwebservices.d2.sc.omtrdc.net",
+    "amazonwebservicesinc.tt.omtrdc.net",
+    "api.demandbase.com",
+    "aws.amazon.com",
+    "d0.awsstatic.com",
+    "d1.awsstatic.com",
+    "fls-na.amazon.com",
+    "s0.awsstatic.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "aws.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 35885,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 47.51999999999998,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 61556,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 368,
+          "resp_body_size": 40802,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 22268,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 12630,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 424,
+          "resp_body_size": 29085,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 418,
+          "resp_body_size": 33879,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 423,
+          "resp_body_size": 17283,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 414,
+          "resp_body_size": 18274,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 436,
+          "resp_body_size": 21588,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 431,
+          "resp_body_size": 29139,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 438,
+          "resp_body_size": 5237,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 433,
+          "resp_body_size": 15234,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 8420,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 5774,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 427,
+          "resp_body_size": 9267,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 429,
+          "resp_body_size": 9154,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 7381,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 427,
+          "resp_body_size": 10757,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 20654,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 2785,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 3591,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 6090,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 419,
+          "resp_body_size": 20303,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 4092,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 4872,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 3693,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 5318,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 16641,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 7295,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 384,
+          "resp_body_size": 4114,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 5589,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 3641,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 418,
+          "resp_body_size": 24402,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 3642,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 398,
+          "resp_body_size": 4737,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 396,
+          "resp_body_size": 6184,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 5223,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 429,
+          "resp_body_size": 15369,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 6467,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 428,
+          "resp_body_size": 27344,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 7394,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 3990,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 417,
+          "resp_body_size": 11233,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 4055,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 3286,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 394,
+          "resp_body_size": 3578,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 3116,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 418,
+          "resp_body_size": 23979,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 9833,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 4100,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 4645,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 6598,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 422,
+          "resp_body_size": 25367,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 3738,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 7257,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 5840,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 4658,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 10735,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 5642,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "61": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 6140,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 6219,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "63": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 5755,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "64": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 5894,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "65": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 6939,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 4261,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 3850,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 3706,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 4135,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 5204,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 3889,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 10508,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 4847,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 6783,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 5673,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "76": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 3363,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "77": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 1265,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "78": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 1728,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "79": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 3768,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "80": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 13341,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "81": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 4821,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "82": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 420,
+          "resp_body_size": 25702,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "83": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 384,
+          "resp_body_size": 3000,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "84": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 4058,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "85": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 3179,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "86": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 384,
+          "resp_body_size": 14196,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "87": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 384,
+          "resp_body_size": 3215,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "88": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 9310,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "89": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 5929,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "90": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 4212,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "91": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 3902,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "92": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 4127,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "93": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 3077,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "94": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 8810,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "95": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 414,
+          "resp_body_size": 125743,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "96": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 427,
+          "resp_body_size": 52437,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "97": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 436,
+          "resp_body_size": 14827,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "98": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 5372,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "99": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 409,
+          "resp_body_size": 6425,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "100": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 361,
+          "resp_body_size": 7408,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "101": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 452,
+          "resp_body_size": 65963,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "105": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 458,
+          "resp_body_size": 58278,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "107": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 458,
+          "resp_body_size": 49290,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "109": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 458,
+          "resp_body_size": 39278,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "111": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "api.demandbase.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 424,
+          "resp_body_size": 971,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "112": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 427,
+          "resp_body_size": 4458,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "113": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 429,
+          "resp_body_size": 57518,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "114": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 416,
+          "resp_body_size": 33548,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "115": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 428,
+          "resp_body_size": 65029,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "116": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 443,
+          "resp_body_size": 3613,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "117": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 430,
+          "resp_body_size": 236594,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "118": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 45257,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "119": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 416,
+          "resp_body_size": 64603,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "120": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "a0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 430,
+          "resp_body_size": 3105,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "121": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "amazonwebservices.d2.sc.omtrdc.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1492,
+          "resp_body_size": 1670,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "amazonwebservices.d2.sc.omtrdc.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1601,
+          "resp_body_size": 528,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "122": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1027,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "123": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1012,
+          "resp_body_size": 180,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "124": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1013,
+          "resp_body_size": 200,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "125": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1022,
+          "resp_body_size": 191,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "126": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1015,
+          "resp_body_size": 181,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "127": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1015,
+          "resp_body_size": 188,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "128": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1015,
+          "resp_body_size": 176,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "129": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1015,
+          "resp_body_size": 201,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "130": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1025,
+          "resp_body_size": 51,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "131": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1029,
+          "resp_body_size": 51,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "132": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "amazonwebservicesinc.tt.omtrdc.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1014,
+          "resp_body_size": 51,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "133": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1032,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "134": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1023,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "135": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 423,
+          "resp_body_size": 1023,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "136": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 711,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "137": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "138": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1025,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "139": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "140": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 424,
+          "resp_body_size": 1033,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "141": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "142": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 1854,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "143": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "144": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 444,
+          "resp_body_size": 1027,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "145": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 419,
+          "resp_body_size": 1035,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "146": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "s0.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 431,
+          "resp_body_size": 1037,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "147": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "148": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "149": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "150": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "151": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "152": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1033,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "153": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "154": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 438,
+          "resp_body_size": 5224,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "155": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "156": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 441,
+          "resp_body_size": 36153,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "157": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "158": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "159": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 414,
+          "resp_body_size": 3001,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "160": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "161": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 409,
+          "resp_body_size": 128168,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "162": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 433,
+          "resp_body_size": 15221,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "163": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "164": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "d1.awsstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 8407,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "165": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1030,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "166": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1027,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "167": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "amazonwebservices.d2.sc.omtrdc.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 979,
+          "resp_body_size": 526,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "168": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fls-na.amazon.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1150,
+          "resp_body_size": 39,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "169": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "amazonwebservices.d2.sc.omtrdc.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 927,
+          "resp_body_size": 527,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70002": {
+      "fired_scope_ids": [
+        181
+      ],
+      "interval_ms": 4,
+      "singleShot": true
+    },
+    "70004": {
+      "fired_scope_ids": [
+        185
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70005": {
+      "fired_scope_ids": [
+        224
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70006": {
+      "fired_scope_ids": [
+        189
+      ],
+      "interval_ms": 4,
+      "singleShot": true
+    },
+    "70010": {
+      "fired_scope_ids": [
+        198
+      ],
+      "interval_ms": 4,
+      "singleShot": true
+    },
+    "70011": {
+      "fired_scope_ids": [
+        202
+      ],
+      "interval_ms": 4,
+      "singleShot": true
+    },
+    "70030": {
+      "fired_scope_ids": [
+        330
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70034": {
+      "fired_scope_ids": [
+        336
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70035": {
+      "fired_scope_ids": [
+        302
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70036": {
+      "fired_scope_ids": [
+        306
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70037": {
+      "fired_scope_ids": [
+        310
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70038": {
+      "fired_scope_ids": [
+        312
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70039": {
+      "fired_scope_ids": [
+        314
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70040": {
+      "fired_scope_ids": [
+        316
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70041": {
+      "fired_scope_ids": [
+        318
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70042": {
+      "fired_scope_ids": [
+        320
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70043": {
+      "fired_scope_ids": [
+        322
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70044": {
+      "fired_scope_ids": [
+        324
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70045": {
+      "fired_scope_ids": [
+        326
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70046": {
+      "fired_scope_ids": [
+        334
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70047": {
+      "fired_scope_ids": [
+        348
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70048": {
+      "fired_scope_ids": [
+        350
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70049": {
+      "fired_scope_ids": [
+        360
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70050": {
+      "fired_scope_ids": [
+        362
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70051": {
+      "fired_scope_ids": [
+        374
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70052": {
+      "fired_scope_ids": [
+        379
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70053": {
+      "fired_scope_ids": [
+        381
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70054": {
+      "fired_scope_ids": [
+        455
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70055": {
+      "fired_scope_ids": [
+        432
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70056": {
+      "fired_scope_ids": [
+        403
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70057": {
+      "fired_scope_ids": [
+        407
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70058": {
+      "fired_scope_ids": [
+        411
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70059": {
+      "fired_scope_ids": [
+        415
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70060": {
+      "fired_scope_ids": [
+        426
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70061": {
+      "fired_scope_ids": [
+        430
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70062": {
+      "fired_scope_ids": [
+        457
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70063": {
+      "fired_scope_ids": [
+        449
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70064": {
+      "fired_scope_ids": [
+        453
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70065": {
+      "fired_scope_ids": [
+        513
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70066": {
+      "fired_scope_ids": [
+        459
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70067": {
+      "fired_scope_ids": [
+        515
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70068": {
+      "fired_scope_ids": [
+        492
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70069": {
+      "fired_scope_ids": [
+        496
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70070": {
+      "fired_scope_ids": [
+        498
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70071": {
+      "fired_scope_ids": [
+        502
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70072": {
+      "fired_scope_ids": [
+        507
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70073": {
+      "fired_scope_ids": [
+        511
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70074": {
+      "fired_scope_ids": [
+        550
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70075": {
+      "fired_scope_ids": [
+        526
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70076": {
+      "fired_scope_ids": [
+        552
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70077": {
+      "fired_scope_ids": [
+        542
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70079": {
+      "fired_scope_ids": [
+        546
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70081": {
+      "fired_scope_ids": [
+        567
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70082": {
+      "fired_scope_ids": [
+        556
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70083": {
+      "fired_scope_ids": [
+        569
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70084": {
+      "fired_scope_ids": [
+        593
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70085": {
+      "fired_scope_ids": [
+        582
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70086": {
+      "fired_scope_ids": [
+        578
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70088": {
+      "fired_scope_ids": [
+        597
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70089": {
+      "fired_scope_ids": [
+        623
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70090": {
+      "fired_scope_ids": [
+        620
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70091": {
+      "fired_scope_ids": [
+        611
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70092": {
+      "fired_scope_ids": [
+        649
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70093": {
+      "fired_scope_ids": [
+        625
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70094": {
+      "fired_scope_ids": [
+        642
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70095": {
+      "fired_scope_ids": [
+        636
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70096": {
+      "fired_scope_ids": [
+        644
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70097": {
+      "fired_scope_ids": [
+        658
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70098": {
+      "fired_scope_ids": [
+        653
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70099": {
+      "fired_scope_ids": [
+        662
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70100": {
+      "fired_scope_ids": [
+        690
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70101": {
+      "fired_scope_ids": [
+        667
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70102": {
+      "fired_scope_ids": [
+        695
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70103": {
+      "fired_scope_ids": [
+        681
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70105": {
+      "fired_scope_ids": [
+        739
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    },
+    "70106": {
+      "fired_scope_ids": [
+        720
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70107": {
+      "fired_scope_ids": [
+        715
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70109": {
+      "fired_scope_ids": [
+        741
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70110": {
+      "fired_scope_ids": [
+        733
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70113": {
+      "fired_scope_ids": [
+        785
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70114": {
+      "fired_scope_ids": [
+        755
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70118": {
+      "fired_scope_ids": [
+        779
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70120": {
+      "fired_scope_ids": [
+        827
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70121": {
+      "fired_scope_ids": [
+        807
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70122": {
+      "fired_scope_ids": [
+        850
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70123": {
+      "fired_scope_ids": [
+        813
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70124": {
+      "fired_scope_ids": [
+        909
+      ],
+      "interval_ms": 800,
+      "singleShot": true
+    },
+    "70128": {
+      "fired_scope_ids": [
+        834
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70129": {
+      "fired_scope_ids": [
+        838
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70130": {
+      "fired_scope_ids": [
+        848
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70131": {
+      "fired_scope_ids": [
+        854
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70134": {
+      "fired_scope_ids": [
+        858
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70135": {
+      "fired_scope_ids": [
+        864
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70136": {
+      "fired_scope_ids": [
+        871
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70137": {
+      "fired_scope_ids": [
+        878
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70138": {
+      "fired_scope_ids": [
+        882
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70139": {
+      "fired_scope_ids": [
+        890
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70140": {
+      "fired_scope_ids": [
+        893
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70141": {
+      "fired_scope_ids": [
+        897
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70142": {
+      "fired_scope_ids": [
+        901
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70143": {
+      "fired_scope_ids": [
+        903
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70144": {
+      "fired_scope_ids": [
+        917
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70145": {
+      "fired_scope_ids": [
+        919
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70146": {
+      "fired_scope_ids": [
+        983
+      ],
+      "interval_ms": 1000,
+      "singleShot": true
+    },
+    "70147": {
+      "fired_scope_ids": [
+        925
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70148": {
+      "fired_scope_ids": [
+        927
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70149": {
+      "fired_scope_ids": [
+        930
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70150": {
+      "fired_scope_ids": [
+        952
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70151": {
+      "fired_scope_ids": [
+        948
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70152": {
+      "fired_scope_ids": [
+        954
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70153": {
+      "fired_scope_ids": [
+        956
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70154": {
+      "fired_scope_ids": [
+        958
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70155": {
+      "fired_scope_ids": [
+        961
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70156": {
+      "fired_scope_ids": [
+        963
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70157": {
+      "fired_scope_ids": [
+        965
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70158": {
+      "fired_scope_ids": [
+        967
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70159": {
+      "fired_scope_ids": [
+        969
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70160": {
+      "fired_scope_ids": [
+        971
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70161": {
+      "fired_scope_ids": [
+        973
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70162": {
+      "fired_scope_ids": [
+        975
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70163": {
+      "fired_scope_ids": [
+        977
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70164": {
+      "fired_scope_ids": [
+        979
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70165": {
+      "fired_scope_ids": [
+        981
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70166": {
+      "fired_scope_ids": [
+        987
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70167": {
+      "fired_scope_ids": [
+        989
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70168": {
+      "fired_scope_ids": [
+        995
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70169": {
+      "fired_scope_ids": [
+        997
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70170": {
+      "fired_scope_ids": [
+        999
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70171": {
+      "fired_scope_ids": [
+        1001
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70172": {
+      "fired_scope_ids": [
+        1003
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70173": {
+      "fired_scope_ids": [
+        1005
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70174": {
+      "fired_scope_ids": [
+        1007
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70175": {
+      "fired_scope_ids": [
+        1009
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70176": {
+      "fired_scope_ids": [
+        1011
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70177": {
+      "fired_scope_ids": [
+        1013
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70178": {
+      "fired_scope_ids": [
+        1015
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70179": {
+      "fired_scope_ids": [
+        1017
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70180": {
+      "fired_scope_ids": [
+        1019
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70181": {
+      "fired_scope_ids": [
+        1021
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70182": {
+      "fired_scope_ids": [
+        1023
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70183": {
+      "fired_scope_ids": [
+        1025
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70184": {
+      "fired_scope_ids": [
+        1027
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70185": {
+      "fired_scope_ids": [
+        1029
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70186": {
+      "fired_scope_ids": [
+        1031
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70187": {
+      "fired_scope_ids": [
+        1033
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70188": {
+      "fired_scope_ids": [
+        1035
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70189": {
+      "fired_scope_ids": [
+        1037
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70190": {
+      "fired_scope_ids": [
+        1039
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70191": {
+      "fired_scope_ids": [
+        1041
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70192": {
+      "fired_scope_ids": [
+        1043
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70193": {
+      "fired_scope_ids": [
+        1045
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70194": {
+      "fired_scope_ids": [
+        1047
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70195": {
+      "fired_scope_ids": [
+        1049
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70196": {
+      "fired_scope_ids": [
+        1051
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70197": {
+      "fired_scope_ids": [
+        1053
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70198": {
+      "fired_scope_ids": [
+        1055
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70199": {
+      "fired_scope_ids": [
+        1057
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70200": {
+      "fired_scope_ids": [
+        1059
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70201": {
+      "fired_scope_ids": [
+        1061
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70202": {
+      "fired_scope_ids": [
+        1063
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70203": {
+      "fired_scope_ids": [
+        1065
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70204": {
+      "fired_scope_ids": [
+        1067
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70205": {
+      "fired_scope_ids": [
+        1069
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70206": {
+      "fired_scope_ids": [
+        1071
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    },
+    "70207": {
+      "fired_scope_ids": [
+        1073
+      ],
+      "interval_ms": 50,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "189": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          268
+        ]
+      ],
+      "res_chain": [
+        111
+      ]
+    },
+    "11714": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          388
+        ]
+      ],
+      "res_chain": [
+        123
+      ]
+    },
+    "11715": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          397
+        ]
+      ],
+      "res_chain": [
+        124
+      ]
+    },
+    "11716": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          443
+        ]
+      ],
+      "res_chain": [
+        125
+      ]
+    },
+    "11717": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          420
+        ]
+      ],
+      "res_chain": [
+        126
+      ]
+    },
+    "11718": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          486
+        ]
+      ],
+      "res_chain": [
+        127
+      ]
+    },
+    "11719": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          477
+        ]
+      ],
+      "res_chain": [
+        128
+      ]
+    },
+    "11720": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          468
+        ]
+      ],
+      "res_chain": [
+        129
+      ]
+    },
+    "11721": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          538
+        ]
+      ],
+      "res_chain": [
+        130
+      ]
+    },
+    "11722": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          532
+        ]
+      ],
+      "res_chain": [
+        131
+      ]
+    },
+    "11723": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          574
+        ]
+      ],
+      "res_chain": [
+        132
+      ]
+    },
+    "11735": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          602
+        ]
+      ],
+      "res_chain": [
+        135
+      ]
+    },
+    "11736": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          726
+        ]
+      ],
+      "res_chain": [
+        136
+      ]
+    },
+    "11741": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          672
+        ]
+      ],
+      "res_chain": [
+        140
+      ]
+    },
+    "11744": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          746
+        ]
+      ],
+      "res_chain": [
+        142
+      ]
+    },
+    "11747": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          704
+        ]
+      ],
+      "res_chain": [
+        144
+      ]
+    },
+    "11748": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          790
+        ]
+      ],
+      "res_chain": [
+        145
+      ]
+    },
+    "11749": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          770
+        ]
+      ],
+      "res_chain": [
+        146
+      ]
+    }
+  }
+}

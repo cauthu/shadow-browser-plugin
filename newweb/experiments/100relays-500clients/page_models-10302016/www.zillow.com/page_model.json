@@ -1,0 +1,862 @@
+{
+  "elements": {
+    "24": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 13,
+      "tag": "script"
+    },
+    "26": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "27": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "28": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "62": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 34,
+      "tag": "script"
+    },
+    "103": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 38,
+      "tag": "script"
+    },
+    "105": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 41,
+      "tag": "script"
+    },
+    "109": {
+      "tag": "body"
+    },
+    "137": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "1174": {
+      "event_handling_scopes": [
+        [
+          "load",
+          125
+        ]
+      ],
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "1262": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "1289": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "1373": {
+      "tag": "img"
+    },
+    "1424": {
+      "tag": "img"
+    },
+    "1473": {
+      "tag": "img"
+    },
+    "1518": {
+      "tag": "img"
+    },
+    "1563": {
+      "tag": "img"
+    },
+    "1608": {
+      "tag": "img"
+    },
+    "1670": {
+      "tag": "img"
+    },
+    "1719": {
+      "tag": "img"
+    },
+    "1769": {
+      "tag": "img"
+    },
+    "1818": {
+      "tag": "img"
+    },
+    "1867": {
+      "tag": "img"
+    },
+    "1916": {
+      "tag": "img"
+    },
+    "1978": {
+      "tag": "img"
+    },
+    "2027": {
+      "tag": "img"
+    },
+    "2077": {
+      "tag": "img"
+    },
+    "2126": {
+      "tag": "img"
+    },
+    "2175": {
+      "tag": "img"
+    },
+    "2224": {
+      "tag": "img"
+    },
+    "2284": {
+      "tag": "img"
+    },
+    "2333": {
+      "tag": "img"
+    },
+    "2382": {
+      "tag": "img"
+    },
+    "2431": {
+      "tag": "img"
+    },
+    "2480": {
+      "tag": "img"
+    },
+    "2529": {
+      "tag": "img"
+    },
+    "2557": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "2589": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "2621": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "2659": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "2706": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "2747": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "2791": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "3520": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 16,
+      "is_parser_blocking": true,
+      "run_scope_id": 60,
+      "tag": "script"
+    },
+    "3524": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 67,
+      "tag": "script"
+    },
+    "3528": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 70,
+      "tag": "script"
+    },
+    "3533": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 74,
+      "tag": "script"
+    },
+    "3537": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 17,
+      "is_parser_blocking": true,
+      "run_scope_id": 83,
+      "tag": "script"
+    },
+    "3692": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 87,
+      "tag": "script"
+    },
+    "3695": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 91,
+      "tag": "script"
+    },
+    "3697": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 94,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "13": [
+      "  /* [602.87, 603.11] scopeStart= 1477877044264.373047 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.24);"
+    ],
+    "34": [
+      "  /* [900.98, 903.36] scopeStart= 1477877044562.479980 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.38);"
+    ],
+    "38": [
+      "  /* [903.78, 904.24] scopeStart= 1477877044565.278076 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.46);"
+    ],
+    "41": [
+      "  /* [904.61, 907.04] scopeStart= 1477877044566.106934 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.43);"
+    ],
+    "60": [
+      "  /* [945.95, 952.57] scopeStart= 1477877044607.446045 type= ScriptControllerRunScriptScope */",
+      "  __msleep(6.62);"
+    ],
+    "67": [
+      "  /* [953.33, 954.03] scopeStart= 1477877044614.833984 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.70);"
+    ],
+    "70": [
+      "  /* [954.34, 954.83] scopeStart= 1477877044615.840820 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.08);",
+      "  __msleep(0.22);"
+    ],
+    "74": [
+      "  /* [955.11, 955.27] scopeStart= 1477877044616.609131 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.16);"
+    ],
+    "78": [
+      "  /* [957.2, 1041.81] scopeStart= 1477877044618.694092 type= RenderTreeUpdateScope */",
+      "  __msleep(7.67);",
+      "  fetch_res(19);",
+      "  __msleep(33.93);",
+      "  fetch_res(21);",
+      "  __msleep(43.01);"
+    ],
+    "79": [
+      "  /* [1042.11, 1042.23] scopeStart= 1477877044703.612061 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "83": [
+      "  /* [1146.63, 1175.18] scopeStart= 1477877044808.129150 type= ScriptControllerRunScriptScope */",
+      "  __msleep(22.56);",
+      "  __msleep(5.99);"
+    ],
+    "87": [
+      "  /* [1175.68, 1186.42] scopeStart= 1477877044837.176025 type= ScriptControllerRunScriptScope */",
+      "  __msleep(9.45);",
+      "  __msleep(0.08);",
+      "  __msleep(0.44);",
+      "  __msleep(0.77);"
+    ],
+    "91": [
+      "  /* [1186.65, 1187.17] scopeStart= 1477877044848.149170 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.52);"
+    ],
+    "94": [
+      "  /* [1187.43, 1188.31] scopeStart= 1477877044848.933838 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.72);",
+      "  __msleep(0.04);",
+      "  __msleep(0.10);",
+      "  __msleep(0.02);"
+    ],
+    "100": [
+      "  /* [1188.5, 1188.78] scopeStart= 1477877044850.003906 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.16);"
+    ],
+    "106": [
+      "  /* [1237.07, 1237.18] scopeStart= 1477877044898.564941 type= RenderTreeUpdateScope */",
+      "  __msleep(0.11);"
+    ],
+    "121": [
+      "  /* [1248.6, 1298.74] scopeStart= 1477877044910.094971 type= RenderTreeUpdateScope */",
+      "  __msleep(50.14);"
+    ],
+    "122": [
+      "  /* [1298.99, 1299.08] scopeStart= 1477877044960.491943 type= RenderTreeUpdateScope */",
+      "  __msleep(0.09);"
+    ],
+    "125": [
+      "  /* [1315.66, 1316.24] scopeStart= 1477877044977.158936 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.58);"
+    ],
+    "128": [
+      "  /* [1316.31, 1316.65] scopeStart= 1477877044977.812012 type= DOMTimerFiredScope */",
+      "  __msleep(0.10);",
+      "  __msleep(0.11);",
+      "  __msleep(0.05);",
+      "  sched_render_update_scope(139);",
+      "  __msleep(0.08);"
+    ],
+    "132": [
+      "  /* [1317.36, 1317.38] scopeStart= 1477877044978.864014 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.02);"
+    ],
+    "133": [
+      "  /* [1317.43, 1317.74] scopeStart= 1477877044978.928955 type= DocOnLoadEventScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.18);"
+    ],
+    "139": [
+      "  /* [1317.77, 1317.82] scopeStart= 1477877044979.273193 type= RenderTreeUpdateScope */",
+      "  __msleep(0.05);"
+    ],
+    "140": [
+      "  /* [1318.44, 1318.6] scopeStart= 1477877044979.937012 type= RenderTreeUpdateScope */",
+      "  __msleep(0.16);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 78,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        202,
+        24
+      ],
+      [
+        227,
+        26
+      ],
+      [
+        252,
+        27
+      ],
+      [
+        367,
+        28
+      ],
+      [
+        1167,
+        62
+      ],
+      [
+        1185,
+        103
+      ],
+      [
+        1643,
+        105
+      ],
+      [
+        1670,
+        109
+      ],
+      [
+        2442,
+        137
+      ],
+      [
+        6644,
+        1174
+      ],
+      [
+        7643,
+        1262
+      ],
+      [
+        7868,
+        1289
+      ],
+      [
+        8862,
+        1373
+      ],
+      [
+        9524,
+        1424
+      ],
+      [
+        10075,
+        1473
+      ],
+      [
+        10608,
+        1518
+      ],
+      [
+        11133,
+        1563
+      ],
+      [
+        11664,
+        1608
+      ],
+      [
+        12408,
+        1670
+      ],
+      [
+        12959,
+        1719
+      ],
+      [
+        13627,
+        1769
+      ],
+      [
+        14183,
+        1818
+      ],
+      [
+        14735,
+        1867
+      ],
+      [
+        15287,
+        1916
+      ],
+      [
+        16031,
+        1978
+      ],
+      [
+        16582,
+        2027
+      ],
+      [
+        17251,
+        2077
+      ],
+      [
+        17806,
+        2126
+      ],
+      [
+        18359,
+        2175
+      ],
+      [
+        18911,
+        2224
+      ],
+      [
+        19546,
+        2284
+      ],
+      [
+        20086,
+        2333
+      ],
+      [
+        20626,
+        2382
+      ],
+      [
+        21169,
+        2431
+      ],
+      [
+        21718,
+        2480
+      ],
+      [
+        22262,
+        2529
+      ],
+      [
+        22631,
+        2557
+      ],
+      [
+        22892,
+        2589
+      ],
+      [
+        23137,
+        2621
+      ],
+      [
+        23457,
+        2659
+      ],
+      [
+        23894,
+        2706
+      ],
+      [
+        24273,
+        2747
+      ],
+      [
+        24660,
+        2791
+      ],
+      [
+        28540,
+        3520
+      ],
+      [
+        30892,
+        3524
+      ],
+      [
+        31075,
+        3528
+      ],
+      [
+        31122,
+        3533
+      ],
+      [
+        31186,
+        3537
+      ],
+      [
+        33554,
+        3692
+      ],
+      [
+        34111,
+        3695
+      ],
+      [
+        35092,
+        3697
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        100
+      ],
+      [
+        "load",
+        133
+      ],
+      [
+        "readystatechange_complete",
+        132
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "www.zillow.com",
+    "www.zillowstatic.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.zillow.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 35116,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 9.42999999999995,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 408,
+          "resp_body_size": 13791,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 4.739999999999895,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 407,
+          "resp_body_size": 7390,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 12.389999999999986,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 875,
+          "resp_body_size": 18425,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillow.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 556,
+          "resp_body_size": 1023,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 457,
+          "resp_body_size": 259329,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 407,
+          "resp_body_size": 51168,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 39413,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 28832,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 38785,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 384,
+          "resp_body_size": 685453,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 22140,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 14804,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 379,
+          "resp_body_size": 24123,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 382,
+          "resp_body_size": 14887,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 27933,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 506,
+          "resp_body_size": 18321,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.zillowstatic.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 918,
+          "resp_body_size": 3781,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70002": {
+      "fired_scope_ids": [
+        128
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    }
+  },
+  "xhrs": {}
+}

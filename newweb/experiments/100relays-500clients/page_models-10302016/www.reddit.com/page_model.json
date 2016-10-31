@@ -1,0 +1,1465 @@
+{
+  "elements": {
+    "28": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "29": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "30": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "34": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 32,
+      "tag": "script"
+    },
+    "131": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 56,
+      "tag": "script"
+    },
+    "135": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 59,
+      "tag": "script"
+    },
+    "137": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 62,
+      "tag": "script"
+    },
+    "140": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 66,
+      "tag": "script"
+    },
+    "143": {
+      "tag": "body"
+    },
+    "145": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 70,
+      "tag": "script"
+    },
+    "154": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 77,
+      "tag": "script"
+    },
+    "691": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 87,
+      "tag": "script"
+    },
+    "742": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "744": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "1045": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "1143": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "1241": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "1336": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 94,
+      "tag": "script"
+    },
+    "1384": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "1435": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "1486": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "1537": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "1587": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "1639": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "1689": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "1740": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1895": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1946": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "2047": {
+      "initial_resInstNum": 21,
+      "tag": "img"
+    },
+    "2147": {
+      "initial_resInstNum": 22,
+      "tag": "img"
+    },
+    "2198": {
+      "initial_resInstNum": 23,
+      "tag": "img"
+    },
+    "2249": {
+      "initial_resInstNum": 24,
+      "tag": "img"
+    },
+    "2299": {
+      "initial_resInstNum": 25,
+      "tag": "img"
+    },
+    "2350": {
+      "initial_resInstNum": 26,
+      "tag": "img"
+    },
+    "2452": {
+      "initial_resInstNum": 27,
+      "tag": "img"
+    },
+    "2558": {
+      "initial_resInstNum": 28,
+      "tag": "img"
+    },
+    "2611": {
+      "initial_resInstNum": 29,
+      "tag": "img"
+    },
+    "2752": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 105,
+      "tag": "script"
+    },
+    "2758": {
+      "initial_resInstNum": 30,
+      "tag": "img"
+    },
+    "2765": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 31,
+      "is_parser_blocking": true,
+      "run_scope_id": 111,
+      "tag": "script"
+    },
+    "2768": {
+      "event_handling_scopes": [
+        [
+          "load",
+          323
+        ]
+      ],
+      "tag": "img"
+    },
+    "2985": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 174,
+      "tag": "script"
+    },
+    "2991": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 45,
+      "is_parser_blocking": true,
+      "run_scope_id": 186,
+      "tag": "script"
+    },
+    "3018": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 201,
+      "tag": "script"
+    },
+    "3022": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 47,
+      "is_parser_blocking": true,
+      "run_scope_id": 221,
+      "tag": "script"
+    },
+    "3038": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 49,
+      "is_parser_blocking": true,
+      "run_scope_id": 301,
+      "tag": "script"
+    },
+    "3098": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 249,
+      "tag": "script"
+    },
+    "3101": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 48,
+      "is_parser_blocking": true,
+      "run_scope_id": 261,
+      "tag": "script"
+    },
+    "3129": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 305,
+      "tag": "script"
+    },
+    "3168": {
+      "tag": "img"
+    },
+    "3205": {
+      "tag": "img"
+    },
+    "3206": {
+      "tag": "img"
+    },
+    "3221": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 368,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "32": [
+      "  /* [4412.18, 4507.91] scopeStart= 1477877060984.015869 type= ScriptControllerRunScriptScope */",
+      "  __msleep(58.26);",
+      "  __msleep(37.47);"
+    ],
+    "56": [
+      "  /* [4508.36, 4512.25] scopeStart= 1477877061080.198975 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.89);"
+    ],
+    "59": [
+      "  /* [4512.64, 4512.77] scopeStart= 1477877061084.482910 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "62": [
+      "  /* [4513.04, 4513.86] scopeStart= 1477877061084.881104 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.26);",
+      "  __msleep(0.21);",
+      "  __msleep(0.35);"
+    ],
+    "66": [
+      "  /* [4514.12, 4514.76] scopeStart= 1477877061085.962158 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.42);",
+      "  __msleep(0.06);",
+      "  __msleep(0.16);"
+    ],
+    "70": [
+      "  /* [4515.1, 4517.32] scopeStart= 1477877061086.937012 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);",
+      "  __msleep(2.07);"
+    ],
+    "77": [
+      "  /* [4517.57, 4517.89] scopeStart= 1477877061089.411133 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.07);",
+      "  __msleep(0.09);"
+    ],
+    "87": [
+      "  /* [4522.35, 4522.57] scopeStart= 1477877061094.193848 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.22);"
+    ],
+    "94": [
+      "  /* [4528.95, 4633.33] scopeStart= 1477877061100.784912 type= ScriptControllerRunScriptScope */",
+      "  __msleep(13.73);",
+      "  fetch_res(34);",
+      "  __msleep(7.77);",
+      "  fetch_res(35);",
+      "  __msleep(23.35);",
+      "  fetch_res(36);",
+      "  __msleep(55.99);",
+      "  __msleep(0.19);",
+      "  send_xhr(1340);",
+      "  __msleep(3.04);",
+      "  __msleep(0.31);"
+    ],
+    "105": [
+      "  /* [4647.03, 4647.2] scopeStart= 1477877061218.869873 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);"
+    ],
+    "111": [
+      "  /* [4650.09, 4678.19] scopeStart= 1477877061221.927002 type= ScriptControllerRunScriptScope */",
+      "  __msleep(28.10);"
+    ],
+    "116": [
+      "  /* [4678.52, 4827.61] scopeStart= 1477877061250.356934 type= EventTargetInvokingListenersScope */",
+      "  __msleep(14.39);",
+      "  fetch_res(38);",
+      "  __msleep(49.23);",
+      "  add_elem(2768);",
+      "  __msleep(0.11);",
+      "  set_elem_res(2768, 41);",
+      "  __msleep(3.37);",
+      "  __msleep(1.64);",
+      "  __msleep(1.37);",
+      "  __msleep(4.85);",
+      "  send_xhr(2769);",
+      "  __msleep(18.08);",
+      "  __msleep(0.29);",
+      "  __msleep(0.11);",
+      "  __msleep(3.24);",
+      "  fetch_res(40);",
+      "  __msleep(26.88);",
+      "  __msleep(1.12);",
+      "  __msleep(3.15);",
+      "  __msleep(8.85);",
+      "  sched_render_update_scope(147);",
+      "  __msleep(12.21);",
+      "  fetch_res(41);",
+      "  __msleep(0.20);"
+    ],
+    "147": [
+      "  /* [4827.62, 4832.06] scopeStart= 1477877061399.462891 type= RenderTreeUpdateScope */",
+      "  __msleep(4.44);"
+    ],
+    "151": [
+      "  /* [4855.29, 4855.71] scopeStart= 1477877061427.125977 type= DOMTimerFiredScope */",
+      "  __msleep(0.33);",
+      "  sched_render_update_scope(156);",
+      "  __msleep(0.09);"
+    ],
+    "156": [
+      "  /* [4858.11, 4858.28] scopeStart= 1477877061429.953125 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "174": [
+      "  /* [4931.47, 4931.6] scopeStart= 1477877061503.304932 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "186": [
+      "  /* [5006.58, 5012.44] scopeStart= 1477877061578.417969 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.59);",
+      "  __msleep(4.27);"
+    ],
+    "201": [
+      "  /* [5049.17, 5049.81] scopeStart= 1477877061621.004150 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.23);",
+      "  __msleep(0.25);",
+      "  __msleep(0.16);"
+    ],
+    "221": [
+      "  /* [5154.11, 5173.45] scopeStart= 1477877061725.950928 type= ScriptControllerRunScriptScope */",
+      "  __msleep(10.62);",
+      "  __msleep(8.07);",
+      "  __msleep(0.65);"
+    ],
+    "249": [
+      "  /* [5173.76, 5173.87] scopeStart= 1477877061745.600830 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.11);"
+    ],
+    "256": [
+      "  /* [5174.99, 5176.13] scopeStart= 1477877061746.833984 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.14);"
+    ],
+    "261": [
+      "  /* [5176.7, 5178.85] scopeStart= 1477877061748.541992 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.15);"
+    ],
+    "301": [
+      "  /* [5208.67, 5210.59] scopeStart= 1477877061780.505859 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.92);"
+    ],
+    "305": [
+      "  /* [5210.94, 5211.72] scopeStart= 1477877061782.776123 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.55);",
+      "  __msleep(0.07);",
+      "  __msleep(0.16);"
+    ],
+    "322": [
+      "  /* [5489.39, 5489.43] scopeStart= 1477877062061.229004 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "323": [
+      "  /* [5489.49, 5491.43] scopeStart= 1477877062061.332031 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.94);"
+    ],
+    "326": [
+      "  /* [5491.46, 5498.07] scopeStart= 1477877062063.303955 type= DocOnLoadEventScope */",
+      "  __msleep(6.61);"
+    ],
+    "332": [
+      "  /* [5802.62, 5810.5] scopeStart= 1477877062374.455811 type= DOMTimerFiredScope */",
+      "  __msleep(2.42);",
+      "  sched_render_update_scope(334);",
+      "  __msleep(5.46);"
+    ],
+    "334": [
+      "  /* [5810.56, 5810.79] scopeStart= 1477877062382.395020 type= RenderTreeUpdateScope */",
+      "  __msleep(0.23);"
+    ],
+    "339": [
+      "  /* [8806.07, 8837.76] scopeStart= 1477877065377.911133 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.31);",
+      "  __msleep(1.84);",
+      "  add_elem(3168);",
+      "  __msleep(0.05);",
+      "  set_elem_res(3168, 50);",
+      "  __msleep(0.12);",
+      "  __msleep(3.29);",
+      "  __msleep(4.17);",
+      "  fetch_res(50);",
+      "  __msleep(3.53);",
+      "  __msleep(3.71);",
+      "  add_elem(3205);",
+      "  __msleep(0.21);",
+      "  set_elem_res(3205, 52);",
+      "  __msleep(0.31);",
+      "  add_elem(3206);",
+      "  __msleep(0.19);",
+      "  set_elem_res(3206, 53);",
+      "  __msleep(11.79);",
+      "  sched_render_update_scope(361);",
+      "  __msleep(1.54);",
+      "  fetch_res(52);",
+      "  __msleep(0.41);",
+      "  fetch_res(53);",
+      "  __msleep(0.22);"
+    ],
+    "361": [
+      "  /* [8838.21, 8838.33] scopeStart= 1477877065410.052002 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "368": [
+      "  /* [8996.15, 8997.21] scopeStart= 1477877065567.987061 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.24);",
+      "  __msleep(0.55);",
+      "  __msleep(0.27);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        229,
+        28
+      ],
+      [
+        248,
+        29
+      ],
+      [
+        269,
+        30
+      ],
+      [
+        298,
+        34
+      ],
+      [
+        923,
+        131
+      ],
+      [
+        974,
+        135
+      ],
+      [
+        1131,
+        137
+      ],
+      [
+        1251,
+        140
+      ],
+      [
+        1261,
+        143
+      ],
+      [
+        1370,
+        145
+      ],
+      [
+        1420,
+        154
+      ],
+      [
+        4722,
+        691
+      ],
+      [
+        5019,
+        742
+      ],
+      [
+        5044,
+        744
+      ],
+      [
+        8062,
+        1045
+      ],
+      [
+        9142,
+        1143
+      ],
+      [
+        10131,
+        1241
+      ],
+      [
+        10825,
+        1336
+      ],
+      [
+        11332,
+        1384
+      ],
+      [
+        12081,
+        1435
+      ],
+      [
+        12820,
+        1486
+      ],
+      [
+        13428,
+        1537
+      ],
+      [
+        14037,
+        1587
+      ],
+      [
+        14682,
+        1639
+      ],
+      [
+        15271,
+        1689
+      ],
+      [
+        15961,
+        1740
+      ],
+      [
+        17738,
+        1895
+      ],
+      [
+        18418,
+        1946
+      ],
+      [
+        19627,
+        2047
+      ],
+      [
+        20821,
+        2147
+      ],
+      [
+        21425,
+        2198
+      ],
+      [
+        22107,
+        2249
+      ],
+      [
+        22678,
+        2299
+      ],
+      [
+        23391,
+        2350
+      ],
+      [
+        24584,
+        2452
+      ],
+      [
+        25646,
+        2558
+      ],
+      [
+        26314,
+        2611
+      ],
+      [
+        27315,
+        2752
+      ],
+      [
+        29055,
+        2758
+      ],
+      [
+        29109,
+        2765
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        116
+      ],
+      [
+        "load",
+        326
+      ],
+      [
+        "readystatechange_complete",
+        322
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "b.thumbs.redditmedia.com",
+    "events.redditmedia.com",
+    "pixel.redditmedia.com",
+    "reddit.com",
+    "www.reddit.com",
+    "www.redditmedia.com",
+    "www.redditstatic.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.reddit.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 29112,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 37.67000000000007,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 84126,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 0.36999999999989086,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 381,
+          "resp_body_size": 761,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 0.0999999999994543,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 525,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 372,
+          "resp_body_size": 78313,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 2337,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 2009,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 2849,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 4637,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 4215,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 9982,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 7238,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 7203,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 8980,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5400,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 10967,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5465,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5021,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 3813,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 7151,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 4803,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5571,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5083,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 2937,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 4375,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 2896,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 5365,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 4355,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 8416,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "reddit.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 400,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 47827,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "33": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 436,
+          "resp_body_size": 613,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 405,
+          "resp_body_size": 373,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 417,
+          "resp_body_size": 53233,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 400,
+          "resp_body_size": 1428,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.reddit.com",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 787,
+          "resp_body_size": 2949,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 419,
+          "resp_body_size": 4230,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "events.redditmedia.com",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1603,
+          "resp_body_size": 96,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "40": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 432,
+          "resp_body_size": 1032,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pixel.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 568,
+          "resp_body_size": 133,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 332,
+          "resp_body_size": 2674,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "46": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 951,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 397,
+          "resp_body_size": 33333,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 4587,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.redditstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 327,
+          "resp_body_size": 2620,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "b.thumbs.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 12620,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 423,
+          "resp_body_size": 569,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pixel.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 471,
+          "resp_body_size": 133,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "pixel.redditmedia.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 1050,
+          "resp_body_size": 415,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70002": {
+      "fired_scope_ids": [
+        151
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70008": {
+      "fired_scope_ids": [
+        332
+      ],
+      "interval_ms": 999,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "1340": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          339
+        ]
+      ],
+      "res_chain": [
+        37
+      ]
+    },
+    "2769": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          256
+        ]
+      ],
+      "res_chain": [
+        39
+      ]
+    }
+  }
+}

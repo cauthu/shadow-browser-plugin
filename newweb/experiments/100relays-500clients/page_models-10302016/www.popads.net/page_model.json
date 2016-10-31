@@ -1,0 +1,876 @@
+{
+  "elements": {
+    "18": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "26": {
+      "tag": "body"
+    },
+    "28": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 3,
+      "is_parser_blocking": true,
+      "run_scope_id": 26,
+      "tag": "script"
+    },
+    "80": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 55,
+      "tag": "script"
+    },
+    "89": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "98": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "104": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "109": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "115": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "120": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "126": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "131": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "137": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "142": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "148": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "153": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "159": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "164": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "170": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "220": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "230": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "239": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "250": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "293": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "427": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "460": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 66,
+      "tag": "script"
+    },
+    "466": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 13,
+      "is_parser_blocking": true,
+      "run_scope_id": 71,
+      "tag": "script"
+    },
+    "469": {
+      "tag": "img"
+    },
+    "473": {
+      "tag": "img"
+    },
+    "476": {
+      "tag": "img"
+    },
+    "480": {
+      "tag": "img"
+    },
+    "483": {
+      "tag": "img"
+    },
+    "486": {
+      "tag": "img"
+    },
+    "490": {
+      "tag": "img"
+    },
+    "493": {
+      "tag": "img"
+    },
+    "496": {
+      "tag": "img"
+    },
+    "499": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "17": [
+      "  /* [1838.05, 1838.96] scopeStart= 1477877454700.558838 type= RenderTreeUpdateScope */",
+      "  __msleep(0.91);"
+    ],
+    "26": [
+      "  /* [1873.61, 1909.9] scopeStart= 1477877454736.119141 type= ScriptControllerRunScriptScope */",
+      "  __msleep(18.96);",
+      "  __msleep(10.39);",
+      "  __msleep(5.83);",
+      "  __msleep(1.11);"
+    ],
+    "55": [
+      "  /* [1910.61, 1912.04] scopeStart= 1477877454773.124023 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.37);",
+      "  __msleep(0.06);"
+    ],
+    "66": [
+      "  /* [1919.98, 1920.71] scopeStart= 1477877454782.490967 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.31);",
+      "  __msleep(0.30);",
+      "  __msleep(0.12);"
+    ],
+    "71": [
+      "  /* [1921.4, 1926.55] scopeStart= 1477877454783.909180 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.49);",
+      "  add_elem(469);",
+      "  __msleep(0.06);",
+      "  set_elem_res(469, 14);",
+      "  __msleep(0.58);",
+      "  fetch_res(14);",
+      "  __msleep(0.39);",
+      "  add_elem(473);",
+      "  __msleep(0.03);",
+      "  set_elem_res(473, 14);",
+      "  __msleep(0.10);",
+      "  add_elem(476);",
+      "  __msleep(0.05);",
+      "  set_elem_res(476, 15);",
+      "  __msleep(0.51);",
+      "  fetch_res(15);",
+      "  __msleep(0.28);",
+      "  add_elem(480);",
+      "  __msleep(0.03);",
+      "  set_elem_res(480, 14);",
+      "  __msleep(0.11);",
+      "  add_elem(483);",
+      "  __msleep(0.02);",
+      "  set_elem_res(483, 15);",
+      "  __msleep(0.10);",
+      "  add_elem(486);",
+      "  __msleep(0.04);",
+      "  set_elem_res(486, 16);",
+      "  __msleep(0.53);",
+      "  fetch_res(16);",
+      "  __msleep(0.27);",
+      "  add_elem(490);",
+      "  __msleep(0.03);",
+      "  set_elem_res(490, 14);",
+      "  __msleep(0.10);",
+      "  add_elem(493);",
+      "  __msleep(0.03);",
+      "  set_elem_res(493, 15);",
+      "  __msleep(0.10);",
+      "  add_elem(496);",
+      "  __msleep(0.02);",
+      "  set_elem_res(496, 16);",
+      "  __msleep(0.10);",
+      "  add_elem(499);",
+      "  __msleep(0.04);",
+      "  set_elem_res(499, 17);",
+      "  __msleep(0.56);",
+      "  fetch_res(17);",
+      "  __msleep(0.58);"
+    ],
+    "97": [
+      "  /* [1927.09, 2020.0] scopeStart= 1477877454789.604004 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.76);",
+      "  fetch_res(18);",
+      "  __msleep(0.91);",
+      "  fetch_res(19);",
+      "  __msleep(0.36);",
+      "  fetch_res(20);",
+      "  __msleep(0.36);",
+      "  fetch_res(21);",
+      "  __msleep(0.54);",
+      "  fetch_res(22);",
+      "  __msleep(0.33);",
+      "  fetch_res(23);",
+      "  __msleep(0.34);",
+      "  fetch_res(24);",
+      "  __msleep(0.44);",
+      "  fetch_res(25);",
+      "  __msleep(9.06);",
+      "  fetch_res(26);",
+      "  __msleep(0.38);",
+      "  fetch_res(27);",
+      "  __msleep(0.44);",
+      "  fetch_res(28);",
+      "  __msleep(0.46);",
+      "  fetch_res(29);",
+      "  __msleep(0.39);",
+      "  fetch_res(30);",
+      "  __msleep(0.43);",
+      "  fetch_res(31);",
+      "  __msleep(76.71);"
+    ],
+    "157": [
+      "  /* [2720.16, 2720.2] scopeStart= 1477877455582.669922 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "158": [
+      "  /* [2720.26, 2721.02] scopeStart= 1477877455582.768066 type= DocOnLoadEventScope */",
+      "  __msleep(0.76);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 17,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        137,
+        18
+      ],
+      [
+        303,
+        26
+      ],
+      [
+        368,
+        28
+      ],
+      [
+        431,
+        80
+      ],
+      [
+        502,
+        89
+      ],
+      [
+        580,
+        98
+      ],
+      [
+        656,
+        104
+      ],
+      [
+        724,
+        109
+      ],
+      [
+        807,
+        115
+      ],
+      [
+        875,
+        120
+      ],
+      [
+        957,
+        126
+      ],
+      [
+        1025,
+        131
+      ],
+      [
+        1108,
+        137
+      ],
+      [
+        1176,
+        142
+      ],
+      [
+        1254,
+        148
+      ],
+      [
+        1322,
+        153
+      ],
+      [
+        1406,
+        159
+      ],
+      [
+        1473,
+        164
+      ],
+      [
+        1554,
+        170
+      ],
+      [
+        1924,
+        220
+      ],
+      [
+        2040,
+        230
+      ],
+      [
+        2126,
+        239
+      ],
+      [
+        2238,
+        250
+      ],
+      [
+        2541,
+        293
+      ],
+      [
+        3514,
+        427
+      ],
+      [
+        3816,
+        460
+      ],
+      [
+        3898,
+        466
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        97
+      ],
+      [
+        "load",
+        158
+      ],
+      [
+        "readystatechange_complete",
+        157
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "popads-trustguard.cdn77-ssl.net",
+    "static.popads.net",
+    "www.popads.net"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 3904,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 1.7100000000000364,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 2455,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 30269,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 364,
+          "resp_body_size": 1627,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 6055,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 456,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 396,
+          "resp_body_size": 448,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 397,
+          "resp_body_size": 676,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 398,
+          "resp_body_size": 695,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 765,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 778,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 1689,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 367,
+          "resp_body_size": 942,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "popads-trustguard.cdn77-ssl.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 3633,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "popads-trustguard.cdn77-ssl.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 3533,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "popads-trustguard.cdn77-ssl.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 393,
+          "resp_body_size": 3614,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "popads-trustguard.cdn77-ssl.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 394,
+          "resp_body_size": 3519,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 584,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 419,
+          "resp_body_size": 493,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 423,
+          "resp_body_size": 1706,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 422,
+          "resp_body_size": 63595,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 423,
+          "resp_body_size": 1131,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 426,
+          "resp_body_size": 510,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 422,
+          "resp_body_size": 375,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 420,
+          "resp_body_size": 403,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 410,
+          "resp_body_size": 2512,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 10757,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 415,
+          "resp_body_size": 10913,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 414,
+          "resp_body_size": 12229,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 416,
+          "resp_body_size": 12786,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.popads.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 411,
+          "resp_body_size": 1697,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {}
+}

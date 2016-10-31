@@ -1,0 +1,1437 @@
+{
+  "elements": {
+    "13": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 13,
+      "tag": "script"
+    },
+    "87": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 16,
+      "tag": "script"
+    },
+    "90": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "92": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 3,
+      "is_parser_blocking": true,
+      "run_scope_id": 29,
+      "tag": "script"
+    },
+    "176": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 50,
+      "tag": "script"
+    },
+    "178": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 56,
+      "tag": "script"
+    },
+    "182": {
+      "initial_resInstNum": 6,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "184": {
+      "initial_resInstNum": 7,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "186": {
+      "initial_resInstNum": 8,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "188": {
+      "initial_resInstNum": 9,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "190": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 73,
+      "tag": "script"
+    },
+    "194": {
+      "tag": "body"
+    },
+    "201": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 77,
+      "tag": "script"
+    },
+    "433": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 10,
+      "is_parser_blocking": true,
+      "run_scope_id": 84,
+      "tag": "script"
+    },
+    "435": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 11,
+      "is_parser_blocking": true,
+      "run_scope_id": 95,
+      "tag": "script"
+    },
+    "437": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 12,
+      "is_parser_blocking": true,
+      "run_scope_id": 106,
+      "tag": "script"
+    },
+    "440": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 110,
+      "tag": "script"
+    },
+    "455": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 13,
+      "is_parser_blocking": true,
+      "run_scope_id": 119,
+      "tag": "script"
+    },
+    "457": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 14,
+      "is_parser_blocking": true,
+      "run_scope_id": 131,
+      "tag": "script"
+    },
+    "459": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 15,
+      "is_parser_blocking": true,
+      "run_scope_id": 136,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "13": [
+      "  /* [509.02, 509.38] scopeStart= 1477878018522.701904 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.36);"
+    ],
+    "16": [
+      "  /* [510.74, 511.04] scopeStart= 1477878018524.414062 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.30);"
+    ],
+    "29": [
+      "  /* [857.85, 906.57] scopeStart= 1477878018871.529053 type= ScriptControllerRunScriptScope */",
+      "  __msleep(46.58);",
+      "  __msleep(2.14);"
+    ],
+    "50": [
+      "  /* [907.22, 907.98] scopeStart= 1477878018920.903076 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.76);"
+    ],
+    "56": [
+      "  /* [909.24, 924.49] scopeStart= 1477878018922.916016 type= ScriptControllerRunScriptScope */",
+      "  __msleep(14.47);",
+      "  send_xhr(180);",
+      "  __msleep(0.78);"
+    ],
+    "73": [
+      "  /* [930.38, 930.59] scopeStart= 1477878018944.061035 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.03);"
+    ],
+    "77": [
+      "  /* [931.0, 931.66] scopeStart= 1477878018944.677002 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.41);",
+      "  __msleep(0.08);",
+      "  __msleep(0.17);"
+    ],
+    "84": [
+      "  /* [935.1, 936.31] scopeStart= 1477878018948.782959 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.21);"
+    ],
+    "88": [
+      "  /* [936.88, 943.76] scopeStart= 1477878018950.557861 type= RenderTreeUpdateScope */",
+      "  __msleep(6.64);",
+      "  fetch_res(60);",
+      "  __msleep(0.24);"
+    ],
+    "89": [
+      "  /* [943.85, 944.92] scopeStart= 1477878018957.524902 type= RenderTreeUpdateScope */",
+      "  __msleep(1.07);"
+    ],
+    "91": [
+      "  /* [983.6, 984.7] scopeStart= 1477878018997.276123 type= RenderTreeUpdateScope */",
+      "  __msleep(1.10);"
+    ],
+    "95": [
+      "  /* [988.62, 1008.77] scopeStart= 1477878019002.299072 type= ScriptControllerRunScriptScope */",
+      "  __msleep(20.15);"
+    ],
+    "100": [
+      "  /* [1009.96, 1010.31] scopeStart= 1477878019023.641113 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.09);",
+      "  __msleep(0.13);"
+    ],
+    "106": [
+      "  /* [1010.58, 1013.61] scopeStart= 1477878019024.255127 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.03);"
+    ],
+    "110": [
+      "  /* [1013.9, 1014.56] scopeStart= 1477878019027.579102 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.24);",
+      "  __msleep(0.05);",
+      "  __msleep(0.09);",
+      "  __msleep(0.07);",
+      "  __msleep(0.07);",
+      "  __msleep(0.04);",
+      "  __msleep(0.10);"
+    ],
+    "119": [
+      "  /* [1015.25, 1015.46] scopeStart= 1477878019028.929932 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.21);"
+    ],
+    "124": [
+      "  /* [1016.23, 1016.37] scopeStart= 1477878019029.911133 type= RenderTreeUpdateScope */",
+      "  __msleep(0.14);"
+    ],
+    "125": [
+      "  /* [1016.56, 1017.61] scopeStart= 1477878019030.234131 type= RenderTreeUpdateScope */",
+      "  __msleep(1.05);"
+    ],
+    "131": [
+      "  /* [1027.92, 1028.67] scopeStart= 1477878019041.600830 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.75);"
+    ],
+    "136": [
+      "  /* [1029.21, 1029.56] scopeStart= 1477878019042.890137 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.35);"
+    ],
+    "141": [
+      "  /* [1029.78, 1044.77] scopeStart= 1477878019043.462158 type= EventTargetInvokingListenersScope */",
+      "  __msleep(5.91);",
+      "  send_xhr(464);",
+      "  __msleep(2.15);",
+      "  send_xhr(466);",
+      "  __msleep(1.19);",
+      "  send_xhr(468);",
+      "  __msleep(5.74);"
+    ],
+    "155": [
+      "  /* [1592.57, 1592.61] scopeStart= 1477878019606.249023 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "156": [
+      "  /* [1592.66, 1592.68] scopeStart= 1477878019606.338867 type= DocOnLoadEventScope */",
+      "  __msleep(0.02);"
+    ],
+    "159": [
+      "  /* [1595.06, 1596.6] scopeStart= 1477878019608.740967 type= RenderTreeUpdateScope */",
+      "  __msleep(1.54);"
+    ],
+    "165": [
+      "  /* [1642.12, 1705.18] scopeStart= 1477878019655.795166 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(58.42);",
+      "  sched_render_update_scope(281);",
+      "  __msleep(3.47);",
+      "  send_xhr(718);",
+      "  __msleep(1.17);"
+    ],
+    "183": [
+      "  /* [1707.31, 1725.92] scopeStart= 1477878019720.993896 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(17.69);",
+      "  send_xhr(1159);",
+      "  __msleep(0.92);"
+    ],
+    "195": [
+      "  /* [1726.6, 1809.99] scopeStart= 1477878019740.278076 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(82.69);",
+      "  send_xhr(1901);",
+      "  __msleep(0.70);"
+    ],
+    "281": [
+      "  /* [1810.17, 1824.75] scopeStart= 1477878019823.854980 type= RenderTreeUpdateScope */",
+      "  __msleep(0.44);",
+      "  fetch_res(61);",
+      "  __msleep(5.20);",
+      "  fetch_res(68);",
+      "  __msleep(0.59);",
+      "  fetch_res(69);",
+      "  __msleep(0.31);",
+      "  fetch_res(70);",
+      "  __msleep(0.28);",
+      "  fetch_res(71);",
+      "  __msleep(0.28);",
+      "  fetch_res(72);",
+      "  __msleep(0.28);",
+      "  fetch_res(73);",
+      "  __msleep(0.29);",
+      "  fetch_res(74);",
+      "  __msleep(0.28);",
+      "  fetch_res(75);",
+      "  __msleep(0.29);",
+      "  fetch_res(76);",
+      "  __msleep(0.30);",
+      "  fetch_res(77);",
+      "  __msleep(0.30);",
+      "  fetch_res(78);",
+      "  __msleep(0.31);",
+      "  fetch_res(79);",
+      "  __msleep(0.30);",
+      "  fetch_res(80);",
+      "  __msleep(0.30);",
+      "  fetch_res(81);",
+      "  __msleep(0.30);",
+      "  fetch_res(82);",
+      "  __msleep(0.29);",
+      "  fetch_res(83);",
+      "  __msleep(0.31);",
+      "  fetch_res(84);",
+      "  __msleep(0.31);",
+      "  fetch_res(85);",
+      "  __msleep(0.30);",
+      "  fetch_res(86);",
+      "  __msleep(0.30);",
+      "  fetch_res(87);",
+      "  __msleep(0.34);",
+      "  fetch_res(88);",
+      "  __msleep(0.61);",
+      "  fetch_res(89);",
+      "  __msleep(0.34);",
+      "  fetch_res(90);",
+      "  __msleep(0.30);",
+      "  fetch_res(91);",
+      "  __msleep(0.28);",
+      "  fetch_res(92);",
+      "  __msleep(0.28);",
+      "  fetch_res(93);",
+      "  __msleep(0.32);",
+      "  fetch_res(94);",
+      "  __msleep(0.55);"
+    ],
+    "282": [
+      "  /* [1824.88, 1831.22] scopeStart= 1477878019838.562012 type= RenderTreeUpdateScope */",
+      "  __msleep(6.34);"
+    ],
+    "284": [
+      "  /* [1930.73, 1939.1] scopeStart= 1477878019944.408936 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);",
+      "  fetch_res(27);",
+      "  __msleep(8.17);"
+    ],
+    "290": [
+      "  /* [1950.13, 1951.98] scopeStart= 1477878019963.807129 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.10);",
+      "  send_xhr(1904);",
+      "  __msleep(0.75);"
+    ],
+    "299": [
+      "  /* [1952.8, 1957.31] scopeStart= 1477878019966.476074 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(2.61);",
+      "  sched_render_update_scope(316);",
+      "  __msleep(1.90);"
+    ],
+    "309": [
+      "  /* [1957.96, 1960.62] scopeStart= 1477878019971.637939 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(2.66);"
+    ],
+    "316": [
+      "  /* [1960.91, 1962.06] scopeStart= 1477878019974.585938 type= RenderTreeUpdateScope */",
+      "  __msleep(1.15);"
+    ],
+    "317": [
+      "  /* [1962.26, 1968.7] scopeStart= 1477878019975.940918 type= RenderTreeUpdateScope */",
+      "  __msleep(6.44);"
+    ],
+    "320": [
+      "  /* [2055.62, 2072.69] scopeStart= 1477878020069.297119 type= RenderTreeUpdateScope */",
+      "  __msleep(17.07);"
+    ],
+    "321": [
+      "  /* [2072.88, 2083.16] scopeStart= 1477878020086.560059 type= RenderTreeUpdateScope */",
+      "  __msleep(10.28);"
+    ],
+    "326": [
+      "  /* [2113.8, 2117.69] scopeStart= 1477878020127.481934 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.61);",
+      "  sched_render_update_scope(333);",
+      "  __msleep(2.28);"
+    ],
+    "333": [
+      "  /* [2129.47, 2130.91] scopeStart= 1477878020143.148926 type= RenderTreeUpdateScope */",
+      "  __msleep(1.44);"
+    ],
+    "334": [
+      "  /* [2131.14, 2139.1] scopeStart= 1477878020144.817139 type= RenderTreeUpdateScope */",
+      "  __msleep(7.96);"
+    ],
+    "343": [
+      "  /* [2372.11, 2390.31] scopeStart= 1477878020385.785156 type= RenderTreeUpdateScope */",
+      "  __msleep(18.20);"
+    ],
+    "344": [
+      "  /* [2390.51, 2400.88] scopeStart= 1477878020404.191895 type= RenderTreeUpdateScope */",
+      "  __msleep(10.37);"
+    ],
+    "371": [
+      "  /* [3207.03, 3208.05] scopeStart= 1477878021220.707031 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.02);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 88,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        122,
+        13
+      ],
+      [
+        1694,
+        87
+      ],
+      [
+        1739,
+        90
+      ],
+      [
+        1780,
+        92
+      ],
+      [
+        1817,
+        176
+      ],
+      [
+        1854,
+        178
+      ],
+      [
+        1893,
+        182
+      ],
+      [
+        1932,
+        184
+      ],
+      [
+        1967,
+        186
+      ],
+      [
+        2015,
+        188
+      ],
+      [
+        2167,
+        190
+      ],
+      [
+        2174,
+        194
+      ],
+      [
+        2411,
+        201
+      ],
+      [
+        7110,
+        433
+      ],
+      [
+        7153,
+        435
+      ],
+      [
+        7190,
+        437
+      ],
+      [
+        7732,
+        440
+      ],
+      [
+        7936,
+        455
+      ],
+      [
+        7970,
+        457
+      ],
+      [
+        8004,
+        459
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        141
+      ],
+      [
+        "load",
+        156
+      ],
+      [
+        "readystatechange_complete",
+        155
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "cdn.diply.com",
+    "diply.com",
+    "goviral-engine-bus.servicebus.windows.net",
+    "img.diply.com",
+    "service-auth.diply.com",
+    "service-content.diply.com",
+    "service-search.diply.net"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 8017,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 15.069999999999936,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 549,
+          "resp_body_size": 25037,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 541,
+          "resp_body_size": 38670,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 531,
+          "resp_body_size": 1361,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 531,
+          "resp_body_size": 2313,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "parse_dur_ms": 0.17999999999994998,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "cdn.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 381,
+          "resp_body_size": 611,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "7": {
+      "parse_dur_ms": 0.18999999999994088,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "cdn.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 602,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "8": {
+      "parse_dur_ms": 0.06000000000005912,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "cdn.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 380,
+          "resp_body_size": 473,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "9": {
+      "parse_dur_ms": 1.7300000000000182,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 550,
+          "resp_body_size": 4156,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 533,
+          "resp_body_size": 2846,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 544,
+          "resp_body_size": 27588,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 526,
+          "resp_body_size": 1542,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 536,
+          "resp_body_size": 842,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 526,
+          "resp_body_size": 1254,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 526,
+          "resp_body_size": 1075,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "16": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "service-auth.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 546,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 676,
+          "resp_body_size": 82901,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "cdn.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 12844,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "61": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "cdn.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 12919,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "62": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "service-content.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 2481,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "63": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "service-search.diply.net",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 441,
+          "resp_body_size": 22882,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "64": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "service-content.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 388,
+          "resp_body_size": 2297,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "65": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 652,
+          "resp_body_size": 668,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "66": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 652,
+          "resp_body_size": 668,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "67": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 652,
+          "resp_body_size": 668,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 24167,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 10674,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 13088,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 13100,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 13200,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 12832,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 8305,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 52906,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "76": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 27187,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "77": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 19177,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "78": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 17430,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "79": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 29933,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "80": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 6250,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "81": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 19536,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "82": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 14514,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "83": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 22685,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "84": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 11950,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "85": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 11574,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "86": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 12662,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "87": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 6325,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "88": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 7111,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "89": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 12594,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "90": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 11735,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "91": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 4738,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "92": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 17688,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "93": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 16876,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "94": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "img.diply.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 425,
+          "resp_body_size": 24024,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "95": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "goviral-engine-bus.servicebus.windows.net",
+          "method": "OPTIONS",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 590,
+          "resp_body_size": 234,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "96": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "goviral-engine-bus.servicebus.windows.net",
+          "method": "POST",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 944,
+          "resp_body_size": 103,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        100
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "180": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          290
+        ]
+      ],
+      "res_chain": [
+        16
+      ]
+    },
+    "464": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          165
+        ]
+      ],
+      "res_chain": [
+        62
+      ]
+    },
+    "466": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          195
+        ]
+      ],
+      "res_chain": [
+        63
+      ]
+    },
+    "468": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          183
+        ]
+      ],
+      "res_chain": [
+        64
+      ]
+    },
+    "718": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          299
+        ]
+      ],
+      "res_chain": [
+        65
+      ]
+    },
+    "1159": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          309
+        ]
+      ],
+      "res_chain": [
+        66
+      ]
+    },
+    "1901": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          326
+        ]
+      ],
+      "res_chain": [
+        67
+      ]
+    },
+    "1904": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          371
+        ]
+      ],
+      "res_chain": [
+        95,
+        96
+      ]
+    }
+  }
+}

@@ -1,0 +1,2880 @@
+{
+  "elements": {
+    "13": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "46": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "48": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "118": {
+      "tag": "body"
+    },
+    "546": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "590": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "634": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "678": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "722": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "766": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "810": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "854": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "898": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "942": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "986": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "1030": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "1074": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1118": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1162": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "1206": {
+      "initial_resInstNum": 21,
+      "tag": "img"
+    },
+    "1250": {
+      "initial_resInstNum": 22,
+      "tag": "img"
+    },
+    "1294": {
+      "initial_resInstNum": 23,
+      "tag": "img"
+    },
+    "1338": {
+      "initial_resInstNum": 24,
+      "tag": "img"
+    },
+    "1382": {
+      "initial_resInstNum": 25,
+      "tag": "img"
+    },
+    "1426": {
+      "initial_resInstNum": 26,
+      "tag": "img"
+    },
+    "1470": {
+      "initial_resInstNum": 27,
+      "tag": "img"
+    },
+    "1514": {
+      "initial_resInstNum": 28,
+      "tag": "img"
+    },
+    "1558": {
+      "initial_resInstNum": 29,
+      "tag": "img"
+    },
+    "1602": {
+      "initial_resInstNum": 30,
+      "tag": "img"
+    },
+    "1646": {
+      "initial_resInstNum": 31,
+      "tag": "img"
+    },
+    "1690": {
+      "initial_resInstNum": 32,
+      "tag": "img"
+    },
+    "1734": {
+      "initial_resInstNum": 33,
+      "tag": "img"
+    },
+    "1778": {
+      "initial_resInstNum": 34,
+      "tag": "img"
+    },
+    "1822": {
+      "initial_resInstNum": 35,
+      "tag": "img"
+    },
+    "1866": {
+      "initial_resInstNum": 36,
+      "tag": "img"
+    },
+    "1910": {
+      "initial_resInstNum": 37,
+      "tag": "img"
+    },
+    "1954": {
+      "initial_resInstNum": 38,
+      "tag": "img"
+    },
+    "1998": {
+      "initial_resInstNum": 39,
+      "tag": "img"
+    },
+    "2042": {
+      "initial_resInstNum": 40,
+      "tag": "img"
+    },
+    "2086": {
+      "initial_resInstNum": 41,
+      "tag": "img"
+    },
+    "2130": {
+      "initial_resInstNum": 42,
+      "tag": "img"
+    },
+    "2174": {
+      "initial_resInstNum": 43,
+      "tag": "img"
+    },
+    "2218": {
+      "initial_resInstNum": 44,
+      "tag": "img"
+    },
+    "2262": {
+      "initial_resInstNum": 45,
+      "tag": "img"
+    },
+    "2306": {
+      "initial_resInstNum": 46,
+      "tag": "img"
+    },
+    "2350": {
+      "initial_resInstNum": 47,
+      "tag": "img"
+    },
+    "2394": {
+      "initial_resInstNum": 48,
+      "tag": "img"
+    },
+    "2438": {
+      "initial_resInstNum": 49,
+      "tag": "img"
+    },
+    "2482": {
+      "initial_resInstNum": 50,
+      "tag": "img"
+    },
+    "2526": {
+      "initial_resInstNum": 51,
+      "tag": "img"
+    },
+    "2570": {
+      "initial_resInstNum": 52,
+      "tag": "img"
+    },
+    "2614": {
+      "initial_resInstNum": 53,
+      "tag": "img"
+    },
+    "2658": {
+      "initial_resInstNum": 54,
+      "tag": "img"
+    },
+    "2702": {
+      "initial_resInstNum": 55,
+      "tag": "img"
+    },
+    "2746": {
+      "initial_resInstNum": 56,
+      "tag": "img"
+    },
+    "2790": {
+      "initial_resInstNum": 57,
+      "tag": "img"
+    },
+    "2834": {
+      "initial_resInstNum": 58,
+      "tag": "img"
+    },
+    "2878": {
+      "initial_resInstNum": 59,
+      "tag": "img"
+    },
+    "2922": {
+      "initial_resInstNum": 60,
+      "tag": "img"
+    },
+    "2966": {
+      "initial_resInstNum": 61,
+      "tag": "img"
+    },
+    "3010": {
+      "initial_resInstNum": 62,
+      "tag": "img"
+    },
+    "3054": {
+      "initial_resInstNum": 63,
+      "tag": "img"
+    },
+    "3098": {
+      "initial_resInstNum": 64,
+      "tag": "img"
+    },
+    "3142": {
+      "initial_resInstNum": 65,
+      "tag": "img"
+    },
+    "3187": {
+      "initial_resInstNum": 66,
+      "tag": "img"
+    },
+    "3225": {
+      "initial_resInstNum": 67,
+      "tag": "img"
+    },
+    "3249": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "3273": {
+      "initial_resInstNum": 68,
+      "tag": "img"
+    },
+    "3297": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "3321": {
+      "initial_resInstNum": 20,
+      "tag": "img"
+    },
+    "3345": {
+      "initial_resInstNum": 69,
+      "tag": "img"
+    },
+    "3369": {
+      "initial_resInstNum": 70,
+      "tag": "img"
+    },
+    "3464": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 133,
+      "tag": "script"
+    },
+    "3474": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 71,
+      "is_parser_blocking": true,
+      "run_scope_id": 138,
+      "tag": "script"
+    },
+    "3548": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 161,
+      "tag": "script"
+    },
+    "3553": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 72,
+      "is_parser_blocking": true,
+      "run_scope_id": 165,
+      "tag": "script"
+    },
+    "3562": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 73,
+      "is_parser_blocking": true,
+      "run_scope_id": 173,
+      "tag": "script"
+    },
+    "3571": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 177,
+      "tag": "script"
+    },
+    "3574": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 180,
+      "tag": "script"
+    },
+    "3577": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 74,
+      "is_parser_blocking": true,
+      "run_scope_id": 184,
+      "tag": "script"
+    },
+    "3579": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 187,
+      "tag": "script"
+    },
+    "3583": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 75,
+      "is_parser_blocking": true,
+      "run_scope_id": 192,
+      "tag": "script"
+    },
+    "3585": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 76,
+      "is_parser_blocking": true,
+      "run_scope_id": 196,
+      "tag": "script"
+    },
+    "3587": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 199,
+      "tag": "script"
+    },
+    "3590": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 77,
+      "is_parser_blocking": true,
+      "run_scope_id": 203,
+      "tag": "script"
+    },
+    "3724": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 223,
+      "tag": "script"
+    },
+    "3743": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 234,
+      "tag": "script"
+    },
+    "3746": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 237,
+      "tag": "script"
+    },
+    "3749": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 240,
+      "tag": "script"
+    },
+    "3758": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 243,
+      "tag": "script"
+    },
+    "3761": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 78,
+      "is_parser_blocking": true,
+      "run_scope_id": 247,
+      "tag": "script"
+    },
+    "3763": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 250,
+      "tag": "script"
+    },
+    "3796": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 279,
+      "tag": "script"
+    },
+    "3799": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 282,
+      "tag": "script"
+    },
+    "3809": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 285,
+      "tag": "script"
+    },
+    "3813": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 289,
+      "tag": "script"
+    },
+    "3817": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 293,
+      "tag": "script"
+    },
+    "3826": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 297,
+      "tag": "script"
+    },
+    "3837": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 301,
+      "tag": "script"
+    },
+    "3846": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 305,
+      "tag": "script"
+    },
+    "3897": {
+      "tag": "img"
+    },
+    "3952": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 347,
+      "tag": "script"
+    },
+    "3958": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 360,
+      "tag": "script"
+    },
+    "3962": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 366,
+      "tag": "script"
+    },
+    "3964": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 369,
+      "tag": "script"
+    },
+    "3995": {
+      "initial_resInstNum": 97,
+      "tag": "img"
+    },
+    "4013": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 386,
+      "tag": "script"
+    },
+    "4015": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 389,
+      "tag": "script"
+    },
+    "4017": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 394,
+      "tag": "script"
+    },
+    "4021": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "133": [
+      "  /* [1114.17, 1114.32] scopeStart= 1477877203446.579834 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);"
+    ],
+    "138": [
+      "  /* [1115.48, 1153.73] scopeStart= 1477877203447.891846 type= ScriptControllerRunScriptScope */",
+      "  __msleep(23.31);",
+      "  sched_render_update_scope(207);",
+      "  __msleep(13.69);",
+      "  __msleep(1.25);"
+    ],
+    "161": [
+      "  /* [1154.03, 1154.12] scopeStart= 1477877203486.437988 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.09);"
+    ],
+    "165": [
+      "  /* [1155.56, 1211.7] scopeStart= 1477877203487.972900 type= ScriptControllerRunScriptScope */",
+      "  __msleep(56.14);"
+    ],
+    "173": [
+      "  /* [1215.12, 1297.67] scopeStart= 1477877203547.527100 type= ScriptControllerRunScriptScope */",
+      "  __msleep(46.36);",
+      "  __msleep(2.81);",
+      "  __msleep(33.38);"
+    ],
+    "177": [
+      "  /* [1298.05, 1308.65] scopeStart= 1477877203630.456055 type= ScriptControllerRunScriptScope */",
+      "  __msleep(10.60);"
+    ],
+    "180": [
+      "  /* [1308.89, 1309.03] scopeStart= 1477877203641.298096 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "184": [
+      "  /* [1309.37, 1309.44] scopeStart= 1477877203641.782959 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.07);"
+    ],
+    "187": [
+      "  /* [1309.64, 1310.06] scopeStart= 1477877203642.052002 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.26);",
+      "  __msleep(0.05);",
+      "  __msleep(0.11);"
+    ],
+    "192": [
+      "  /* [1310.37, 1310.71] scopeStart= 1477877203642.781982 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.34);"
+    ],
+    "196": [
+      "  /* [1311.04, 1311.25] scopeStart= 1477877203643.446045 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.21);"
+    ],
+    "199": [
+      "  /* [1311.51, 1312.05] scopeStart= 1477877203643.922119 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.54);"
+    ],
+    "203": [
+      "  /* [1312.71, 1324.65] scopeStart= 1477877203645.124023 type= ScriptControllerRunScriptScope */",
+      "  __msleep(10.95);",
+      "  __msleep(0.53);",
+      "  __msleep(0.07);",
+      "  __msleep(0.12);",
+      "  __msleep(0.07);",
+      "  __msleep(0.20);"
+    ],
+    "207": [
+      "  /* [1324.8, 1349.88] scopeStart= 1477877203657.205078 type= RenderTreeUpdateScope */",
+      "  __msleep(5.10);",
+      "  fetch_res(91);",
+      "  __msleep(0.28);",
+      "  fetch_res(89);",
+      "  __msleep(5.82);",
+      "  fetch_res(80);",
+      "  __msleep(1.34);",
+      "  fetch_res(92);",
+      "  __msleep(12.54);"
+    ],
+    "223": [
+      "  /* [1493.52, 1522.34] scopeStart= 1477877203825.925049 type= ScriptControllerRunScriptScope */",
+      "  __msleep(28.74);",
+      "  __msleep(0.08);"
+    ],
+    "234": [
+      "  /* [1522.67, 1523.23] scopeStart= 1477877203855.083008 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.56);"
+    ],
+    "237": [
+      "  /* [1523.53, 1523.84] scopeStart= 1477877203855.938965 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.31);"
+    ],
+    "240": [
+      "  /* [1524.1, 1532.55] scopeStart= 1477877203856.504883 type= ScriptControllerRunScriptScope */",
+      "  __msleep(8.45);"
+    ],
+    "243": [
+      "  /* [1532.82, 1533.09] scopeStart= 1477877203865.227051 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.27);"
+    ],
+    "247": [
+      "  /* [1536.4, 1574.84] scopeStart= 1477877203868.812012 type= ScriptControllerRunScriptScope */",
+      "  __msleep(38.44);"
+    ],
+    "250": [
+      "  /* [1575.12, 1618.44] scopeStart= 1477877203907.525146 type= ScriptControllerRunScriptScope */",
+      "  __msleep(25.90);",
+      "  fetch_res(93);",
+      "  __msleep(0.51);",
+      "  fetch_res(82);",
+      "  __msleep(7.22);",
+      "  __msleep(9.69);"
+    ],
+    "279": [
+      "  /* [1618.71, 1619.66] scopeStart= 1477877203951.115967 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.72);",
+      "  __msleep(0.20);",
+      "  __msleep(0.03);"
+    ],
+    "282": [
+      "  /* [1619.85, 1627.42] scopeStart= 1477877203952.259033 type= ScriptControllerRunScriptScope */",
+      "  __msleep(7.44);",
+      "  __msleep(0.13);"
+    ],
+    "285": [
+      "  /* [1627.63, 1628.05] scopeStart= 1477877203960.035156 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.24);",
+      "  __msleep(0.05);",
+      "  __msleep(0.13);"
+    ],
+    "289": [
+      "  /* [1628.21, 1628.44] scopeStart= 1477877203960.624023 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);",
+      "  __msleep(0.03);",
+      "  __msleep(0.05);"
+    ],
+    "293": [
+      "  /* [1628.64, 1628.85] scopeStart= 1477877203961.046875 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.05);",
+      "  __msleep(0.04);"
+    ],
+    "297": [
+      "  /* [1629.06, 1629.32] scopeStart= 1477877203961.468018 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.04);",
+      "  __msleep(0.10);"
+    ],
+    "301": [
+      "  /* [1629.58, 1629.88] scopeStart= 1477877203961.991943 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);",
+      "  __msleep(0.03);",
+      "  __msleep(0.10);"
+    ],
+    "305": [
+      "  /* [1630.08, 1630.73] scopeStart= 1477877203962.491943 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.65);"
+    ],
+    "310": [
+      "  /* [1630.95, 1649.67] scopeStart= 1477877203963.359131 type= EventTargetInvokingListenersScope */",
+      "  __msleep(14.60);",
+      "  sched_render_update_scope(332);",
+      "  __msleep(1.65);",
+      "  add_elem(3897);",
+      "  __msleep(1.24);",
+      "  set_elem_res(3897, 94);",
+      "  __msleep(0.18);",
+      "  __msleep(0.91);",
+      "  fetch_res(94);",
+      "  __msleep(0.14);"
+    ],
+    "332": [
+      "  /* [1649.68, 1649.84] scopeStart= 1477877203982.094971 type= RenderTreeUpdateScope */",
+      "  __msleep(0.16);"
+    ],
+    "347": [
+      "  /* [1663.24, 1663.36] scopeStart= 1477877203995.651123 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);"
+    ],
+    "355": [
+      "  /* [1666.87, 1681.18] scopeStart= 1477877203999.283936 type= RenderTreeUpdateScope */",
+      "  __msleep(14.31);"
+    ],
+    "360": [
+      "  /* [1700.75, 1702.61] scopeStart= 1477877204033.156006 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.80);",
+      "  __msleep(0.44);",
+      "  send_xhr(3961);",
+      "  __msleep(0.62);"
+    ],
+    "366": [
+      "  /* [1702.81, 1702.95] scopeStart= 1477877204035.216064 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "369": [
+      "  /* [1703.13, 1704.12] scopeStart= 1477877204035.535156 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.99);"
+    ],
+    "386": [
+      "  /* [1705.78, 1706.27] scopeStart= 1477877204038.186035 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.49);"
+    ],
+    "389": [
+      "  /* [1706.45, 1706.55] scopeStart= 1477877204038.858887 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.10);"
+    ],
+    "394": [
+      "  /* [1707.84, 1708.53] scopeStart= 1477877204040.247070 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.69);"
+    ],
+    "399": [
+      "  /* [1709.69, 1709.89] scopeStart= 1477877204042.097168 type= RenderTreeUpdateScope */",
+      "  __msleep(0.04);",
+      "  sched_render_update_scope(418);",
+      "  __msleep(0.16);"
+    ],
+    "407": [
+      "  /* [1724.99, 1725.34] scopeStart= 1477877204057.403076 type= DOMTimerFiredScope */",
+      "  __msleep(0.28);",
+      "  __msleep(0.07);"
+    ],
+    "418": [
+      "  /* [1730.72, 1730.89] scopeStart= 1477877204063.127930 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "421": [
+      "  /* [1762.35, 1762.56] scopeStart= 1477877204094.764893 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "422": [
+      "  /* [1771.94, 1772.13] scopeStart= 1477877204104.346924 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "426": [
+      "  /* [1784.9, 1799.6] scopeStart= 1477877204117.305908 type= RenderTreeUpdateScope */",
+      "  __msleep(14.70);"
+    ],
+    "428": [
+      "  /* [1816.76, 1817.14] scopeStart= 1477877204149.164795 type= DOMTimerFiredScope */",
+      "  __msleep(0.34);",
+      "  __msleep(0.04);"
+    ],
+    "432": [
+      "  /* [1829.18, 1829.41] scopeStart= 1477877204161.593018 type= RenderTreeUpdateScope */",
+      "  __msleep(0.23);"
+    ],
+    "433": [
+      "  /* [1834.91, 1835.11] scopeStart= 1477877204167.316895 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "436": [
+      "  /* [1868.26, 1868.43] scopeStart= 1477877204200.666992 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "439": [
+      "  /* [1884.96, 1885.15] scopeStart= 1477877204217.371826 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "440": [
+      "  /* [1901.62, 1901.8] scopeStart= 1477877204234.026855 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "442": [
+      "  /* [1918.16, 1931.99] scopeStart= 1477877204250.572021 type= RenderTreeUpdateScope */",
+      "  __msleep(13.83);"
+    ],
+    "447": [
+      "  /* [1951.59, 1951.78] scopeStart= 1477877204283.997070 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "449": [
+      "  /* [1968.25, 1968.43] scopeStart= 1477877204300.662109 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "450": [
+      "  /* [1984.92, 1985.09] scopeStart= 1477877204317.327881 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "452": [
+      "  /* [2001.62, 2001.85] scopeStart= 1477877204334.030029 type= RenderTreeUpdateScope */",
+      "  __msleep(0.23);"
+    ],
+    "454": [
+      "  /* [2018.01, 2018.26] scopeStart= 1477877204350.419922 type= DOMTimerFiredScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.03);"
+    ],
+    "456": [
+      "  /* [2018.35, 2018.53] scopeStart= 1477877204350.761963 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "457": [
+      "  /* [2034.93, 2035.1] scopeStart= 1477877204367.336914 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "460": [
+      "  /* [2051.65, 2051.91] scopeStart= 1477877204384.058838 type= RenderTreeUpdateScope */",
+      "  __msleep(0.26);"
+    ],
+    "462": [
+      "  /* [2068.27, 2068.5] scopeStart= 1477877204400.677002 type= RenderTreeUpdateScope */",
+      "  __msleep(0.23);"
+    ],
+    "475": [
+      "  /* [2101.57, 2101.77] scopeStart= 1477877204433.978027 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "476": [
+      "  /* [2118.26, 2118.43] scopeStart= 1477877204450.668945 type= RenderTreeUpdateScope */",
+      "  __msleep(0.17);"
+    ],
+    "481": [
+      "  /* [2122.76, 2122.77] scopeStart= 1477877204455.171143 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.01);"
+    ],
+    "482": [
+      "  /* [2122.8, 2122.81] scopeStart= 1477877204455.208984 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ],
+    "493": [
+      "  /* [2133.35, 2133.79] scopeStart= 1477877204465.754883 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.44);"
+    ],
+    "496": [
+      "  /* [2134.87, 2135.05] scopeStart= 1477877204467.282959 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "497": [
+      "  /* [2149.58, 2151.69] scopeStart= 1477877204481.989990 type= DOMTimerFiredScope */",
+      "  __msleep(0.43);",
+      "  __msleep(0.47);",
+      "  add_elem(4021);",
+      "  __msleep(0.76);",
+      "  set_elem_res(4021, 98);",
+      "  __msleep(0.34);",
+      "  fetch_res(98);",
+      "  __msleep(0.11);"
+    ],
+    "501": [
+      "  /* [2151.84, 2151.99] scopeStart= 1477877204484.247803 type= RenderTreeUpdateScope */",
+      "  __msleep(0.15);"
+    ],
+    "502": [
+      "  /* [2184.93, 2185.18] scopeStart= 1477877204517.343018 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "503": [
+      "  /* [2218.25, 2218.51] scopeStart= 1477877204550.662109 type= RenderTreeUpdateScope */",
+      "  __msleep(0.26);"
+    ],
+    "504": [
+      "  /* [2221.34, 2221.65] scopeStart= 1477877204553.746094 type= DOMTimerFiredScope */",
+      "  __msleep(0.25);",
+      "  __msleep(0.06);"
+    ],
+    "506": [
+      "  /* [2251.65, 2251.9] scopeStart= 1477877204584.055908 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "507": [
+      "  /* [2268.32, 2268.61] scopeStart= 1477877204600.725830 type= RenderTreeUpdateScope */",
+      "  __msleep(0.29);"
+    ],
+    "509": [
+      "  /* [2301.62, 2301.89] scopeStart= 1477877204634.028076 type= RenderTreeUpdateScope */",
+      "  __msleep(0.27);"
+    ],
+    "510": [
+      "  /* [2334.95, 2335.19] scopeStart= 1477877204667.362061 type= RenderTreeUpdateScope */",
+      "  __msleep(0.24);"
+    ],
+    "511": [
+      "  /* [2422.44, 2422.77] scopeStart= 1477877204754.844971 type= DOMTimerFiredScope */",
+      "  __msleep(0.27);",
+      "  __msleep(0.06);"
+    ],
+    "513": [
+      "  /* [2622.91, 2623.16] scopeStart= 1477877204955.321045 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.05);"
+    ],
+    "515": [
+      "  /* [2823.35, 2823.66] scopeStart= 1477877205155.755127 type= DOMTimerFiredScope */",
+      "  __msleep(0.25);",
+      "  __msleep(0.06);"
+    ],
+    "517": [
+      "  /* [3023.79, 3024.02] scopeStart= 1477877205356.195068 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.05);"
+    ],
+    "519": [
+      "  /* [3224.15, 3224.39] scopeStart= 1477877205556.561035 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.05);"
+    ],
+    "521": [
+      "  /* [3284.88, 3285.15] scopeStart= 1477877205617.288086 type= RenderTreeUpdateScope */",
+      "  __msleep(0.27);"
+    ],
+    "522": [
+      "  /* [3301.53, 3301.74] scopeStart= 1477877205633.937988 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "523": [
+      "  /* [3318.21, 3318.42] scopeStart= 1477877205650.624023 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "524": [
+      "  /* [3334.89, 3335.09] scopeStart= 1477877205667.301025 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "525": [
+      "  /* [3424.62, 3424.9] scopeStart= 1477877205757.030029 type= DOMTimerFiredScope */",
+      "  __msleep(0.21);",
+      "  __msleep(0.07);"
+    ],
+    "527": [
+      "  /* [3625.01, 3625.24] scopeStart= 1477877205957.413818 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.05);"
+    ],
+    "529": [
+      "  /* [3825.38, 3825.62] scopeStart= 1477877206157.792969 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.06);"
+    ],
+    "531": [
+      "  /* [4025.73, 4025.98] scopeStart= 1477877206358.135010 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);",
+      "  __msleep(0.06);"
+    ],
+    "533": [
+      "  /* [4226.12, 4226.38] scopeStart= 1477877206558.532959 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);",
+      "  __msleep(0.06);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 207,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        42,
+        13
+      ],
+      [
+        268,
+        46
+      ],
+      [
+        283,
+        48
+      ],
+      [
+        676,
+        118
+      ],
+      [
+        3201,
+        546
+      ],
+      [
+        3394,
+        590
+      ],
+      [
+        3586,
+        634
+      ],
+      [
+        3782,
+        678
+      ],
+      [
+        3978,
+        722
+      ],
+      [
+        4172,
+        766
+      ],
+      [
+        4362,
+        810
+      ],
+      [
+        4556,
+        854
+      ],
+      [
+        4755,
+        898
+      ],
+      [
+        4950,
+        942
+      ],
+      [
+        5141,
+        986
+      ],
+      [
+        5335,
+        1030
+      ],
+      [
+        5526,
+        1074
+      ],
+      [
+        5719,
+        1118
+      ],
+      [
+        5909,
+        1162
+      ],
+      [
+        6099,
+        1206
+      ],
+      [
+        6294,
+        1250
+      ],
+      [
+        6485,
+        1294
+      ],
+      [
+        6679,
+        1338
+      ],
+      [
+        6872,
+        1382
+      ],
+      [
+        7064,
+        1426
+      ],
+      [
+        7254,
+        1470
+      ],
+      [
+        7444,
+        1514
+      ],
+      [
+        7639,
+        1558
+      ],
+      [
+        7832,
+        1602
+      ],
+      [
+        8024,
+        1646
+      ],
+      [
+        8213,
+        1690
+      ],
+      [
+        8405,
+        1734
+      ],
+      [
+        8602,
+        1778
+      ],
+      [
+        8798,
+        1822
+      ],
+      [
+        9000,
+        1866
+      ],
+      [
+        9194,
+        1910
+      ],
+      [
+        9389,
+        1954
+      ],
+      [
+        9581,
+        1998
+      ],
+      [
+        9778,
+        2042
+      ],
+      [
+        9979,
+        2086
+      ],
+      [
+        10174,
+        2130
+      ],
+      [
+        10363,
+        2174
+      ],
+      [
+        10568,
+        2218
+      ],
+      [
+        10761,
+        2262
+      ],
+      [
+        10952,
+        2306
+      ],
+      [
+        11142,
+        2350
+      ],
+      [
+        11333,
+        2394
+      ],
+      [
+        11531,
+        2438
+      ],
+      [
+        11722,
+        2482
+      ],
+      [
+        11913,
+        2526
+      ],
+      [
+        12105,
+        2570
+      ],
+      [
+        12296,
+        2614
+      ],
+      [
+        12487,
+        2658
+      ],
+      [
+        12677,
+        2702
+      ],
+      [
+        12868,
+        2746
+      ],
+      [
+        13058,
+        2790
+      ],
+      [
+        13252,
+        2834
+      ],
+      [
+        13445,
+        2878
+      ],
+      [
+        13639,
+        2922
+      ],
+      [
+        13834,
+        2966
+      ],
+      [
+        14029,
+        3010
+      ],
+      [
+        14223,
+        3054
+      ],
+      [
+        14417,
+        3098
+      ],
+      [
+        14607,
+        3142
+      ],
+      [
+        14804,
+        3187
+      ],
+      [
+        14995,
+        3225
+      ],
+      [
+        15117,
+        3249
+      ],
+      [
+        15229,
+        3273
+      ],
+      [
+        15354,
+        3297
+      ],
+      [
+        15462,
+        3321
+      ],
+      [
+        15569,
+        3345
+      ],
+      [
+        15695,
+        3369
+      ],
+      [
+        16104,
+        3464
+      ],
+      [
+        16220,
+        3474
+      ],
+      [
+        16249,
+        3548
+      ],
+      [
+        16267,
+        3553
+      ],
+      [
+        16282,
+        3562
+      ],
+      [
+        17325,
+        3571
+      ],
+      [
+        17459,
+        3574
+      ],
+      [
+        17476,
+        3577
+      ],
+      [
+        17609,
+        3579
+      ],
+      [
+        17623,
+        3583
+      ],
+      [
+        17637,
+        3585
+      ],
+      [
+        18467,
+        3587
+      ],
+      [
+        18481,
+        3590
+      ],
+      [
+        18594,
+        3724
+      ],
+      [
+        18745,
+        3743
+      ],
+      [
+        18857,
+        3746
+      ],
+      [
+        18930,
+        3749
+      ],
+      [
+        19052,
+        3758
+      ],
+      [
+        19067,
+        3761
+      ],
+      [
+        19150,
+        3763
+      ],
+      [
+        19176,
+        3796
+      ],
+      [
+        19208,
+        3799
+      ],
+      [
+        19231,
+        3809
+      ],
+      [
+        19276,
+        3813
+      ],
+      [
+        19341,
+        3817
+      ],
+      [
+        19443,
+        3826
+      ],
+      [
+        19580,
+        3837
+      ],
+      [
+        19703,
+        3846
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        310
+      ],
+      [
+        "load",
+        482
+      ],
+      [
+        "readystatechange_complete",
+        481
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "ajax.googleapis.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "i.imgur.com",
+    "imgur.com",
+    "p.imgur.com",
+    "s.imgur.com",
+    "static.xx.fbcdn.net",
+    "www.facebook.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 19708,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 0.2400000000000091,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fonts.googleapis.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 417,
+          "resp_body_size": 937,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 16.690000000000055,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 461,
+          "resp_body_size": 26706,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 14.840000000000032,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 462,
+          "resp_body_size": 27558,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.facebook.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 536,
+          "resp_body_size": 193,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "www.facebook.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 531,
+          "resp_body_size": 11009,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7394,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 12097,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5462,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6130,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6818,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5122,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6862,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 8011,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 4579,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 12013,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6164,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7565,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 4792,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5192,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7027,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6897,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 11740,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 11610,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6662,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 11489,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7349,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5053,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5619,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7086,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7876,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 5182,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 8603,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 4315,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 4239,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7130,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7545,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 8422,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 6001,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 1776,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7177,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7526,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7954,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 4670,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8804,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8381,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 9313,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7148,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 12835,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 9334,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7028,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8687,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7818,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8025,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7227,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 4689,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 9181,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8268,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8109,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 4850,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 4559,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "61": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7899,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 13899,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "63": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 7264,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "64": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 8159,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "65": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 607,
+          "resp_body_size": 6141,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 473,
+          "resp_body_size": 9865,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 7464,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 528,
+          "resp_body_size": 5572,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 528,
+          "resp_body_size": 5188,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "i.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 10561,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ajax.googleapis.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 377,
+          "resp_body_size": 29777,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 446,
+          "resp_body_size": 47025,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 445,
+          "resp_body_size": 133579,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 450,
+          "resp_body_size": 492,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 435,
+          "resp_body_size": 637,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "76": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 435,
+          "resp_body_size": 636,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "77": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 447,
+          "resp_body_size": 22374,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "78": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 446,
+          "resp_body_size": 111308,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "80": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fonts.gstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 500,
+          "resp_body_size": 20476,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "82": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "fonts.gstatic.com",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 500,
+          "resp_body_size": 21256,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "89": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 412,
+          "resp_body_size": 14330,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "91": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 488,
+          "resp_body_size": 5999,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "92": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 499,
+          "resp_body_size": 71987,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "93": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "s.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 626,
+          "resp_body_size": 40187,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "94": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "p.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 1558,
+          "resp_body_size": 300,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "96": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "static.xx.fbcdn.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 547,
+          "resp_body_size": 107470,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "97": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "static.xx.fbcdn.net",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 520,
+          "resp_body_size": 967,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "98": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "p.imgur.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 2480,
+          "resp_body_size": 300,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        407
+      ],
+      "interval_ms": 150,
+      "singleShot": false
+    },
+    "70003": {
+      "fired_scope_ids": [
+        428
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70006": {
+      "fired_scope_ids": [
+        497
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70007": {
+      "fired_scope_ids": [
+        454
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70008": {
+      "fired_scope_ids": [
+        504
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70009": {
+      "fired_scope_ids": [
+        511
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70010": {
+      "fired_scope_ids": [
+        513
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70011": {
+      "fired_scope_ids": [
+        515
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70012": {
+      "fired_scope_ids": [
+        517
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70013": {
+      "fired_scope_ids": [
+        519
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70014": {
+      "fired_scope_ids": [
+        525
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70015": {
+      "fired_scope_ids": [
+        527
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70016": {
+      "fired_scope_ids": [
+        529
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70017": {
+      "fired_scope_ids": [
+        531
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    },
+    "70018": {
+      "fired_scope_ids": [
+        533
+      ],
+      "interval_ms": 200,
+      "singleShot": true
+    }
+  },
+  "xhrs": {
+    "3961": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          493
+        ]
+      ],
+      "res_chain": [
+        96
+      ]
+    }
+  }
+}

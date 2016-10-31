@@ -1,0 +1,2126 @@
+{
+  "elements": {
+    "62": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "64": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "66": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "69": {
+      "tag": "body"
+    },
+    "74": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 28,
+      "tag": "script"
+    },
+    "88": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "114": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "125": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "136": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "333": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "344": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "355": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "366": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "377": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "388": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "411": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "422": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "433": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "444": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "455": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "466": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "489": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "500": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "511": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "522": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "533": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "544": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "567": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "578": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "589": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "600": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "611": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "622": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "645": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "656": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "667": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "678": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "689": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "700": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "734": {
+      "initial_resInstNum": 8,
+      "tag": "img"
+    },
+    "760": {
+      "initial_resInstNum": 9,
+      "tag": "img"
+    },
+    "786": {
+      "initial_resInstNum": 10,
+      "tag": "img"
+    },
+    "828": {
+      "initial_resInstNum": 11,
+      "tag": "img"
+    },
+    "854": {
+      "initial_resInstNum": 12,
+      "tag": "img"
+    },
+    "880": {
+      "initial_resInstNum": 13,
+      "tag": "img"
+    },
+    "922": {
+      "initial_resInstNum": 14,
+      "tag": "img"
+    },
+    "948": {
+      "initial_resInstNum": 15,
+      "tag": "img"
+    },
+    "974": {
+      "initial_resInstNum": 16,
+      "tag": "img"
+    },
+    "1009": {
+      "initial_resInstNum": 17,
+      "tag": "img"
+    },
+    "1011": {
+      "initial_resInstNum": 18,
+      "tag": "img"
+    },
+    "1013": {
+      "initial_resInstNum": 19,
+      "tag": "img"
+    },
+    "1015": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 20,
+      "is_parser_blocking": true,
+      "run_scope_id": 36,
+      "tag": "script"
+    },
+    "1173": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 48,
+      "tag": "script"
+    },
+    "1176": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 21,
+      "is_parser_blocking": true,
+      "run_scope_id": 59,
+      "tag": "script"
+    },
+    "1329": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 22,
+      "is_parser_blocking": true,
+      "run_scope_id": 96,
+      "tag": "script"
+    },
+    "1331": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 23,
+      "is_parser_blocking": true,
+      "run_scope_id": 105,
+      "tag": "script"
+    },
+    "1386": {
+      "tag": "img"
+    },
+    "1397": {
+      "tag": "img"
+    },
+    "1408": {
+      "tag": "img"
+    },
+    "1419": {
+      "tag": "img"
+    },
+    "1430": {
+      "tag": "img"
+    },
+    "1441": {
+      "tag": "img"
+    },
+    "1463": {
+      "tag": "img"
+    },
+    "1474": {
+      "tag": "img"
+    },
+    "1485": {
+      "tag": "img"
+    },
+    "1496": {
+      "tag": "img"
+    },
+    "1507": {
+      "tag": "img"
+    },
+    "1518": {
+      "tag": "img"
+    },
+    "1549": {
+      "tag": "img"
+    },
+    "1557": {
+      "tag": "img"
+    },
+    "1565": {
+      "tag": "img"
+    },
+    "1573": {
+      "tag": "img"
+    },
+    "1581": {
+      "tag": "img"
+    },
+    "1589": {
+      "tag": "img"
+    },
+    "1597": {
+      "tag": "img"
+    },
+    "1605": {
+      "tag": "img"
+    },
+    "1613": {
+      "tag": "img"
+    },
+    "1621": {
+      "tag": "img"
+    },
+    "1629": {
+      "tag": "img"
+    },
+    "1637": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "28": [
+      "  /* [1462.19, 1465.63] scopeStart= 1477879034090.543945 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.01);",
+      "  __msleep(0.12);",
+      "  __msleep(0.31);"
+    ],
+    "36": [
+      "  /* [1480.45, 1485.14] scopeStart= 1477879034108.808105 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.54);",
+      "  __msleep(0.06);",
+      "  __msleep(0.09);"
+    ],
+    "48": [
+      "  /* [1485.55, 1485.78] scopeStart= 1477879034113.904053 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.23);"
+    ],
+    "52": [
+      "  /* [1486.44, 1514.28] scopeStart= 1477879034114.797119 type= RenderTreeUpdateScope */",
+      "  __msleep(2.15);",
+      "  fetch_res(24);",
+      "  __msleep(0.40);",
+      "  fetch_res(25);",
+      "  __msleep(0.33);",
+      "  fetch_res(26);",
+      "  __msleep(1.03);",
+      "  fetch_res(27);",
+      "  __msleep(9.20);",
+      "  fetch_res(28);",
+      "  __msleep(1.26);",
+      "  fetch_res(29);",
+      "  __msleep(0.35);",
+      "  fetch_res(30);",
+      "  __msleep(0.32);",
+      "  fetch_res(31);",
+      "  __msleep(0.30);",
+      "  fetch_res(32);",
+      "  __msleep(0.31);",
+      "  fetch_res(33);",
+      "  __msleep(0.31);",
+      "  fetch_res(34);",
+      "  __msleep(0.35);",
+      "  fetch_res(35);",
+      "  __msleep(0.32);",
+      "  fetch_res(36);",
+      "  __msleep(0.30);",
+      "  fetch_res(37);",
+      "  __msleep(0.30);",
+      "  fetch_res(38);",
+      "  __msleep(0.29);",
+      "  fetch_res(39);",
+      "  __msleep(0.30);",
+      "  fetch_res(40);",
+      "  __msleep(0.36);",
+      "  fetch_res(41);",
+      "  __msleep(0.30);",
+      "  fetch_res(42);",
+      "  __msleep(0.30);",
+      "  fetch_res(43);",
+      "  __msleep(0.29);",
+      "  fetch_res(44);",
+      "  __msleep(0.29);",
+      "  fetch_res(45);",
+      "  __msleep(0.29);",
+      "  fetch_res(46);",
+      "  __msleep(0.35);",
+      "  fetch_res(47);",
+      "  __msleep(0.30);",
+      "  fetch_res(48);",
+      "  __msleep(0.29);",
+      "  fetch_res(49);",
+      "  __msleep(0.28);",
+      "  fetch_res(50);",
+      "  __msleep(0.29);",
+      "  fetch_res(51);",
+      "  __msleep(0.30);",
+      "  fetch_res(52);",
+      "  __msleep(0.35);",
+      "  fetch_res(53);",
+      "  __msleep(0.30);",
+      "  fetch_res(54);",
+      "  __msleep(0.30);",
+      "  fetch_res(55);",
+      "  __msleep(0.29);",
+      "  fetch_res(56);",
+      "  __msleep(0.30);",
+      "  fetch_res(57);",
+      "  __msleep(0.30);",
+      "  fetch_res(58);",
+      "  __msleep(3.82);",
+      "  fetch_res(59);",
+      "  __msleep(0.36);",
+      "  fetch_res(60);",
+      "  __msleep(0.36);"
+    ],
+    "59": [
+      "  /* [1793.73, 1911.25] scopeStart= 1477879034422.094971 type= ScriptControllerRunScriptScope */",
+      "  __msleep(22.58);",
+      "  __msleep(5.98);",
+      "  __msleep(2.28);",
+      "  __msleep(0.37);",
+      "  __msleep(0.61);",
+      "  __msleep(2.57);",
+      "  __msleep(83.13);"
+    ],
+    "96": [
+      "  /* [1912.09, 1914.89] scopeStart= 1477879034540.450195 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.80);"
+    ],
+    "105": [
+      "  /* [1918.4, 1973.11] scopeStart= 1477879034546.758057 type= ScriptControllerRunScriptScope */",
+      "  __msleep(5.50);",
+      "  __msleep(0.21);",
+      "  send_xhr(1332);",
+      "  __msleep(30.86);",
+      "  add_elem(1386);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1386, 7);",
+      "  __msleep(0.11);",
+      "  add_elem(1397);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1397, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1408);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1408, 7);",
+      "  __msleep(0.07);",
+      "  add_elem(1419);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1419, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1430);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1430, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1441);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1441, 7);",
+      "  __msleep(0.36);",
+      "  add_elem(1463);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1463, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1474);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1474, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1485);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1485, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1496);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1496, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1507);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1507, 7);",
+      "  __msleep(0.08);",
+      "  add_elem(1518);",
+      "  __msleep(0.02);",
+      "  set_elem_res(1518, 7);",
+      "  __msleep(1.35);",
+      "  fetch_res(62);",
+      "  __msleep(0.43);",
+      "  fetch_res(63);",
+      "  __msleep(9.63);",
+      "  __msleep(2.70);",
+      "  __msleep(0.03);",
+      "  send_xhr(1528);",
+      "  __msleep(1.36);",
+      "  __msleep(0.10);",
+      "  __msleep(0.05);",
+      "  __msleep(0.59);",
+      "  __msleep(0.02);",
+      "  send_xhr(1530);",
+      "  __msleep(0.42);"
+    ],
+    "161": [
+      "  /* [1973.39, 1974.86] scopeStart= 1477879034601.747070 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.47);"
+    ],
+    "181": [
+      "  /* [2022.44, 2022.53] scopeStart= 1477879034650.799072 type= RenderTreeUpdateScope */",
+      "  __msleep(0.09);"
+    ],
+    "189": [
+      "  /* [2408.17, 2411.44] scopeStart= 1477879035036.533203 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(1.42);",
+      "  __msleep(1.85);"
+    ],
+    "217": [
+      "  /* [2585.22, 2588.26] scopeStart= 1477879035213.581055 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.32);",
+      "  __msleep(2.07);",
+      "  sched_render_update_scope(224);",
+      "  __msleep(0.65);"
+    ],
+    "224": [
+      "  /* [2588.44, 2588.79] scopeStart= 1477879035216.797119 type= RenderTreeUpdateScope */",
+      "  __msleep(0.35);"
+    ],
+    "239": [
+      "  /* [2728.48, 2742.31] scopeStart= 1477879035356.843018 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.25);",
+      "  __msleep(1.43);",
+      "  add_elem(1549);",
+      "  __msleep(0.05);",
+      "  set_elem_res(1549, 66);",
+      "  __msleep(0.90);",
+      "  fetch_res(66);",
+      "  __msleep(0.17);",
+      "  sched_render_update_scope(292);",
+      "  __msleep(0.70);",
+      "  add_elem(1557);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1557, 66);",
+      "  __msleep(0.84);",
+      "  add_elem(1565);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1565, 66);",
+      "  __msleep(0.75);",
+      "  add_elem(1573);",
+      "  __msleep(0.05);",
+      "  set_elem_res(1573, 66);",
+      "  __msleep(0.74);",
+      "  add_elem(1581);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1581, 66);",
+      "  __msleep(0.76);",
+      "  add_elem(1589);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1589, 66);",
+      "  __msleep(0.74);",
+      "  add_elem(1597);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1597, 66);",
+      "  __msleep(0.73);",
+      "  add_elem(1605);",
+      "  __msleep(0.04);",
+      "  set_elem_res(1605, 66);",
+      "  __msleep(0.74);",
+      "  add_elem(1613);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1613, 66);",
+      "  __msleep(0.74);",
+      "  add_elem(1621);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1621, 66);",
+      "  __msleep(0.74);",
+      "  add_elem(1629);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1629, 66);",
+      "  __msleep(0.72);",
+      "  add_elem(1637);",
+      "  __msleep(0.03);",
+      "  set_elem_res(1637, 66);",
+      "  __msleep(2.43);"
+    ],
+    "292": [
+      "  /* [2742.71, 2747.97] scopeStart= 1477879035371.068115 type= RenderTreeUpdateScope */",
+      "  __msleep(0.51);",
+      "  fetch_res(67);",
+      "  __msleep(0.46);",
+      "  fetch_res(68);",
+      "  __msleep(0.42);",
+      "  fetch_res(69);",
+      "  __msleep(0.40);",
+      "  fetch_res(70);",
+      "  __msleep(0.42);",
+      "  fetch_res(71);",
+      "  __msleep(0.42);",
+      "  fetch_res(72);",
+      "  __msleep(0.40);",
+      "  fetch_res(73);",
+      "  __msleep(0.40);",
+      "  fetch_res(74);",
+      "  __msleep(0.41);",
+      "  fetch_res(75);",
+      "  __msleep(0.41);",
+      "  fetch_res(76);",
+      "  __msleep(0.42);",
+      "  fetch_res(77);",
+      "  __msleep(0.42);",
+      "  fetch_res(78);",
+      "  __msleep(0.17);"
+    ],
+    "330": [
+      "  /* [3739.69, 3739.73] scopeStart= 1477879036368.051025 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "331": [
+      "  /* [3739.78, 3739.79] scopeStart= 1477879036368.136963 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 52,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        399,
+        62
+      ],
+      [
+        422,
+        64
+      ],
+      [
+        445,
+        66
+      ],
+      [
+        448,
+        69
+      ],
+      [
+        551,
+        74
+      ],
+      [
+        622,
+        88
+      ],
+      [
+        802,
+        114
+      ],
+      [
+        905,
+        125
+      ],
+      [
+        1007,
+        136
+      ],
+      [
+        2064,
+        333
+      ],
+      [
+        2167,
+        344
+      ],
+      [
+        2269,
+        355
+      ],
+      [
+        2371,
+        366
+      ],
+      [
+        2473,
+        377
+      ],
+      [
+        2576,
+        388
+      ],
+      [
+        2735,
+        411
+      ],
+      [
+        2838,
+        422
+      ],
+      [
+        2940,
+        433
+      ],
+      [
+        3042,
+        444
+      ],
+      [
+        3145,
+        455
+      ],
+      [
+        3248,
+        466
+      ],
+      [
+        3407,
+        489
+      ],
+      [
+        3509,
+        500
+      ],
+      [
+        3612,
+        511
+      ],
+      [
+        3714,
+        522
+      ],
+      [
+        3816,
+        533
+      ],
+      [
+        3918,
+        544
+      ],
+      [
+        4079,
+        567
+      ],
+      [
+        4181,
+        578
+      ],
+      [
+        4284,
+        589
+      ],
+      [
+        4386,
+        600
+      ],
+      [
+        4489,
+        611
+      ],
+      [
+        4591,
+        622
+      ],
+      [
+        4750,
+        645
+      ],
+      [
+        4853,
+        656
+      ],
+      [
+        4955,
+        667
+      ],
+      [
+        5057,
+        678
+      ],
+      [
+        5159,
+        689
+      ],
+      [
+        5262,
+        700
+      ],
+      [
+        5425,
+        734
+      ],
+      [
+        5585,
+        760
+      ],
+      [
+        5739,
+        786
+      ],
+      [
+        5957,
+        828
+      ],
+      [
+        6115,
+        854
+      ],
+      [
+        6274,
+        880
+      ],
+      [
+        6497,
+        922
+      ],
+      [
+        6657,
+        948
+      ],
+      [
+        6815,
+        974
+      ],
+      [
+        6996,
+        1009
+      ],
+      [
+        7018,
+        1011
+      ],
+      [
+        7037,
+        1013
+      ],
+      [
+        7061,
+        1015
+      ],
+      [
+        7109,
+        1173
+      ],
+      [
+        7124,
+        1176
+      ],
+      [
+        7140,
+        1329
+      ],
+      [
+        7157,
+        1331
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        161
+      ],
+      [
+        "load",
+        331
+      ],
+      [
+        "readystatechange_complete",
+        330
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "act.ameba.jp",
+    "ad.pr.ameba.jp",
+    "ameblo.jp",
+    "ln.ameba.jp",
+    "ssl-stat.amebame.com",
+    "stat.profile.ameba.jp",
+    "stat100.ameba.jp",
+    "sy.ameba.jp",
+    "sy.amebame.com",
+    "sy.ameblo.jp",
+    "usrattr.ameba.jp"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "ameblo.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 374,
+          "resp_body_size": 7161,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 0.9700000000000273,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 408,
+          "resp_body_size": 1585,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 2.0299999999999727,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 3456,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 0.2799999999999727,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 386,
+          "resp_body_size": 670,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 1519,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 396,
+          "resp_body_size": 265,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 396,
+          "resp_body_size": 274,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 41230,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 63677,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 406,
+          "resp_body_size": 7681,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 240219,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 47522,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 67419,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 15303,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 225859,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat.profile.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 421,
+          "resp_body_size": 36828,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "act.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 459,
+          "resp_body_size": 0,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ln.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 407,
+          "resp_body_size": 334,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "sy.ameblo.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 373,
+          "resp_body_size": 0,
+          "resp_meta_size": 147
+        },
+        {
+          "host": "sy.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 372,
+          "resp_body_size": 0,
+          "resp_meta_size": 150
+        },
+        {
+          "host": "sy.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 0,
+          "resp_meta_size": 140
+        },
+        {
+          "host": "sy.ameblo.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 365,
+          "resp_body_size": 77,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "sy.ameblo.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 0,
+          "resp_meta_size": 160
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 385,
+          "resp_body_size": 2282,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "21": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 363,
+          "resp_body_size": 53268,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "22": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 369,
+          "resp_body_size": 6112,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "23": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 370,
+          "resp_body_size": 2027,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "24": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 400,
+          "resp_body_size": 96876,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "25": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 400,
+          "resp_body_size": 6478,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "26": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 400,
+          "resp_body_size": 28957,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "27": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 334,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "28": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 429,
+          "resp_body_size": 418,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "29": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 77049,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "30": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 181736,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "31": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 75890,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "32": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 150399,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "33": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 111763,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "34": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 304425,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "35": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 29362,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "36": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 45738,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "37": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 60659,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "38": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 61415,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "39": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 53905,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "40": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 91592,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "41": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 41044,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "42": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 66839,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "43": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 35149,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "44": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 61568,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "45": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 49973,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "46": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 31547,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "47": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 22162,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "48": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 230492,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "49": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 27187,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "50": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 82538,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "51": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 55166,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "52": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 27605,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "53": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 20223,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "54": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 55958,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "55": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 38387,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "56": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 15750,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "57": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 66326,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "58": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 401,
+          "resp_body_size": 60236,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "59": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 445,
+          "resp_body_size": 4221,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "60": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 457,
+          "resp_body_size": 6642,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "61": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "usrattr.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 420,
+          "resp_body_size": 0,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "62": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 433,
+          "resp_body_size": 445,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "63": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 434,
+          "resp_body_size": 441,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "64": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "ad.pr.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 502,
+          "resp_body_size": 14762,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "65": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "ad.pr.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 429,
+          "resp_body_size": 877,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "66": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "stat100.ameba.jp",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 396,
+          "resp_body_size": 274,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "67": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 31245,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "68": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 38462,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "69": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 26744,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "70": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 51393,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "71": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 23845,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "72": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 139408,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "73": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 34248,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "74": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 55175,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "75": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 42052,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "76": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 53144,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "77": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 92991,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "78": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "ssl-stat.amebame.com",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 413,
+          "resp_body_size": 32533,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {
+    "1332": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          189
+        ]
+      ],
+      "res_chain": [
+        61
+      ]
+    },
+    "1528": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          239
+        ]
+      ],
+      "res_chain": [
+        64
+      ]
+    },
+    "1530": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          217
+        ]
+      ],
+      "res_chain": [
+        65
+      ]
+    }
+  }
+}

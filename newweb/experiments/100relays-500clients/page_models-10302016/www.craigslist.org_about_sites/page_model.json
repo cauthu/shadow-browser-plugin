@@ -1,0 +1,879 @@
+{
+  "elements": {
+    "22": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "24": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "26": {
+      "initial_resInstNum": 4,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "33": {
+      "tag": "body"
+    },
+    "35": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 28,
+      "tag": "script"
+    },
+    "3908": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 32,
+      "tag": "script"
+    },
+    "3911": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 45,
+      "tag": "script"
+    },
+    "4052": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 96,
+      "tag": "script"
+    },
+    "4062": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 6,
+      "is_parser_blocking": true,
+      "run_scope_id": 104,
+      "tag": "script"
+    },
+    "4067": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 7,
+      "is_parser_blocking": true,
+      "run_scope_id": 108,
+      "tag": "script"
+    },
+    "4069": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 8,
+      "is_parser_blocking": true,
+      "run_scope_id": 112,
+      "tag": "script"
+    },
+    "4102": {
+      "event_handling_scopes": [
+        [
+          "load",
+          452
+        ]
+      ],
+      "tag": "img"
+    },
+    "4103": {
+      "event_handling_scopes": [
+        [
+          "load",
+          472
+        ]
+      ],
+      "tag": "img"
+    },
+    "4104": {
+      "event_handling_scopes": [
+        [
+          "load",
+          456
+        ]
+      ],
+      "tag": "img"
+    },
+    "4105": {
+      "event_handling_scopes": [
+        [
+          "load",
+          447
+        ]
+      ],
+      "tag": "img"
+    },
+    "4106": {
+      "event_handling_scopes": [
+        [
+          "load",
+          466
+        ]
+      ],
+      "tag": "img"
+    },
+    "4107": {
+      "event_handling_scopes": [
+        [
+          "load",
+          441
+        ]
+      ],
+      "tag": "img"
+    },
+    "4108": {
+      "event_handling_scopes": [
+        [
+          "load",
+          500
+        ]
+      ],
+      "tag": "img"
+    },
+    "4109": {
+      "event_handling_scopes": [
+        [
+          "load",
+          497
+        ]
+      ],
+      "tag": "img"
+    },
+    "4110": {
+      "event_handling_scopes": [
+        [
+          "load",
+          480
+        ]
+      ],
+      "tag": "img"
+    },
+    "4111": {
+      "event_handling_scopes": [
+        [
+          "load",
+          477
+        ]
+      ],
+      "tag": "img"
+    },
+    "4160": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 183,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "28": [
+      "  /* [1982.72, 1988.94] scopeStart= 1477877137792.973145 type= ScriptControllerRunScriptScope */",
+      "  __msleep(6.22);"
+    ],
+    "32": [
+      "  /* [2012.71, 2012.85] scopeStart= 1477877137822.957031 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "36": [
+      "  /* [2013.5, 2028.54] scopeStart= 1477877137823.750000 type= RenderTreeUpdateScope */",
+      "  __msleep(15.04);"
+    ],
+    "45": [
+      "  /* [2282.4, 2391.99] scopeStart= 1477877138092.648926 type= ScriptControllerRunScriptScope */",
+      "  __msleep(48.05);",
+      "  __msleep(3.35);",
+      "  __msleep(0.56);",
+      "  __msleep(1.59);",
+      "  __msleep(3.63);",
+      "  __msleep(49.29);",
+      "  __msleep(3.12);"
+    ],
+    "96": [
+      "  /* [2392.32, 2394.7] scopeStart= 1477877138202.572021 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);",
+      "  __msleep(2.26);"
+    ],
+    "104": [
+      "  /* [2396.47, 2435.02] scopeStart= 1477877138206.715088 type= ScriptControllerRunScriptScope */",
+      "  __msleep(38.55);"
+    ],
+    "108": [
+      "  /* [2435.63, 2436.29] scopeStart= 1477877138245.882080 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.66);"
+    ],
+    "112": [
+      "  /* [2436.79, 2436.99] scopeStart= 1477877138247.039062 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.20);"
+    ],
+    "117": [
+      "  /* [2437.25, 2488.14] scopeStart= 1477877138247.504883 type= EventTargetInvokingListenersScope */",
+      "  __msleep(15.82);",
+      "  sched_render_update_scope(177);",
+      "  __msleep(11.25);",
+      "  add_elem(4102);",
+      "  __msleep(1.08);",
+      "  set_elem_res(4102, 11);",
+      "  __msleep(0.30);",
+      "  add_elem(4103);",
+      "  __msleep(0.87);",
+      "  set_elem_res(4103, 12);",
+      "  __msleep(0.19);",
+      "  add_elem(4104);",
+      "  __msleep(0.32);",
+      "  set_elem_res(4104, 13);",
+      "  __msleep(0.13);",
+      "  add_elem(4105);",
+      "  __msleep(0.22);",
+      "  set_elem_res(4105, 14);",
+      "  __msleep(0.12);",
+      "  add_elem(4106);",
+      "  __msleep(0.21);",
+      "  set_elem_res(4106, 15);",
+      "  __msleep(0.12);",
+      "  add_elem(4107);",
+      "  __msleep(0.21);",
+      "  set_elem_res(4107, 16);",
+      "  __msleep(0.12);",
+      "  add_elem(4108);",
+      "  __msleep(0.21);",
+      "  set_elem_res(4108, 17);",
+      "  __msleep(0.12);",
+      "  add_elem(4109);",
+      "  __msleep(0.21);",
+      "  set_elem_res(4109, 17);",
+      "  __msleep(0.12);",
+      "  add_elem(4110);",
+      "  __msleep(0.21);",
+      "  set_elem_res(4110, 18);",
+      "  __msleep(0.12);",
+      "  add_elem(4111);",
+      "  __msleep(0.20);",
+      "  set_elem_res(4111, 18);",
+      "  __msleep(9.84);",
+      "  send_xhr(4148);",
+      "  __msleep(7.18);",
+      "  fetch_res(11);",
+      "  __msleep(0.23);",
+      "  fetch_res(12);",
+      "  __msleep(0.20);",
+      "  fetch_res(13);",
+      "  __msleep(0.21);",
+      "  fetch_res(14);",
+      "  __msleep(0.20);",
+      "  fetch_res(15);",
+      "  __msleep(0.20);",
+      "  fetch_res(16);",
+      "  __msleep(0.19);",
+      "  fetch_res(17);",
+      "  __msleep(0.27);",
+      "  fetch_res(18);",
+      "  __msleep(0.22);"
+    ],
+    "177": [
+      "  /* [2488.15, 2489.33] scopeStart= 1477877138298.399902 type= RenderTreeUpdateScope */",
+      "  __msleep(0.41);",
+      "  fetch_res(19);",
+      "  __msleep(0.21);",
+      "  fetch_res(20);",
+      "  __msleep(0.56);"
+    ],
+    "183": [
+      "  /* [2537.53, 2541.49] scopeStart= 1477877138347.781982 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.96);"
+    ],
+    "213": [
+      "  /* [3558.27, 3785.0] scopeStart= 1477877139368.519043 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(82.19);",
+      "  sched_render_update_scope(438);",
+      "  __msleep(144.54);"
+    ],
+    "438": [
+      "  /* [3785.88, 3789.12] scopeStart= 1477877139596.128906 type= RenderTreeUpdateScope */",
+      "  __msleep(3.24);"
+    ],
+    "441": [
+      "  /* [4268.22, 4268.96] scopeStart= 1477877140078.468994 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.38);",
+      "  sched_render_update_scope(444);",
+      "  __msleep(0.36);"
+    ],
+    "444": [
+      "  /* [4276.2, 4277.04] scopeStart= 1477877140086.451172 type= RenderTreeUpdateScope */",
+      "  __msleep(0.84);"
+    ],
+    "445": [
+      "  /* [4293.02, 4293.26] scopeStart= 1477877140103.266846 type= RenderTreeUpdateScope */",
+      "  __msleep(0.24);"
+    ],
+    "447": [
+      "  /* [4303.74, 4304.32] scopeStart= 1477877140113.985107 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.22);",
+      "  sched_render_update_scope(450);",
+      "  __msleep(0.36);"
+    ],
+    "450": [
+      "  /* [4309.6, 4309.91] scopeStart= 1477877140119.847900 type= RenderTreeUpdateScope */",
+      "  __msleep(0.31);"
+    ],
+    "452": [
+      "  /* [4311.48, 4311.82] scopeStart= 1477877140121.728027 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.15);",
+      "  sched_render_update_scope(459);",
+      "  __msleep(0.19);"
+    ],
+    "456": [
+      "  /* [4319.87, 4320.11] scopeStart= 1477877140130.121094 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.24);"
+    ],
+    "459": [
+      "  /* [4326.26, 4326.71] scopeStart= 1477877140136.512939 type= RenderTreeUpdateScope */",
+      "  __msleep(0.45);"
+    ],
+    "460": [
+      "  /* [4343.07, 4343.36] scopeStart= 1477877140153.315918 type= RenderTreeUpdateScope */",
+      "  __msleep(0.29);"
+    ],
+    "461": [
+      "  /* [4359.72, 4360.02] scopeStart= 1477877140169.967041 type= RenderTreeUpdateScope */",
+      "  __msleep(0.30);"
+    ],
+    "462": [
+      "  /* [4376.39, 4376.69] scopeStart= 1477877140186.639160 type= RenderTreeUpdateScope */",
+      "  __msleep(0.30);"
+    ],
+    "463": [
+      "  /* [4393.08, 4393.38] scopeStart= 1477877140203.332031 type= RenderTreeUpdateScope */",
+      "  __msleep(0.30);"
+    ],
+    "464": [
+      "  /* [4409.67, 4409.97] scopeStart= 1477877140219.916016 type= RenderTreeUpdateScope */",
+      "  __msleep(0.30);"
+    ],
+    "466": [
+      "  /* [4411.93, 4412.23] scopeStart= 1477877140222.176025 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.15);",
+      "  sched_render_update_scope(469);",
+      "  __msleep(0.15);"
+    ],
+    "469": [
+      "  /* [4426.31, 4426.76] scopeStart= 1477877140236.560059 type= RenderTreeUpdateScope */",
+      "  __msleep(0.45);"
+    ],
+    "470": [
+      "  /* [4443.05, 4443.38] scopeStart= 1477877140253.303955 type= RenderTreeUpdateScope */",
+      "  __msleep(0.33);"
+    ],
+    "472": [
+      "  /* [4451.53, 4451.84] scopeStart= 1477877140261.780029 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.17);",
+      "  sched_render_update_scope(475);",
+      "  __msleep(0.14);"
+    ],
+    "475": [
+      "  /* [4459.68, 4460.09] scopeStart= 1477877140269.927979 type= RenderTreeUpdateScope */",
+      "  __msleep(0.41);"
+    ],
+    "477": [
+      "  /* [4467.53, 4467.86] scopeStart= 1477877140277.775146 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.17);",
+      "  sched_render_update_scope(483);",
+      "  __msleep(0.16);"
+    ],
+    "480": [
+      "  /* [4467.89, 4468.04] scopeStart= 1477877140278.139160 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.15);"
+    ],
+    "483": [
+      "  /* [4476.4, 4476.93] scopeStart= 1477877140286.647949 type= RenderTreeUpdateScope */",
+      "  __msleep(0.53);"
+    ],
+    "485": [
+      "  /* [4493.52, 4493.96] scopeStart= 1477877140303.770020 type= RenderTreeUpdateScope */",
+      "  __msleep(0.44);"
+    ],
+    "487": [
+      "  /* [4509.78, 4510.17] scopeStart= 1477877140320.031982 type= RenderTreeUpdateScope */",
+      "  __msleep(0.39);"
+    ],
+    "491": [
+      "  /* [4526.83, 4527.25] scopeStart= 1477877140337.079102 type= RenderTreeUpdateScope */",
+      "  __msleep(0.42);"
+    ],
+    "493": [
+      "  /* [4543.07, 4543.35] scopeStart= 1477877140353.315186 type= RenderTreeUpdateScope */",
+      "  __msleep(0.28);"
+    ],
+    "494": [
+      "  /* [4559.74, 4560.04] scopeStart= 1477877140369.990967 type= RenderTreeUpdateScope */",
+      "  __msleep(0.30);"
+    ],
+    "496": [
+      "  /* [4587.33, 4587.36] scopeStart= 1477877140397.581055 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.03);"
+    ],
+    "497": [
+      "  /* [4587.41, 4587.71] scopeStart= 1477877140397.660889 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.16);",
+      "  sched_render_update_scope(505);",
+      "  __msleep(0.14);"
+    ],
+    "500": [
+      "  /* [4587.74, 4588.19] scopeStart= 1477877140397.984863 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.38);",
+      "  __msleep(0.07);"
+    ],
+    "503": [
+      "  /* [4588.21, 4588.22] scopeStart= 1477877140398.459961 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ],
+    "505": [
+      "  /* [4588.27, 4588.66] scopeStart= 1477877140398.523193 type= RenderTreeUpdateScope */",
+      "  __msleep(0.39);"
+    ],
+    "506": [
+      "  /* [4593.0, 4593.26] scopeStart= 1477877140403.244873 type= RenderTreeUpdateScope */",
+      "  __msleep(0.26);"
+    ],
+    "507": [
+      "  /* [4609.75, 4610.09] scopeStart= 1477877140419.997070 type= RenderTreeUpdateScope */",
+      "  __msleep(0.34);"
+    ],
+    "509": [
+      "  /* [4626.58, 4626.96] scopeStart= 1477877140436.833008 type= RenderTreeUpdateScope */",
+      "  __msleep(0.38);"
+    ],
+    "511": [
+      "  /* [4643.05, 4643.37] scopeStart= 1477877140453.303955 type= RenderTreeUpdateScope */",
+      "  __msleep(0.32);"
+    ],
+    "513": [
+      "  /* [4659.87, 4660.2] scopeStart= 1477877140470.119873 type= RenderTreeUpdateScope */",
+      "  __msleep(0.33);"
+    ],
+    "515": [
+      "  /* [4676.37, 4676.65] scopeStart= 1477877140486.615967 type= RenderTreeUpdateScope */",
+      "  __msleep(0.28);"
+    ],
+    "518": [
+      "  /* [4693.28, 4693.61] scopeStart= 1477877140503.529053 type= RenderTreeUpdateScope */",
+      "  __msleep(0.33);"
+    ],
+    "520": [
+      "  /* [4709.67, 4709.89] scopeStart= 1477877140519.917969 type= RenderTreeUpdateScope */",
+      "  __msleep(0.22);"
+    ],
+    "521": [
+      "  /* [4759.66, 4759.92] scopeStart= 1477877140569.910889 type= RenderTreeUpdateScope */",
+      "  __msleep(0.26);"
+    ],
+    "522": [
+      "  /* [4776.36, 4776.61] scopeStart= 1477877140586.611084 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "523": [
+      "  /* [4793.04, 4793.36] scopeStart= 1477877140603.286133 type= RenderTreeUpdateScope */",
+      "  __msleep(0.32);"
+    ],
+    "526": [
+      "  /* [4810.05, 4810.44] scopeStart= 1477877140620.297852 type= RenderTreeUpdateScope */",
+      "  __msleep(0.39);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 36,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        67,
+        22
+      ],
+      [
+        88,
+        24
+      ],
+      [
+        110,
+        26
+      ],
+      [
+        181,
+        33
+      ],
+      [
+        392,
+        35
+      ],
+      [
+        12035,
+        3908
+      ],
+      [
+        12057,
+        3911
+      ],
+      [
+        12105,
+        4052
+      ],
+      [
+        12125,
+        4062
+      ],
+      [
+        12144,
+        4067
+      ],
+      [
+        12163,
+        4069
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        117
+      ],
+      [
+        "load",
+        503
+      ],
+      [
+        "readystatechange_complete",
+        496
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "map1.craigslist.org",
+    "map2.craigslist.org",
+    "map3.craigslist.org",
+    "map4.craigslist.org",
+    "map5.craigslist.org",
+    "www.craigslist.org"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 12166,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 7.779999999999973,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 419,
+          "resp_body_size": 9601,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 1.490000000000009,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 424,
+          "resp_body_size": 2410,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "parse_dur_ms": 0.22000000000002728,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 430,
+          "resp_body_size": 539,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 415,
+          "resp_body_size": 112045,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 415,
+          "resp_body_size": 43147,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 405,
+          "resp_body_size": 1339,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 406,
+          "resp_body_size": 1295,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "9": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 486,
+          "resp_body_size": 614,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "10": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 449,
+          "resp_body_size": 17868,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "raw"
+    },
+    "11": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map4.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 108422,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map3.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 88886,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map3.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 95390,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map5.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 123512,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map2.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 92273,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map4.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 99206,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map2.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 95549,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "map1.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 391,
+          "resp_body_size": 77976,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 437,
+          "resp_body_size": 222,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "www.craigslist.org",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 438,
+          "resp_body_size": 218,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {
+    "4148": {
+      "event_handling_scopes": [
+        [
+          "readystatechange_DONE",
+          213
+        ]
+      ],
+      "res_chain": [
+        10
+      ]
+    }
+  }
+}
