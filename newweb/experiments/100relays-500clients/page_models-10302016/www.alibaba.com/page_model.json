@@ -686,7 +686,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.alibaba.com",
+          "host": "server143",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -702,7 +702,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -717,7 +717,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -732,7 +732,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -747,7 +747,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -763,7 +763,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -778,7 +778,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "gtms01.alicdn.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -794,7 +794,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -809,7 +809,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -824,7 +824,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -839,7 +839,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "i.alicdn.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -854,7 +854,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "perf.mmstat.com",
+          "host": "server103",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -869,7 +869,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "googleads.g.doubleclick.net",
+          "host": "server122",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -878,7 +878,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "www.google.com",
+          "host": "server178",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -893,7 +893,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "analytics.twitter.com",
+          "host": "server126",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -902,7 +902,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "analytics.twitter.com",
+          "host": "server126",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -917,7 +917,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "t.co",
+          "host": "server159",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -932,7 +932,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "sp.analytics.yahoo.com",
+          "host": "server76",
           "method": "GET",
           "port": 80,
           "priority": 3,

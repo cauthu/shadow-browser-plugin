@@ -435,7 +435,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -450,7 +450,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -465,7 +465,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "bs.serving-sys.com",
+          "host": "server111",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -480,7 +480,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "js.dmtry.com",
+          "host": "server41",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -495,7 +495,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -510,7 +510,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "log.dmtry.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -519,7 +519,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "log.dmtry.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -528,7 +528,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "cm.g.doubleclick.net",
+          "host": "server106",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -537,7 +537,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "cm.g.doubleclick.net",
+          "host": "server106",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -546,7 +546,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "log.dmtry.com",
+          "host": "server66",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -561,7 +561,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -576,7 +576,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -592,7 +592,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -607,7 +607,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.indeed.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,

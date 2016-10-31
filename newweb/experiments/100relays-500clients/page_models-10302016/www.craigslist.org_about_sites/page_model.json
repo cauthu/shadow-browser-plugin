@@ -562,7 +562,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -578,7 +578,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -594,7 +594,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -610,7 +610,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -625,7 +625,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -640,7 +640,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -655,7 +655,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -670,7 +670,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -685,7 +685,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -700,7 +700,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -715,7 +715,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map4.craigslist.org",
+          "host": "server119",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -730,7 +730,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map3.craigslist.org",
+          "host": "server178",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -745,7 +745,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map3.craigslist.org",
+          "host": "server178",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -760,7 +760,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map5.craigslist.org",
+          "host": "server151",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -775,7 +775,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map2.craigslist.org",
+          "host": "server194",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -790,7 +790,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map4.craigslist.org",
+          "host": "server119",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -805,7 +805,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map2.craigslist.org",
+          "host": "server194",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -820,7 +820,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "map1.craigslist.org",
+          "host": "server150",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -835,7 +835,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -850,7 +850,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.craigslist.org",
+          "host": "server145",
           "method": "GET",
           "port": 443,
           "priority": 3,

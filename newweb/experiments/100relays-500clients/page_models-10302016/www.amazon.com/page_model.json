@@ -1419,7 +1419,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.amazon.com",
+          "host": "server159",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1435,7 +1435,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1451,7 +1451,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1467,7 +1467,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1482,7 +1482,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1497,7 +1497,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "fls-na.amazon.com",
+          "host": "server128",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1512,7 +1512,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1527,7 +1527,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1542,7 +1542,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1557,7 +1557,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1572,7 +1572,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1587,7 +1587,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1602,7 +1602,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1618,7 +1618,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1634,7 +1634,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1649,7 +1649,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "images-na.ssl-images-amazon.com",
+          "host": "server121",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1664,7 +1664,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.amazon.com",
+          "host": "server159",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1679,7 +1679,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "fls-na.amazon.com",
+          "host": "server128",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1694,7 +1694,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "fls-na.amazon.com",
+          "host": "server128",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1709,7 +1709,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "fls-na.amazon.com",
+          "host": "server128",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1724,7 +1724,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1733,7 +1733,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1748,7 +1748,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1763,7 +1763,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "bh.contextweb.com",
+          "host": "server6",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1772,7 +1772,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1787,7 +1787,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "sync.search.spotxchange.com",
+          "host": "server104",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1796,7 +1796,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1811,7 +1811,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "usermatch.krxd.net",
+          "host": "server192",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1820,7 +1820,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "beacon.krxd.net",
+          "host": "server131",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1835,7 +1835,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cm.g.doubleclick.net",
+          "host": "server7",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1844,7 +1844,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "cm.g.doubleclick.net",
+          "host": "server7",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1853,7 +1853,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1868,7 +1868,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "x.bidswitch.net",
+          "host": "server78",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1877,7 +1877,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "x.bidswitch.net",
+          "host": "server78",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1886,7 +1886,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1901,7 +1901,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "us-u.openx.net",
+          "host": "server162",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1910,7 +1910,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "us-u.openx.net",
+          "host": "server162",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1919,7 +1919,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1934,7 +1934,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ssum-sec.casalemedia.com",
+          "host": "server166",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1943,7 +1943,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "ssum-sec.casalemedia.com",
+          "host": "server166",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1952,7 +1952,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1967,7 +1967,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ums.adtechus.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1976,7 +1976,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "ums.adtechus.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1985,7 +1985,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2000,7 +2000,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ib.adnxs.com",
+          "host": "server130",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2009,7 +2009,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "ib.adnxs.com",
+          "host": "server130",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2018,7 +2018,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2033,7 +2033,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "token.rubiconproject.com",
+          "host": "server177",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2042,7 +2042,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2057,7 +2057,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "geo-um.btrll.com",
+          "host": "server148",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2066,7 +2066,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "geo-um.btrll.com",
+          "host": "server148",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2075,7 +2075,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2090,7 +2090,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.facebook.com",
+          "host": "server184",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2099,7 +2099,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2114,7 +2114,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "sync.adaptv.advertising.com",
+          "host": "server157",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2123,7 +2123,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2138,7 +2138,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "analytics.twitter.com",
+          "host": "server169",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2147,7 +2147,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2162,7 +2162,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ads.yahoo.com",
+          "host": "server26",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2171,7 +2171,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2186,7 +2186,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.facebook.com",
+          "host": "server184",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2195,7 +2195,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2210,7 +2210,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "image5.pubmatic.com",
+          "host": "server81",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2219,7 +2219,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2234,7 +2234,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "sync.ipredictive.com",
+          "host": "server109",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2243,7 +2243,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "s.amazon-adsystem.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,

@@ -269,7 +269,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.tianya.cn",
+          "host": "server30",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -285,7 +285,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -301,7 +301,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -316,7 +316,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -331,7 +331,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -346,7 +346,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -361,7 +361,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -376,7 +376,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -391,7 +391,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -406,7 +406,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.tianyaui.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,

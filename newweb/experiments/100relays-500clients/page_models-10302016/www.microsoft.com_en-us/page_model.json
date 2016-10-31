@@ -795,7 +795,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.microsoft.com",
+          "host": "server198",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -811,7 +811,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -827,7 +827,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -843,7 +843,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -859,7 +859,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -874,7 +874,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ajax.aspnetcdn.com",
+          "host": "server181",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -889,7 +889,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -904,7 +904,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "mem.gfx.ms",
+          "host": "server117",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -919,7 +919,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -934,7 +934,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -949,7 +949,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.optimizely.com",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -964,7 +964,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -979,7 +979,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -994,7 +994,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1009,7 +1009,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1024,7 +1024,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1039,7 +1039,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1054,7 +1054,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1069,7 +1069,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1084,7 +1084,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1099,7 +1099,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1114,7 +1114,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1129,7 +1129,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1144,7 +1144,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1159,7 +1159,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1174,7 +1174,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1189,7 +1189,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img-prod-cms-rt-microsoft-com.akamaized.net",
+          "host": "server197",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1204,7 +1204,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1219,7 +1219,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1234,7 +1234,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1249,7 +1249,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1264,7 +1264,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "6212760188.log.optimizely.com",
+          "host": "server50",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1279,7 +1279,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1294,7 +1294,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1309,7 +1309,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1324,7 +1324,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1339,7 +1339,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1354,7 +1354,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.s-microsoft.com",
+          "host": "server32",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1369,7 +1369,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "assets.onestore.ms",
+          "host": "server196",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1384,7 +1384,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "c1.microsoft.com",
+          "host": "server101",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1393,7 +1393,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "c.bing.com",
+          "host": "server192",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1402,7 +1402,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "c1.microsoft.com",
+          "host": "server101",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1417,7 +1417,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "c.microsoft.com",
+          "host": "server119",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1432,7 +1432,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.microsoftstore.com",
+          "host": "server80",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1447,7 +1447,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1462,7 +1462,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1477,7 +1477,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1492,7 +1492,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1507,7 +1507,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1522,7 +1522,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "2.rto.microsoft.com",
+          "host": "server152",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -1537,7 +1537,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.microsoft.com",
+          "host": "server198",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1546,7 +1546,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "login.live.com",
+          "host": "server137",
           "method": "GET",
           "port": 443,
           "priority": 3,

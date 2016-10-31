@@ -305,7 +305,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.google.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -320,7 +320,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.google.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -335,7 +335,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.google.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -350,7 +350,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ssl.gstatic.com",
+          "host": "server9",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -365,7 +365,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.google.com",
+          "host": "server163",
           "method": "GET",
           "port": 443,
           "priority": 3,

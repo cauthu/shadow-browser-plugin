@@ -1169,7 +1169,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.instagram.com",
+          "host": "server64",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1184,7 +1184,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1199,7 +1199,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1214,7 +1214,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1229,7 +1229,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1244,7 +1244,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1259,7 +1259,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1274,7 +1274,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1289,7 +1289,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1304,7 +1304,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1319,7 +1319,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1334,7 +1334,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1349,7 +1349,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1364,7 +1364,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1379,7 +1379,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1394,7 +1394,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1409,7 +1409,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "instagramstatic-a.akamaihd.net",
+          "host": "server176",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1424,7 +1424,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.instagram.com",
+          "host": "server64",
           "method": "POST",
           "port": 443,
           "priority": 3,

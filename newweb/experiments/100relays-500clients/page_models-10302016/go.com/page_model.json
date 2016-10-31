@@ -508,7 +508,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "go.com",
+          "host": "server98",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -523,7 +523,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -539,7 +539,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -555,7 +555,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -571,7 +571,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -587,7 +587,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -603,7 +603,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -619,7 +619,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -634,7 +634,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.registerdisney.go.com",
+          "host": "server114",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -649,7 +649,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ajax.googleapis.com",
+          "host": "server196",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -664,7 +664,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -680,7 +680,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -695,7 +695,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -710,7 +710,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "lumiere-a.akamaihd.net",
+          "host": "server164",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -725,7 +725,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "lumiere-a.akamaihd.net",
+          "host": "server164",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -740,7 +740,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -755,7 +755,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -770,7 +770,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -785,7 +785,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -800,7 +800,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -815,7 +815,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -830,7 +830,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -845,7 +845,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -860,7 +860,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -875,7 +875,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.dilcdn.com",
+          "host": "server52",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -890,7 +890,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -905,7 +905,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -920,7 +920,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.lum.dolimg.com",
+          "host": "server87",
           "method": "GET",
           "port": 80,
           "priority": 3,

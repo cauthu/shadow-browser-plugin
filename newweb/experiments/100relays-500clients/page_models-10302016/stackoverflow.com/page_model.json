@@ -425,7 +425,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "stackoverflow.com",
+          "host": "server20",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -440,7 +440,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ajax.googleapis.com",
+          "host": "server134",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -455,7 +455,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -471,7 +471,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -486,7 +486,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -501,7 +501,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -516,7 +516,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -531,7 +531,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -546,7 +546,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -561,7 +561,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -576,7 +576,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -591,7 +591,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.stack.imgur.com",
+          "host": "server145",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -606,7 +606,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "ssum-sec.casalemedia.com",
+          "host": "server106",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -615,7 +615,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "ssum-sec.casalemedia.com",
+          "host": "server106",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -630,7 +630,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -645,7 +645,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -660,7 +660,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -675,7 +675,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -690,7 +690,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.sstatic.net",
+          "host": "server49",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -705,7 +705,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "engine.adzerk.net",
+          "host": "server126",
           "method": "GET",
           "port": 443,
           "priority": 3,

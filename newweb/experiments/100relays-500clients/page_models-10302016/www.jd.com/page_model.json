@@ -297,7 +297,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.jd.com",
+          "host": "server93",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -312,7 +312,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img14.360buyimg.com",
+          "host": "server19",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -327,7 +327,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "misc.360buyimg.com",
+          "host": "server175",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -342,7 +342,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "wl.jd.com",
+          "host": "server187",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -357,7 +357,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "misc.360buyimg.com",
+          "host": "server175",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -372,7 +372,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "misc.360buyimg.com",
+          "host": "server175",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -387,7 +387,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img12.360buyimg.com",
+          "host": "server85",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -402,7 +402,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img10.360buyimg.com",
+          "host": "server195",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -417,7 +417,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "misc.360buyimg.com",
+          "host": "server175",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -432,7 +432,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "ccc.jd.com",
+          "host": "server161",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -447,7 +447,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "mercury.jd.com",
+          "host": "server68",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -462,7 +462,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img13.360buyimg.com",
+          "host": "server96",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -477,7 +477,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img30.360buyimg.com",
+          "host": "server94",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -492,7 +492,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img11.360buyimg.com",
+          "host": "server138",
           "method": "GET",
           "port": 80,
           "priority": 3,

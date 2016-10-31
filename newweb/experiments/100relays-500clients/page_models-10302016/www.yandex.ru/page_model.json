@@ -1178,7 +1178,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.yandex.ru",
+          "host": "server60",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1193,7 +1193,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yandex.ru",
+          "host": "server36",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1208,7 +1208,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1223,7 +1223,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yabs.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1232,7 +1232,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "yabs.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1247,7 +1247,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1262,7 +1262,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1277,7 +1277,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1292,7 +1292,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1307,7 +1307,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1322,7 +1322,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1337,7 +1337,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1352,7 +1352,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "mc.yandex.ru",
+          "host": "server155",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1367,7 +1367,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yabs.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1382,7 +1382,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1397,7 +1397,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1413,7 +1413,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1428,7 +1428,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.yandex.ru",
+          "host": "server60",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1443,7 +1443,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "awaps.yandex.net",
+          "host": "server90",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1458,7 +1458,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yastatic.net",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1473,7 +1473,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yabs.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1488,7 +1488,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "mc.yandex.ru",
+          "host": "server155",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1503,7 +1503,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "kiks.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1512,7 +1512,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "kiks.yandex.ru",
+          "host": "server190",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1527,7 +1527,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.tns-counter.ru",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1536,7 +1536,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "www.tns-counter.ru",
+          "host": "server4",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1551,7 +1551,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "yandex.ru",
+          "host": "server36",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -1566,7 +1566,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.yandex.ru",
+          "host": "server60",
           "method": "GET",
           "port": 443,
           "priority": 3,

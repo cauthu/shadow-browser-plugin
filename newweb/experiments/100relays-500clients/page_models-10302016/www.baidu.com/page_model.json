@@ -370,7 +370,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server93",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -385,7 +385,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server93",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -400,7 +400,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.baidu.com",
+          "host": "server93",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -415,7 +415,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -430,7 +430,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -445,7 +445,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -460,7 +460,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -475,7 +475,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -490,7 +490,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "s1.bdstatic.com",
+          "host": "server69",
           "method": "GET",
           "port": 80,
           "priority": 3,

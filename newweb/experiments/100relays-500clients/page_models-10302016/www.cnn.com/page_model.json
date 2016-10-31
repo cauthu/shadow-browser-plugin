@@ -2356,7 +2356,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.cnn.com",
+          "host": "server118",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2372,7 +2372,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2388,7 +2388,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2403,7 +2403,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2418,7 +2418,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2433,7 +2433,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "cdn.optimizely.com",
+          "host": "server162",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2448,7 +2448,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2463,7 +2463,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2478,7 +2478,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2493,7 +2493,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2508,7 +2508,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2523,7 +2523,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2538,7 +2538,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2553,7 +2553,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "z.cdn.turner.com",
+          "host": "server74",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2568,7 +2568,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2583,7 +2583,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "a.postrelease.com",
+          "host": "server158",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2598,7 +2598,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2613,7 +2613,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "static.chartbeat.com",
+          "host": "server137",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2628,7 +2628,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2643,7 +2643,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2658,7 +2658,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2673,7 +2673,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2688,7 +2688,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2703,7 +2703,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2718,7 +2718,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2733,7 +2733,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "131788053.log.optimizely.com",
+          "host": "server44",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2748,7 +2748,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "a125375509.cdn.optimizely.com",
+          "host": "server119",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -2763,7 +2763,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "OPTIONS",
           "port": 443,
           "priority": 3,
@@ -2778,7 +2778,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i.cdn.turner.com",
+          "host": "server179",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2793,7 +2793,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2808,7 +2808,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2823,7 +2823,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2838,7 +2838,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2853,7 +2853,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "data.cnn.com",
+          "host": "server99",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2868,7 +2868,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.cnn.com",
+          "host": "server118",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2883,7 +2883,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "www.cnn.com",
+          "host": "server118",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2898,7 +2898,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2913,7 +2913,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "www.i.cdn.cnn.com",
+          "host": "server9",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2928,7 +2928,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "mab.chartbeat.com",
+          "host": "server151",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2943,7 +2943,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2958,7 +2958,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2973,7 +2973,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -2988,7 +2988,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3003,7 +3003,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3018,7 +3018,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3033,7 +3033,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3048,7 +3048,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3063,7 +3063,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3078,7 +3078,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3093,7 +3093,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "img.bleacherreport.net",
+          "host": "server148",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3108,7 +3108,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3123,7 +3123,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3138,7 +3138,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3153,7 +3153,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3168,7 +3168,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3183,7 +3183,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "i2.cdn.turner.com",
+          "host": "server39",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3198,7 +3198,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "secure-us.imrworldwide.com",
+          "host": "server117",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3207,7 +3207,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "secure-us.imrworldwide.com",
+          "host": "server117",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3222,7 +3222,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "metrics.cnn.com",
+          "host": "server35",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3231,7 +3231,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "metrics.cnn.com",
+          "host": "server35",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3240,7 +3240,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "b.scorecardresearch.com",
+          "host": "server114",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3249,7 +3249,7 @@
           "resp_meta_size": 200
         },
         {
-          "host": "b.scorecardresearch.com",
+          "host": "server114",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -3264,7 +3264,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "OPTIONS",
           "port": 443,
           "priority": 3,
@@ -3279,7 +3279,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -3294,7 +3294,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -3309,7 +3309,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -3324,7 +3324,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -3339,7 +3339,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
@@ -3354,7 +3354,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "131788053.cdn.optimizely.com",
+          "host": "server133",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -3369,7 +3369,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "logx.optimizely.com",
+          "host": "server34",
           "method": "POST",
           "port": 443,
           "priority": 3,
