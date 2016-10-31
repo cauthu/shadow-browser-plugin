@@ -65,6 +65,7 @@ public:
     };
 
     EstablishReturnValue establish_tunnel(CSPStatusCb, const bool force_reconnect=true);
+    void close_all_streams();
 
     bool set_auto_start_defense_session_on_next_send();
     void stop_defense_session(const bool& right_now);

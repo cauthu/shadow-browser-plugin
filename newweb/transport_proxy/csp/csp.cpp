@@ -122,6 +122,15 @@ ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
     return EstablishReturnValue::PENDING;
 }
 
+void
+ClientSideProxy::close_all_streams()
+{
+    decltype(client_handlers_) tmp;
+    std::swap(tmp, client_handlers_);
+    CHECK(client_handlers_.empty());
+    tmp.clear();
+}
+
 bool
 ClientSideProxy::set_auto_start_defense_session_on_next_send()
 {

@@ -62,6 +62,16 @@ s_on_SIGUSR2(int, short, void *arg)
 }
 
 static void
+s_on_SIGUSR1(int, short, void *arg)
+{
+    auto csp = (csp::ClientSideProxy*)arg;
+    CHECK_NOTNULL(csp);
+
+    LOG(INFO) << "received SIGUSR1; request csp to close all streams";
+    csp->close_all_streams();
+}
+
+static void
 s_on_SIGTERM_SIGINT(int, short, void *arg)
 {
     auto csp = (csp::ClientSideProxy*)arg;
@@ -297,6 +307,8 @@ int main(int argc, char **argv)
 
 #ifndef IN_SHADOW
 
+    std::unique_ptr<struct event, void(*)(struct event*)> sigusr1_ev(
+        nullptr, event_free);
     std::unique_ptr<struct event, void(*)(struct event*)> sigusr2_ev(
         nullptr, event_free);
     std::unique_ptr<struct event, void(*)(struct event*)> sigterm_ev(
@@ -394,6 +406,18 @@ int main(int argc, char **argv)
                             conf.auto_start_defense_session_on_next_send),
                 true);
 
+            auto rv2 = 0;
+
+            LOG(INFO) << "setting up SIGUSR1 handler; "
+                      << "use SIGUSR1 to close all streams, if any";
+
+            sigusr1_ev.reset(
+                evsignal_new(evbase.get(), SIGUSR1, s_on_SIGUSR1, csp.get()));
+            CHECK_NOTNULL(sigusr1_ev.get());
+
+            rv2 = event_add(sigusr1_ev.get(), nullptr);
+            CHECK_EQ(rv2, 0);
+
             LOG(INFO) << "setting up SIGUSR2 handler; "
                       << "use SIGUSR2 to stop an active defense, if any";
 
@@ -401,7 +425,7 @@ int main(int argc, char **argv)
                 evsignal_new(evbase.get(), SIGUSR2, s_on_SIGUSR2, csp.get()));
             CHECK_NOTNULL(sigusr2_ev.get());
 
-            auto rv2 = event_add(sigusr2_ev.get(), nullptr);
+            rv2 = event_add(sigusr2_ev.get(), nullptr);
             CHECK_EQ(rv2, 0);
 
             sigterm_ev.reset(
