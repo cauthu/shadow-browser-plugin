@@ -624,21 +624,9 @@
       "tag": "script"
     },
     "3764": {
-      "event_handling_scopes": [
-        [
-          "error",
-          561
-        ]
-      ],
       "tag": "img"
     },
     "3765": {
-      "event_handling_scopes": [
-        [
-          "error",
-          565
-        ]
-      ],
       "tag": "img"
     },
     "3770": {
