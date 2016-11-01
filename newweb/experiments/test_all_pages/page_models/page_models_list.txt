@@ -35,3 +35,5 @@ www.naver.com page_models/www.naver.com-page_model.json
 www.linkedin.com page_models/www.linkedin.com-page_model.json
 mail.ru page_models/mail.ru-page_model.json
 www.outbrain.com page_models/www.outbrain.com-page_model.json
+www.jd.com-1030 page_models/www.jd.com-page_model-10302016.json
+www.sogou.com-1030 page_models/www.sogou.com-page_model-10302016.json
