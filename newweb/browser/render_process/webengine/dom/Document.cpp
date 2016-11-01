@@ -47,7 +47,6 @@ Document::Document(struct ::event_base* evbase,
     , page_model_(page_model)
     , resource_fetcher_(resource_fetcher)
     , state_(ReadyState::Initial)
-    , pendingStylesheets_(0)
     , executeScriptsWaitingForResourcesTimer_(
         new Timer(evbase, true,
                   boost::bind(&Document::_executeScriptsWaitingForResourcesTimerFired, this, _1)))
@@ -199,26 +198,33 @@ Document::set_elem_res(const uint32_t elemInstNum, const uint32_t resInstNum)
 bool
 Document::isScriptExecutionReady() const
 {
-    return pendingStylesheets_ == 0;
+    return pendingStylesheets_.empty();
 }
 
 void
 Document::addPendingSheet(Element* element)
 {
-    ++pendingStylesheets_;
-    vlogself(2) << "elem:" << element->instNum()
-                << " increments pendingStylesheets_ to " << pendingStylesheets_;
+    const auto elemInstNum = element->instNum();
+    const auto it = pendingStylesheets_.find(elemInstNum);
+    CHECK(it == pendingStylesheets_.end())
+        << "elem:" << elemInstNum << " already a pending stylesheet";
+    pendingStylesheets_.insert(elemInstNum);
+    vlogself(2) << "elem:" << elemInstNum
+                << " increments pendingStylesheets_ to " << pendingStylesheets_.size();
 }
 
 void
 Document::removePendingSheet(Element* element)
 {
-    CHECK_GT(pendingStylesheets_, 0);
-    --pendingStylesheets_;
-    vlogself(2) << "elem:" << element->instNum()
-                << " decrements pendingStylesheets_ to " << pendingStylesheets_;
+    const auto elemInstNum = element->instNum();
+    const auto it = pendingStylesheets_.find(elemInstNum);
+    CHECK(it != pendingStylesheets_.end())
+        << "elem:" << element->instNum() << " not a pending stylesheet";
+    pendingStylesheets_.erase(it);
+    vlogself(2) << "elem:" << elemInstNum
+                << " decrements pendingStylesheets_ to " << pendingStylesheets_.size();
 
-    if (pendingStylesheets_) {
+    if (pendingStylesheets_.size()) {
         return;
     }
 
@@ -252,7 +258,7 @@ Document::_executeScriptsWaitingForResourcesTimerFired(Timer*)
 {
     // after the timer is scheduled but before it fires, more blocking
     // style sheets can be added (e.g., by script)
-    if (pendingStylesheets_ == 0) {
+    if (pendingStylesheets_.empty()) {
         parser_->executeScriptsWaitingForResources();
     }
 }

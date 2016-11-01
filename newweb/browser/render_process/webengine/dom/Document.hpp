@@ -89,10 +89,10 @@ protected:
     std::shared_ptr<Resource> main_resource_;
     HTMLDocumentParser::UniquePtr parser_;
 
-    /* number of blocking stylesheets that are still pending, i.e.,
+    /* instNum's of blocking stylesheets that are still pending, i.e.,
      * not loaded/parsed yet. this typically blocks js execution.
      */
-    int pendingStylesheets_;
+    std::set<uint32_t> pendingStylesheets_;
 
     Timer::UniquePtr executeScriptsWaitingForResourcesTimer_;
 

@@ -37,6 +37,7 @@ protected:
 
     Document* document() { return document_; }
 
+    virtual void onResInstNumChanged() {}
 
     ///////
 

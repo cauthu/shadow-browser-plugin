@@ -28,10 +28,16 @@ protected:
     virtual ~HTMLLinkElement() = default;
 
     virtual void notifyFinished(Resource*, bool success) override;
+    virtual void onResInstNumChanged() override;
 
     const std::string rel_;
     const bool is_blocking_stylesheet_;
 
+    // whether we are currently blocking. this is so that, if we have
+    // added ourselves as pending style sheet, then before we remove
+    // ourselves, we are set to a different resource, so we shouldn't
+    // incremented again
+    bool currently_blocking_ = false;
 };
 
 } //namespace

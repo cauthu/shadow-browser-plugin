@@ -80,6 +80,8 @@ Element::setResInstNum(const uint32_t& resInstNum)
         resource->addClient(this);
     }
 
+    onResInstNumChanged();
+
     vlogself(2) << "done";
 }
 
