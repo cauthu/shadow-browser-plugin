@@ -77,7 +77,8 @@ PageModel::get_resource_info(const uint32_t& resInstNum,
 
     json::Value::ConstMemberIterator itr =
         model_json["resources"].FindMember(resInstNumStr.c_str());
-    CHECK(itr != model_json["resources"].MemberEnd());
+    CHECK(itr != model_json["resources"].MemberEnd())
+        << "unknown res:" << resInstNumStr;
 
     const json::Value& resource = itr->value;
     CHECK(resource.IsObject());
