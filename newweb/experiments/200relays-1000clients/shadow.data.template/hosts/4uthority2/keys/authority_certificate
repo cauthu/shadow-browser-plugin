@@ -1,0 +1,39 @@
+dir-key-certificate-version 3
+fingerprint 3500CF182D5C86FC4A68B504949B1E7A33920101
+dir-key-published 2016-11-03 10:03:52
+dir-key-expires 2018-11-03 10:03:52
+dir-identity-key
+-----BEGIN RSA PUBLIC KEY-----
+MIIBigKCAYEA2kH1NpAsPeB3ZLfjaZs2PvJPDGKhngVmRS0LG7l6NGDKPTzOPcY3
+yeRFdGhpCF0stMzLJT9CbOAp+njaqxgR3mZnuXdc0pmKFza46WZ/lgENVCy3GAFQ
+orcb+EdmPNOU5mybM49V12RAx7usVFlWT1yFCW2cELON4m8GBg0EOeIwfn0yYmwe
+wzs6aasfdiJWM6zmKrENg0OJbtXacDmmWDxTI+zPAHVlth1IfFWdmf4BexrWy7O8
+T2GXbxse2cs3cFGyhAf+VP/OffmC4bjQEAG3SflQJVn53pOlxf0hcmH5jszGjzE1
+E5jI4cixEKySDxtJQLmefyBKxmYbXyEx8OR3TpQTJr7qaBxUb1CVa4bNyrjHUJEX
+S7T3t24PquxARh294vVOSigZdI/jj9+ES9AFuxxhhOx7dxU8dfwvDFMojXiQXMEg
+Th5ia+cpoRpizSMgqmjxIq0aeuQeNo4cu542nbYxlu3EQViy92rV24+yCNmVVO1M
+4inCSKmApyivAgMBAAE=
+-----END RSA PUBLIC KEY-----
+dir-signing-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBANMkoS95zyLlZYOiz62J7/iag7m+Qm828afLoJ+fwjtW3FN7Z1shx33b
+BNP+wWPtuqYJ3Dt4eKqTK9eipIEDDiT96/O/3a8SnbgromcoBqHQMY2sfUV/hqu9
+ar9szuQVnCFmiy45JGbxQmkPI3EAm2z6GYbcggr6UJDdxsnRuJarAgMBAAE=
+-----END RSA PUBLIC KEY-----
+dir-key-crosscert
+-----BEGIN ID SIGNATURE-----
+Xt/ZdQNX/C8L26eEuplTjzgwmkZ5MZMoaqRhGz/CMQPT8HM8Ecf782b05ixNvJO+
+fNwYuodMu7dJ0x60/2nVhKWc6kLLuEehSF53Pjw3shX3c/rZM7pXDONMO8ymm4ZA
+b/VdV1BX+jRpdPh9HGu2Wk0/znP+rYztKKxgPhzJkeI=
+-----END ID SIGNATURE-----
+dir-key-certification
+-----BEGIN SIGNATURE-----
+Kq2JKZqO7xzFanwjIcYb84gThPNAYHjX3rVt0g2AtQkXm3HZ2cofxDQqThcOxFIF
+Jo4r6xJ5golbJ6vovMYIhMjmJlS+Wl/5uqQuUK39Sw/7MwiQfXG6kkKtFnYhRjmf
+39XyzE74LsAQjQ+0xerOTIulRNY4y1myHFWmqf2UBPMwc83OmS0YA5gXY6vA8qm9
+U0eSnLK4OqcQqHbfeEgR693MXrVLVD6RAImt/QhPyISxHYWib++0k6VzIjBVKd+o
+pqwM4eJQFuAB5VlmI6b2lUDDH7GncigLBoTMvtghhihpnZtinNoXF1cWOHkBfpWG
+UMWUSy2LcajGj4/j4LyjKt0ziXRie+kUi6xL535z1VuLCzbCvVa+AH2ORdrHBHKX
+UFpjhvmwkGc1pSGfmzZHfJ9NSgq5t6DhUgv3qqvGrFYq5KWsWU1TV/qPDXksw7yv
+/tazETlt8wztTmop5pWG69uXktwe5QStci1gU4PFaB2xDmDixvvk+5pC/5Cj/LpF
+-----END SIGNATURE-----
