@@ -1,5 +1,5 @@
 <shadow>
-  <!-- generated with cmd: /home/nguyen59/shadow-plugin-extras/newweb/tools/generate.py --nauths 2 --nrelays 300 --nclients 1000 --nservers 300 --fweb 0.80 --fbulk 0.20 --nperf50k 20 --nperf1m 20 --nperf5m 20 ../alexa-top-1000-ips.csv ../consensuses-2016-03/01/2016-03-01-01-00-00-consensus ../server-descriptors-2016-03 ../extra-infos-2016-03 ../clients.csv -->
+  <!-- generated with cmd: /home/nguyen59/shadow-plugin-extras/newweb/tools/generate.py --nauths 1 --nrelays 300 --nclients 1000 --nservers 300 --fweb 0.80 --fbulk 0.20 --nperf50k 20 --nperf1m 20 --nperf5m 20 ../alexa-top-1000-ips.csv ../consensuses-2016-03/01/2016-03-01-01-00-00-consensus ../server-descriptors-2016-03 ../extra-infos-2016-03 ../clients.csv -->
   <kill time="3305"/>
   <topology path="~/.shadow/share/topology.graphml.xml"/>
   <plugin id="webserver" path="~/.shadow/plugins/libshadow-plugin-webserver.so"/>
@@ -1212,50 +1212,47 @@
   <node id="4uthority1" typehint="relay" bandwidthdown="6400" bandwidthup="6400" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="5" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.authority.torrc"/>
   </node>
-  <node id="4uthority2" typehint="relay" bandwidthdown="6400" bandwidthup="6400" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="6" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.authority.torrc"/>
-  </node>
-  <node id="relayexitguard1" iphint="93.115.95.206" geocodehint="RO" typehint="relay" bandwidthdown="88400" bandwidthup="88400" quantity="1" cpufrequency="3400000">
+  <node id="relayexitguard1" iphint="93.115.95.206" geocodehint="RO" typehint="relay" bandwidthdown="88400" bandwidthup="88400" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="60" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="60" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard2" iphint="185.100.85.190" geocodehint="RO" typehint="relay" bandwidthdown="51000" bandwidthup="51000" quantity="1" cpufrequency="2600000">
+  <node id="relayexitguard2" iphint="185.100.85.190" geocodehint="RO" typehint="relay" bandwidthdown="51000" bandwidthup="51000" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="62" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="62" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard3" iphint="178.32.181.99" geocodehint="FR" typehint="relay" bandwidthdown="32900" bandwidthup="32900" quantity="1" cpufrequency="3200000">
+  <node id="relayexitguard3" iphint="178.32.181.99" geocodehint="FR" typehint="relay" bandwidthdown="32900" bandwidthup="32900" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="64" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="64" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard4" iphint="37.187.7.74" geocodehint="FR" typehint="relay" bandwidthdown="24000" bandwidthup="24000" quantity="1" cpufrequency="2200000">
+  <node id="relayexitguard4" iphint="37.187.7.74" geocodehint="FR" typehint="relay" bandwidthdown="24000" bandwidthup="24000" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="66" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="66" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard5" iphint="5.196.66.162" geocodehint="FR" typehint="relay" bandwidthdown="20100" bandwidthup="20100" quantity="1" cpufrequency="3200000">
+  <node id="relayexitguard5" iphint="5.196.66.162" geocodehint="FR" typehint="relay" bandwidthdown="20100" bandwidthup="20100" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="68" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="68" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard6" iphint="151.80.164.147" geocodehint="FR" typehint="relay" bandwidthdown="18200" bandwidthup="18200" quantity="1" cpufrequency="2600000">
+  <node id="relayexitguard6" iphint="151.80.164.147" geocodehint="FR" typehint="relay" bandwidthdown="18200" bandwidthup="18200" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="70" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="70" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard7" iphint="216.17.99.183" geocodehint="US" typehint="relay" bandwidthdown="15200" bandwidthup="15200" quantity="1" cpufrequency="2200000">
+  <node id="relayexitguard7" iphint="216.17.99.183" geocodehint="US" typehint="relay" bandwidthdown="15200" bandwidthup="15200" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="72" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="72" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard8" iphint="213.61.149.125" geocodehint="DE" typehint="relay" bandwidthdown="13700" bandwidthup="13700" quantity="1" cpufrequency="2800000">
+  <node id="relayexitguard8" iphint="213.61.149.125" geocodehint="DE" typehint="relay" bandwidthdown="13700" bandwidthup="13700" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="74" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="74" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard9" iphint="107.181.178.204" geocodehint="US" typehint="relay" bandwidthdown="11300" bandwidthup="11300" quantity="1" cpufrequency="3200000">
+  <node id="relayexitguard9" iphint="107.181.178.204" geocodehint="US" typehint="relay" bandwidthdown="11300" bandwidthup="11300" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="76" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="76" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard10" iphint="104.233.108.86" geocodehint="CA" typehint="relay" bandwidthdown="9380" bandwidthup="9380" quantity="1" cpufrequency="2200000">
+  <node id="relayexitguard10" iphint="104.233.108.86" geocodehint="CA" typehint="relay" bandwidthdown="9380" bandwidthup="9380" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="78" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="78" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard11" iphint="216.218.134.12" geocodehint="US" typehint="relay" bandwidthdown="7520" bandwidthup="7520" quantity="1" cpufrequency="2800000">
+  <node id="relayexitguard11" iphint="216.218.134.12" geocodehint="US" typehint="relay" bandwidthdown="7520" bandwidthup="7520" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="80" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="80" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
@@ -1263,15 +1260,15 @@
     <application plugin="tor" starttime="82" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="82" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard13" iphint="217.115.10.131" geocodehint="DE" typehint="relay" bandwidthdown="5280" bandwidthup="5280" quantity="1" cpufrequency="3200000">
+  <node id="relayexitguard13" iphint="217.115.10.131" geocodehint="DE" typehint="relay" bandwidthdown="5280" bandwidthup="5280" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="84" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="84" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard14" iphint="158.69.172.225" geocodehint="US" typehint="relay" bandwidthdown="3980" bandwidthup="3980" quantity="1" cpufrequency="2600000">
+  <node id="relayexitguard14" iphint="158.69.172.225" geocodehint="US" typehint="relay" bandwidthdown="3980" bandwidthup="3980" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="86" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="86" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexitguard15" iphint="171.25.193.20" geocodehint="SE" typehint="relay" bandwidthdown="2950" bandwidthup="2950" quantity="1" cpufrequency="2200000">
+  <node id="relayexitguard15" iphint="171.25.193.20" geocodehint="SE" typehint="relay" bandwidthdown="2950" bandwidthup="2950" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="88" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="88" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
@@ -1279,481 +1276,484 @@
     <application plugin="tor" starttime="90" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exitguard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="90" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayguard1" iphint="46.101.186.153" geocodehint="DE" typehint="relay" bandwidthdown="47300" bandwidthup="47300" quantity="1" cpufrequency="2800000">
+  <node id="relayguard1" iphint="46.101.186.153" geocodehint="DE" typehint="relay" bandwidthdown="47300" bandwidthup="47300" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="92" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard2" iphint="178.16.208.55" geocodehint="SE" typehint="relay" bandwidthdown="41400" bandwidthup="41400" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="94" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard3" iphint="37.200.98.5" geocodehint="DE" typehint="relay" bandwidthdown="36200" bandwidthup="36200" quantity="1" cpufrequency="2200000">
+  <node id="relayguard3" iphint="37.200.98.5" geocodehint="DE" typehint="relay" bandwidthdown="36200" bandwidthup="36200" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="96" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard4" iphint="91.237.88.103" geocodehint="DE" typehint="relay" bandwidthdown="32100" bandwidthup="32100" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="99" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard4" iphint="91.237.88.103" geocodehint="DE" typehint="relay" bandwidthdown="32100" bandwidthup="32100" quantity="1" cpufrequency="2200000">
+    <application plugin="tor" starttime="98" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard5" iphint="185.15.244.234" geocodehint="DE" typehint="relay" bandwidthdown="30500" bandwidthup="30500" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="101" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard5" iphint="185.15.244.234" geocodehint="DE" typehint="relay" bandwidthdown="30500" bandwidthup="30500" quantity="1" cpufrequency="2600000">
+    <application plugin="tor" starttime="100" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard6" iphint="149.202.62.49" geocodehint="FR" typehint="relay" bandwidthdown="28100" bandwidthup="28100" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="103" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard6" iphint="149.202.62.49" geocodehint="FR" typehint="relay" bandwidthdown="28100" bandwidthup="28100" quantity="1" cpufrequency="2800000">
+    <application plugin="tor" starttime="102" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard7" iphint="51.254.120.82" geocodehint="FR" typehint="relay" bandwidthdown="26400" bandwidthup="26400" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="105" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard7" iphint="51.254.120.82" geocodehint="FR" typehint="relay" bandwidthdown="26400" bandwidthup="26400" quantity="1" cpufrequency="3400000">
+    <application plugin="tor" starttime="104" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard8" iphint="176.9.99.134" geocodehint="DE" typehint="relay" bandwidthdown="25500" bandwidthup="25500" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="107" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard8" iphint="176.9.99.134" geocodehint="DE" typehint="relay" bandwidthdown="25500" bandwidthup="25500" quantity="1" cpufrequency="3200000">
+    <application plugin="tor" starttime="106" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard9" iphint="37.230.119.37" geocodehint="RU" typehint="relay" bandwidthdown="24400" bandwidthup="24400" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="109" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard9" iphint="37.230.119.37" geocodehint="RU" typehint="relay" bandwidthdown="24400" bandwidthup="24400" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="108" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard10" iphint="188.166.16.91" geocodehint="NL" typehint="relay" bandwidthdown="23600" bandwidthup="23600" quantity="1" cpufrequency="2800000">
+  <node id="relayguard10" iphint="188.166.16.91" geocodehint="NL" typehint="relay" bandwidthdown="23600" bandwidthup="23600" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="111" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard11" iphint="159.203.97.91" geocodehint="US" typehint="relay" bandwidthdown="22500" bandwidthup="22500" quantity="1" cpufrequency="2200000">
+  <node id="relayguard11" iphint="159.203.97.91" geocodehint="US" typehint="relay" bandwidthdown="22500" bandwidthup="22500" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="113" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard12" iphint="78.46.183.39" geocodehint="DE" typehint="relay" bandwidthdown="21300" bandwidthup="21300" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="115" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard13" iphint="62.210.105.47" geocodehint="FR" typehint="relay" bandwidthdown="20700" bandwidthup="20700" quantity="1" cpufrequency="3400000">
+  <node id="relayguard13" iphint="62.210.105.47" geocodehint="FR" typehint="relay" bandwidthdown="20700" bandwidthup="20700" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="117" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard14" iphint="192.34.63.137" geocodehint="US" typehint="relay" bandwidthdown="19700" bandwidthup="19700" quantity="1" cpufrequency="3000000">
+  <node id="relayguard14" iphint="192.34.63.137" geocodehint="US" typehint="relay" bandwidthdown="19700" bandwidthup="19700" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="119" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard15" iphint="104.131.73.86" geocodehint="US" typehint="relay" bandwidthdown="19000" bandwidthup="19000" quantity="1" cpufrequency="3200000">
+  <node id="relayguard15" iphint="104.131.73.86" geocodehint="US" typehint="relay" bandwidthdown="19000" bandwidthup="19000" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="121" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard16" iphint="89.36.208.96" geocodehint="RO" typehint="relay" bandwidthdown="18000" bandwidthup="18000" quantity="1" cpufrequency="2800000">
+  <node id="relayguard16" iphint="89.36.208.96" geocodehint="RO" typehint="relay" bandwidthdown="18000" bandwidthup="18000" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="123" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard17" iphint="76.10.212.27" geocodehint="US" typehint="relay" bandwidthdown="17400" bandwidthup="17400" quantity="1" cpufrequency="2600000">
+  <node id="relayguard17" iphint="76.10.212.27" geocodehint="US" typehint="relay" bandwidthdown="17400" bandwidthup="17400" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="125" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard18" iphint="185.66.250.141" geocodehint="NL" typehint="relay" bandwidthdown="16700" bandwidthup="16700" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="127" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard19" iphint="178.62.86.96" geocodehint="GB" typehint="relay" bandwidthdown="16100" bandwidthup="16100" quantity="1" cpufrequency="3200000">
+  <node id="relayguard19" iphint="178.62.86.96" geocodehint="GB" typehint="relay" bandwidthdown="16100" bandwidthup="16100" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="129" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard20" iphint="91.226.89.17" geocodehint="DE" typehint="relay" bandwidthdown="15500" bandwidthup="15500" quantity="1" cpufrequency="2600000">
+  <node id="relayguard20" iphint="91.226.89.17" geocodehint="DE" typehint="relay" bandwidthdown="15500" bandwidthup="15500" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="131" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard21" iphint="195.154.162.172" geocodehint="FR" typehint="relay" bandwidthdown="15200" bandwidthup="15200" quantity="1" cpufrequency="3400000">
+  <node id="relayguard21" iphint="195.154.162.172" geocodehint="FR" typehint="relay" bandwidthdown="15200" bandwidthup="15200" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="133" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard22" iphint="217.12.199.208" geocodehint="UA" typehint="relay" bandwidthdown="14700" bandwidthup="14700" quantity="1" cpufrequency="2600000">
+  <node id="relayguard22" iphint="217.12.199.208" geocodehint="UA" typehint="relay" bandwidthdown="14700" bandwidthup="14700" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="135" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard23" iphint="141.20.103.25" geocodehint="DE" typehint="relay" bandwidthdown="14300" bandwidthup="14300" quantity="1" cpufrequency="2800000">
+  <node id="relayguard23" iphint="141.20.103.25" geocodehint="DE" typehint="relay" bandwidthdown="14300" bandwidthup="14300" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="137" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard24" iphint="46.101.252.29" geocodehint="DE" typehint="relay" bandwidthdown="13900" bandwidthup="13900" quantity="1" cpufrequency="3400000">
+  <node id="relayguard24" iphint="46.101.252.29" geocodehint="DE" typehint="relay" bandwidthdown="13900" bandwidthup="13900" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="139" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard25" iphint="188.165.204.117" geocodehint="FR" typehint="relay" bandwidthdown="13400" bandwidthup="13400" quantity="1" cpufrequency="3000000">
+  <node id="relayguard25" iphint="188.165.204.117" geocodehint="FR" typehint="relay" bandwidthdown="13400" bandwidthup="13400" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="141" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard26" iphint="212.47.240.167" geocodehint="FR" typehint="relay" bandwidthdown="13100" bandwidthup="13100" quantity="1" cpufrequency="2800000">
+  <node id="relayguard26" iphint="212.47.240.167" geocodehint="FR" typehint="relay" bandwidthdown="13100" bandwidthup="13100" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="143" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard27" iphint="212.47.234.192" geocodehint="FR" typehint="relay" bandwidthdown="12700" bandwidthup="12700" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="145" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard28" iphint="195.154.42.101" geocodehint="FR" typehint="relay" bandwidthdown="12000" bandwidthup="12000" quantity="1" cpufrequency="2600000">
+  <node id="relayguard28" iphint="195.154.42.101" geocodehint="FR" typehint="relay" bandwidthdown="12000" bandwidthup="12000" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="147" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard29" iphint="148.251.214.53" geocodehint="DE" typehint="relay" bandwidthdown="11700" bandwidthup="11700" quantity="1" cpufrequency="3000000">
+  <node id="relayguard29" iphint="148.251.214.53" geocodehint="DE" typehint="relay" bandwidthdown="11700" bandwidthup="11700" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="149" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard30" iphint="212.47.249.63" geocodehint="FR" typehint="relay" bandwidthdown="11400" bandwidthup="11400" quantity="1" cpufrequency="2200000">
+  <node id="relayguard30" iphint="212.47.249.63" geocodehint="FR" typehint="relay" bandwidthdown="11400" bandwidthup="11400" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="151" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard31" iphint="217.23.15.200" geocodehint="NL" typehint="relay" bandwidthdown="11000" bandwidthup="11000" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="153" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard32" iphint="91.121.76.204" geocodehint="FR" typehint="relay" bandwidthdown="10700" bandwidthup="10700" quantity="1" cpufrequency="2800000">
+  <node id="relayguard32" iphint="91.121.76.204" geocodehint="FR" typehint="relay" bandwidthdown="10700" bandwidthup="10700" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="155" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard33" iphint="212.83.177.193" geocodehint="FR" typehint="relay" bandwidthdown="10300" bandwidthup="10300" quantity="1" cpufrequency="3200000">
+  <node id="relayguard33" iphint="212.83.177.193" geocodehint="FR" typehint="relay" bandwidthdown="10300" bandwidthup="10300" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="157" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard34" iphint="37.157.194.180" geocodehint="CZ" typehint="relay" bandwidthdown="9890" bandwidthup="9890" quantity="1" cpufrequency="2400000">
+  <node id="relayguard34" iphint="37.157.194.180" geocodehint="CZ" typehint="relay" bandwidthdown="9890" bandwidthup="9890" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="159" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard35" iphint="212.47.246.13" geocodehint="FR" typehint="relay" bandwidthdown="9480" bandwidthup="9480" quantity="1" cpufrequency="3200000">
+  <node id="relayguard35" iphint="212.47.246.13" geocodehint="FR" typehint="relay" bandwidthdown="9480" bandwidthup="9480" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="161" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard36" iphint="78.47.39.60" geocodehint="DE" typehint="relay" bandwidthdown="9140" bandwidthup="9140" quantity="1" cpufrequency="3400000">
+  <node id="relayguard36" iphint="78.47.39.60" geocodehint="DE" typehint="relay" bandwidthdown="9140" bandwidthup="9140" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="163" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard37" iphint="195.154.42.18" geocodehint="FR" typehint="relay" bandwidthdown="8730" bandwidthup="8730" quantity="1" cpufrequency="2400000">
+  <node id="relayguard37" iphint="195.154.42.18" geocodehint="FR" typehint="relay" bandwidthdown="8730" bandwidthup="8730" quantity="1" cpufrequency="3400000">
     <application plugin="tor" starttime="165" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard38" iphint="5.39.80.28" geocodehint="FR" typehint="relay" bandwidthdown="8360" bandwidthup="8360" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="167" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard39" iphint="216.210.71.4" geocodehint="US" typehint="relay" bandwidthdown="8130" bandwidthup="8130" quantity="1" cpufrequency="2200000">
+  <node id="relayguard39" iphint="216.210.71.4" geocodehint="US" typehint="relay" bandwidthdown="8130" bandwidthup="8130" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="169" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard40" iphint="109.228.158.78" geocodehint="SE" typehint="relay" bandwidthdown="7830" bandwidthup="7830" quantity="1" cpufrequency="3000000">
+  <node id="relayguard40" iphint="109.228.158.78" geocodehint="SE" typehint="relay" bandwidthdown="7830" bandwidthup="7830" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="171" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard41" iphint="178.254.6.21" geocodehint="DE" typehint="relay" bandwidthdown="7460" bandwidthup="7460" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="174" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard41" iphint="178.254.6.21" geocodehint="DE" typehint="relay" bandwidthdown="7460" bandwidthup="7460" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="173" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard42" iphint="5.175.233.86" geocodehint="DE" typehint="relay" bandwidthdown="7180" bandwidthup="7180" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="176" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard42" iphint="5.175.233.86" geocodehint="DE" typehint="relay" bandwidthdown="7180" bandwidthup="7180" quantity="1" cpufrequency="3200000">
+    <application plugin="tor" starttime="175" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard43" iphint="31.31.74.47" geocodehint="CZ" typehint="relay" bandwidthdown="6890" bandwidthup="6890" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="178" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard43" iphint="31.31.74.47" geocodehint="CZ" typehint="relay" bandwidthdown="6890" bandwidthup="6890" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="177" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard44" iphint="216.230.230.247" geocodehint="US" typehint="relay" bandwidthdown="6680" bandwidthup="6680" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="180" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="179" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard45" iphint="192.99.246.101" geocodehint="CA" typehint="relay" bandwidthdown="6540" bandwidthup="6540" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="182" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard45" iphint="192.99.246.101" geocodehint="CA" typehint="relay" bandwidthdown="6540" bandwidthup="6540" quantity="1" cpufrequency="2800000">
+    <application plugin="tor" starttime="181" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard46" iphint="45.55.42.180" geocodehint="US" typehint="relay" bandwidthdown="6320" bandwidthup="6320" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="184" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard46" iphint="45.55.42.180" geocodehint="US" typehint="relay" bandwidthdown="6320" bandwidthup="6320" quantity="1" cpufrequency="3400000">
+    <application plugin="tor" starttime="183" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard47" iphint="212.47.248.68" geocodehint="FR" typehint="relay" bandwidthdown="6120" bandwidthup="6120" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="186" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard47" iphint="212.47.248.68" geocodehint="FR" typehint="relay" bandwidthdown="6120" bandwidthup="6120" quantity="1" cpufrequency="2400000">
+    <application plugin="tor" starttime="185" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relayguard48" iphint="213.136.81.89" geocodehint="DE" typehint="relay" bandwidthdown="5850" bandwidthup="5850" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="188" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="187" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard49" iphint="5.79.100.189" geocodehint="NL" typehint="relay" bandwidthdown="5600" bandwidthup="5600" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="190" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard49" iphint="5.79.100.189" geocodehint="NL" typehint="relay" bandwidthdown="5600" bandwidthup="5600" quantity="1" cpufrequency="3400000">
+    <application plugin="tor" starttime="189" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard50" iphint="178.63.78.8" geocodehint="DE" typehint="relay" bandwidthdown="5450" bandwidthup="5450" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="192" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard50" iphint="178.63.78.8" geocodehint="DE" typehint="relay" bandwidthdown="5450" bandwidthup="5450" quantity="1" cpufrequency="2400000">
+    <application plugin="tor" starttime="191" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard51" iphint="37.187.123.121" geocodehint="FR" typehint="relay" bandwidthdown="5270" bandwidthup="5270" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="194" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard51" iphint="37.187.123.121" geocodehint="FR" typehint="relay" bandwidthdown="5270" bandwidthup="5270" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="193" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard52" iphint="185.60.146.245" geocodehint="CH" typehint="relay" bandwidthdown="5090" bandwidthup="5090" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="196" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard52" iphint="185.60.146.245" geocodehint="CH" typehint="relay" bandwidthdown="5090" bandwidthup="5090" quantity="1" cpufrequency="2800000">
+    <application plugin="tor" starttime="195" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard53" iphint="86.107.110.51" geocodehint="RO" typehint="relay" bandwidthdown="4860" bandwidthup="4860" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="198" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard53" iphint="86.107.110.51" geocodehint="RO" typehint="relay" bandwidthdown="4860" bandwidthup="4860" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="197" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard54" iphint="192.99.33.158" geocodehint="CA" typehint="relay" bandwidthdown="4680" bandwidthup="4680" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="200" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard54" iphint="192.99.33.158" geocodehint="CA" typehint="relay" bandwidthdown="4680" bandwidthup="4680" quantity="1" cpufrequency="2200000">
+    <application plugin="tor" starttime="199" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard55" iphint="207.244.65.165" geocodehint="US" typehint="relay" bandwidthdown="4440" bandwidthup="4440" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="202" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard55" iphint="207.244.65.165" geocodehint="US" typehint="relay" bandwidthdown="4440" bandwidthup="4440" quantity="1" cpufrequency="3000000">
+    <application plugin="tor" starttime="201" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard56" iphint="81.4.103.3" geocodehint="NL" typehint="relay" bandwidthdown="4240" bandwidthup="4240" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="204" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard56" iphint="81.4.103.3" geocodehint="NL" typehint="relay" bandwidthdown="4240" bandwidthup="4240" quantity="1" cpufrequency="2600000">
+    <application plugin="tor" starttime="203" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard57" iphint="170.75.162.81" geocodehint="CA" typehint="relay" bandwidthdown="4030" bandwidthup="4030" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="206" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard57" iphint="170.75.162.81" geocodehint="CA" typehint="relay" bandwidthdown="4030" bandwidthup="4030" quantity="1" cpufrequency="2200000">
+    <application plugin="tor" starttime="205" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard58" iphint="93.91.50.145" geocodehint="CZ" typehint="relay" bandwidthdown="3860" bandwidthup="3860" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="208" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard58" iphint="93.91.50.145" geocodehint="CZ" typehint="relay" bandwidthdown="3860" bandwidthup="3860" quantity="1" cpufrequency="2600000">
+    <application plugin="tor" starttime="207" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard59" iphint="95.141.37.22" geocodehint="IT" typehint="relay" bandwidthdown="3720" bandwidthup="3720" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="210" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  <node id="relayguard59" iphint="95.141.37.22" geocodehint="IT" typehint="relay" bandwidthdown="3720" bandwidthup="3720" quantity="1" cpufrequency="2400000">
+    <application plugin="tor" starttime="209" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard60" iphint="195.169.207.54" geocodehint="NL" typehint="relay" bandwidthdown="3550" bandwidthup="3550" quantity="1" cpufrequency="2200000">
+  <node id="relayguard60" iphint="195.169.207.54" geocodehint="NL" typehint="relay" bandwidthdown="3550" bandwidthup="3550" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="212" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard61" iphint="209.180.247.49" geocodehint="US" typehint="relay" bandwidthdown="3420" bandwidthup="3420" quantity="1" cpufrequency="2400000">
+  <node id="relayguard61" iphint="209.180.247.49" geocodehint="US" typehint="relay" bandwidthdown="3420" bandwidthup="3420" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="214" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard62" iphint="185.8.237.199" geocodehint="CZ" typehint="relay" bandwidthdown="3310" bandwidthup="3310" quantity="1" cpufrequency="2800000">
+  <node id="relayguard62" iphint="185.8.237.199" geocodehint="CZ" typehint="relay" bandwidthdown="3310" bandwidthup="3310" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="216" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard63" iphint="81.169.138.51" geocodehint="DE" typehint="relay" bandwidthdown="3120" bandwidthup="3120" quantity="1" cpufrequency="2400000">
+  <node id="relayguard63" iphint="81.169.138.51" geocodehint="DE" typehint="relay" bandwidthdown="3120" bandwidthup="3120" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="218" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard64" iphint="62.210.243.198" geocodehint="FR" typehint="relay" bandwidthdown="2940" bandwidthup="2940" quantity="1" cpufrequency="3200000">
+  <node id="relayguard64" iphint="62.210.243.198" geocodehint="FR" typehint="relay" bandwidthdown="2940" bandwidthup="2940" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="220" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard65" iphint="24.44.132.124" geocodehint="US" typehint="relay" bandwidthdown="2770" bandwidthup="2770" quantity="1" cpufrequency="2800000">
+  <node id="relayguard65" iphint="24.44.132.124" geocodehint="US" typehint="relay" bandwidthdown="2770" bandwidthup="2770" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="222" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard66" iphint="141.255.161.166" geocodehint="CH" typehint="relay" bandwidthdown="2540" bandwidthup="2540" quantity="1" cpufrequency="2400000">
+  <node id="relayguard66" iphint="141.255.161.166" geocodehint="CH" typehint="relay" bandwidthdown="2540" bandwidthup="2540" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="224" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayguard67" iphint="98.225.154.183" geocodehint="US" typehint="relay" bandwidthdown="2330" bandwidthup="2330" quantity="1" cpufrequency="3400000">
+  <node id="relayguard67" iphint="98.225.154.183" geocodehint="US" typehint="relay" bandwidthdown="2330" bandwidthup="2330" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="226" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayexit1" iphint="5.141.168.43" geocodehint="RU" typehint="relay" bandwidthdown="18500" bandwidthup="18500" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="228" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="228" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+  <node id="relayguard68" iphint="217.23.11.138" geocodehint="NL" typehint="relay" bandwidthdown="1990" bandwidthup="1990" quantity="1" cpufrequency="3400000">
+    <application plugin="tor" starttime="228" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.guard.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relayexit2" iphint="204.13.164.54" geocodehint="US" typehint="relay" bandwidthdown="6510" bandwidthup="6510" quantity="1" cpufrequency="2400000">
+  <node id="relayexit1" iphint="5.141.168.43" geocodehint="RU" typehint="relay" bandwidthdown="18500" bandwidthup="18500" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="230" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="230" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit3" iphint="2.111.70.28" geocodehint="DK" typehint="relay" bandwidthdown="3200" bandwidthup="3200" quantity="1" cpufrequency="2600000">
+  <node id="relayexit2" iphint="204.13.164.54" geocodehint="US" typehint="relay" bandwidthdown="6510" bandwidthup="6510" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="232" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="232" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit4" iphint="82.221.129.96" geocodehint="IS" typehint="relay" bandwidthdown="2100" bandwidthup="2100" quantity="1" cpufrequency="2800000">
+  <node id="relayexit3" iphint="2.111.70.28" geocodehint="DK" typehint="relay" bandwidthdown="3200" bandwidthup="3200" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="234" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="234" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit5" iphint="82.211.19.129" geocodehint="DE" typehint="relay" bandwidthdown="1670" bandwidthup="1670" quantity="1" cpufrequency="2200000">
+  <node id="relayexit4" iphint="82.221.129.96" geocodehint="IS" typehint="relay" bandwidthdown="2100" bandwidthup="2100" quantity="1" cpufrequency="2800000">
     <application plugin="tor" starttime="236" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="236" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit6" iphint="93.113.36.242" geocodehint="RO" typehint="relay" bandwidthdown="1330" bandwidthup="1330" quantity="1" cpufrequency="3200000">
+  <node id="relayexit5" iphint="82.211.19.129" geocodehint="DE" typehint="relay" bandwidthdown="1670" bandwidthup="1670" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="238" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="238" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit7" iphint="37.59.97.134" geocodehint="FR" typehint="relay" bandwidthdown="1160" bandwidthup="1160" quantity="1" cpufrequency="3000000">
+  <node id="relayexit6" iphint="93.113.36.242" geocodehint="RO" typehint="relay" bandwidthdown="1330" bandwidthup="1330" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="240" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="240" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit8" iphint="209.141.43.84" geocodehint="US" typehint="relay" bandwidthdown="910" bandwidthup="910" quantity="1" cpufrequency="3000000">
+  <node id="relayexit7" iphint="37.59.97.134" geocodehint="FR" typehint="relay" bandwidthdown="1160" bandwidthup="1160" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="242" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="242" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit9" iphint="80.241.60.207" geocodehint="DE" typehint="relay" bandwidthdown="679" bandwidthup="679" quantity="1" cpufrequency="2400000">
+  <node id="relayexit8" iphint="209.141.43.84" geocodehint="US" typehint="relay" bandwidthdown="910" bandwidthup="910" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="244" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="244" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
-  <node id="relayexit10" iphint="185.86.148.17" geocodehint="SE" typehint="relay" bandwidthdown="548" bandwidthup="548" quantity="1" cpufrequency="2400000">
+  <node id="relayexit9" iphint="80.241.60.207" geocodehint="DE" typehint="relay" bandwidthdown="679" bandwidthup="679" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="246" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
     <application plugin="tproxy" starttime="246" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
+  <node id="relayexit10" iphint="185.86.148.17" geocodehint="SE" typehint="relay" bandwidthdown="548" bandwidthup="548" quantity="1" cpufrequency="2400000">
+    <application plugin="tor" starttime="248" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="248" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+  </node>
   <node id="relayexit11" iphint="106.186.28.33" geocodehint="JP" typehint="relay" bandwidthdown="433" bandwidthup="433" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="249" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="249" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="250" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="250" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit12" iphint="84.194.92.197" geocodehint="BE" typehint="relay" bandwidthdown="334" bandwidthup="334" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="251" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="251" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="252" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="252" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit13" iphint="188.209.52.119" geocodehint="NL" typehint="relay" bandwidthdown="258" bandwidthup="258" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="253" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="253" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="254" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="254" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit14" iphint="185.65.121.134" geocodehint="BA" typehint="relay" bandwidthdown="188" bandwidthup="188" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="255" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="255" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="256" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="256" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit15" iphint="81.89.0.203" geocodehint="RO" typehint="relay" bandwidthdown="150" bandwidthup="150" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="257" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="257" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="258" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="258" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit16" iphint="104.208.241.245" geocodehint="US" typehint="relay" bandwidthdown="107" bandwidthup="107" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="259" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="259" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="260" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="260" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit17" iphint="46.148.26.71" geocodehint="UA" typehint="relay" bandwidthdown="62" bandwidthup="62" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="261" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="261" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="262" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="262" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit18" iphint="193.0.100.130" geocodehint="PL" typehint="relay" bandwidthdown="37" bandwidthup="37" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="263" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="263" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="264" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="264" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit19" iphint="46.16.234.131" geocodehint="SE" typehint="relay" bandwidthdown="27" bandwidthup="27" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="265" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="265" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="266" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="266" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit20" iphint="94.218.175.247" geocodehint="DE" typehint="relay" bandwidthdown="22" bandwidthup="22" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="267" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="267" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="268" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="268" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit21" iphint="176.9.145.194" geocodehint="DE" typehint="relay" bandwidthdown="16" bandwidthup="16" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="269" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="269" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="270" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="270" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit22" iphint="83.238.163.214" geocodehint="PL" typehint="relay" bandwidthdown="10" bandwidthup="10" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="271" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="271" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="272" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="272" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relayexit23" iphint="178.238.223.67" geocodehint="HU" typehint="relay" bandwidthdown="4" bandwidthup="4" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="273" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-    <application plugin="tproxy" starttime="273" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
+    <application plugin="tor" starttime="274" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.exit.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tproxy" starttime="274" arguments="--conf=../newweb_conf/tproxy_ssp.conf"/>
   </node>
   <node id="relaymiddle1" iphint="91.236.251.23" geocodehint="UA" typehint="relay" bandwidthdown="4750" bandwidthup="4750" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="275" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="276" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle2" iphint="217.16.182.20" geocodehint="CZ" typehint="relay" bandwidthdown="3990" bandwidthup="3990" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="277" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="278" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle3" iphint="178.162.194.210" geocodehint="DE" typehint="relay" bandwidthdown="3580" bandwidthup="3580" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="279" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="280" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle4" iphint="149.202.156.108" geocodehint="FR" typehint="relay" bandwidthdown="3350" bandwidthup="3350" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="281" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="282" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle5" iphint="95.69.232.24" geocodehint="UA" typehint="relay" bandwidthdown="3080" bandwidthup="3080" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="283" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="284" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle6" iphint="81.7.10.20" geocodehint="DE" typehint="relay" bandwidthdown="2790" bandwidthup="2790" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="285" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="286" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle7" iphint="176.9.84.37" geocodehint="DE" typehint="relay" bandwidthdown="2590" bandwidthup="2590" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="287" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="288" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle8" iphint="199.74.222.171" geocodehint="US" typehint="relay" bandwidthdown="2460" bandwidthup="2460" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="289" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="290" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle9" iphint="91.221.66.220" geocodehint="FI" typehint="relay" bandwidthdown="2290" bandwidthup="2290" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="291" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="292" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle10" iphint="97.107.139.108" geocodehint="US" typehint="relay" bandwidthdown="2170" bandwidthup="2170" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="293" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="294" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle11" iphint="172.245.220.91" geocodehint="US" typehint="relay" bandwidthdown="2080" bandwidthup="2080" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="295" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="296" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle12" iphint="66.111.2.16" geocodehint="US" typehint="relay" bandwidthdown="2030" bandwidthup="2030" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="297" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="298" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle13" iphint="62.92.111.45" geocodehint="NO" typehint="relay" bandwidthdown="1960" bandwidthup="1960" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="299" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="300" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle14" iphint="85.226.121.240" geocodehint="SE" typehint="relay" bandwidthdown="1910" bandwidthup="1910" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="301" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="302" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle15" iphint="95.85.53.98" geocodehint="NL" typehint="relay" bandwidthdown="1860" bandwidthup="1860" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="303" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="304" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle16" iphint="87.100.190.179" geocodehint="FI" typehint="relay" bandwidthdown="1800" bandwidthup="1800" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="305" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="306" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle17" iphint="173.255.248.18" geocodehint="US" typehint="relay" bandwidthdown="1710" bandwidthup="1710" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="307" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="308" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle18" iphint="62.210.69.236" geocodehint="FR" typehint="relay" bandwidthdown="1670" bandwidthup="1670" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="309" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
-  </node>
-  <node id="relaymiddle19" iphint="162.243.144.201" geocodehint="US" typehint="relay" bandwidthdown="1630" bandwidthup="1630" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="311" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relaymiddle20" iphint="97.107.138.68" geocodehint="US" typehint="relay" bandwidthdown="1600" bandwidthup="1600" quantity="1" cpufrequency="3200000">
+  <node id="relaymiddle19" iphint="162.243.144.201" geocodehint="US" typehint="relay" bandwidthdown="1630" bandwidthup="1630" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="313" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relaymiddle21" iphint="217.122.195.190" geocodehint="NL" typehint="relay" bandwidthdown="1560" bandwidthup="1560" quantity="1" cpufrequency="2200000">
+  <node id="relaymiddle20" iphint="97.107.138.68" geocodehint="US" typehint="relay" bandwidthdown="1600" bandwidthup="1600" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="315" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relaymiddle22" iphint="192.198.81.42" geocodehint="US" typehint="relay" bandwidthdown="1520" bandwidthup="1520" quantity="1" cpufrequency="2600000">
+  <node id="relaymiddle21" iphint="217.122.195.190" geocodehint="NL" typehint="relay" bandwidthdown="1560" bandwidthup="1560" quantity="1" cpufrequency="2200000">
     <application plugin="tor" starttime="317" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relaymiddle23" iphint="162.243.150.156" geocodehint="US" typehint="relay" bandwidthdown="1490" bandwidthup="1490" quantity="1" cpufrequency="2400000">
+  <node id="relaymiddle22" iphint="192.198.81.42" geocodehint="US" typehint="relay" bandwidthdown="1520" bandwidthup="1520" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="319" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
-  <node id="relaymiddle24" iphint="46.246.89.169" geocodehint="SE" typehint="relay" bandwidthdown="1460" bandwidthup="1460" quantity="1" cpufrequency="2400000">
+  <node id="relaymiddle23" iphint="162.243.150.156" geocodehint="US" typehint="relay" bandwidthdown="1490" bandwidthup="1490" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="321" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
+  <node id="relaymiddle24" iphint="46.246.89.169" geocodehint="SE" typehint="relay" bandwidthdown="1460" bandwidthup="1460" quantity="1" cpufrequency="2400000">
+    <application plugin="tor" starttime="323" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+  </node>
   <node id="relaymiddle25" iphint="71.218.92.112" geocodehint="US" typehint="relay" bandwidthdown="1430" bandwidthup="1430" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="324" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="325" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle26" iphint="5.103.52.228" geocodehint="DK" typehint="relay" bandwidthdown="1410" bandwidthup="1410" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="326" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="327" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle27" iphint="91.96.38.173" geocodehint="DE" typehint="relay" bandwidthdown="1380" bandwidthup="1380" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="328" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="329" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle28" iphint="79.120.41.147" geocodehint="RU" typehint="relay" bandwidthdown="1360" bandwidthup="1360" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="330" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="331" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle29" iphint="93.184.16.172" geocodehint="CH" typehint="relay" bandwidthdown="1340" bandwidthup="1340" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="332" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="333" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle30" iphint="185.100.85.244" geocodehint="RO" typehint="relay" bandwidthdown="1310" bandwidthup="1310" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="334" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="335" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle31" iphint="151.236.14.149" geocodehint="NL" typehint="relay" bandwidthdown="1280" bandwidthup="1280" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="336" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="337" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle32" iphint="207.140.49.226" geocodehint="US" typehint="relay" bandwidthdown="1240" bandwidthup="1240" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="338" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="339" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle33" iphint="95.121.249.176" geocodehint="ES" typehint="relay" bandwidthdown="1230" bandwidthup="1230" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="340" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="341" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle34" iphint="158.69.102.208" geocodehint="US" typehint="relay" bandwidthdown="1210" bandwidthup="1210" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="342" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="343" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle35" iphint="68.66.154.214" geocodehint="US" typehint="relay" bandwidthdown="1180" bandwidthup="1180" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="344" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="345" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle36" iphint="92.63.87.230" geocodehint="LV" typehint="relay" bandwidthdown="1160" bandwidthup="1160" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="346" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="347" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle37" iphint="78.50.226.239" geocodehint="DE" typehint="relay" bandwidthdown="1150" bandwidthup="1150" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="348" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="349" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle38" iphint="188.165.94.106" geocodehint="FR" typehint="relay" bandwidthdown="1130" bandwidthup="1130" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="350" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="351" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle39" iphint="107.3.33.18" geocodehint="US" typehint="relay" bandwidthdown="1100" bandwidthup="1100" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="352" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="353" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle40" iphint="99.229.118.205" geocodehint="CA" typehint="relay" bandwidthdown="1070" bandwidthup="1070" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="354" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="355" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle41" iphint="167.114.9.84" geocodehint="CA" typehint="relay" bandwidthdown="1040" bandwidthup="1040" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="356" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="357" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle42" iphint="75.127.15.73" geocodehint="US" typehint="relay" bandwidthdown="1020" bandwidthup="1020" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="358" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="359" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle43" iphint="62.210.123.24" geocodehint="FR" typehint="relay" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="360" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="361" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle44" iphint="104.131.27.185" geocodehint="US" typehint="relay" bandwidthdown="977" bandwidthup="977" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="362" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="363" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle45" iphint="207.255.42.202" geocodehint="US" typehint="relay" bandwidthdown="940" bandwidthup="940" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="364" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="365" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle46" iphint="84.200.206.99" geocodehint="DE" typehint="relay" bandwidthdown="909" bandwidthup="909" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="366" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="367" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle47" iphint="46.246.93.70" geocodehint="SE" typehint="relay" bandwidthdown="865" bandwidthup="865" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="368" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="369" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle48" iphint="83.161.218.226" geocodehint="NL" typehint="relay" bandwidthdown="847" bandwidthup="847" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="370" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="371" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle49" iphint="188.166.2.78" geocodehint="NL" typehint="relay" bandwidthdown="827" bandwidthup="827" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="372" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="373" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle50" iphint="64.254.175.3" geocodehint="US" typehint="relay" bandwidthdown="804" bandwidthup="804" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="374" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="375" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle51" iphint="85.25.141.10" geocodehint="DE" typehint="relay" bandwidthdown="783" bandwidthup="783" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="376" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="377" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle52" iphint="178.62.8.189" geocodehint="GB" typehint="relay" bandwidthdown="762" bandwidthup="762" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="378" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="379" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle53" iphint="78.24.223.132" geocodehint="RU" typehint="relay" bandwidthdown="746" bandwidthup="746" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="380" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="381" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle54" iphint="193.169.37.72" geocodehint="RU" typehint="relay" bandwidthdown="723" bandwidthup="723" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="382" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="383" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle55" iphint="87.118.84.246" geocodehint="DE" typehint="relay" bandwidthdown="708" bandwidthup="708" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="384" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="385" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle56" iphint="85.204.132.144" geocodehint="DK" typehint="relay" bandwidthdown="690" bandwidthup="690" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="386" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="387" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle57" iphint="51.254.131.226" geocodehint="FR" typehint="relay" bandwidthdown="674" bandwidthup="674" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="388" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="389" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle58" iphint="90.151.28.151" geocodehint="RU" typehint="relay" bandwidthdown="664" bandwidthup="664" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="390" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="391" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle59" iphint="94.181.190.21" geocodehint="RU" typehint="relay" bandwidthdown="647" bandwidthup="647" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="392" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="393" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle60" iphint="217.12.223.48" geocodehint="UA" typehint="relay" bandwidthdown="625" bandwidthup="625" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="394" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="395" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle61" iphint="217.12.203.50" geocodehint="BG" typehint="relay" bandwidthdown="616" bandwidthup="616" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="396" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="397" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle62" iphint="109.107.35.154" geocodehint="GB" typehint="relay" bandwidthdown="603" bandwidthup="603" quantity="1" cpufrequency="3200000">
     <application plugin="tor" starttime="399" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
@@ -1774,97 +1774,97 @@
     <application plugin="tor" starttime="409" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle68" iphint="193.24.210.126" geocodehint="DE" typehint="relay" bandwidthdown="518" bandwidthup="518" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="411" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="412" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle69" iphint="71.19.157.213" geocodehint="US" typehint="relay" bandwidthdown="506" bandwidthup="506" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="413" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="414" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle70" iphint="95.172.236.63" geocodehint="GB" typehint="relay" bandwidthdown="497" bandwidthup="497" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="415" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="416" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle71" iphint="84.114.115.100" geocodehint="AT" typehint="relay" bandwidthdown="482" bandwidthup="482" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="417" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="418" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle72" iphint="24.2.175.184" geocodehint="US" typehint="relay" bandwidthdown="468" bandwidthup="468" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="419" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="420" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle73" iphint="85.88.11.243" geocodehint="DE" typehint="relay" bandwidthdown="456" bandwidthup="456" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="421" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="422" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle74" iphint="104.168.62.209" geocodehint="US" typehint="relay" bandwidthdown="442" bandwidthup="442" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="423" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="424" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle75" iphint="81.169.181.95" geocodehint="DE" typehint="relay" bandwidthdown="433" bandwidthup="433" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="425" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="426" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle76" iphint="195.43.138.226" geocodehint="NL" typehint="relay" bandwidthdown="424" bandwidthup="424" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="427" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="428" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle77" iphint="108.61.199.206" geocodehint="NL" typehint="relay" bandwidthdown="415" bandwidthup="415" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="429" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="430" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle78" iphint="178.83.190.108" geocodehint="CH" typehint="relay" bandwidthdown="406" bandwidthup="406" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="431" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="432" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle79" iphint="128.199.107.165" geocodehint="SG" typehint="relay" bandwidthdown="398" bandwidthup="398" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="433" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="434" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle80" iphint="92.63.110.124" geocodehint="BE" typehint="relay" bandwidthdown="389" bandwidthup="389" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="435" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="436" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle81" iphint="84.249.68.22" geocodehint="FI" typehint="relay" bandwidthdown="379" bandwidthup="379" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="437" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="438" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle82" iphint="107.191.63.248" geocodehint="FR" typehint="relay" bandwidthdown="365" bandwidthup="365" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="439" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="440" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle83" iphint="159.122.141.19" geocodehint="US" typehint="relay" bandwidthdown="349" bandwidthup="349" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="441" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="442" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle84" iphint="185.61.148.11" geocodehint="LV" typehint="relay" bandwidthdown="339" bandwidthup="339" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="443" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="444" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle85" iphint="45.62.238.157" geocodehint="CA" typehint="relay" bandwidthdown="328" bandwidthup="328" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="445" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="446" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle86" iphint="151.236.24.57" geocodehint="IS" typehint="relay" bandwidthdown="321" bandwidthup="321" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="447" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="448" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle87" iphint="90.184.222.116" geocodehint="DK" typehint="relay" bandwidthdown="315" bandwidthup="315" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="449" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="450" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle88" iphint="212.129.37.75" geocodehint="FR" typehint="relay" bandwidthdown="307" bandwidthup="307" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="451" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="452" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle89" iphint="37.59.61.192" geocodehint="FR" typehint="relay" bandwidthdown="295" bandwidthup="295" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="453" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="454" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle90" iphint="2.225.141.134" geocodehint="IT" typehint="relay" bandwidthdown="288" bandwidthup="288" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="455" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="456" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle91" iphint="128.52.160.20" geocodehint="US" typehint="relay" bandwidthdown="279" bandwidthup="279" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="457" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="458" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle92" iphint="207.158.15.114" geocodehint="US" typehint="relay" bandwidthdown="268" bandwidthup="268" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="459" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="460" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle93" iphint="31.25.44.55" geocodehint="DE" typehint="relay" bandwidthdown="258" bandwidthup="258" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="461" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="462" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle94" iphint="153.92.127.105" geocodehint="NL" typehint="relay" bandwidthdown="253" bandwidthup="253" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="463" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="464" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle95" iphint="94.181.45.237" geocodehint="RU" typehint="relay" bandwidthdown="246" bandwidthup="246" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="465" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="466" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle96" iphint="80.255.11.205" geocodehint="DE" typehint="relay" bandwidthdown="240" bandwidthup="240" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="467" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="468" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle97" iphint="14.199.113.179" geocodehint="HK" typehint="relay" bandwidthdown="235" bandwidthup="235" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="469" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="470" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle98" iphint="168.235.92.183" geocodehint="US" typehint="relay" bandwidthdown="227" bandwidthup="227" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="471" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="472" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle99" iphint="198.211.123.125" geocodehint="NL" typehint="relay" bandwidthdown="218" bandwidthup="218" quantity="1" cpufrequency="2600000">
     <application plugin="tor" starttime="474" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
@@ -1921,61 +1921,61 @@
     <application plugin="tor" starttime="508" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle117" iphint="144.76.112.85" geocodehint="DE" typehint="relay" bandwidthdown="124" bandwidthup="124" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="510" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="511" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle118" iphint="223.135.76.186" geocodehint="JP" typehint="relay" bandwidthdown="120" bandwidthup="120" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="512" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="513" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle119" iphint="24.151.22.183" geocodehint="US" typehint="relay" bandwidthdown="117" bandwidthup="117" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="514" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="515" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle120" iphint="46.162.96.137" geocodehint="SE" typehint="relay" bandwidthdown="113" bandwidthup="113" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="516" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="517" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle121" iphint="92.226.155.44" geocodehint="DE" typehint="relay" bandwidthdown="110" bandwidthup="110" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="518" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="519" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle122" iphint="83.162.203.144" geocodehint="NL" typehint="relay" bandwidthdown="107" bandwidthup="107" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="520" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="521" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle123" iphint="82.193.140.122" geocodehint="RU" typehint="relay" bandwidthdown="103" bandwidthup="103" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="522" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="523" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle124" iphint="208.95.3.28" geocodehint="US" typehint="relay" bandwidthdown="99" bandwidthup="99" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="524" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="525" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle125" iphint="178.27.248.190" geocodehint="DE" typehint="relay" bandwidthdown="96" bandwidthup="96" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="526" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="527" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle126" iphint="24.98.128.189" geocodehint="US" typehint="relay" bandwidthdown="93" bandwidthup="93" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="528" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="529" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle127" iphint="178.27.162.22" geocodehint="DE" typehint="relay" bandwidthdown="90" bandwidthup="90" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="530" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="531" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle128" iphint="68.168.191.158" geocodehint="US" typehint="relay" bandwidthdown="84" bandwidthup="84" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="532" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="533" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle129" iphint="66.158.200.153" geocodehint="US" typehint="relay" bandwidthdown="79" bandwidthup="79" quantity="1" cpufrequency="2200000">
-    <application plugin="tor" starttime="534" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="535" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle130" iphint="91.45.195.206" geocodehint="DE" typehint="relay" bandwidthdown="74" bandwidthup="74" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="536" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="537" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle131" iphint="95.172.236.118" geocodehint="GB" typehint="relay" bandwidthdown="70" bandwidthup="70" quantity="1" cpufrequency="3400000">
-    <application plugin="tor" starttime="538" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="539" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle132" iphint="5.196.10.150" geocodehint="FR" typehint="relay" bandwidthdown="65" bandwidthup="65" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="540" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="541" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle133" iphint="178.216.92.117" geocodehint="PL" typehint="relay" bandwidthdown="59" bandwidthup="59" quantity="1" cpufrequency="2800000">
-    <application plugin="tor" starttime="542" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="543" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle134" iphint="71.222.0.39" geocodehint="US" typehint="relay" bandwidthdown="54" bandwidthup="54" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="544" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="545" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle135" iphint="24.151.116.8" geocodehint="US" typehint="relay" bandwidthdown="50" bandwidthup="50" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="546" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="547" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle136" iphint="78.47.84.98" geocodehint="DE" typehint="relay" bandwidthdown="47" bandwidthup="47" quantity="1" cpufrequency="2400000">
     <application plugin="tor" starttime="549" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
@@ -2071,22 +2071,22 @@
     <application plugin="tor" starttime="609" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle167" iphint="158.69.217.34" geocodehint="US" typehint="relay" bandwidthdown="14" bandwidthup="14" quantity="1" cpufrequency="2600000">
-    <application plugin="tor" starttime="611" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="612" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle168" iphint="89.65.201.70" geocodehint="PL" typehint="relay" bandwidthdown="14" bandwidthup="14" quantity="1" cpufrequency="3000000">
-    <application plugin="tor" starttime="613" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="614" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle169" iphint="142.105.208.68" geocodehint="US" typehint="relay" bandwidthdown="13" bandwidthup="13" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="615" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="616" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle170" iphint="73.26.251.139" geocodehint="US" typehint="relay" bandwidthdown="13" bandwidthup="13" quantity="1" cpufrequency="2400000">
-    <application plugin="tor" starttime="617" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="618" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle171" iphint="213.162.141.236" geocodehint="DE" typehint="relay" bandwidthdown="12" bandwidthup="12" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="619" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="620" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle172" iphint="213.113.161.10" geocodehint="SE" typehint="relay" bandwidthdown="11" bandwidthup="11" quantity="1" cpufrequency="3200000">
-    <application plugin="tor" starttime="621" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
+    <application plugin="tor" starttime="622" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>
   </node>
   <node id="relaymiddle173" iphint="80.13.121.35" geocodehint="FR" typehint="relay" bandwidthdown="11" bandwidthup="11" quantity="1" cpufrequency="3000000">
     <application plugin="tor" starttime="624" arguments="--Address ${NODEID} --Nickname ${NODEID} --DataDirectory shadow.data/hosts/${NODEID} --GeoIPFile ~/.shadow/share/geoip --defaults-torrc conf/tor.common.torrc -f conf/tor.middle.torrc --BandwidthRate 76800 --BandwidthBurst 76800"/>

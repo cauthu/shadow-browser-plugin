@@ -1,9 +1,8 @@
-DirServer 4uthority1 v3ident=E26B6551D9D19482D0341528B3C40FA645C6B3A9 orport=9111 4uthority1:9112 BF44 4342 AFD4 8F35 0BC7 D6FB 76F3 3105 C6B6 0196
-DirServer 4uthority2 v3ident=9CE0FA777D1DE90492C4FECC174CEF36156D79A6 orport=9111 4uthority2:9112 55DA EE99 CCE7 3D6D 1605 A078 4D99 AA8E 7586 27F5
+DirServer 4uthority1 v3ident=0C0ECFD550080FECA9D13E19C86FFA6EF3DEF2DB orport=9111 4uthority1:9112 E104 608E 6C1A 75C5 1309 E543 AE24 C485 3D4B E4ED
 TestingTorNetwork 1
 AllowInvalidNodes "entry,middle,exit,introduction,rendezvous"
 ServerDNSResolvConfFile conf/shadowresolv.conf
-ServerDNSTestAddresses 4uthority1,4uthority2
+ServerDNSTestAddresses 4uthority1
 ServerDNSAllowBrokenConfig 1
 ServerDNSDetectHijacking 0
 NumCPUs 1
