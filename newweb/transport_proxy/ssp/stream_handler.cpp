@@ -138,7 +138,8 @@ void
 StreamHandler::onConnectTimeout(StreamChannel*) noexcept
 {
     CHECK_EQ(state_, State::CONNECTING_TARGET);
-    logself(WARNING) << "times out connecting to target";
+    logself(WARNING) << "times out connecting to target [" << target_host_ << "]:"
+                     << target_port_;
     _close();
 }
 
