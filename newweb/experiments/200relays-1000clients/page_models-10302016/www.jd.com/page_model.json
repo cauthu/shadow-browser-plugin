@@ -58,6 +58,12 @@
       "tag": "script"
     },
     "923": {
+      "event_handling_scopes": [
+        [
+          "error",
+          155
+        ]
+      ],
       "tag": "img"
     },
     "925": {
@@ -291,7 +297,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "server93",
+          "host": "server172",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -306,7 +312,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server19",
+          "host": "server91",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -321,7 +327,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server175",
+          "host": "server203",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -336,7 +342,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server187",
+          "host": "server34",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -351,7 +357,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server175",
+          "host": "server203",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -366,7 +372,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server175",
+          "host": "server203",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -381,7 +387,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server85",
+          "host": "server181",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -396,7 +402,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server195",
+          "host": "server184",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -411,7 +417,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server175",
+          "host": "server203",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -426,7 +432,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server161",
+          "host": "server160",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -441,7 +447,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server68",
+          "host": "server6",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -456,7 +462,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server96",
+          "host": "server3",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -471,7 +477,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server94",
+          "host": "server185",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -486,7 +492,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server138",
+          "host": "server204",
           "method": "GET",
           "port": 80,
           "priority": 3,

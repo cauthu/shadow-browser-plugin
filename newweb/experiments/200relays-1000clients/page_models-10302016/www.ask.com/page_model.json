@@ -87,6 +87,12 @@
       "tag": "script"
     },
     "483": {
+      "event_handling_scopes": [
+        [
+          "error",
+          171
+        ]
+      ],
       "tag": "img"
     },
     "485": {
@@ -132,6 +138,12 @@
       "tag": "script"
     },
     "527": {
+      "event_handling_scopes": [
+        [
+          "error",
+          187
+        ]
+      ],
       "tag": "img"
     }
   },
@@ -357,7 +369,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -373,7 +385,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -388,7 +400,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server104",
+          "host": "server111",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -403,7 +415,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -418,7 +430,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server104",
+          "host": "server111",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -433,7 +445,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -448,7 +460,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,
@@ -463,7 +475,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server166",
+          "host": "server241",
           "method": "GET",
           "port": 80,
           "priority": 3,

@@ -117,6 +117,12 @@
       "tag": "img"
     },
     "368": {
+      "event_handling_scopes": [
+        [
+          "error",
+          331
+        ]
+      ],
       "tag": "img"
     },
     "369": {
@@ -129,6 +135,12 @@
       "tag": "img"
     },
     "408": {
+      "event_handling_scopes": [
+        [
+          "error",
+          335
+        ]
+      ],
       "tag": "img"
     },
     "409": {
@@ -819,7 +831,7 @@
       "part_of_page_loaded_check": false,
       "req_chain": [
         {
-          "host": "server69",
+          "host": "server288",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -835,7 +847,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server138",
+          "host": "server291",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -850,7 +862,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server72",
+          "host": "server174",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -865,7 +877,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server72",
+          "host": "server174",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -880,7 +892,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server115",
+          "host": "server111",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -895,7 +907,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server175",
+          "host": "server130",
           "method": "GET",
           "port": 443,
           "priority": 3,
@@ -910,7 +922,7 @@
       "part_of_page_loaded_check": true,
       "req_chain": [
         {
-          "host": "server115",
+          "host": "server111",
           "method": "GET",
           "port": 443,
           "priority": 3,
