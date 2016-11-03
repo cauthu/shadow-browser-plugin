@@ -1,0 +1,1225 @@
+{
+  "elements": {
+    "106": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "108": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 43,
+      "tag": "script"
+    },
+    "114": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 47,
+      "tag": "script"
+    },
+    "120": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 50,
+      "tag": "script"
+    },
+    "123": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 53,
+      "tag": "script"
+    },
+    "126": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 56,
+      "tag": "script"
+    },
+    "129": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 3,
+      "is_parser_blocking": true,
+      "run_scope_id": 60,
+      "tag": "script"
+    },
+    "131": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 63,
+      "tag": "script"
+    },
+    "141": {
+      "event_handling_scopes": [
+        [
+          "load",
+          154
+        ]
+      ],
+      "tag": "img"
+    },
+    "144": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 70,
+      "tag": "script"
+    },
+    "149": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 76,
+      "tag": "script"
+    },
+    "151": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 82,
+      "tag": "script"
+    },
+    "154": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 6,
+      "is_parser_blocking": true,
+      "run_scope_id": 149,
+      "tag": "script"
+    },
+    "156": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 7,
+      "is_parser_blocking": true,
+      "run_scope_id": 176,
+      "tag": "script"
+    },
+    "157": {
+      "event_handling_scopes": [
+        [
+          "load",
+          253
+        ]
+      ],
+      "tag": "img"
+    },
+    "158": {
+      "event_handling_scopes": [
+        [
+          "load",
+          256
+        ]
+      ],
+      "tag": "img"
+    },
+    "159": {
+      "event_handling_scopes": [
+        [
+          "load",
+          259
+        ]
+      ],
+      "tag": "img"
+    },
+    "165": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 8,
+      "is_parser_blocking": true,
+      "run_scope_id": 181,
+      "tag": "script"
+    },
+    "167": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 9,
+      "is_parser_blocking": true,
+      "run_scope_id": 185,
+      "tag": "script"
+    },
+    "170": {
+      "tag": "body"
+    },
+    "1267": {
+      "tag": "img"
+    },
+    "1281": {
+      "tag": "img"
+    },
+    "1331": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 237,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "43": [
+      "  /* [1364.27, 1367.31] scopeStart= 1477877854047.992920 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.04);"
+    ],
+    "47": [
+      "  /* [1369.12, 1373.66] scopeStart= 1477877854052.849121 type= ScriptControllerRunScriptScope */",
+      "  __msleep(4.54);"
+    ],
+    "50": [
+      "  /* [1379.0, 1379.94] scopeStart= 1477877854062.729004 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.94);"
+    ],
+    "53": [
+      "  /* [1380.31, 1380.64] scopeStart= 1477877854064.042969 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.33);"
+    ],
+    "56": [
+      "  /* [1380.94, 1381.13] scopeStart= 1477877854064.672852 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.19);"
+    ],
+    "60": [
+      "  /* [1381.7, 1381.82] scopeStart= 1477877854065.428955 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.12);"
+    ],
+    "63": [
+      "  /* [1382.4, 1396.19] scopeStart= 1477877854066.128906 type= ScriptControllerRunScriptScope */",
+      "  __msleep(9.00);",
+      "  add_elem(141);",
+      "  __msleep(4.79);"
+    ],
+    "70": [
+      "  /* [1396.76, 1398.43] scopeStart= 1477877854080.490234 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.74);",
+      "  __msleep(0.24);",
+      "  __msleep(0.40);",
+      "  __msleep(0.07);",
+      "  __msleep(0.22);"
+    ],
+    "76": [
+      "  /* [1399.66, 1418.58] scopeStart= 1477877854083.385010 type= ScriptControllerRunScriptScope */",
+      "  __msleep(18.86);",
+      "  __msleep(0.06);"
+    ],
+    "82": [
+      "  /* [1422.87, 1450.75] scopeStart= 1477877854106.595947 type= ScriptControllerRunScriptScope */",
+      "  __msleep(27.88);"
+    ],
+    "149": [
+      "  /* [1452.9, 1508.33] scopeStart= 1477877854136.630127 type= ScriptControllerRunScriptScope */",
+      "  __msleep(54.94);",
+      "  __msleep(0.12);",
+      "  __msleep(0.07);",
+      "  __msleep(0.07);",
+      "  __msleep(0.07);",
+      "  __msleep(0.07);",
+      "  __msleep(0.05);",
+      "  __msleep(0.04);"
+    ],
+    "154": [
+      "  /* [1510.26, 1511.66] scopeStart= 1477877854193.989990 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.47);",
+      "  add_elem(157);",
+      "  __msleep(0.37);",
+      "  add_elem(158);",
+      "  __msleep(0.28);",
+      "  add_elem(159);",
+      "  __msleep(0.28);"
+    ],
+    "158": [
+      "  /* [1511.7, 1512.47] scopeStart= 1477877854195.430908 type= DOMTimerFiredScope */",
+      "  __msleep(0.33);",
+      "  __msleep(0.07);",
+      "  __msleep(0.37);"
+    ],
+    "162": [
+      "  /* [1513.93, 1515.1] scopeStart= 1477877854197.662109 type= DOMTimerFiredScope */",
+      "  __msleep(0.91);",
+      "  __msleep(0.09);",
+      "  __msleep(0.17);"
+    ],
+    "164": [
+      "  /* [1515.11, 1515.6] scopeStart= 1477877854198.842041 type= DOMTimerFiredScope */",
+      "  __msleep(0.25);",
+      "  __msleep(0.04);",
+      "  __msleep(0.20);"
+    ],
+    "176": [
+      "  /* [1519.72, 1522.72] scopeStart= 1477877854203.453125 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.42);",
+      "  __msleep(0.58);"
+    ],
+    "181": [
+      "  /* [1523.28, 1524.1] scopeStart= 1477877854207.011963 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.50);",
+      "  __msleep(0.13);",
+      "  __msleep(0.08);",
+      "  __msleep(0.09);",
+      "  __msleep(0.02);"
+    ],
+    "185": [
+      "  /* [1524.59, 1525.46] scopeStart= 1477877854208.323975 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.87);"
+    ],
+    "237": [
+      "  /* [1547.93, 1548.4] scopeStart= 1477877854231.663086 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.47);"
+    ],
+    "242": [
+      "  /* [1549.29, 1554.17] scopeStart= 1477877854233.016113 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.47);",
+      "  __msleep(0.09);",
+      "  __msleep(0.06);",
+      "  __msleep(2.78);",
+      "  __msleep(0.05);",
+      "  __msleep(0.23);",
+      "  __msleep(0.04);",
+      "  __msleep(0.16);"
+    ],
+    "250": [
+      "  /* [1554.18, 1564.71] scopeStart= 1477877854237.910889 type= RenderTreeUpdateScope */",
+      "  __msleep(10.53);"
+    ],
+    "253": [
+      "  /* [1588.15, 1588.46] scopeStart= 1477877854271.881104 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.31);"
+    ],
+    "256": [
+      "  /* [1588.48, 1588.62] scopeStart= 1477877854272.208008 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.14);"
+    ],
+    "259": [
+      "  /* [1588.64, 1588.75] scopeStart= 1477877854272.367920 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.11);"
+    ],
+    "270": [
+      "  /* [1607.86, 1608.05] scopeStart= 1477877854291.593994 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "271": [
+      "  /* [1624.24, 1624.42] scopeStart= 1477877854307.968018 type= RenderTreeUpdateScope */",
+      "  __msleep(0.18);"
+    ],
+    "272": [
+      "  /* [1640.95, 1641.15] scopeStart= 1477877854324.682861 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "273": [
+      "  /* [1651.14, 1651.34] scopeStart= 1477877854334.870117 type= DOMTimerFiredScope */",
+      "  __msleep(0.20);"
+    ],
+    "275": [
+      "  /* [1657.54, 1657.66] scopeStart= 1477877854341.267090 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "276": [
+      "  /* [1674.23, 1674.34] scopeStart= 1477877854357.958984 type= RenderTreeUpdateScope */",
+      "  __msleep(0.11);"
+    ],
+    "277": [
+      "  /* [1690.89, 1691.01] scopeStart= 1477877854374.623047 type= RenderTreeUpdateScope */",
+      "  __msleep(0.12);"
+    ],
+    "278": [
+      "  /* [1707.59, 1707.79] scopeStart= 1477877854391.320068 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "279": [
+      "  /* [1724.2, 1724.39] scopeStart= 1477877854407.933838 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "280": [
+      "  /* [1740.94, 1741.14] scopeStart= 1477877854424.665039 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "281": [
+      "  /* [1751.47, 1751.66] scopeStart= 1477877854435.200928 type= DOMTimerFiredScope */",
+      "  __msleep(0.19);"
+    ],
+    "283": [
+      "  /* [1757.6, 1757.81] scopeStart= 1477877854441.330811 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "284": [
+      "  /* [1774.27, 1774.47] scopeStart= 1477877854458.002930 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "285": [
+      "  /* [1774.71, 1774.91] scopeStart= 1477877854458.434082 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.04);"
+    ],
+    "287": [
+      "  /* [1774.93, 1775.05] scopeStart= 1477877854458.655029 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.04);"
+    ],
+    "289": [
+      "  /* [1775.07, 1775.21] scopeStart= 1477877854458.796875 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.05);"
+    ],
+    "291": [
+      "  /* [1790.92, 1791.11] scopeStart= 1477877854474.645996 type= RenderTreeUpdateScope */",
+      "  __msleep(0.19);"
+    ],
+    "292": [
+      "  /* [1807.59, 1807.79] scopeStart= 1477877854491.322998 type= RenderTreeUpdateScope */",
+      "  __msleep(0.20);"
+    ],
+    "293": [
+      "  /* [1824.27, 1824.5] scopeStart= 1477877854507.998047 type= RenderTreeUpdateScope */",
+      "  __msleep(0.23);"
+    ],
+    "294": [
+      "  /* [1840.94, 1841.19] scopeStart= 1477877854524.665039 type= RenderTreeUpdateScope */",
+      "  __msleep(0.25);"
+    ],
+    "295": [
+      "  /* [1852.35, 1852.46] scopeStart= 1477877854536.076172 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);"
+    ],
+    "297": [
+      "  /* [1857.57, 1857.79] scopeStart= 1477877854541.296875 type= RenderTreeUpdateScope */",
+      "  __msleep(0.22);"
+    ],
+    "298": [
+      "  /* [1874.25, 1874.46] scopeStart= 1477877854557.980957 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "299": [
+      "  /* [1919.58, 1919.94] scopeStart= 1477877854603.311035 type= DOMTimerFiredScope */",
+      "  __msleep(0.29);",
+      "  __msleep(0.07);"
+    ],
+    "301": [
+      "  /* [1953.08, 1953.23] scopeStart= 1477877854636.806885 type= DOMTimerFiredScope */",
+      "  __msleep(0.15);"
+    ],
+    "328": [
+      "  /* [1988.29, 1994.23] scopeStart= 1477877854672.017090 type= RenderTreeUpdateScope */",
+      "  __msleep(5.94);"
+    ],
+    "329": [
+      "  /* [2025.34, 2025.58] scopeStart= 1477877854709.063965 type= DOMTimerFiredScope */",
+      "  __msleep(0.18);",
+      "  __msleep(0.06);"
+    ],
+    "331": [
+      "  /* [2025.6, 2025.75] scopeStart= 1477877854709.333008 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.07);"
+    ],
+    "333": [
+      "  /* [2025.77, 2025.89] scopeStart= 1477877854709.497070 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  __msleep(0.05);"
+    ],
+    "358": [
+      "  /* [2029.96, 2036.5] scopeStart= 1477877854713.687012 type= RenderTreeUpdateScope */",
+      "  __msleep(6.54);"
+    ],
+    "361": [
+      "  /* [2048.94, 2048.98] scopeStart= 1477877854732.672852 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "362": [
+      "  /* [2049.13, 2049.17] scopeStart= 1477877854732.856934 type= DocOnLoadEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "386": [
+      "  /* [2056.78, 2056.89] scopeStart= 1477877854740.506836 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);"
+    ],
+    "390": [
+      "  /* [2157.43, 2157.54] scopeStart= 1477877854841.160156 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);"
+    ],
+    "392": [
+      "  /* [2257.66, 2257.79] scopeStart= 1477877854941.387939 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "394": [
+      "  /* [2275.91, 2276.13] scopeStart= 1477877854959.635986 type= DOMTimerFiredScope */",
+      "  __msleep(0.16);",
+      "  __msleep(0.06);"
+    ],
+    "396": [
+      "  /* [2276.14, 2276.27] scopeStart= 1477877854959.873047 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.04);"
+    ],
+    "398": [
+      "  /* [2276.29, 2276.45] scopeStart= 1477877854960.020020 type= DOMTimerFiredScope */",
+      "  __msleep(0.11);",
+      "  __msleep(0.05);"
+    ],
+    "400": [
+      "  /* [2358.56, 2358.68] scopeStart= 1477877855042.285889 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);"
+    ],
+    "402": [
+      "  /* [2420.83, 2421.2] scopeStart= 1477877855104.562012 type= DOMTimerFiredScope */",
+      "  __msleep(0.28);",
+      "  __msleep(0.09);"
+    ],
+    "404": [
+      "  /* [2459.34, 2459.48] scopeStart= 1477877855143.068115 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);"
+    ],
+    "406": [
+      "  /* [2526.59, 2526.78] scopeStart= 1477877855210.318115 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.06);"
+    ],
+    "408": [
+      "  /* [2526.8, 2526.92] scopeStart= 1477877855210.525879 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.04);"
+    ],
+    "410": [
+      "  /* [2526.94, 2527.06] scopeStart= 1477877855210.669922 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.04);"
+    ],
+    "412": [
+      "  /* [2560.2, 2560.33] scopeStart= 1477877855243.926025 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "414": [
+      "  /* [2660.47, 2660.6] scopeStart= 1477877855344.198975 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "416": [
+      "  /* [2760.74, 2760.86] scopeStart= 1477877855444.464844 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);"
+    ],
+    "418": [
+      "  /* [2777.0, 2777.21] scopeStart= 1477877855460.725098 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.08);"
+    ],
+    "420": [
+      "  /* [2777.23, 2777.37] scopeStart= 1477877855460.962158 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.05);"
+    ],
+    "422": [
+      "  /* [2777.4, 2777.54] scopeStart= 1477877855461.131104 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.06);"
+    ],
+    "424": [
+      "  /* [2861.65, 2861.78] scopeStart= 1477877855545.375977 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "426": [
+      "  /* [2921.92, 2922.11] scopeStart= 1477877855605.648926 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.06);"
+    ],
+    "428": [
+      "  /* [2962.24, 2962.37] scopeStart= 1477877855645.970215 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "430": [
+      "  /* [3027.51, 3027.68] scopeStart= 1477877855711.232910 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.05);"
+    ],
+    "432": [
+      "  /* [3027.71, 3027.86] scopeStart= 1477877855711.438965 type= DOMTimerFiredScope */",
+      "  __msleep(0.10);",
+      "  __msleep(0.05);"
+    ],
+    "434": [
+      "  /* [3027.87, 3028.0] scopeStart= 1477877855711.603027 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.04);"
+    ],
+    "436": [
+      "  /* [3063.14, 3063.27] scopeStart= 1477877855746.867920 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "438": [
+      "  /* [3163.38, 3163.52] scopeStart= 1477877855847.109131 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);"
+    ],
+    "440": [
+      "  /* [3263.65, 3263.78] scopeStart= 1477877855947.382080 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "442": [
+      "  /* [3277.92, 3278.09] scopeStart= 1477877855961.644043 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.05);"
+    ],
+    "444": [
+      "  /* [3278.11, 3278.25] scopeStart= 1477877855961.843018 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.06);"
+    ],
+    "446": [
+      "  /* [3278.29, 3278.43] scopeStart= 1477877855962.014893 type= DOMTimerFiredScope */",
+      "  __msleep(0.09);",
+      "  __msleep(0.05);"
+    ],
+    "448": [
+      "  /* [3364.56, 3364.69] scopeStart= 1477877856048.290039 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);"
+    ],
+    "450": [
+      "  /* [3422.82, 3423.02] scopeStart= 1477877856106.551025 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.06);"
+    ],
+    "452": [
+      "  /* [3465.17, 3465.31] scopeStart= 1477877856148.900146 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);"
+    ],
+    "454": [
+      "  /* [3528.45, 3528.64] scopeStart= 1477877856212.179932 type= DOMTimerFiredScope */",
+      "  __msleep(0.13);",
+      "  __msleep(0.06);"
+    ],
+    "456": [
+      "  /* [3528.66, 3528.78] scopeStart= 1477877856212.385986 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.04);"
+    ],
+    "458": [
+      "  /* [3528.8, 3528.93] scopeStart= 1477877856212.529785 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.05);"
+    ],
+    "460": [
+      "  /* [3566.07, 3566.19] scopeStart= 1477877856249.803955 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);"
+    ],
+    "462": [
+      "  /* [3666.34, 3669.42] scopeStart= 1477877856350.065918 type= DOMTimerFiredScope */",
+      "  __msleep(2.99);",
+      "  __msleep(0.09);"
+    ],
+    "464": [
+      "  /* [3779.55, 3779.77] scopeStart= 1477877856463.281006 type= DOMTimerFiredScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.08);"
+    ],
+    "466": [
+      "  /* [3779.78, 3779.93] scopeStart= 1477877856463.512939 type= DOMTimerFiredScope */",
+      "  __msleep(0.10);",
+      "  __msleep(0.05);"
+    ],
+    "468": [
+      "  /* [3779.94, 3780.07] scopeStart= 1477877856463.671875 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.05);"
+    ],
+    "470": [
+      "  /* [3923.21, 3923.42] scopeStart= 1477877856606.936035 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.09);"
+    ],
+    "472": [
+      "  /* [4030.56, 4030.74] scopeStart= 1477877856714.284912 type= DOMTimerFiredScope */",
+      "  __msleep(0.12);",
+      "  __msleep(0.06);"
+    ],
+    "474": [
+      "  /* [4030.76, 4030.88] scopeStart= 1477877856714.489014 type= DOMTimerFiredScope */",
+      "  __msleep(0.08);",
+      "  __msleep(0.04);"
+    ],
+    "476": [
+      "  /* [4030.9, 4031.01] scopeStart= 1477877856714.627930 type= DOMTimerFiredScope */",
+      "  __msleep(0.07);",
+      "  __msleep(0.04);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 250,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        739,
+        106
+      ],
+      [
+        2333,
+        108
+      ],
+      [
+        11459,
+        114
+      ],
+      [
+        20594,
+        120
+      ],
+      [
+        20901,
+        123
+      ],
+      [
+        20930,
+        126
+      ],
+      [
+        20951,
+        129
+      ],
+      [
+        22674,
+        131
+      ],
+      [
+        23659,
+        144
+      ],
+      [
+        23679,
+        149
+      ],
+      [
+        23701,
+        151
+      ],
+      [
+        23723,
+        154
+      ],
+      [
+        23742,
+        156
+      ],
+      [
+        23763,
+        165
+      ],
+      [
+        23782,
+        167
+      ],
+      [
+        23790,
+        170
+      ],
+      [
+        66659,
+        1267
+      ],
+      [
+        66773,
+        1281
+      ],
+      [
+        99943,
+        1331
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        242
+      ],
+      [
+        "load",
+        362
+      ],
+      [
+        "readystatechange_complete",
+        361
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "webappstatic.buzzfeed.com",
+    "www.buzzfeed.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server25",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 376,
+          "resp_body_size": 99952,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 16.139999999999873,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 408,
+          "resp_body_size": 18550,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 546,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 14265,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 395,
+          "resp_body_size": 85375,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 403,
+          "resp_body_size": 35712,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 377,
+          "resp_body_size": 8759,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 387,
+          "resp_body_size": 4693,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 375,
+          "resp_body_size": 4168,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 40490,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "14": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 390,
+          "resp_body_size": 18904,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server64",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 392,
+          "resp_body_size": 19104,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "font"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        299
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70005": {
+      "fired_scope_ids": [
+        158
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70007": {
+      "fired_scope_ids": [
+        162
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70008": {
+      "fired_scope_ids": [
+        164
+      ],
+      "interval_ms": 1,
+      "singleShot": true
+    },
+    "70013": {
+      "fired_scope_ids": [
+        285
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70014": {
+      "fired_scope_ids": [
+        287
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70015": {
+      "fired_scope_ids": [
+        289
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70016": {
+      "fired_scope_ids": [
+        273,
+        281,
+        295,
+        301,
+        386,
+        390,
+        392,
+        400,
+        404,
+        412,
+        414,
+        416,
+        424,
+        428,
+        436,
+        438,
+        440,
+        448,
+        452,
+        460,
+        462
+      ],
+      "interval_ms": 100,
+      "singleShot": false
+    },
+    "70019": {
+      "fired_scope_ids": [
+        329
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70020": {
+      "fired_scope_ids": [
+        331
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70021": {
+      "fired_scope_ids": [
+        333
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70022": {
+      "fired_scope_ids": [
+        402
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70023": {
+      "fired_scope_ids": [
+        394
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70024": {
+      "fired_scope_ids": [
+        396
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70025": {
+      "fired_scope_ids": [
+        398
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70026": {
+      "fired_scope_ids": [
+        406
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70027": {
+      "fired_scope_ids": [
+        408
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70028": {
+      "fired_scope_ids": [
+        410
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70029": {
+      "fired_scope_ids": [
+        426
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70030": {
+      "fired_scope_ids": [
+        418
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70031": {
+      "fired_scope_ids": [
+        420
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70032": {
+      "fired_scope_ids": [
+        422
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70033": {
+      "fired_scope_ids": [
+        430
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70034": {
+      "fired_scope_ids": [
+        432
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70035": {
+      "fired_scope_ids": [
+        434
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70036": {
+      "fired_scope_ids": [
+        450
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70037": {
+      "fired_scope_ids": [
+        442
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70038": {
+      "fired_scope_ids": [
+        444
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70039": {
+      "fired_scope_ids": [
+        446
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70040": {
+      "fired_scope_ids": [
+        454
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70041": {
+      "fired_scope_ids": [
+        456
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70042": {
+      "fired_scope_ids": [
+        458
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70043": {
+      "fired_scope_ids": [
+        470
+      ],
+      "interval_ms": 500,
+      "singleShot": true
+    },
+    "70044": {
+      "fired_scope_ids": [
+        464
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70045": {
+      "fired_scope_ids": [
+        466
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70046": {
+      "fired_scope_ids": [
+        468
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70047": {
+      "fired_scope_ids": [
+        472
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70048": {
+      "fired_scope_ids": [
+        474
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    },
+    "70049": {
+      "fired_scope_ids": [
+        476
+      ],
+      "interval_ms": 250,
+      "singleShot": true
+    }
+  },
+  "xhrs": {}
+}

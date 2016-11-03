@@ -1,0 +1,1004 @@
+{
+  "elements": {
+    "74": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "76": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 3,
+      "is_parser_blocking": true,
+      "run_scope_id": 19,
+      "tag": "script"
+    },
+    "81": {
+      "tag": "img"
+    },
+    "95": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 28,
+      "tag": "script"
+    },
+    "99": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 31,
+      "tag": "script"
+    },
+    "106": {
+      "asyncExec": true,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": false,
+      "run_scope_id": 145,
+      "tag": "script"
+    },
+    "108": {
+      "initial_resInstNum": 6,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "111": {
+      "tag": "body"
+    },
+    "112": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 36,
+      "tag": "script"
+    },
+    "116": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 40,
+      "tag": "script"
+    },
+    "121": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 43,
+      "tag": "script"
+    },
+    "126": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 46,
+      "tag": "script"
+    },
+    "135": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 49,
+      "tag": "script"
+    },
+    "140": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 52,
+      "tag": "script"
+    },
+    "241": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 55,
+      "tag": "script"
+    },
+    "265": {
+      "initial_resInstNum": 7,
+      "tag": "img"
+    },
+    "422": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 63,
+      "tag": "script"
+    },
+    "469": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 66,
+      "tag": "script"
+    },
+    "474": {
+      "initial_resInstNum": 8,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "902": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 74,
+      "tag": "script"
+    },
+    "905": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 77,
+      "tag": "script"
+    },
+    "910": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 80,
+      "tag": "script"
+    },
+    "915": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 84,
+      "tag": "script"
+    },
+    "918": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 89,
+      "tag": "script"
+    },
+    "923": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 92,
+      "tag": "script"
+    },
+    "930": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 95,
+      "tag": "script"
+    },
+    "937": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 98,
+      "tag": "script"
+    },
+    "944": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 101,
+      "tag": "script"
+    },
+    "951": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 104,
+      "tag": "script"
+    },
+    "958": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 107,
+      "tag": "script"
+    },
+    "965": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 110,
+      "tag": "script"
+    },
+    "970": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 114,
+      "tag": "script"
+    },
+    "975": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 117,
+      "tag": "script"
+    },
+    "982": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 120,
+      "tag": "script"
+    },
+    "989": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 123,
+      "tag": "script"
+    },
+    "996": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 126,
+      "tag": "script"
+    },
+    "1003": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 129,
+      "tag": "script"
+    },
+    "1010": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 132,
+      "tag": "script"
+    },
+    "1014": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 136,
+      "tag": "script"
+    },
+    "1039": {
+      "tag": "img"
+    },
+    "1057": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 177,
+      "tag": "script"
+    },
+    "1061": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 181,
+      "tag": "script"
+    },
+    "1067": {
+      "event_handling_scopes": [
+        [
+          "load",
+          207
+        ]
+      ],
+      "tag": "img"
+    },
+    "1070": {
+      "event_handling_scopes": [
+        [
+          "load",
+          215
+        ]
+      ],
+      "tag": "img"
+    },
+    "1071": {
+      "event_handling_scopes": [
+        [
+          "load",
+          224
+        ]
+      ],
+      "tag": "img"
+    },
+    "1072": {
+      "event_handling_scopes": [
+        [
+          "load",
+          219
+        ]
+      ],
+      "tag": "img"
+    },
+    "1073": {
+      "event_handling_scopes": [
+        [
+          "load",
+          211
+        ]
+      ],
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "19": [
+      "  /* [260.73, 278.94] scopeStart= 1476570452209.170166 type= ScriptControllerRunScriptScope */",
+      "  __msleep(9.11);",
+      "  __msleep(0.30);",
+      "  add_elem(81);",
+      "  __msleep(0.13);",
+      "  __msleep(8.40);",
+      "  __msleep(0.17);",
+      "  __msleep(0.10);"
+    ],
+    "28": [
+      "  /* [279.33, 279.92] scopeStart= 1476570452227.772949 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.59);"
+    ],
+    "31": [
+      "  /* [280.1, 280.17] scopeStart= 1476570452228.538086 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.07);"
+    ],
+    "36": [
+      "  /* [293.78, 294.12] scopeStart= 1476570452242.217041 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.22);",
+      "  __msleep(0.07);",
+      "  __msleep(0.05);"
+    ],
+    "40": [
+      "  /* [294.28, 295.67] scopeStart= 1476570452242.719971 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.39);"
+    ],
+    "43": [
+      "  /* [295.85, 295.93] scopeStart= 1476570452244.285156 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.08);"
+    ],
+    "46": [
+      "  /* [296.1, 296.19] scopeStart= 1476570452244.538086 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.09);"
+    ],
+    "49": [
+      "  /* [296.38, 296.47] scopeStart= 1476570452244.817871 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.09);"
+    ],
+    "52": [
+      "  /* [296.69, 296.93] scopeStart= 1476570452245.129150 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.24);"
+    ],
+    "55": [
+      "  /* [297.53, 297.95] scopeStart= 1476570452245.969971 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.42);"
+    ],
+    "63": [
+      "  /* [299.37, 299.51] scopeStart= 1476570452247.805176 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "66": [
+      "  /* [299.83, 299.96] scopeStart= 1476570452248.266846 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.13);"
+    ],
+    "74": [
+      "  /* [303.05, 303.26] scopeStart= 1476570452251.492920 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.21);"
+    ],
+    "77": [
+      "  /* [303.45, 303.6] scopeStart= 1476570452251.884033 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);"
+    ],
+    "80": [
+      "  /* [303.78, 303.86] scopeStart= 1476570452252.216064 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.08);"
+    ],
+    "84": [
+      "  /* [304.77, 305.29] scopeStart= 1476570452253.210938 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.52);"
+    ],
+    "89": [
+      "  /* [306.0, 306.41] scopeStart= 1476570452254.440918 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.41);"
+    ],
+    "92": [
+      "  /* [306.62, 306.81] scopeStart= 1476570452255.062988 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.19);"
+    ],
+    "95": [
+      "  /* [307.01, 307.17] scopeStart= 1476570452255.444092 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.16);"
+    ],
+    "98": [
+      "  /* [307.36, 307.53] scopeStart= 1476570452255.799072 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);"
+    ],
+    "101": [
+      "  /* [307.72, 307.88] scopeStart= 1476570452256.156982 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.16);"
+    ],
+    "104": [
+      "  /* [308.08, 308.25] scopeStart= 1476570452256.520996 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);"
+    ],
+    "107": [
+      "  /* [308.45, 308.62] scopeStart= 1476570452256.890137 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.17);"
+    ],
+    "110": [
+      "  /* [308.85, 309.05] scopeStart= 1476570452257.288818 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.20);"
+    ],
+    "114": [
+      "  /* [309.38, 309.58] scopeStart= 1476570452257.821045 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.20);"
+    ],
+    "117": [
+      "  /* [309.75, 309.89] scopeStart= 1476570452258.192139 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "120": [
+      "  /* [310.06, 310.2] scopeStart= 1476570452258.498047 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "123": [
+      "  /* [310.38, 310.53] scopeStart= 1476570452258.815918 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.15);"
+    ],
+    "126": [
+      "  /* [310.7, 310.84] scopeStart= 1476570452259.140869 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "129": [
+      "  /* [311.01, 311.15] scopeStart= 1476570452259.453125 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "132": [
+      "  /* [311.32, 311.91] scopeStart= 1476570452259.762939 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.33);",
+      "  __msleep(0.06);",
+      "  __msleep(0.20);"
+    ],
+    "136": [
+      "  /* [312.07, 312.28] scopeStart= 1476570452260.513184 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.21);"
+    ],
+    "142": [
+      "  /* [312.58, 342.57] scopeStart= 1476570452261.022949 type= RenderTreeUpdateScope */",
+      "  __msleep(29.99);"
+    ],
+    "145": [
+      "  /* [441.16, 477.0] scopeStart= 1476570452389.595947 type= ScriptControllerRunScriptScope */",
+      "  __msleep(35.84);"
+    ],
+    "153": [
+      "  /* [481.51, 486.12] scopeStart= 1476570452429.945068 type= RenderTreeUpdateScope */",
+      "  __msleep(4.61);"
+    ],
+    "156": [
+      "  /* [952.69, 952.71] scopeStart= 1476570452901.125000 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.02);"
+    ],
+    "157": [
+      "  /* [952.77, 957.17] scopeStart= 1476570452901.205078 type= DocOnLoadEventScope */",
+      "  __msleep(1.49);",
+      "  __msleep(1.11);",
+      "  __msleep(0.28);",
+      "  sched_render_update_scope(167);",
+      "  __msleep(1.52);"
+    ],
+    "167": [
+      "  /* [957.21, 957.34] scopeStart= 1476570452905.645996 type= RenderTreeUpdateScope */",
+      "  __msleep(0.13);"
+    ],
+    "169": [
+      "  /* [1054.52, 1060.71] scopeStart= 1476570453002.955078 type= DOMTimerFiredScope */",
+      "  __msleep(3.67);",
+      "  add_elem(1039);",
+      "  __msleep(0.25);",
+      "  set_elem_res(1039, 15);",
+      "  __msleep(2.27);"
+    ],
+    "177": [
+      "  /* [1067.89, 1075.51] scopeStart= 1476570453016.324951 type= ScriptControllerRunScriptScope */",
+      "  __msleep(6.09);",
+      "  __msleep(1.53);"
+    ],
+    "181": [
+      "  /* [1077.11, 1079.22] scopeStart= 1476570453025.548096 type= ScriptControllerRunScriptScope */",
+      "  __msleep(2.11);"
+    ],
+    "195": [
+      "  /* [1084.55, 1084.62] scopeStart= 1476570453032.993164 type= RenderTreeUpdateScope */",
+      "  __msleep(0.07);"
+    ],
+    "207": [
+      "  /* [1139.78, 1139.98] scopeStart= 1476570453088.221191 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.20);"
+    ],
+    "211": [
+      "  /* [1167.7, 1167.83] scopeStart= 1476570453116.144775 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.13);"
+    ],
+    "215": [
+      "  /* [1170.75, 1170.85] scopeStart= 1476570453119.187012 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.10);"
+    ],
+    "219": [
+      "  /* [1191.87, 1192.03] scopeStart= 1476570453140.311035 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.16);"
+    ],
+    "224": [
+      "  /* [1281.22, 1281.41] scopeStart= 1476570453229.659180 type= EventTargetInvokingListenersScope */",
+      "  __msleep(0.19);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        606,
+        74
+      ],
+      [
+        627,
+        76
+      ],
+      [
+        652,
+        95
+      ],
+      [
+        689,
+        99
+      ],
+      [
+        987,
+        106
+      ],
+      [
+        1224,
+        108
+      ],
+      [
+        1234,
+        111
+      ],
+      [
+        1335,
+        112
+      ],
+      [
+        1401,
+        116
+      ],
+      [
+        1453,
+        121
+      ],
+      [
+        1507,
+        126
+      ],
+      [
+        1664,
+        135
+      ],
+      [
+        2521,
+        140
+      ],
+      [
+        3399,
+        241
+      ],
+      [
+        3506,
+        265
+      ],
+      [
+        4447,
+        422
+      ],
+      [
+        4726,
+        469
+      ],
+      [
+        4762,
+        474
+      ],
+      [
+        7654,
+        902
+      ],
+      [
+        7750,
+        905
+      ],
+      [
+        7799,
+        910
+      ],
+      [
+        15594,
+        915
+      ],
+      [
+        21455,
+        918
+      ],
+      [
+        22207,
+        923
+      ],
+      [
+        22575,
+        930
+      ],
+      [
+        22906,
+        937
+      ],
+      [
+        23268,
+        944
+      ],
+      [
+        23766,
+        951
+      ],
+      [
+        24205,
+        958
+      ],
+      [
+        25322,
+        965
+      ],
+      [
+        26735,
+        970
+      ],
+      [
+        26774,
+        975
+      ],
+      [
+        26823,
+        982
+      ],
+      [
+        27080,
+        989
+      ],
+      [
+        27122,
+        996
+      ],
+      [
+        27171,
+        1003
+      ],
+      [
+        27282,
+        1010
+      ],
+      [
+        27399,
+        1014
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "load",
+        157
+      ],
+      [
+        "readystatechange_complete",
+        156
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "analytics.twitter.com",
+    "d.adroll.com",
+    "googleads.g.doubleclick.net",
+    "gtms01.alicdn.com",
+    "i.alicdn.com",
+    "perf.mmstat.com",
+    "sp.analytics.yahoo.com",
+    "t.co",
+    "www.alibaba.com",
+    "www.google.com"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server5",
+          "method": "GET",
+          "port": 80,
+          "priority": 4,
+          "req_total_size": 337,
+          "resp_body_size": 27405,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 7.690000000000026,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 346,
+          "resp_body_size": 87006,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 2,
+          "req_total_size": 325,
+          "resp_body_size": 14006,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 2,
+          "req_total_size": 359,
+          "resp_body_size": 3449,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 2,
+          "req_total_size": 1300,
+          "resp_body_size": 203918,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "parse_dur_ms": 12.870000000000005,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 1236,
+          "resp_body_size": 34558,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server62",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 367,
+          "resp_body_size": 178190,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "8": {
+      "parse_dur_ms": 0.57000000000005,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 352,
+          "resp_body_size": 1854,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "12": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 1298,
+          "resp_body_size": 40289,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "13": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 386,
+          "resp_body_size": 5049,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "14": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server196",
+          "method": "GET",
+          "port": 80,
+          "priority": 4,
+          "req_total_size": 611,
+          "resp_body_size": 12881,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "15": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server121",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 756,
+          "resp_body_size": 155,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "16": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server8",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 961,
+          "resp_body_size": 762,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "server194",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 919,
+          "resp_body_size": 143,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "17": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server173",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 637,
+          "resp_body_size": 404,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "18": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server134",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 650,
+          "resp_body_size": 221,
+          "resp_meta_size": 200
+        },
+        {
+          "host": "server134",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 650,
+          "resp_body_size": 274,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "19": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server84",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 633,
+          "resp_body_size": 463,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "20": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server177",
+          "method": "GET",
+          "port": 80,
+          "priority": 0,
+          "req_total_size": 615,
+          "resp_body_size": 288,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {
+    "70001": {
+      "fired_scope_ids": [
+        169
+      ],
+      "interval_ms": 100,
+      "singleShot": true
+    }
+  },
+  "xhrs": {}
+}

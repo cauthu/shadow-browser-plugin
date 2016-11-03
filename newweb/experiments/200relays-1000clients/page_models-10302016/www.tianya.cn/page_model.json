@@ -1,0 +1,423 @@
+{
+  "elements": {
+    "40": {
+      "initial_resInstNum": 2,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "42": {
+      "initial_resInstNum": 3,
+      "is_blocking_css": true,
+      "rel": "stylesheet",
+      "tag": "link"
+    },
+    "48": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "is_parser_blocking": true,
+      "run_scope_id": 25,
+      "tag": "script"
+    },
+    "53": {
+      "tag": "body"
+    },
+    "66": {
+      "initial_resInstNum": 4,
+      "tag": "img"
+    },
+    "117": {
+      "initial_resInstNum": 5,
+      "tag": "img"
+    },
+    "156": {
+      "tag": "img"
+    },
+    "213": {
+      "tag": "img"
+    },
+    "240": {
+      "initial_resInstNum": 6,
+      "tag": "img"
+    },
+    "277": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 36,
+      "tag": "script"
+    },
+    "345": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 7,
+      "is_parser_blocking": true,
+      "run_scope_id": 43,
+      "tag": "script"
+    },
+    "413": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 99,
+      "tag": "script"
+    },
+    "416": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 8,
+      "is_parser_blocking": true,
+      "run_scope_id": 103,
+      "tag": "script"
+    },
+    "424": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 9,
+      "is_parser_blocking": true,
+      "run_scope_id": 113,
+      "tag": "script"
+    },
+    "429": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 117,
+      "tag": "script"
+    }
+  },
+  "exec_scopes": {
+    "25": [
+      "  /* [1491.83, 1492.22] scopeStart= 1477878013978.394043 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.39);"
+    ],
+    "36": [
+      "  /* [1497.78, 1498.46] scopeStart= 1477878013984.353027 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.68);"
+    ],
+    "43": [
+      "  /* [1501.47, 1615.39] scopeStart= 1477878013988.038086 type= ScriptControllerRunScriptScope */",
+      "  __msleep(26.86);",
+      "  __msleep(6.11);",
+      "  fetch_res(10);",
+      "  __msleep(69.46);",
+      "  __msleep(11.49);"
+    ],
+    "99": [
+      "  /* [1615.78, 1615.88] scopeStart= 1477878014102.349121 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.10);"
+    ],
+    "103": [
+      "  /* [1616.39, 1627.97] scopeStart= 1477878014102.960205 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.96);",
+      "  __msleep(2.37);",
+      "  __msleep(0.08);",
+      "  __msleep(0.80);",
+      "  __msleep(0.12);",
+      "  __msleep(0.36);",
+      "  __msleep(0.05);",
+      "  __msleep(4.32);",
+      "  __msleep(0.06);",
+      "  __msleep(0.32);",
+      "  __msleep(0.04);",
+      "  __msleep(1.69);",
+      "  __msleep(0.07);",
+      "  __msleep(0.34);"
+    ],
+    "113": [
+      "  /* [1628.5, 1633.44] scopeStart= 1477878014115.071045 type= ScriptControllerRunScriptScope */",
+      "  __msleep(1.53);",
+      "  __msleep(0.24);",
+      "  __msleep(0.07);",
+      "  __msleep(0.10);",
+      "  __msleep(0.04);",
+      "  __msleep(0.09);",
+      "  __msleep(0.03);",
+      "  __msleep(0.05);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.09);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.03);",
+      "  __msleep(0.02);",
+      "  __msleep(0.11);",
+      "  __msleep(0.43);",
+      "  __msleep(0.16);",
+      "  __msleep(1.49);"
+    ],
+    "117": [
+      "  /* [1633.72, 1633.98] scopeStart= 1477878014120.287842 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);",
+      "  __msleep(0.06);",
+      "  __msleep(0.06);"
+    ],
+    "123": [
+      "  /* [1634.23, 1636.34] scopeStart= 1477878014120.794922 type= EventTargetInvokingListenersScope */",
+      "  __msleep(1.30);",
+      "  __msleep(0.04);",
+      "  __msleep(0.06);",
+      "  __msleep(0.71);"
+    ],
+    "137": [
+      "  /* [1655.46, 1655.51] scopeStart= 1477878014142.034912 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.05);"
+    ],
+    "138": [
+      "  /* [1655.55, 1655.67] scopeStart= 1477878014142.116943 type= DocOnLoadEventScope */",
+      "  __msleep(0.12);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 0,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        463,
+        40
+      ],
+      [
+        517,
+        42
+      ],
+      [
+        778,
+        48
+      ],
+      [
+        785,
+        53
+      ],
+      [
+        905,
+        66
+      ],
+      [
+        1316,
+        117
+      ],
+      [
+        1888,
+        156
+      ],
+      [
+        2455,
+        213
+      ],
+      [
+        2736,
+        240
+      ],
+      [
+        3096,
+        277
+      ],
+      [
+        4078,
+        345
+      ],
+      [
+        4197,
+        413
+      ],
+      [
+        4267,
+        416
+      ],
+      [
+        4324,
+        424
+      ],
+      [
+        4507,
+        429
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        123
+      ],
+      [
+        "load",
+        138
+      ],
+      [
+        "readystatechange_complete",
+        137
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "static.tianyaui.com",
+    "www.tianya.cn"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server30",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 378,
+          "resp_body_size": 4599,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "parse_dur_ms": 3.099999999999909,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 376,
+          "resp_body_size": 4963,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "3": {
+      "parse_dur_ms": 1.6499999999998636,
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 406,
+          "resp_body_size": 3054,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "css"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 406,
+          "resp_body_size": 1870,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 472,
+          "resp_body_size": 15835,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 474,
+          "resp_body_size": 3145,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 360,
+          "resp_body_size": 61293,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "8": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 389,
+          "resp_body_size": 3143,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "9": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 361,
+          "resp_body_size": 2819,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "10": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server187",
+          "method": "GET",
+          "port": 80,
+          "priority": 3,
+          "req_total_size": 529,
+          "resp_body_size": 30161,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {}
+}

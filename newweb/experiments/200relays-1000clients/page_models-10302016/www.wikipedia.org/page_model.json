@@ -1,0 +1,262 @@
+{
+  "elements": {
+    "22": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 13,
+      "tag": "script"
+    },
+    "44": {
+      "tag": "body"
+    },
+    "48": {
+      "initial_resInstNum": 2,
+      "tag": "img"
+    },
+    "62": {
+      "initial_resInstNum": 3,
+      "tag": "img"
+    },
+    "2182": {
+      "asyncExec": false,
+      "exec_immediately": true,
+      "is_parser_blocking": false,
+      "run_scope_id": 91,
+      "tag": "script"
+    },
+    "2185": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 4,
+      "is_parser_blocking": true,
+      "run_scope_id": 103,
+      "tag": "script"
+    },
+    "2208": {
+      "asyncExec": false,
+      "exec_immediately": false,
+      "initial_resInstNum": 5,
+      "is_parser_blocking": true,
+      "run_scope_id": 110,
+      "tag": "script"
+    },
+    "2222": {
+      "tag": "img"
+    }
+  },
+  "exec_scopes": {
+    "13": [
+      "  /* [677.66, 681.49] scopeStart= 1477877168905.476074 type= ScriptControllerRunScriptScope */",
+      "  __msleep(3.83);"
+    ],
+    "84": [
+      "  /* [727.17, 740.71] scopeStart= 1477877168954.993896 type= RenderTreeUpdateScope */",
+      "  __msleep(13.54);"
+    ],
+    "91": [
+      "  /* [810.38, 810.52] scopeStart= 1477877169038.196045 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.14);"
+    ],
+    "96": [
+      "  /* [812.18, 829.43] scopeStart= 1477877169039.994873 type= RenderTreeUpdateScope */",
+      "  __msleep(0.62);",
+      "  fetch_res(6);",
+      "  __msleep(16.21);",
+      "  fetch_res(7);",
+      "  __msleep(0.42);"
+    ],
+    "99": [
+      "  /* [1101.66, 1101.87] scopeStart= 1477877169329.479004 type= RenderTreeUpdateScope */",
+      "  __msleep(0.21);"
+    ],
+    "103": [
+      "  /* [1105.3, 1118.52] scopeStart= 1477877169333.124023 type= ScriptControllerRunScriptScope */",
+      "  __msleep(10.33);",
+      "  __msleep(2.89);"
+    ],
+    "110": [
+      "  /* [1119.51, 1119.69] scopeStart= 1477877169347.330078 type= ScriptControllerRunScriptScope */",
+      "  __msleep(0.18);"
+    ],
+    "116": [
+      "  /* [1120.06, 1127.2] scopeStart= 1477877169347.876953 type= EventTargetInvokingListenersScope */",
+      "  __msleep(5.96);",
+      "  add_elem(2222);",
+      "  __msleep(0.51);",
+      "  sched_render_update_scope(129);",
+      "  __msleep(0.67);"
+    ],
+    "129": [
+      "  /* [1127.21, 1129.3] scopeStart= 1477877169355.031006 type= RenderTreeUpdateScope */",
+      "  __msleep(2.09);"
+    ],
+    "137": [
+      "  /* [1235.15, 1235.19] scopeStart= 1477877169462.969971 type= DOMReadyStateChangeEventScope */",
+      "  __msleep(0.04);"
+    ],
+    "138": [
+      "  /* [1235.24, 1235.25] scopeStart= 1477877169463.058105 type= DocOnLoadEventScope */",
+      "  __msleep(0.01);"
+    ]
+  },
+  "initial_render_tree_update_scope_id": 84,
+  "main_html": {
+    "element_byte_offsets": [
+      [
+        107,
+        22
+      ],
+      [
+        9889,
+        44
+      ],
+      [
+        9977,
+        48
+      ],
+      [
+        10120,
+        62
+      ],
+      [
+        19348,
+        2182
+      ],
+      [
+        19366,
+        2185
+      ],
+      [
+        19392,
+        2208
+      ]
+    ],
+    "event_handling_scopes": [
+      [
+        "DOMContentLoaded",
+        116
+      ],
+      [
+        "load",
+        138
+      ],
+      [
+        "readystatechange_complete",
+        137
+      ]
+    ]
+  },
+  "orig_used_hostnames": [
+    "www.wikipedia.org"
+  ],
+  "resources": {
+    "1": {
+      "part_of_page_loaded_check": false,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 377,
+          "resp_body_size": 19468,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "main"
+    },
+    "2": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 490,
+          "resp_body_size": 1830,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "3": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 489,
+          "resp_body_size": 13063,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "4": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 469,
+          "resp_body_size": 9267,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "5": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 470,
+          "resp_body_size": 1007,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "script"
+    },
+    "6": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 533,
+          "resp_body_size": 8909,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    },
+    "7": {
+      "part_of_page_loaded_check": true,
+      "req_chain": [
+        {
+          "host": "server103",
+          "method": "GET",
+          "port": 443,
+          "priority": 3,
+          "req_total_size": 535,
+          "resp_body_size": 1987,
+          "resp_meta_size": 200
+        }
+      ],
+      "type": "img"
+    }
+  },
+  "timers": {},
+  "xhrs": {}
+}
