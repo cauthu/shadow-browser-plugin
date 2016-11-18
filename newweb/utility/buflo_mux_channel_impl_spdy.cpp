@@ -243,9 +243,11 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
     // hardcoding this for now. this is what the tamaraw paper used
     CHECK(   (tamaraw_L_ == 0)
+          || (tamaraw_L_ == 50)
           || (tamaraw_L_ == 100)
+          || (tamaraw_L_ == 150)
           || (tamaraw_L_ == 200))
-        << "currently only L=100 or L=200 is supported";
+        << "currently L should be 50, 100, 150, or 200";
 
     CHECK(   (tamaraw_pkt_intvl_ms_ == 0)
           || (tamaraw_pkt_intvl_ms_ == 5)
@@ -336,7 +338,14 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct timeval timeout_tv;
     timeout_tv.tv_sec = 5;
     timeout_tv.tv_usec = 0;
-    rv = event_add(socket_read_ev_.get(), &timeout_tv);
+
+#ifdef IN_SHADOW
+        const auto timeout_tv_ptr = &timeout_tv_ptr;
+#else
+        const auto timeout_tv_ptr = nullptr;
+#endif
+
+    rv = event_add(socket_read_ev_.get(), timeout_tv_ptr);
     CHECK_EQ(rv, 0);
 
     _self_test_bit_manipulation();
