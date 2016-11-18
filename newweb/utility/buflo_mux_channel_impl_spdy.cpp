@@ -340,7 +340,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     timeout_tv.tv_usec = 0;
 
 #ifdef IN_SHADOW
-        const auto timeout_tv_ptr = &timeout_tv_ptr;
+        const auto timeout_tv_ptr = &timeout_tv;
 #else
         const auto timeout_tv_ptr = nullptr;
 #endif

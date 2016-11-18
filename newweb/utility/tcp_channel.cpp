@@ -388,8 +388,14 @@ TCPChannel::_set_read_monitoring(bool enabled)
         timeout_tv.tv_sec = 5;
         timeout_tv.tv_usec = 0;
 
+#ifdef IN_SHADOW
+        const auto timeout_tv_ptr = &timeout_tv;
+#else
+        const auto timeout_tv_ptr = nullptr;
+#endif
+
         vlogself(3) << "start monitoring read event for fd= " << fd_;
-        auto rv = event_add(socket_read_ev_.get(), &timeout_tv);
+        auto rv = event_add(socket_read_ev_.get(), timeout_tv_ptr);
         CHECK_EQ(rv, 0);
     } else {
         vlogself(3) << "STOP monitoring read event for fd= " << fd_;
