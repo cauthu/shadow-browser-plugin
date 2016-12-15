@@ -86,10 +86,16 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 3;
+static const uint8_t s_version = 4;
 
-/* 1 byte for version, 2 for cell size, and 4 for address */
-#define PEER_INFO_NUM_BYTES (1 + 2 + 4)
+/* 1 byte for version, 2 for cell size, and 4 for address, 2 for
+ * requested L.
+ *
+ * the requested L is only used by CSP to tell SSP what L to use,
+ * i.e., override SSP's default L. the SSP never sends this field,
+ * i.e., always zero.
+ */
+#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -241,13 +247,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
         CHECK_LE(defense_session_time_limit_, 60 * 3);
     }
 
-    // hardcoding this for now. this is what the tamaraw paper used
-    CHECK(   (tamaraw_L_ == 0)
-          || (tamaraw_L_ == 50)
-          || (tamaraw_L_ == 100)
-          || (tamaraw_L_ == 150)
-          || (tamaraw_L_ == 200))
-        << "currently L should be 50, 100, 150, or 200";
+    CHECK(_check_L(tamaraw_L_)) << "bad L: " << tamaraw_L_;
 
     CHECK(   (tamaraw_pkt_intvl_ms_ == 0)
           || (tamaraw_pkt_intvl_ms_ == 5)
@@ -1611,7 +1611,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4),
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2),
                   "unexpected PEER_INFO_NUM_BYTES");
 
     uint8_t peer_version = 0;
@@ -1636,6 +1636,14 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     rv = evbuffer_drain(peer_info_inbuf_, 4);
     CHECK_EQ(rv, 0);
 
+    uint16_t requested_L = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&requested_L, 2);
+    CHECK_EQ(rv, 2);
+    rv = evbuffer_drain(peer_info_inbuf_, 2);
+    CHECK_EQ(rv, 0);
+
+    requested_L = ntohs(requested_L);
+
     logself(INFO) << "peer IP is " << peer_ip()
                   << " version= " << unsigned(peer_version)
                   << " using cell size= " << peer_cell_size_;
@@ -1658,6 +1666,16 @@ BufloMuxChannelImplSpdy::_read_peer_info()
             _close_socket_and_events();
             ch_status_cb_(this, ChannelStatus::CLOSED);
             return;
+        }
+    }
+
+    if (requested_L) {
+        if (is_client_side_) {
+            logself(FATAL) << "SSP unexpectedly requests L= " << requested_L;
+        } else {
+            logself(INFO) << "CSP requests L= " << requested_L;
+            tamaraw_L_ = requested_L;
+            CHECK(_check_L(tamaraw_L_)) << "bad requested L= " << tamaraw_L_;
         }
     }
 
@@ -1691,6 +1709,12 @@ BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
 
     const in_addr_t addr = htonl(myaddr_);
     rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&addr, 4);
+    CHECK_EQ(rv, 0);
+
+    // only csp sends L (tell ssp to use the same L as csp). (ssp
+    // sends 0.)
+    const uint16_t L = is_client_side_ ? htons(tamaraw_L_) : 0;
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&L, 2);
     CHECK_EQ(rv, 0);
 
     CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), PEER_INFO_NUM_BYTES);
@@ -2222,6 +2246,23 @@ BufloMuxChannelImplSpdy::_close_socket_and_events()
     if (fd_) {
         ::close(fd_);
         fd_ = -1;
+    }
+}
+
+bool
+BufloMuxChannelImplSpdy::_check_L(const uint16_t& L) const
+{
+    if (!(   (tamaraw_L_ == 0)
+          || (tamaraw_L_ == 50)
+          || (tamaraw_L_ == 100)
+          || (tamaraw_L_ == 150)
+          || (tamaraw_L_ == 200)))
+    {
+        logself(ERROR) << "currently L should be 50, 100, 150, or 200";
+        return false;
+    }
+    else {
+        return true;
     }
 }
 

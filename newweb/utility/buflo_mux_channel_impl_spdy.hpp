@@ -264,6 +264,8 @@ protected:
                                              int32_t length,
                                              void *user_data);
 
+    bool _check_L(const uint16_t& L) const;
+
     class StreamState
     {
     public:
@@ -330,7 +332,7 @@ protected:
     const size_t cell_size_;
     const size_t cell_body_size_;
     const uint32_t tamaraw_pkt_intvl_ms_;
-    const uint32_t tamaraw_L_;
+    uint32_t tamaraw_L_;
 
     /* for cells that the peer sends and we receive */
     size_t peer_cell_size_;
