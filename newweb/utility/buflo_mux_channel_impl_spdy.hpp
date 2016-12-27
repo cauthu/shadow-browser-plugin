@@ -157,6 +157,7 @@ protected:
                                   bool crash_if_EINPROGRESS);
     void _on_socket_eof();
     void _on_socket_error();
+    void _notify_a_defense_session_done();
     void _init_stream_state(const int&);
     void _init_stream_data_provider(const int& sid);
 
@@ -376,7 +377,7 @@ protected:
             evutil_timerclear(&auto_stop_time_point);
         }
 
-        bool is_done_defending(const uint8_t& L) const
+        bool is_done_defending_send(const uint8_t& L) const
         {
             CHECK_EQ(state, DefenseState::ACTIVE);
             return (stop_requested && (0 == (num_write_attempts % L)));
@@ -497,6 +498,12 @@ protected:
         }
     } cell_read_info_;
     bool need_to_read_peer_info_;
+
+    /* number of consecutive cells with DEFENSIVE flag that we're
+     * receiving from peer; i.e., cleared to zero whenever a cell has
+     * that flag off, and incremented whenever a cell has that flag on
+     */
+    uint32_t num_consecutive_defensive_cells_from_peer_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
 

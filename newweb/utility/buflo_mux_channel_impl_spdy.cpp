@@ -118,11 +118,19 @@ static_assert((CELL_TYPE_WIDTH + CELL_FLAGS_WIDTH) == 8,
 #define CELL_FLAGS_STOP_DEFENSE_POSITION 1
 #define CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION 2
 
+// this flag is set for "defensive" cells, i.e., those that are sent
+// when the sender is in an active defense session.
+//
+// both sides (csp and ssp) can use this flag
+#define CELL_FLAGS_DEFENSIVE_POSITION 4
+
 static_assert(CELL_FLAGS_START_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
               "bit position out-of-bounds");
 static_assert(CELL_FLAGS_STOP_DEFENSE_POSITION < CELL_FLAGS_WIDTH,
               "bit position out-of-bounds");
 static_assert(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION < CELL_FLAGS_WIDTH,
+              "bit position out-of-bounds");
+static_assert(CELL_FLAGS_DEFENSIVE_POSITION < CELL_FLAGS_WIDTH,
               "bit position out-of-bounds");
 
 /* extract the type from the type_and_flags field t_n_f */
@@ -200,6 +208,15 @@ static_assert(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION < CELL_FLAGS_WIDTH,
         SET_CELL_FLAGS((t_n_f), flags_val);                     \
     } while (0)
 
+#define SET_CELL_DEFENSIVE_FLAG(t_n_f)                     \
+    do {                                                        \
+        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
+        flags_bs.set(CELL_FLAGS_DEFENSIVE_POSITION, true); \
+                                                                \
+        const auto flags_val = flags_bs.to_ulong();             \
+        SET_CELL_FLAGS((t_n_f), flags_val);                     \
+    } while (0)
+
 
 static void
 _self_test_bit_manipulation();
@@ -232,6 +249,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , num_dummy_cells_avoided_(0)
     , front_cell_sent_progress_(0)
     , need_to_read_peer_info_(true)
+    , num_consecutive_defensive_cells_from_peer_(0)
     , all_recv_byte_count_(0)
     , all_users_data_recv_byte_count_(0)
     , dummy_recv_cell_count_(0)
@@ -622,8 +640,8 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     const auto rv = gettimeofday(&current_tv, nullptr);
     CHECK_EQ(rv, 0);
 
-    if (defense_info_.is_done_defending(tamaraw_L_)) {
-        logself(INFO) << "done defending; final number of cells sent/attempted: "
+    if (defense_info_.is_done_defending_send(tamaraw_L_)) {
+        logself(INFO) << "done defending send; final number of cells sent/attempted: "
                       << defense_info_.num_write_attempts;
         buflo_timer_->cancel();
 
@@ -660,6 +678,26 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         }
 
         CHECK(!defense_info_.need_stop_flag_in_next_cell);
+
+        if (is_client_side_) {
+            // we are done defending the send direction. if we are
+            // also done with the receive direction, then notify the
+            // user
+
+            // BUT: we really should get here very rarely, if ever,
+            // because, as client-side, we are the one that controls
+            // when the defense is done, i.e., the ssp is done only
+            // after we tell it to (except for the "auto-stopped"
+            // case), and we only tell it to be done when we ourselves
+            // are done (specifically, requested to be done by user),
+            // and since the ssp is expected to be a little far from
+            // us, due to latency, we should be almost always be done
+            // before the ssp.
+
+            CHECK_GT(num_consecutive_defensive_cells_from_peer_, 0)
+                << "num consecutive defense-active cells from ssp: "
+                << num_consecutive_defensive_cells_from_peer_;
+        }
 
         goto done;
     } else {
@@ -855,6 +893,10 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
         SET_CELL_AUTO_STOPPED_FLAG(*type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
+    }
+
+    if (defense_info_.state == DefenseState::ACTIVE) {
+        SET_CELL_DEFENSIVE_FLAG(*type_n_flags);
     }
 }
 
@@ -1391,6 +1433,10 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
 
     auto ptr = evbuffer_pullup(cell_inbuf_, CELL_HEADER_SIZE + payload_len);
 
+    bool is_defensive_cell = false;
+    const auto saved_num_consecutive_defensive_cells_from_peer =
+        num_consecutive_defensive_cells_from_peer_;
+
     // handle any flags
     const auto cell_flags = (cell_read_info_.cell_flags_);
     if (cell_flags) {
@@ -1400,6 +1446,7 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
         const auto start_defense = flags_bs.test(CELL_FLAGS_START_DEFENSE_POSITION);
         const auto stop_defense = flags_bs.test(CELL_FLAGS_STOP_DEFENSE_POSITION);
         const auto defense_auto_stopped = flags_bs.test(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION);
+        is_defensive_cell = flags_bs.test(CELL_FLAGS_DEFENSIVE_POSITION);
 
         if (defense_auto_stopped) {
             // only ssp auto-stops and notifies csp about it
@@ -1466,6 +1513,58 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
         break;
     }
 
+    if (is_defensive_cell) {
+        ++num_consecutive_defensive_cells_from_peer_;
+    } else {
+        num_consecutive_defensive_cells_from_peer_ = 0;
+    }
+
+    if (is_client_side_ && (defense_info_.state == DefenseState::NONE)) {
+        if (
+            /* num consecutive defensive cells from ssp just went from
+             * non-zero to zero, i.e., this is a non-defensive cell
+             * while previous cell was defensive
+             */
+            ((0 == num_consecutive_defensive_cells_from_peer_)
+             && (saved_num_consecutive_defensive_cells_from_peer > 0))
+
+            ||
+
+            /* num consecutive defensive cells from ssp is positive
+             * and a multiple of L
+             */
+            ((num_consecutive_defensive_cells_from_peer_ > 0)
+             && (0 == (num_consecutive_defensive_cells_from_peer_ % tamaraw_L_)))
+            )
+        {
+            /* in either case, the CSP can consider its receive
+             * direction is done being defended, and since it's done
+             * (*) defending its send direction, it can notify user
+             * now
+             *
+             * (*) note: we can be sure that the CSP is now done
+             * defending its send direction after previously defending
+             * it, because here we know the SSP is still actively
+             * defending or just finished defending ITS send
+             * direction, and the SSP only defends after being told by
+             * CSP
+             */
+
+            if (0 == num_consecutive_defensive_cells_from_peer_) {
+                logself(INFO)
+                    << "normal done defending recv; number of defensive "
+                    << "cells recv this session: "
+                    << saved_num_consecutive_defensive_cells_from_peer;
+            } else {
+                logself(INFO)
+                    << "early done defending recv; number of defensive "
+                    << "cells recv this session: "
+                    << num_consecutive_defensive_cells_from_peer_;
+            }
+            _notify_a_defense_session_done();
+        }
+    }
+
     // now drain the whole cell
     auto rv = evbuffer_drain(cell_inbuf_, peer_cell_size_);
     CHECK_EQ(rv, 0);
@@ -1487,6 +1586,13 @@ BufloMuxChannelImplSpdy::_on_socket_error()
 {
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::CLOSED);
+}
+
+void
+BufloMuxChannelImplSpdy::_notify_a_defense_session_done()
+{
+    DestructorGuard dg(this);
+    ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
 }
 
 void

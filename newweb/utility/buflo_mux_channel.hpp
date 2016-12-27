@@ -52,6 +52,8 @@ public:
     enum class ChannelStatus : short
     {
         READY,
+        A_DEFENSE_SESSION_DONE /* i.e., both send and recv directions
+                                * are done */,
         CLOSED
     };
     typedef boost::function<void(BufloMuxChannel*, ChannelStatus)> ChannelStatusCb;
