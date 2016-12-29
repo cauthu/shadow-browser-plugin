@@ -181,45 +181,47 @@ static_assert(CELL_FLAGS_DEFENSIVE_POSITION < CELL_FLAGS_WIDTH,
         }                                                               \
     } while(0)
 
-#define SET_CELL_START_FLAG(t_n_f)                               \
-    do {                                                         \
-        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                    \
-        flags_bs.set(CELL_FLAGS_START_DEFENSE_POSITION, true);   \
-                                                                 \
-        const auto flags_val = flags_bs.to_ulong();              \
-        SET_CELL_FLAGS((t_n_f), flags_val);                      \
+#define SET_CELL_START_FLAG(t_n_f)                                  \
+    do {                                                            \
+        s_set_cell_flag(t_n_f, CELL_FLAGS_START_DEFENSE_POSITION);  \
     } while (0)
 
-#define SET_CELL_STOP_FLAG(t_n_f)                               \
-    do {                                                        \
-        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
-        flags_bs.set(CELL_FLAGS_STOP_DEFENSE_POSITION, true);   \
-                                                                \
-        const auto flags_val = flags_bs.to_ulong();             \
-        SET_CELL_FLAGS((t_n_f), flags_val);                     \
+#define SET_CELL_STOP_FLAG(t_n_f)                                   \
+    do {                                                            \
+        s_set_cell_flag(t_n_f, CELL_FLAGS_STOP_DEFENSE_POSITION);   \
     } while (0)
 
-#define SET_CELL_AUTO_STOPPED_FLAG(t_n_f)                       \
-    do {                                                        \
-        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
-        flags_bs.set(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION, true);   \
-                                                                \
-        const auto flags_val = flags_bs.to_ulong();             \
-        SET_CELL_FLAGS((t_n_f), flags_val);                     \
+#define SET_CELL_AUTO_STOPPED_FLAG(t_n_f)                               \
+    do {                                                                \
+        s_set_cell_flag(t_n_f, CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION); \
     } while (0)
 
-#define SET_CELL_DEFENSIVE_FLAG(t_n_f)                     \
+#define SET_CELL_DEFENSIVE_FLAG(t_n_f)                          \
     do {                                                        \
-        bitset<CELL_FLAGS_WIDTH> flags_bs(0);                   \
-        flags_bs.set(CELL_FLAGS_DEFENSIVE_POSITION, true); \
-                                                                \
-        const auto flags_val = flags_bs.to_ulong();             \
-        SET_CELL_FLAGS((t_n_f), flags_val);                     \
+        s_set_cell_flag(t_n_f, CELL_FLAGS_DEFENSIVE_POSITION);  \
     } while (0)
 
 
 static void
 _self_test_bit_manipulation();
+
+/*
+ * essentially this affects only the ONE bit at the "flag_pos", i.e.,
+ * any other bits that might already be set will remain set in the
+ * result
+ */
+static inline void
+s_set_cell_flag(uint8_t* t_n_f, const uint8_t flag_pos)
+{
+    /* !!! initialize the flags_bs with the CURRENT FLAGS that might
+     * already be set !!!
+     */
+    bitset<CELL_FLAGS_WIDTH> flags_bs(GET_CELL_FLAGS(*t_n_f));
+    flags_bs.set(flag_pos, true);
+
+    const auto flags_val = flags_bs.to_ulong();
+    SET_CELL_FLAGS(*t_n_f, flags_val);
+}
 
 
 namespace myio { namespace buflo
@@ -877,28 +879,28 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
               || (defense_info_.state == DefenseState::ACTIVE && !defense_info_.stop_requested));
         CHECK(is_client_side_);
         vlogself(1) << "setting the START flag, in a " << cell_type << " cell";
-        SET_CELL_START_FLAG(*type_n_flags);
+        SET_CELL_START_FLAG(type_n_flags);
         defense_info_.need_start_flag_in_next_cell = false;
     }
 
     if (defense_info_.need_stop_flag_in_next_cell) {
         // CHECK(defense_info_.stop_requested);
         vlogself(1) << "setting the STOP flag, in a " << cell_type << " cell";
-        SET_CELL_STOP_FLAG(*type_n_flags);
+        SET_CELL_STOP_FLAG(type_n_flags);
         defense_info_.need_stop_flag_in_next_cell = false;
     }
 
     if (defense_info_.need_auto_stopped_flag_in_next_cell) {
         CHECK(!is_client_side_);
         vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
-        SET_CELL_AUTO_STOPPED_FLAG(*type_n_flags);
+        SET_CELL_AUTO_STOPPED_FLAG(type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
     }
 
     if ((defense_info_.state == DefenseState::ACTIVE)
         || (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND))
     {
-        SET_CELL_DEFENSIVE_FLAG(*type_n_flags);
+        SET_CELL_DEFENSIVE_FLAG(type_n_flags);
     }
 }
 
