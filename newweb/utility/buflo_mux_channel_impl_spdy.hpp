@@ -133,7 +133,7 @@ protected:
     bool _maybe_drop_whole_dummy_cell_at_end_outbuf(const int from_line,
                                                     const bool=true);
 
-    void _maybe_set_cell_flags(uint8_t* type_n_flags,
+    bool _maybe_set_cell_flags(uint8_t* type_n_flags,
                                const char* cell_type);
 
     /* WILL move all data into cell outbuf. the current defense state
@@ -449,6 +449,11 @@ protected:
 
     // Timer::UniquePtr buflo_timer_;
     bool whole_dummy_cell_at_end_outbuf_;
+    /* "whole_dummy_cell_at_end_outbuf_has_important_flags_" is only
+     * meaningful when "whole_dummy_cell_at_end_outbuf_" is true,
+     * i.e., its value doesn't need to be anything in particular if
+     * "whole_dummy_cell_at_end_outbuf_" is false */
+    bool whole_dummy_cell_at_end_outbuf_has_important_flags_;
 
     /* count of those we really avoided, i.e., that are not to be
      * immediately replaced by a dummy cell.... something we have to

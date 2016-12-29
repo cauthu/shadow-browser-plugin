@@ -248,6 +248,7 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , myaddr_(myaddr)
     , defense_session_time_limit_(defense_session_time_limit)
     , whole_dummy_cell_at_end_outbuf_(false)
+    , whole_dummy_cell_at_end_outbuf_has_important_flags_(false)
     , num_dummy_cells_avoided_(0)
     , front_cell_sent_progress_(0)
     , need_to_read_peer_info_(true)
@@ -866,10 +867,28 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
     return num_added;
 }
 
-void
+/*
+ * currently we have 4 possible flags.
+ *
+ * the DEFENSIVE flag is redundant for dummy cells, i.e., that's the
+ * purpose of dummy cells: to defend
+ *
+ * but the other 3 flags -- START, STOP, and AUTO_STOPPED -- might be
+ * part of a dummy cell (the START flag might be attached to a dummy
+ * cell to tell ssp to start again after it has auto-stopped). and
+ * dummy cells might be dropped due to congestion, so we need a way to
+ * prevent such dummy cells from being dropped (although there's a
+ * more optimal way: if the dummy cell is dropped to make way for a
+ * data cell, then we can somehow make that data cell carry the flags
+ * of the dropped dummy cell)
+ */
+
+bool
 BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
                                                const char* cell_type)
 {
+    bool has_important_flags = false;
+
     if (defense_info_.need_start_flag_in_next_cell) {
         /* we should need the start flag only when waiting for first
          * socket write or when we're active and has not been
@@ -881,6 +900,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         vlogself(1) << "setting the START flag, in a " << cell_type << " cell";
         SET_CELL_START_FLAG(type_n_flags);
         defense_info_.need_start_flag_in_next_cell = false;
+        has_important_flags = true;
     }
 
     if (defense_info_.need_stop_flag_in_next_cell) {
@@ -888,6 +908,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         vlogself(1) << "setting the STOP flag, in a " << cell_type << " cell";
         SET_CELL_STOP_FLAG(type_n_flags);
         defense_info_.need_stop_flag_in_next_cell = false;
+        has_important_flags = true;
     }
 
     if (defense_info_.need_auto_stopped_flag_in_next_cell) {
@@ -895,6 +916,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
         SET_CELL_AUTO_STOPPED_FLAG(type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
+        has_important_flags = true;
     }
 
     if ((defense_info_.state == DefenseState::ACTIVE)
@@ -902,6 +924,8 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
     {
         SET_CELL_DEFENSIVE_FLAG(type_n_flags);
     }
+
+    return has_important_flags;
 }
 
 /*
@@ -1206,7 +1230,8 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
 
     CHECK(!whole_dummy_cell_at_end_outbuf_);
 
-    _maybe_set_cell_flags(&type_n_flags, "dummy");
+    const auto did_set_important_flags =
+        _maybe_set_cell_flags(&type_n_flags, "dummy");
 
     // add type and length
     auto rv = evbuffer_add(
@@ -1222,6 +1247,7 @@ BufloMuxChannelImplSpdy::_add_ONE_dummy_cell_to_outbuf()
     CHECK_EQ(rv, 0);
 
     whole_dummy_cell_at_end_outbuf_ = true;
+    whole_dummy_cell_at_end_outbuf_has_important_flags_ = did_set_important_flags;
     output_cells_data_bytes_info_.push_back(0);
 }
 
@@ -1314,6 +1340,11 @@ BufloMuxChannelImplSpdy::_maybe_drop_whole_dummy_cell_at_end_outbuf(const int ca
 
         _WITH_CALLER_CHECK(curbufsize == amnt_to_keep)
             << "amnt_to_keep= " << amnt_to_keep << " curbufsize= " << curbufsize;
+
+        // we're dropping the dummy cell, so make sure it doesn't
+        // carry important flags
+        CHECK(!whole_dummy_cell_at_end_outbuf_has_important_flags_) << "todo";
+        CHECK(whole_dummy_cell_at_end_outbuf_);
 
         whole_dummy_cell_at_end_outbuf_ = false;
         _WITH_CALLER_CHECK(!output_cells_data_bytes_info_.empty());
