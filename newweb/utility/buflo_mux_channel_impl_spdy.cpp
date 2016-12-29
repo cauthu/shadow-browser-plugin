@@ -895,7 +895,9 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
     }
 
-    if (defense_info_.state == DefenseState::ACTIVE) {
+    if ((defense_info_.state == DefenseState::ACTIVE)
+        || (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND))
+    {
         SET_CELL_DEFENSIVE_FLAG(*type_n_flags);
     }
 }
