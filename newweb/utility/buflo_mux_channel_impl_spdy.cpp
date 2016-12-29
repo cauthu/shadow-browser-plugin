@@ -86,7 +86,7 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 4;
+static const uint8_t s_version = 5;
 
 /* 1 byte for version, 2 for cell size, and 4 for address, 2 for
  * requested L.
