@@ -372,6 +372,7 @@ protected:
 
             need_start_flag_in_next_cell = false;
             need_stop_flag_in_next_cell = false;
+            need_done_flag_in_next_cell = false;
             need_auto_stopped_flag_in_next_cell = false;
 
             evutil_timerclear(&auto_stop_time_point);
@@ -440,6 +441,12 @@ protected:
          * false */
         bool need_stop_flag_in_next_cell;
 
+        /* used by ssp to notify csp that it has finished its side of
+         * defense session. this is the "normal"/graceful stopping
+         * case, i.e., the ssp has been told be csp to stop
+         */
+        bool need_done_flag_in_next_cell;
+
         /* used by ssp to notify csp that it has auto-matically
          * stopped its side of defense session. the csp can choose to
          * tell ssp to start again
@@ -448,12 +455,22 @@ protected:
     } defense_info_;
 
     // Timer::UniquePtr buflo_timer_;
+
+    /* if the dummy cell at the end of outbuf carries important flags,
+     * then we will pretend it's not a dummy cell, by keeping
+     * "whole_dummy_cell_at_end_outbuf_" on false, so that it won't be
+     * dropped.
+     *
+     * this trick/hack still does not allow additional dummy cells
+     * from being undesirably added immediately after this cell -- so
+     * that there are 2 whole dummy cells at end of outbuf -- because
+     * the defense logic ensures that there is never two (2) full
+     * cells, of any type, in the outbuf while the defense is active,
+     * i.e., _ensure_a_whole_dummy_cell_at_end_outbuf() doesn't get
+     * called if there are at least a cell's worth of bytes in
+     * cell_outbuf_.
+     */
     bool whole_dummy_cell_at_end_outbuf_;
-    /* "whole_dummy_cell_at_end_outbuf_has_important_flags_" is only
-     * meaningful when "whole_dummy_cell_at_end_outbuf_" is true,
-     * i.e., its value doesn't need to be anything in particular if
-     * "whole_dummy_cell_at_end_outbuf_" is false */
-    bool whole_dummy_cell_at_end_outbuf_has_important_flags_;
 
     /* count of those we really avoided, i.e., that are not to be
      * immediately replaced by a dummy cell.... something we have to
@@ -503,12 +520,6 @@ protected:
         }
     } cell_read_info_;
     bool need_to_read_peer_info_;
-
-    /* number of consecutive cells with DEFENSIVE flag that we're
-     * receiving from peer; i.e., cleared to zero whenever a cell has
-     * that flag off, and incremented whenever a cell has that flag on
-     */
-    uint32_t num_consecutive_defensive_cells_from_peer_;
 
     std::map<int, std::unique_ptr<StreamState> > stream_states_;
 
