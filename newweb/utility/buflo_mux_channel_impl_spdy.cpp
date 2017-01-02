@@ -108,7 +108,7 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 7;
+static const uint8_t s_version = 8;
 
 /* 1 byte for version, 2 for cell size, and 4 for address, 2 for
  * requested L.
@@ -716,6 +716,8 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
         CHECK(!defense_info_.need_stop_flag_in_next_cell);
         CHECK(!defense_info_.need_done_flag_in_next_cell);
 
+        _check_notify_a_defense_session_done(__LINE__);
+
         goto done;
     } else {
         if (evutil_timercmp(&current_tv, &defense_info_.auto_stop_time_point, >=)) {
@@ -819,7 +821,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
             // there is definitely in out buf so just force enable
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
-        if (log_flushed_cell_count) {
+        if (log_flushed_cell_count && num_cells_added) {
             logself(INFO) << "added " << num_cells_added << " data cells";
         }
     } else if (defense_info_.state == DefenseState::PENDING_NEXT_SOCKET_SEND) {
@@ -1499,6 +1501,7 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
         const auto start_defense = flags_bs.test(CELL_FLAGS_START_DEFENSE_POSITION);
         const auto stop_defense = flags_bs.test(CELL_FLAGS_STOP_DEFENSE_POSITION);
         const auto defense_auto_stopped = flags_bs.test(CELL_FLAGS_DEFENSE_AUTO_STOPPED_POSITION);
+        const auto defensive = flags_bs.test(CELL_FLAGS_DEFENSIVE_POSITION);
         done_defending_recv = flags_bs.test(CELL_FLAGS_DEFENSE_DONE_POSITION);
 
         if (defense_auto_stopped) {
@@ -1530,6 +1533,10 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
             CHECK(!is_client_side_);
             logself(INFO) << "schedule to stop defense requested by csp";
             stop_defense_session();
+        }
+
+        if (defensive) {
+            ++defense_info_.num_cells_recv;
         }
     }
 
@@ -1572,19 +1579,12 @@ BufloMuxChannelImplSpdy::_handle_input_cell()
     if (done_defending_recv) {
         CHECK(is_client_side_);
 
+        defense_info_.done_defending_recv = true;
+
         logself(INFO) << "done defending recv (notified via a "
                       << cell_type_str << " cell)";
 
-        /* since the two sides can use different rates and L params,
-         * the CSP might still be actively defending its sending the
-         * upstream direction when it receives the SSP's notification
-         * that the downstream defense is done. will need to handle
-         * it.
-         */
-        CHECK_EQ(defense_info_.state, DefenseState::NONE)
-            << "todo";
-
-        _notify_a_defense_session_done();
+        _check_notify_a_defense_session_done(__LINE__);
     }
 
     // now drain the whole cell
@@ -1611,10 +1611,25 @@ BufloMuxChannelImplSpdy::_on_socket_error()
 }
 
 void
-BufloMuxChannelImplSpdy::_notify_a_defense_session_done()
+BufloMuxChannelImplSpdy::_check_notify_a_defense_session_done(const int called_from_line)
 {
-    DestructorGuard dg(this);
-    ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
+    vlogself(2) << "begin (called from line " << called_from_line << "): "
+                << (defense_info_.state == DefenseState::NONE) << " "
+                << defense_info_.done_defending_recv;
+
+    if ((defense_info_.state == DefenseState::NONE)
+        && defense_info_.done_defending_recv)
+    {
+        DestructorGuard dg(this);
+        logself(INFO) << "defense session (both directions) done; "
+                      << "number of received cells in session: "
+                      << defense_info_.num_cells_recv;
+        defense_info_.done_defending_recv = false;
+        defense_info_.num_cells_recv = 0;
+        ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
+    }
+
+    vlogself(2) << "done";
 }
 
 void

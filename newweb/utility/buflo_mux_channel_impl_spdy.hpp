@@ -157,7 +157,7 @@ protected:
                                   bool crash_if_EINPROGRESS);
     void _on_socket_eof();
     void _on_socket_error();
-    void _notify_a_defense_session_done();
+    void _check_notify_a_defense_session_done(const int called_from_line);
     void _init_stream_state(const int&);
     void _init_stream_data_provider(const int& sid);
 
@@ -452,6 +452,19 @@ protected:
          * tell ssp to start again
          */
         bool need_auto_stopped_flag_in_next_cell;
+
+        /**
+         **
+         ** DO NOT reset the following in reset()
+         **
+         **/
+
+        bool done_defending_recv = false;
+
+        /* incremented when receives a cell with DEFENSIVE
+         * flag. cleared after notifying the user the defense is done
+         */
+        uint32_t num_cells_recv = 0;
     } defense_info_;
 
     // Timer::UniquePtr buflo_timer_;
@@ -535,7 +548,6 @@ protected:
     uint64_t all_users_data_recv_byte_count_;
 
     uint32_t dummy_recv_cell_count_;
-
 
     // how much of the cell at front of cell_outbuf_ we have written
     // into socket
