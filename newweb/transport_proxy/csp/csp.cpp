@@ -146,7 +146,7 @@ ClientSideProxy::set_auto_start_defense_session_on_next_send()
 
     buflo_ch_->set_auto_start_defense_session_on_next_send();
 
-    logself(INFO) << "will start defense on next send";
+    // logself(INFO) << "will start defense on next send";
     return true;
 }
 
@@ -427,6 +427,13 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 #else
         LOG(FATAL) << "buflo channel is closed, so we're exiting";
 #endif
+
+    } else if (status == BufloMuxChannel::ChannelStatus::A_DEFENSE_SESSION_DONE) {
+
+        if (a_defense_session_done_cb_) {
+            DestructorGuard dg(this);
+            a_defense_session_done_cb_(this);
+        }
 
     } else {
         LOG(FATAL) << "unknown channel status";

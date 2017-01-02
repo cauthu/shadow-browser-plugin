@@ -19,6 +19,7 @@ class ClientSideProxy;
 
 
 typedef boost::function<void(ClientSideProxy*, bool ok)> CSPStatusCb;
+typedef boost::function<void(ClientSideProxy*)> ADefenseSessionDoneCb;
 
 
 class ClientSideProxy : public Object
@@ -66,6 +67,8 @@ public:
 
     EstablishReturnValue establish_tunnel(CSPStatusCb, const bool force_reconnect=true);
     void close_all_streams();
+
+    void set_a_defense_session_done_cb(ADefenseSessionDoneCb cb) { a_defense_session_done_cb_ = cb; }
 
     bool set_auto_start_defense_session_on_next_send();
     void stop_defense_session(const bool& right_now);
@@ -162,6 +165,7 @@ protected:
     } state_;
 
     CSPStatusCb csp_status_cb_;
+    ADefenseSessionDoneCb a_defense_session_done_cb_;
 
     std::map<uint32_t, ClientHandler::UniquePtr> client_handlers_;
 

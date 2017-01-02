@@ -1,4 +1,5 @@
 
+#include <fstream>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <event2/event.h>
@@ -39,7 +40,7 @@ static void
 s_on_buflo_channel_ready(csp::ClientSideProxy* csp,
                          const bool auto_start_defense_session_on_next_send)
 {
-    LOG(INFO) << "buflo channel ready";
+    // LOG(INFO) << "buflo channel ready";
     csp->start_accepting_clients();
     LOG(INFO) << "CSP is ready and accepting clients";
     if (auto_start_defense_session_on_next_send) {
@@ -89,6 +90,17 @@ s_on_SIGTERM_SIGINT(int, short, void *arg)
 
 static const char auto_start_defense_session_on_next_send_name[] =
     "auto-start-defense-session-on-next-send";
+
+/* specify a path to file to write (possibly create) a single byte
+ * when a defense session is done. will open the file every time we
+ * want to write, instead of opening once and writing to the same
+ * descriptor.
+ */
+static const char write_file_on_a_defense_session_done[] =
+    "write-file-on-a-defense-session-done";
+static const char exit_on_a_defense_session_done[] =
+    "exit-on-a-defense-session-done";
+
 static const char tamaraw_packet_interval_name[] =
     "tamaraw-packet-interval";
 static const char tamaraw_L_name[] =
@@ -132,6 +144,9 @@ struct MyConfig
     /* automatically start the defense the next time we send stuff to
      * the ssp */
     bool auto_start_defense_session_on_next_send;
+
+    std::shared_ptr<std::string> write_file_on_a_defense_session_done;
+    bool exit_on_a_defense_session_done = false;
 
 #endif
 
@@ -219,6 +234,29 @@ set_my_config(MyConfig& conf,
 #endif
         }
 
+        else if (name == write_file_on_a_defense_session_done) {
+#ifdef IN_SHADOW
+            LOG(FATAL) << write_file_on_a_defense_session_done
+                       << " makes sense only outside shadow";
+#else
+            CHECK(value.length())
+                << write_file_on_a_defense_session_done << " requires non-empty value";
+            conf.write_file_on_a_defense_session_done.reset(
+                new std::string(value));
+#endif
+        }
+
+        else if (name == exit_on_a_defense_session_done) {
+#ifdef IN_SHADOW
+            LOG(FATAL) << exit_on_a_defense_session_done
+                       << " makes sense only outside shadow";
+#else
+            CHECK((value == "yes") || (value == "no"))
+                << "use yes or no for " << exit_on_a_defense_session_done;
+            conf.exit_on_a_defense_session_done = (value == "yes");
+#endif
+        }
+
         else {
             // ignore other args
         }
@@ -240,6 +278,32 @@ check_tamaraw_params(const MyConfig& conf)
               << " , L= " << conf.tamaraw_L
               << " , session time limit= " << conf.tamaraw_time_limit_secs
         ;
+}
+
+static void
+s_on_buflo_channel_defense_session_done(csp::ClientSideProxy* csp,
+                                        const MyConfig& conf)
+{
+
+#ifdef IN_SHADOW
+
+#else
+
+    if (conf.write_file_on_a_defense_session_done) {
+        std::ofstream ofs(conf.write_file_on_a_defense_session_done->c_str(),
+                          std::ofstream::out);
+        ofs << "1"; // write a single byte, doesn't matter what the
+                    // actual byte value is
+        ofs.close();
+    }
+
+    if (conf.exit_on_a_defense_session_done) {
+        LOG(INFO) << "defense session done; exiting as instructed";
+        exit(0);
+    }
+
+#endif
+
 }
 
 INITIALIZE_EASYLOGGINGPP
@@ -384,6 +448,9 @@ int main(int argc, char **argv)
                           conf.tamaraw_L,
                           conf.tamaraw_time_limit_secs));
 
+            csp->set_a_defense_session_done_cb(
+                boost::bind(s_on_buflo_channel_defense_session_done, _1, conf));
+
 #ifdef IN_SHADOW
             // only in shadow do we use ipc cuz shadow doesn't support
             // launching nodes (i.e., fork() so we can't restart csp
@@ -464,6 +531,10 @@ int main(int argc, char **argv)
         
         CHECK(!conf.auto_start_defense_session_on_next_send)
             << "ssp doesn't support " << auto_start_defense_session_on_next_send_name;
+        CHECK(!conf.write_file_on_a_defense_session_done)
+            << "ssp doesn't support " << write_file_on_a_defense_session_done;
+        CHECK(!conf.exit_on_a_defense_session_done)
+            << "ssp doesn't support " << exit_on_a_defense_session_done;
 
 #endif
 
