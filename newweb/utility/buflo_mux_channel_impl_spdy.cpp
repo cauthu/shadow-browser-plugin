@@ -494,8 +494,8 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
 void
 BufloMuxChannelImplSpdy::stop_defense_session(bool right_now)
 {
-    logself(INFO) << "requested to stop defense (right now: " << right_now << "); "
-                  << "current number of cells sent/attempted: "
+    logself(INFO) << "requested to stop defense; "
+                  << "current number of defensive cells sent/attempted: "
                   << defense_info_.num_write_attempts;
 
     if (defense_info_.state != DefenseState::ACTIVE) {
@@ -672,8 +672,9 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     CHECK_EQ(rv, 0);
 
     if (defense_info_.is_done_defending_send(tamaraw_L_)) {
-        logself(INFO) << "done defending send; final number of cells sent/attempted: "
+        logself(INFO) << "done defending send; defensive cells sent/attempted= "
                       << defense_info_.num_write_attempts;
+        defense_info_.saved_num_write_attempts = defense_info_.num_write_attempts;
         buflo_timer_->cancel();
 
         // we are finally done according to normal operation
@@ -728,8 +729,9 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
             } else {
                 // we're on ssp
                 logself(WARNING) << "exceeding defense session time limit! "
-                                 << "auto-stopping; number of cells sent/attempted: "
+                                 << "auto-stopping; number of defensive cells sent/attempted: "
                                  << defense_info_.num_write_attempts;
+                defense_info_.saved_num_write_attempts = defense_info_.num_write_attempts;
                 buflo_timer_->cancel();
 
                 defense_info_.reset();
@@ -1622,10 +1624,13 @@ BufloMuxChannelImplSpdy::_check_notify_a_defense_session_done(const int called_f
     {
         DestructorGuard dg(this);
         logself(INFO) << "defense session (both directions) done; "
-                      << "number of received cells in session: "
+                      << "defensive cells sent/attempted= "
+                      << defense_info_.saved_num_write_attempts
+                      << " received= "
                       << defense_info_.num_cells_recv;
         defense_info_.done_defending_recv = false;
         defense_info_.num_cells_recv = 0;
+        defense_info_.saved_num_write_attempts = 0;
         ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
     }
 

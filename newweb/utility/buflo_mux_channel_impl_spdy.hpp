@@ -465,6 +465,9 @@ protected:
          * flag. cleared after notifying the user the defense is done
          */
         uint32_t num_cells_recv = 0;
+
+        /* saved before "num_write_attempts" is cleared in reset() */
+        uint32_t saved_num_write_attempts = 0;
     } defense_info_;
 
     // Timer::UniquePtr buflo_timer_;
