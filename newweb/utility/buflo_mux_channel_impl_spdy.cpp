@@ -108,16 +108,16 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 8;
+static const uint8_t s_version = 9;
 
 /* 1 byte for version, 2 for cell size, and 4 for address, 2 for
- * requested L.
+ * requested L, 2 for requested pkt interval.
  *
  * the requested L is only used by CSP to tell SSP what L to use,
  * i.e., override SSP's default L. the SSP never sends this field,
  * i.e., always zero.
  */
-#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2)
+#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2 + 2)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -262,7 +262,9 @@ namespace myio { namespace buflo
 BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     struct event_base* evbase,
     int fd, bool is_client_side, const in_addr_t& myaddr,
-    size_t cell_size, const uint32_t& tamaraw_pkt_intvl_ms, const uint32_t& tamaraw_L,
+    size_t cell_size, const uint32_t& tamaraw_pkt_intvl_ms,
+    const uint32_t& peer_tamaraw_pkt_intvl_ms,
+    const uint32_t& tamaraw_L,
     const uint32_t& defense_session_time_limit,
     ChannelStatusCb ch_status_cb,
     NewStreamConnectRequestCb st_connect_req_cb)
@@ -273,7 +275,9 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
     , socket_read_ev_(nullptr, event_free)
     , socket_write_ev_(nullptr, event_free)
     , cell_size_(cell_size)
-    , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms), tamaraw_L_(tamaraw_L)
+    , tamaraw_pkt_intvl_ms_(tamaraw_pkt_intvl_ms)
+    , peer_tamaraw_pkt_intvl_ms_(peer_tamaraw_pkt_intvl_ms)
+    , tamaraw_L_(tamaraw_L)
     , cell_body_size_(cell_size_ - (CELL_HEADER_SIZE))
     , peer_cell_size_(0)
     , peer_cell_body_size_(0)
@@ -300,18 +304,17 @@ BufloMuxChannelImplSpdy::BufloMuxChannelImplSpdy(
 
     CHECK(_check_L(tamaraw_L_)) << "bad L: " << tamaraw_L_;
 
-    CHECK(   (tamaraw_pkt_intvl_ms_ == 0)
-          || (tamaraw_pkt_intvl_ms_ == 5)
-          || (tamaraw_pkt_intvl_ms_ == 20)
-          || (tamaraw_pkt_intvl_ms_ == 50)
-          || (tamaraw_pkt_intvl_ms_ == 75)
-          || (tamaraw_pkt_intvl_ms_ == 100)
-          || (tamaraw_pkt_intvl_ms_ == 125)
-        );
+    CHECK(_check_pkt_intvl(tamaraw_pkt_intvl_ms_))
+        << "bad pkt interval: " << tamaraw_pkt_intvl_ms_;
 
     if (tamaraw_L_ == 0 || tamaraw_pkt_intvl_ms_ == 0) {
         // if either is 0, then both must be 0
         CHECK((tamaraw_L == 0) && (tamaraw_pkt_intvl_ms_ == 0));
+    }
+
+    if (peer_tamaraw_pkt_intvl_ms_) {
+        CHECK(is_client_side_);
+        CHECK(_check_pkt_intvl(peer_tamaraw_pkt_intvl_ms_));
     }
 
     if (cell_size_ || tamaraw_L_ || tamaraw_pkt_intvl_ms_ || defense_session_time_limit_)
@@ -1762,7 +1765,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2),
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2 + 2),
                   "unexpected PEER_INFO_NUM_BYTES");
 
     uint8_t peer_version = 0;
@@ -1794,6 +1797,14 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK_EQ(rv, 0);
 
     requested_L = ntohs(requested_L);
+
+    uint16_t requested_pkt_intvl = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&requested_pkt_intvl, 2);
+    CHECK_EQ(rv, 2);
+    rv = evbuffer_drain(peer_info_inbuf_, 2);
+    CHECK_EQ(rv, 0);
+
+    requested_pkt_intvl = ntohs(requested_pkt_intvl);
 
     logself(INFO) << "peer IP is " << peer_ip()
                   << " version= " << unsigned(peer_version)
@@ -1827,6 +1838,19 @@ BufloMuxChannelImplSpdy::_read_peer_info()
             logself(INFO) << "CSP requests L= " << requested_L;
             tamaraw_L_ = requested_L;
             CHECK(_check_L(tamaraw_L_)) << "bad requested L= " << tamaraw_L_;
+        }
+    }
+
+    if (requested_pkt_intvl) {
+        if (is_client_side_) {
+            logself(FATAL) << "SSP unexpectedly requests pkt interval= " << requested_pkt_intvl;
+        } else {
+            logself(INFO) << "CSP requests pkt interval= " << requested_pkt_intvl;
+            // CSP wants us to use this pkt interval, and we oblige,
+            // after validating it
+            CHECK(_check_pkt_intvl(requested_pkt_intvl))
+                << "bad requested pkt interval= " << requested_pkt_intvl;
+            tamaraw_pkt_intvl_ms_ = requested_pkt_intvl;
         }
     }
 
@@ -1866,6 +1890,11 @@ BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
     // sends 0.)
     const uint16_t L = is_client_side_ ? htons(tamaraw_L_) : 0;
     rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&L, 2);
+    CHECK_EQ(rv, 0);
+
+    // only csp sends pkt interval. (ssp sends 0.)
+    const uint16_t pkt_intvl = is_client_side_ ? htons(peer_tamaraw_pkt_intvl_ms_) : 0;
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&pkt_intvl, 2);
     CHECK_EQ(rv, 0);
 
     CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), PEER_INFO_NUM_BYTES);
@@ -2410,6 +2439,25 @@ BufloMuxChannelImplSpdy::_check_L(const uint16_t& L) const
           || (tamaraw_L_ == 200)))
     {
         logself(ERROR) << "currently L should be 50, 100, 150, or 200";
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+bool
+BufloMuxChannelImplSpdy::_check_pkt_intvl(const uint16_t& intvl) const
+{
+    if (!(   (intvl == 0)
+          || (intvl == 5)
+          || (intvl == 20)
+          || (intvl == 50)
+          || (intvl == 75)
+          || (intvl == 100)
+          || (intvl == 125)))
+    {
+        logself(ERROR) << "unsupported pkt interval: " << intvl;
         return false;
     }
     else {

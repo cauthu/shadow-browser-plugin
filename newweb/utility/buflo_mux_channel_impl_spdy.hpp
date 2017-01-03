@@ -52,6 +52,10 @@ public:
      * course, the client side might continue its side of the defense
      *
      * if 0 is speficied, will use default_defense_session_time_limit
+     *
+     * "peer_tamaraw_pkt_intvl_ms": if non-zero, will request the peer
+     * to use this packet interval. should only specify if
+     * "is_client_side" is true.
      */
 
 #ifdef IN_SHADOW
@@ -64,6 +68,7 @@ public:
                             const in_addr_t& myaddr,
                             size_t cell_size,
                             const uint32_t& tamaraw_pkt_intvl_ms,
+                            const uint32_t& peer_tamaraw_pkt_intvl_ms,
                             const uint32_t& tamaraw_L,
                             const uint32_t& defense_session_time_limit,
                             ChannelStatusCb ch_status_cb,
@@ -266,6 +271,7 @@ protected:
                                              void *user_data);
 
     bool _check_L(const uint16_t& L) const;
+    bool _check_pkt_intvl(const uint16_t& intvl) const;
 
     class StreamState
     {
@@ -332,7 +338,8 @@ protected:
     /* for cells that we send */
     const size_t cell_size_;
     const size_t cell_body_size_;
-    const uint32_t tamaraw_pkt_intvl_ms_;
+    uint32_t tamaraw_pkt_intvl_ms_;
+    const uint32_t peer_tamaraw_pkt_intvl_ms_;
     uint32_t tamaraw_L_;
 
     /* for cells that the peer sends and we receive */

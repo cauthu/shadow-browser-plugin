@@ -53,7 +53,9 @@ CSPHandler::CSPHandler(struct event_base* evbase,
     buflo_channel_.reset(
         new BufloMuxChannelImplSpdy(
             evbase, fd, false, ntohl(common::getaddr(myhostname)),
-            cell_size, tamaraw_pkt_intvl_ms, tamaraw_L, tamaraw_time_limit_secs,
+            cell_size,
+            tamaraw_pkt_intvl_ms, 0,
+            tamaraw_L, tamaraw_time_limit_secs,
             boost::bind(&CSPHandler::_on_buflo_channel_status,
                         this, _1, _2),
             boost::bind(&CSPHandler::_on_buflo_new_stream_connect_request,

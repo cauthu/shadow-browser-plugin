@@ -42,6 +42,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
                                  const in_addr_t& socks5_addr,
                                  const in_port_t& socks5_port,
                                  const uint32_t& buflo_packet_intvl_ms,
+                                 const uint32_t& ssp_buflo_packet_intvl_ms,
                                  const uint32_t& buflo_L,
                                  const uint32_t& buflo_time_limit_secs)
     : evbase_(evbase)
@@ -50,6 +51,7 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     , socks5_addr_(socks5_addr), socks5_port_(socks5_port)
     , buflo_cell_size_(0)
     , buflo_packet_intvl_ms_(buflo_packet_intvl_ms)
+    , ssp_buflo_packet_intvl_ms_(ssp_buflo_packet_intvl_ms)
     , buflo_L_(buflo_L)
     , buflo_time_limit_secs_(buflo_time_limit_secs)
     , state_(State::INITIAL)
@@ -359,7 +361,9 @@ ClientSideProxy::_on_connected_to_ssp()
     buflo_ch_.reset(
         new BufloMuxChannelImplSpdy(
             evbase_, peer_fd, true, myaddr_,
-            buflo_cell_size_, buflo_packet_intvl_ms_, buflo_L_,
+            buflo_cell_size_,
+            buflo_packet_intvl_ms_, ssp_buflo_packet_intvl_ms_,
+            buflo_L_,
             buflo_time_limit_secs_,
             boost::bind(&ClientSideProxy::_on_buflo_channel_status,
                         this, _1, _2),

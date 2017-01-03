@@ -53,6 +53,7 @@ public:
                             const in_addr_t& socks5_addr,
                              const in_port_t& socks5_port,
                              const uint32_t& buflo_packet_intvl_ms,
+                             const uint32_t& ssp_buflo_packet_intvl_ms,
                              const uint32_t& buflo_L,
                              const uint32_t& buflo_time_limit_secs);
 
@@ -139,6 +140,7 @@ protected:
     const in_port_t socks5_port_;
     uint32_t buflo_cell_size_;
     const uint32_t buflo_packet_intvl_ms_;
+    const uint32_t ssp_buflo_packet_intvl_ms_;
     const uint32_t buflo_L_;
     const uint32_t buflo_time_limit_secs_;
 

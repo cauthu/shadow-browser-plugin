@@ -103,6 +103,9 @@ static const char exit_on_a_defense_session_done[] =
 
 static const char tamaraw_packet_interval_name[] =
     "tamaraw-packet-interval";
+/* if we are CSP, then will ask SSP to use this packet interval */
+static const char ssp_tamaraw_packet_interval_name[] =
+    "ssp-tamaraw-packet-interval";
 static const char tamaraw_L_name[] =
     "tamaraw-L";
 static const char tamaraw_time_limit_secs_name[] =
@@ -117,6 +120,7 @@ struct MyConfig
         , tor_socks_port(0)
         , tproxy_ipcport(common::ports::transport_proxy_ipc)
         , tamaraw_pkt_intvl_ms(0)
+        , ssp_tamaraw_pkt_intvl_ms(0)
         , tamaraw_L(0)
         , tamaraw_time_limit_secs(0)
         , ssp_log_outer_connect_latency(false)
@@ -133,6 +137,7 @@ struct MyConfig
     uint16_t tor_socks_port;
     uint16_t tproxy_ipcport;
     uint16_t tamaraw_pkt_intvl_ms;
+    uint16_t ssp_tamaraw_pkt_intvl_ms;
     uint16_t tamaraw_L;
     uint32_t tamaraw_time_limit_secs;
     bool ssp_log_outer_connect_latency;
@@ -190,6 +195,15 @@ set_my_config(MyConfig& conf,
             }
             catch (...) {
                 LOG(FATAL) << "bad value for " << tamaraw_packet_interval_name;
+            }
+        }
+
+        else if (name == ssp_tamaraw_packet_interval_name) {
+            try {
+                conf.ssp_tamaraw_pkt_intvl_ms = boost::lexical_cast<uint16_t>(value);
+            }
+            catch (...) {
+                LOG(FATAL) << "bad value for " << ssp_tamaraw_packet_interval_name;
             }
         }
 
@@ -445,6 +459,7 @@ int main(int argc, char **argv)
                           conf.tor_socks_port ? common::getaddr("localhost") : 0,
                           conf.tor_socks_port,
                           conf.tamaraw_pkt_intvl_ms,
+                          conf.ssp_tamaraw_pkt_intvl_ms,
                           conf.tamaraw_L,
                           conf.tamaraw_time_limit_secs));
 
@@ -537,6 +552,9 @@ int main(int argc, char **argv)
             << "ssp doesn't support " << exit_on_a_defense_session_done;
 
 #endif
+
+        CHECK(!conf.ssp_tamaraw_pkt_intvl_ms)
+            << "ssp doesn't support " << ssp_tamaraw_packet_interval_name;
 
         /* tcpserver to accept connections from CSPs */
         myio::TCPServer::UniquePtr tcpserver(
