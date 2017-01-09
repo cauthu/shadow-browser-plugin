@@ -108,16 +108,16 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 10;
+static const uint8_t s_version = 9;
 
-/* 1 byte for version, 2 for cell size, and 4 for address, 4 for
+/* 1 byte for version, 2 for cell size, and 4 for address, 2 for
  * requested L, 2 for requested pkt interval.
  *
  * the requested L is only used by CSP to tell SSP what L to use,
  * i.e., override SSP's default L. the SSP never sends this field,
  * i.e., always zero.
  */
-#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 4 + 2)
+#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2 + 2)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -1765,7 +1765,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 4 + 2),
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2 + 2),
                   "unexpected PEER_INFO_NUM_BYTES");
 
     uint8_t peer_version = 0;
@@ -1790,13 +1790,13 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     rv = evbuffer_drain(peer_info_inbuf_, 4);
     CHECK_EQ(rv, 0);
 
-    uint32_t requested_L = 0;
-    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&requested_L, 4);
-    CHECK_EQ(rv, 4);
-    rv = evbuffer_drain(peer_info_inbuf_, 4);
+    uint16_t requested_L = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&requested_L, 2);
+    CHECK_EQ(rv, 2);
+    rv = evbuffer_drain(peer_info_inbuf_, 2);
     CHECK_EQ(rv, 0);
 
-    requested_L = ntohl(requested_L);
+    requested_L = ntohs(requested_L);
 
     uint16_t requested_pkt_intvl = 0;
     rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&requested_pkt_intvl, 2);
@@ -1888,8 +1888,8 @@ BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
 
     // only csp sends L (tell ssp to use the same L as csp). (ssp
     // sends 0.)
-    const uint32_t L = is_client_side_ ? htonl(tamaraw_L_) : 0;
-    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&L, 4);
+    const uint16_t L = is_client_side_ ? htons(tamaraw_L_) : 0;
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&L, 2);
     CHECK_EQ(rv, 0);
 
     // only csp sends pkt interval. (ssp sends 0.)
@@ -2430,7 +2430,7 @@ BufloMuxChannelImplSpdy::_close_socket_and_events()
 }
 
 bool
-BufloMuxChannelImplSpdy::_check_L(const uint32_t& L) const
+BufloMuxChannelImplSpdy::_check_L(const uint16_t& L) const
 {
     if (!(   (tamaraw_L_ == 0)
           || (tamaraw_L_ == 50)
