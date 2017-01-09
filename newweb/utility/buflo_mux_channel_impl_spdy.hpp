@@ -270,7 +270,7 @@ protected:
                                              int32_t length,
                                              void *user_data);
 
-    bool _check_L(const uint16_t& L) const;
+    bool _check_L(const uint32_t& L) const;
     bool _check_pkt_intvl(const uint16_t& intvl) const;
 
     class StreamState
