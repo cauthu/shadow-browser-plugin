@@ -385,7 +385,7 @@ protected:
             evutil_timerclear(&auto_stop_time_point);
         }
 
-        bool is_done_defending_send(const uint8_t& L) const
+        bool is_done_defending_send(const uint16_t& L) const
         {
             CHECK_EQ(state, DefenseState::ACTIVE);
             return (stop_requested && (0 == (num_write_attempts % L)));
