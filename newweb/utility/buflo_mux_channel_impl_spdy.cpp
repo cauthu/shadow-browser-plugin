@@ -2437,9 +2437,10 @@ BufloMuxChannelImplSpdy::_check_L(const uint16_t& L) const
           || (tamaraw_L_ == 100)
           || (tamaraw_L_ == 150)
           || (tamaraw_L_ == 200)
+          || (tamaraw_L_ == 250)
           || (tamaraw_L_ == 300)))
     {
-        logself(ERROR) << "currently L should be 50, 100, 150, 200, or 300";
+        logself(ERROR) << "currently L should be 50, 100, 150, 200, 250, or 300";
         return false;
     }
     else {
