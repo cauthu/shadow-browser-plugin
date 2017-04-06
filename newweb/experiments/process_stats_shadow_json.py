@@ -1,7 +1,7 @@
 import json
 import sys
 import lzma
-
+import logging
 
 # processes the stats.shadow.json files produced by shadow's
 # tools/parse-shadow.py script; but also need the
@@ -25,8 +25,9 @@ stats_shadow_json_fpath = sys.argv[1]
 
 browser_proxy_mode_spec_fpath = sys.argv[2]
 
+openfunc = lzma.open if stats_shadow_json_fpath.endswith('.xz') else open
 
-with lzma.open(stats_shadow_json_fpath, 'rt') as fp:
+with openfunc(stats_shadow_json_fpath, 'rt') as fp:
     obj = json.load(fp)
     pass
 
