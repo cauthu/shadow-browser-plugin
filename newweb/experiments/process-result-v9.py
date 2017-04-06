@@ -14,6 +14,7 @@ from collections import namedtuple
 import datetime
 from common import convert_to_second, genCDF
 import math
+from collections import defaultdict
 
 
 g_version = 9
@@ -538,6 +539,9 @@ def analyzeClientResults(results, output_cdf_prefix,
 
     print( "total num result", len(results))
 
+    # numtorresults = len(list(filter(lambda r: r.proxymode == 'tor', results)))
+    # numbuflootresults = len(list(filter(lambda r: r.proxymode == 'tproxy-via-tor', results)))
+
     numbadresult = len(list(filter(lambda r: not r.succeeded, results)))
     numtimedout = len(list(filter(lambda r: (not r.succeeded) and (r.reason == 'TIMEDOUT'), results)))
     numfailed = len(list(filter(lambda r: (not r.succeeded) and (r.reason == 'FAILED'), results)))
@@ -567,11 +571,31 @@ def analyzeClientResults(results, output_cdf_prefix,
         'tproxy-via-tor': bufloot_ttfbs,
         }
 
+    summary_stats = {
+        'comment': '\n'.join(commentLines),
+        'count_pageloads': defaultdict(int),
+        'count_timedout_pageloads': defaultdict(int),
+        'count_failed_pageloads': defaultdict(int),
+        'count_failed_reqs': defaultdict(int),
+        }
+        
     for r in results:
+        proxymode = r.proxymode
+
+        summary_stats['count_pageloads'][proxymode] += 1
+
         if r.succeeded:
-            proxymode_to_plt_lst[r.proxymode].append(round(float(r.plt) * plt_scale, 1))
-            proxymode_to_ttfb_lst[r.proxymode].append(round(float(r.ttfb) * ttfb_scale, 1))
+            proxymode_to_plt_lst[proxymode].append(round(float(r.plt) * plt_scale, 1))
+            proxymode_to_ttfb_lst[proxymode].append(round(float(r.ttfb) * ttfb_scale, 1))
             pass
+        elif r.reason == 'TIMEDOUT':
+            summary_stats['count_timedout_pageloads'][proxymode] += 1
+            pass
+        elif r.reason == 'FAILED':
+            summary_stats['count_failed_pageloads'][proxymode] += 1
+            pass
+
+        summary_stats['count_failed_reqs'][proxymode] += r.numFailed
         pass
 
     for (proxymode, plt_lst, ttfb_lst) in (
@@ -593,6 +617,10 @@ def analyzeClientResults(results, output_cdf_prefix,
                    )
             pass
         pass
+
+    import json
+    with open('summary_stats.json', 'w') as fp:
+        json.dump(summary_stats, fp,indent=2, sort_keys=True)
 
     return
 
