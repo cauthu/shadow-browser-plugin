@@ -17,6 +17,10 @@ from common import convert_to_second, genCDF
 import math
 from collections import defaultdict
 
+# hack so that it outputs only 2 decimal places
+from json import encoder
+encoder.FLOAT_REPR = lambda o: format(o, '.2f')
+
 
 g_version = 9
 
@@ -1067,6 +1071,30 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
             all_ssp_csp_handler_totals[attr] += getattr(report, attr)
             pass
         pass
+
+    def _compute_x_overhead_over_y_in_percentage(x, y):
+        return ((x - y) / float(y)) * 100
+
+    def _compute_byte_overheads(total_dict):
+        total_dict['recv_byte_overhead_percent'] = \
+          _compute_x_overhead_over_y_in_percentage(
+              total_dict['recv_all_bytes'],
+              total_dict['recv_useful_bytes'])
+
+        total_dict['send_byte_overhead_percent'] = \
+          _compute_x_overhead_over_y_in_percentage(
+              total_dict['send_all_bytes'],
+              total_dict['send_useful_bytes'])
+
+        total_dict['overall_byte_overhead_percent'] = \
+          _compute_x_overhead_over_y_in_percentage(
+              total_dict['recv_all_bytes'] + total_dict['send_all_bytes'],
+              total_dict['recv_useful_bytes'] + total_dict['send_useful_bytes'])
+
+        pass
+
+    _compute_byte_overheads(all_csp_totals)
+    _compute_byte_overheads(all_ssp_csp_handler_totals)
 
     # write out the json stats, assuming that the 
     #
