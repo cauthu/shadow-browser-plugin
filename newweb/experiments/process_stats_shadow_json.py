@@ -8,6 +8,17 @@ import logging
 # browser_proxy_mode_spec.txt file to know which web client is tor and
 # which is tproxy-via-tor
 
+starting_at = 1800
+
+print('''
+
+
+NOTE!!!!!! count only starting at/after {starting_at} seconds, when all
+the nodes in the network are up and tranferring stuff
+
+
+
+'''.format(starting_at=starting_at))
 
 def sizeof_fmt(num, suffix='B'):
     for unit in ['','Ki','Mi','Gi','Ti','Pi','Ei','Zi']:
@@ -105,9 +116,6 @@ for nodename, nodestats in nodes.items():
         total_recv_stats = recv_stats['bytes_total']
         total_send_stats = send_stats['bytes_total']
 
-        # count only starting at 1600 seconds, when all the nodes in
-        # the network are up and running
-        starting_at = 1600
         recv_byte_counts = [byte_count for time_str, byte_count in list(total_recv_stats.items()) if int(time_str) >= starting_at]
         send_byte_counts = [byte_count for time_str, byte_count in list(total_send_stats.items()) if int(time_str) >= starting_at]
 
