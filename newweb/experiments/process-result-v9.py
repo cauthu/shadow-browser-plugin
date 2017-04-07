@@ -392,7 +392,7 @@ webclient_driver_dom_load_event_fired_pattern = re.compile(
 webclient_driver_report_result_pattern = re.compile(
     newweb_common_log_prefix + \
     'loadnum= (?P<loadnum>\d+), webmode= (?P<webmode>.+), proxyMode= (?P<proxymode>.+): '
-    'loadResult= (?P<loadresult>.+): startSec= (?P<startsec>\d+) plt= (?P<plt>\d+) '
+    'loadResult= (?P<loadresult>.+): startSec= (?P<startsec>[\d.]+) plt= (?P<plt>\d+) '
     'page= \[(?P<url>.+)\] ttfb= (?P<ttfb>\d+) numReqs= (?P<numreqs>\d+) '
     'numSuccess= (?P<numsuccess>\d+) numFailed= (?P<numfailed>\d+) '
     'numAfterDOMLoadEvent= (?P<numafterdomload>\d+) numForced= (?P<numforced>\d+)')
@@ -458,10 +458,11 @@ def parse_webclient_driver_log(onesimulationresult, hostname, fp):
             assert loadnum > 0
             ts = match.group('ts')
             timestamp = convert_to_second(ts)
-            reportloadnum, startsec, plt, ttfb, numreqs, numsuccess, numfailed, numafterdomloadevent, \
-              numforced = list(map(int, match.group('loadnum', 'startsec', 'plt', 'ttfb', 'numreqs',
+            reportloadnum, plt, ttfb, numreqs, numsuccess, numfailed, numafterdomloadevent, \
+              numforced = list(map(int, match.group('loadnum', 'plt', 'ttfb', 'numreqs',
                                                     'numsuccess', 'numfailed', 'numafterdomload',
                                                     'numforced')))
+            startsec = int(float(match.group('startsec')))
             proxymode, loadresult, url = match.group('proxymode', 'loadresult', 'url')
             succeeded = (loadresult == 'OK')
 
