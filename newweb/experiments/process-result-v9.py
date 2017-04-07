@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import pdb
 import re
 import sys
@@ -19,6 +20,7 @@ from collections import defaultdict
 
 g_version = 9
 
+summary_stats_json_fname = 'summary_stats.json'
     
 # represents results of one simulation file, containing many page load
 # results
@@ -49,7 +51,8 @@ class OneSimulationResult:
         # to store the OneSSPCspHandlerReport's
         self.ssp_csp_handler_reports = []
 
-        self.csp_periodic_reports = []
+        # map from hostname to list of OneCSPStatsReport's
+        self.csp_periodic_reports = defaultdict(list)
         pass
     pass
 
@@ -537,8 +540,7 @@ def parse_webclient_tproxy_log(onesimulationresult, hostname, fp):
             init_report_kwargs['timestamp'] = timestamp
             onereportobj = OneCSPStatsReport(**init_report_kwargs)
 
-            onesimulationresult.csp_periodic_reports.append(onereportobj)
-            pdb.set_trace()
+            onesimulationresult.csp_periodic_reports[hostname].append(onereportobj)
 
             continue
 
@@ -548,7 +550,7 @@ def parse_webclient_tproxy_log(onesimulationresult, hostname, fp):
 
 def parse_webclient(onesimulationresult, outdir):
     logging.debug('parsing webclient in {}'.format(outdir))
-    hostname = os.path.basename(outdir)
+    hostname = get_shared_ref(os.path.basename(outdir), sharedstrmap)
     for fname in os.listdir(outdir):
 
         if fname.startswith('stdout-driver-'):
@@ -769,9 +771,9 @@ def analyzeClientResults(results, output_cdf_prefix,
             pass
         pass
 
-    import json
-    with open('summary_stats.json', 'w') as fp:
+    with open(summary_stats_json_fname, 'w') as fp:
         json.dump(summary_stats, fp,indent=2, sort_keys=True)
+        pass
 
     return
 
@@ -917,6 +919,11 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
             output_cdf_prefix='', startAfter=0, doneBefore=None,
             commentLines=[]):
 
+    csp_periodic_reports = None
+    ssp_csp_handler_reports = None
+
+    assert len(filepaths) == 1, 'currently can analyze only one file at a time'
+
     aggregate = True
     if aggregate:
         results = []
@@ -941,6 +948,11 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
                 pass
             del unpickler
             results.extend(onesimulationresult.loadResults)
+            assert csp_periodic_reports is None
+            csp_periodic_reports = onesimulationresult.csp_periodic_reports
+            assert ssp_csp_handler_reports is None
+            ssp_csp_handler_reports = onesimulationresult.ssp_csp_handler_reports
+
             commentLine = '[{filepath}]: [{shadowRelease}] [{torVersion}] [{desc}] [{completionTime}]'.format(
                 filepath=filepath,
                 shadowRelease=onesimulationresult.shadowRelease,
@@ -976,8 +988,77 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
             )
         pass
 
+    #
+    # summarize the csp and ssp stats
+
+    # csp's reports contain running stats, so we need to subtract the
+    # offset if we want to count starting at certain time instead of
+    # the whole duration of experiment
+    def _get_one_host_csp_stats_totals(reports, startAfter):
+
+        # !!! ASSUMES that the reports are ordered chronologically
+
+        ret_totals = {}
+
+        if startAfter is None:
+            raise Exception('TODO')
+        else:
+            offset_report = None # the first one after "startAfter"
+            for report in reports:
+                if report.timestamp > startAfter:
+                    offset_report = report
+                    break
+                pass
+            last_report = reports[-1]
+            assert last_report is not offset_report
+
+            for attr in ('recv_all_bytes',
+                         'recv_useful_bytes',
+                         'recv_dummy_cells',
+                         'send_all_bytes',
+                         'send_useful_bytes',
+                         'send_dummy_cells',
+                         'avoided_send_dummy_cells',
+                         ):
+                ret_totals[attr] = getattr(last_report, attr) - getattr(offset_report, attr)
+                pass
+            pass
+
+        return ret_totals
+    ######
+
+
+    # tallies of values from all csp's
+    all_csp_totals = defaultdict(int)
+
+    for host, reports in csp_periodic_reports.items():
+        host_totals = _get_one_host_csp_stats_totals(reports, startAfter)
+
+        for attr in ('recv_all_bytes',
+                         'recv_useful_bytes',
+                         'recv_dummy_cells',
+                         'send_all_bytes',
+                         'send_useful_bytes',
+                         'send_dummy_cells',
+                         'avoided_send_dummy_cells',
+                         ):
+            all_csp_totals[attr] += host_totals[attr]
+            pass
+        pass
+
+    with open(summary_stats_json_fname) as fp:
+        summary_stats = json.load(fp)
+        summary_stats['all_csp_totals'] = all_csp_totals
+        pass
+
+    with open(summary_stats_json_fname, 'w') as fp:
+        json.dump(summary_stats, fp,indent=2, sort_keys=True)
+        pass
+
     if web_only:
         return
+
+    
 
     # for (hostprefix, outputprefix) in (('bulkclient', 'bulk-'),
     #                                    ('bridgebulkclient', 'bridgebulk-'),
@@ -1113,6 +1194,8 @@ first, use the "parse" command to parse a simulation\'s logs into a pickle file.
             pass
 
         startAfter = convert_to_second(args.startAfter)
+
+        assert args.doneBefore is None, 'TODO'
 
         if args.doneBefore:
             doneBefore = convert_to_second(args.doneBefore) 
