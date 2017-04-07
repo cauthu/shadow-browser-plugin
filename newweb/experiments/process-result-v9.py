@@ -45,6 +45,11 @@ class OneSimulationResult:
         self.completionTime = None
         self.description = description
         self.loadResults = []
+
+        # to store the OneSSPCspHandlerReport's
+        self.ssp_csp_handler_reports = []
+
+        self.csp_periodic_reports = []
         pass
     pass
 
@@ -479,13 +484,73 @@ def parse_webclient_driver_log(onesimulationresult, hostname, fp):
             continue
         
         pass
-    
+
+    pass
+
+
+class OneCSPStatsReport:
+    # each csp logs stats every 30 seconds. this is one such
+    # report. there will be multiple reports per csp
+
+    def __init__(self, **kwargs):
+        for key in kwargs:
+            setattr(self, key, kwargs[key])
+        pass
+    pass
+
+# 00:21:30.000 INFO  - csp.cpp :494, log_stats() ::   cstp= 2: recv_so_far: all_bytes= 452250 useful_bytes= 337113 dummy_cells= 147 ; send_so_far: all_bytes= 135000 useful_bytes= 5252 dummy_cells= 168 dummy_cells_avoided_so_far= 0
+
+webclient_tproxy_periodic_stats_report_pattern = re.compile(
+    newweb_common_log_prefix + \
+    'cstp= \d+: '
+    'recv_so_far: '
+    'all_bytes= (?P<recv_all_bytes>\d+) '
+    'useful_bytes= (?P<recv_useful_bytes>\d+) '
+    'dummy_cells= (?P<recv_dummy_cells>\d+) ; '
+    'send_so_far: '
+    'all_bytes= (?P<send_all_bytes>\d+) '
+    'useful_bytes= (?P<send_useful_bytes>\d+) '
+    'dummy_cells= (?P<send_dummy_cells>\d+) '
+    'dummy_cells_avoided_so_far= (?P<avoided_send_dummy_cells>\d+)')
+
+
+def parse_webclient_tproxy_log(onesimulationresult, hostname, fp):
+
+    while True:
+        line = fp.readline()
+        if line == '':
+            # readline() returns empty string on EOF
+            break
+        line = line.strip()
+        logging.debug('line: [%s]' % (line))
+
+        match = None
+
+        #####
+        match = re.match(webclient_tproxy_periodic_stats_report_pattern, line)
+        if match:
+            ts = match.group('ts')
+            timestamp = convert_to_second(ts)
+            # FIX later, for now using groupdict to set the report due
+            # to time pressue
+            init_report_kwargs = {k: int(v) for k, v in match.groupdict().items() if k != 'ts'}
+            init_report_kwargs['timestamp'] = timestamp
+            onereportobj = OneCSPStatsReport(**init_report_kwargs)
+
+            onesimulationresult.csp_periodic_reports.append(onereportobj)
+            pdb.set_trace()
+
+            continue
+
+        pass
+
     pass
 
 def parse_webclient(onesimulationresult, outdir):
     logging.debug('parsing webclient in {}'.format(outdir))
     hostname = os.path.basename(outdir)
     for fname in os.listdir(outdir):
+
         if fname.startswith('stdout-driver-'):
             fpath = os.path.join(outdir, fname)
             with open(fpath) as fp:
@@ -493,8 +558,90 @@ def parse_webclient(onesimulationresult, outdir):
                 parse_webclient_driver_log(onesimulationresult, hostname, fp)
                 pass
             pass
+
+        elif fname.startswith('stdout-tproxy-'):
+            fpath = os.path.join(outdir, fname)
+            with open(fpath) as fp:
+                logging.debug('parsing webclient tproxy log "{}"'.format(fname))
+                parse_webclient_tproxy_log(onesimulationresult, hostname, fp)
+                pass
+            pass
+
         pass
     pass
+
+#############################################
+
+# a report by an ssp about one of its csp handler
+class OneSSPCspHandlerReport:
+    def __init__(self, **kwargs):
+        for key in kwargs:
+            setattr(self, key, kwargs[key])
+        pass
+    pass
+
+# the ssp reports the stats when a csp handler is destroyed:
+#
+# 00:20:15.400 INFO  - csp_handler.cpp :105, _report_stats() ::   csphandler= 4: with peer 11.0.2.10 recv: all_bytes= 75000 useful_bytes= 3698 dummy_cells= 91 ; send: all_bytes= 300000 useful_bytes= 57227 dummy_cells= 319 dummy_cells_avoided= 0
+
+exitrelay_tproxy_report_csp_handler_stats_pattern = re.compile(
+    newweb_common_log_prefix + \
+    'csphandler= \d+: with peer .* '
+    'recv: '
+    'all_bytes= (?P<recv_all_bytes>\d+) '
+    'useful_bytes= (?P<recv_useful_bytes>\d+) '
+    'dummy_cells= (?P<recv_dummy_cells>\d+) ; '
+    'send: '
+    'all_bytes= (?P<send_all_bytes>\d+) '
+    'useful_bytes= (?P<send_useful_bytes>\d+) '
+    'dummy_cells= (?P<send_dummy_cells>\d+) '
+    'dummy_cells_avoided= (?P<avoided_send_dummy_cells>\d+)')
+
+def parse_exitrelay_tproxy_log(onesimulationresult, hostname, fp):
+
+    while True:
+        line = fp.readline()
+        if line == '':
+            # readline() returns empty string on EOF
+            break
+        line = line.strip()
+        logging.debug('line: [%s]' % (line))
+
+        match = None
+
+        #####
+        match = re.match(exitrelay_tproxy_report_csp_handler_stats_pattern, line)
+        if match:
+            ts = match.group('ts')
+            timestamp = convert_to_second(ts)
+            # FIX later, for now using groupdict to set the report due
+            # to time pressue
+            init_report_kwargs = {k: int(v) for k, v in match.groupdict().items() if k != 'ts'}
+            init_report_kwargs['timestamp'] = timestamp
+            onereportobj = OneSSPCspHandlerReport(**init_report_kwargs)
+
+            onesimulationresult.ssp_csp_handler_reports.append(onereportobj)
+            continue
+
+        pass
+    
+    return
+
+def parse_exitrelay(onesimulationresult, outdir):
+    logging.debug('parsing exit relay in {}'.format(outdir))
+    hostname = os.path.basename(outdir)
+    for fname in os.listdir(outdir):
+
+        if fname.startswith('stdout-tproxy-'):
+            fpath = os.path.join(outdir, fname)
+            with open(fpath) as fp:
+                logging.debug('parsing exit relay tproxy log "{}"'.format(fname))
+                parse_exitrelay_tproxy_log(onesimulationresult, hostname, fp)
+                pass
+            pass
+        pass
+
+    return
 
 #############################################
 def parse(expdir, outputfilepath='parsedPickledResults-v%u.bz2' % (g_version),
@@ -516,6 +663,10 @@ def parse(expdir, outputfilepath='parsedPickledResults-v%u.bz2' % (g_version),
         if hostname.startswith('webclient'):
             num_webclients += 1
             parse_webclient(onesimulationresult,
+                            os.path.join(hosts_data_dir, hostname))
+            pass
+        elif hostname.startswith('relay') and hostname.find('exit'):
+            parse_exitrelay(onesimulationresult,
                             os.path.join(hosts_data_dir, hostname))
             pass
         # else:
