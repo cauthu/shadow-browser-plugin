@@ -1005,10 +1005,11 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
         else:
             offset_report = None # the first one after "startAfter"
             for report in reports:
-                if report.timestamp > startAfter:
+                if report.timestamp >= startAfter:
                     offset_report = report
                     break
                 pass
+            assert offset_report is not None
             last_report = reports[-1]
             assert last_report is not offset_report
 
@@ -1046,10 +1047,41 @@ def analyze(filepaths, web_urls=set(), web_plt_bucketsize=None,
             pass
         pass
 
-    with open(summary_stats_json_fname) as fp:
-        summary_stats = json.load(fp)
-        summary_stats['all_csp_totals'] = all_csp_totals
+
+    ### tally up all the ssp's csp_handler stats reports. these are
+    ### not "running" stats, so we look at each and every one
+
+    all_ssp_csp_handler_totals = defaultdict(int)
+    assert startAfter is not None
+    for report in ssp_csp_handler_reports:
+        if report.timestamp < startAfter:
+            continue
+        for attr in ('recv_all_bytes',
+                         'recv_useful_bytes',
+                         'recv_dummy_cells',
+                         'send_all_bytes',
+                         'send_useful_bytes',
+                         'send_dummy_cells',
+                         'avoided_send_dummy_cells',
+                         ):
+            all_ssp_csp_handler_totals[attr] += getattr(report, attr)
+            pass
         pass
+
+    # write out the json stats, assuming that the 
+    #
+
+    summary_stats = {}
+    try:
+        with open(summary_stats_json_fname) as fp:
+            summary_stats = json.load(fp)
+            pass
+        pass
+    except:
+        pass
+
+    summary_stats['all_csp_totals'] = all_csp_totals
+    summary_stats['all_ssp_csp_handler_totals'] = all_ssp_csp_handler_totals
 
     with open(summary_stats_json_fname, 'w') as fp:
         json.dump(summary_stats, fp,indent=2, sort_keys=True)
