@@ -100,7 +100,7 @@ Driver::Driver(struct event_base* evbase,
                   boost::bind(&Driver::_on_think_time_timer_fired, this, _1)));
 
     static const int lowerbound_thinktime_ms = 20*1000;
-    static const int upperbound_thinktime_ms = 60*1000;
+    static const int upperbound_thinktime_ms = 40*1000;
     think_time_rand_gen_.reset(
         new boost::variate_generator<boost::mt19937, boost::uniform_real<double> >(
             boost::mt19937(std::time(0)), boost::uniform_real<double>(
