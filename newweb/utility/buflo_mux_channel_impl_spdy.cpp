@@ -960,7 +960,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
 
     if (defense_info_.need_auto_stopped_flag_in_next_cell) {
         CHECK(!is_client_side_);
-        vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
+        logself(INFO) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
         SET_CELL_AUTO_STOPPED_FLAG(type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
         has_important_flags = true;
