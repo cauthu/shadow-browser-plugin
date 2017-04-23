@@ -107,6 +107,7 @@ public:
     virtual const uint64_t& established_timestamp_ms() const override;
     virtual bool has_pending_bytes() const override;
     virtual bool is_defense_in_progress() const override;
+    virtual uint32_t cell_outbuf_length() const override;
 
     std::string peer_ip() const;
 

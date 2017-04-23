@@ -490,7 +490,8 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
     CHECK_EQ(evbuffer_get_length(spdy_outbuf_), 0);
 
     if (evbuffer_get_length(cell_outbuf_) > 0) {
-        logself(FATAL) << evbuffer_get_length(cell_outbuf_);
+        logself(FATAL) << "cell_outbuf_ length: "
+                       << evbuffer_get_length(cell_outbuf_);
     }
     CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
 
@@ -888,6 +889,8 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
         CHECK(rv);
         ++num_added;
     }
+    logself(INFO) << "cell_outbuf_ length after flush: "
+                  << evbuffer_get_length(cell_outbuf_);
     vlogself(2) << "done, returning " << num_added;
     return num_added;
 }
@@ -2458,6 +2461,12 @@ BufloMuxChannelImplSpdy::is_defense_in_progress() const
          || !defense_info_.done_defending_recv /* recv direction */);
     vlogself(2) << "retval= " << retval;
     return retval;
+}
+
+uint32_t
+BufloMuxChannelImplSpdy::cell_outbuf_length() const
+{
+    return evbuffer_get_length(cell_outbuf_);
 }
 
 void

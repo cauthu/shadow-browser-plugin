@@ -559,13 +559,23 @@ ClientSideProxy::_reap_buflo_channel_timer_fired(Timer*)
                     << " buflo_ch_establish_timestamp_ms: " << buflo_ch_establish_timestamp_ms
                     << " buflo_ch_age_sec: " << buflo_ch_age_sec;
 
-        logself(INFO) << "channel age (seconds): " << buflo_ch_age_sec;
+        if (buflo_ch_age_sec >= buflo_ch_max_age_sec_) {
+            logself(INFO) << "channel age (seconds): " << buflo_ch_age_sec;
+        }
 
-        if (buflo_ch_->is_defense_in_progress() || buflo_ch_->has_pending_bytes()) {
+        const bool is_defense_in_progress = buflo_ch_->is_defense_in_progress();
+        if (is_defense_in_progress || buflo_ch_->has_pending_bytes()) {
             vlogself(2) << "defense in progress and/or pending bytes";
             if (buflo_ch_age_sec >= buflo_ch_max_age_sec_) {
                 logself(INFO) << "channel is old (" << buflo_ch_age_sec
                               <<" seconds), but we cannot reap it";
+                if (!is_defense_in_progress) {
+                    const uint32_t cell_outbuf_length = buflo_ch_->cell_outbuf_length();
+                    if (cell_outbuf_length) {
+                        logself(INFO) << "no active defense, but cell_outbuf_ length: "
+                                      << cell_outbuf_length;
+                    }
+                }
                 // do nothing
             }
         } else {

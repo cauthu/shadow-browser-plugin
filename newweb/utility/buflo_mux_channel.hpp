@@ -190,6 +190,8 @@ public:
      * receive direction */
     virtual bool is_defense_in_progress() const = 0;
 
+    virtual uint32_t cell_outbuf_length() const = 0;
+
 protected:
 
     BufloMuxChannel(int fd,
