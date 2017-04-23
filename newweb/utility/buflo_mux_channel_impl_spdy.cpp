@@ -830,6 +830,7 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
         size_t before_cell_outbuf_length = 0;
         size_t after_cell_outbuf_length = 0;
         num_cells_added = _maybe_flush_data_to_cell_outbuf(
+            log_flushed_cell_count,
             &before_cell_outbuf_length, &after_cell_outbuf_length);
         if (after_cell_outbuf_length) {
             // there is definitely in out buf so just force enable
@@ -879,8 +880,10 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
  * returns the number of cells that we added to outbuf
  */
 size_t
-BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf(size_t* before_cell_outbuf_length,
-                                                          size_t* after_cell_outbuf_length)
+BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf(
+    bool log_cell_outbuf_length,
+    size_t* before_cell_outbuf_length,
+    size_t* after_cell_outbuf_length)
 {
     CHECK(   (defense_info_.state == DefenseState::NONE)
         );
@@ -899,8 +902,10 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf(size_t* before_cell_ou
     }
 
     const auto cell_outbuf_len = evbuffer_get_length(cell_outbuf_);
-    logself(INFO) << "cell_outbuf_ length after flush: "
-                  << cell_outbuf_len;
+    if (log_cell_outbuf_length) {
+        logself(INFO) << "cell_outbuf_ length after flush: "
+                      << cell_outbuf_len;
+    }
     if (after_cell_outbuf_length) {
         *after_cell_outbuf_length = cell_outbuf_len;
     }

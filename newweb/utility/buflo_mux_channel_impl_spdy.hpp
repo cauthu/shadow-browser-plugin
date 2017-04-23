@@ -148,7 +148,8 @@ protected:
 
     /* WILL move all data into cell outbuf. the current defense state
      * must be NONE */
-    size_t _maybe_flush_data_to_cell_outbuf(size_t* before_cell_outbuf_length,
+    size_t _maybe_flush_data_to_cell_outbuf(bool log_cell_outbuf_length,
+                                            size_t* before_cell_outbuf_length,
                                             size_t* after_cell_outbuf_length);
 
     /* this will add a dummy cell if there is not already a WHOLE
