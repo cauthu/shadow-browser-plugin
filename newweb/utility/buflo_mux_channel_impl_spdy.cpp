@@ -108,16 +108,16 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 9;
+static const uint8_t s_version = 10;
 
-/* 1 byte for version, 2 for cell size, and 4 for address, 2 for
+/* 1 byte for version, 4 for channel instNum, 2 for cell size, and 4 for address, 2 for
  * requested L, 2 for requested pkt interval.
  *
  * the requested L is only used by CSP to tell SSP what L to use,
  * i.e., override SSP's default L. the SSP never sends this field,
  * i.e., always zero.
  */
-#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2 + 2)
+#define PEER_INFO_NUM_BYTES (1 + 4 + 2 + 4 + 2 + 2)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -1769,7 +1769,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2 + 2),
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 4 + 2 + 4 + 2 + 2),
                   "unexpected PEER_INFO_NUM_BYTES");
 
     uint8_t peer_version = 0;
@@ -1777,6 +1777,12 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     auto rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_version, 1);
     CHECK_EQ(rv, 1);
     rv = evbuffer_drain(peer_info_inbuf_, 1);
+    CHECK_EQ(rv, 0);
+
+    uint32_t peer_ch_instNum = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint32_t*)&peer_ch_instNum, 4);
+    CHECK_EQ(rv, 4);
+    rv = evbuffer_drain(peer_info_inbuf_, 4);
     CHECK_EQ(rv, 0);
 
     rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_cell_size_, 2);
@@ -1811,6 +1817,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     requested_pkt_intvl = ntohs(requested_pkt_intvl);
 
     logself(INFO) << "peer IP is " << peer_ip()
+                  << " channel instNum " << peer_ch_instNum
                   << " version= " << unsigned(peer_version)
                   << " using cell size= " << peer_cell_size_;
 
@@ -1882,6 +1889,9 @@ BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
     CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), 0);
 
     auto rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&s_version, 1);
+    CHECK_EQ(rv, 0);
+
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint32_t*)&objId(), 4);
     CHECK_EQ(rv, 0);
 
     const uint16_t cs = htons(cell_size_);
