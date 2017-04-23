@@ -55,6 +55,7 @@ Driver::_tproxy_on_ipc_msg(GenericIpcChannel*, uint8_t,
     logself(WARNING) << "ignoring msgs from tproxy";
 }
 
+#if 0
 void
 Driver::_tproxy_maybe_establish_tunnel()
 {
@@ -116,16 +117,19 @@ Driver::_tproxy_on_establish_tunnel_resp(GenericIpcChannel::RespStatus status,
 
     vlogself(2) << "done";
 }
+#endif
 
 void
 Driver::_tproxy_set_auto_start_defense_on_next_send()
 {
     vlogself(2) << "begin";
+    logself(INFO) << "tell proxy to start defense on next send";
 
     CHECK(tproxy_ipc_ch_ready_);
 
-    CHECK_EQ(state_, State::DONE_ESTABLISH_TPROXY_TUNNEL);
-    state_ = State::SET_TPROXY_AUTO_START;
+    // CHECK((state_ == State::DONE_ESTABLISH_TPROXY_TUNNEL)
+    //       || (state_ == State::DONE_RESET_RENDERER));
+    // state_ = State::SET_TPROXY_AUTO_START;
 
     {
         flatbuffers::FlatBufferBuilder bufbuilder;
@@ -147,7 +151,7 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
 {
     vlogself(2) << "begin";
 
-    CHECK_EQ(state_, State::SET_TPROXY_AUTO_START);
+    // CHECK_EQ(state_, State::SET_TPROXY_AUTO_START);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
         logself(WARNING) << "timed out setting tunnel auto start";
@@ -160,16 +164,9 @@ Driver::_tproxy_on_set_auto_start_defense_on_next_send_resp(
         }
     }
 
-    state_ = State::DONE_SET_TPROXY_AUTO_START;
+    // state_ = State::DONE_SET_TPROXY_AUTO_START;
 
-    if (loadnum_) {
-        // we got here after a page load, so we need to think
-        _start_thinking();
-    } else {
-        // start loading immediately since we got here from
-        // initializing
-        _renderer_load_page();
-    }
+    // _do_start_thinking_or_loading();
 
     vlogself(2) << "done";
 }

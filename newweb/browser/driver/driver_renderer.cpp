@@ -315,6 +315,8 @@ void
 Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
                                 uint16_t len, const uint8_t* buf)
 {
+    vlogself(2) << "begin";
+
     CHECK_EQ(state_, State::RESET_RENDERER);
 
     if (status == GenericIpcChannel::RespStatus::TIMEDOUT) {
@@ -323,25 +325,24 @@ Driver::_renderer_on_reset_resp(GenericIpcChannel::RespStatus status,
 
     state_ = State::DONE_RESET_RENDERER;
 
-    if (using_tproxy_) {
-        _tproxy_maybe_establish_tunnel();
-    } else {
-        if (loadnum_) {
-            // we got here after a page load, so we need to think
-            _start_thinking();
-        } else {
-            // start loading immediately since we got here from
-            // initializing
-            _renderer_load_page();
-        }
-    }
+    // if (using_tproxy_) {
+
+    //     if (loadnum_ == 0) {
+    //         _tproxy_maybe_establish_tunnel();
+    //     } else {
+    //         _tproxy_set_auto_start_defense_on_next_send();
+    //     }
+    // } else {
+        _do_start_thinking_or_loading();
+    // }
+
+    vlogself(2) << "done";
 }
 
 void
 Driver::_start_thinking()
 {
-    CHECK((state_ == State::DONE_RESET_RENDERER)
-          || (state_ == State::DONE_SET_TPROXY_AUTO_START));
+    CHECK(state_ == State::DONE_RESET_RENDERER);
     state_ = State::THINKING;
 
     const auto think_time_ms = (*think_time_rand_gen_)();
@@ -354,17 +355,15 @@ Driver::_renderer_load_page()
 {
     vlogself(2) << "begin";
 
+    /* normally we get here after thinking, except for the very
+     * first load, for which there was no thinking before it
+     */
+    CHECK((state_ == State::THINKING)
+          || (state_ == State::DONE_RESET_RENDERER))
+        << "unexpected state " << common::as_integer(state_);
+
     if (using_tproxy_) {
-        CHECK((state_ == State::THINKING)
-              || (state_ == State::DONE_SET_TPROXY_AUTO_START))
-            << "unexpected state " << common::as_integer(state_);
-    } else {
-        /* normally we get here after thinking, except for the very
-         * first load, for which there was no thinking before it
-         */
-        CHECK((state_ == State::THINKING)
-              || (state_ == State::DONE_RESET_RENDERER))
-            << "unexpected state " << common::as_integer(state_);
+        _tproxy_set_auto_start_defense_on_next_send();
     }
 
     state_ = State::LOADING_PAGE;

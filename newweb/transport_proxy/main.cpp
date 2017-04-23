@@ -466,6 +466,8 @@ int main(int argc, char **argv)
             csp->set_a_defense_session_done_cb(
                 boost::bind(s_on_buflo_channel_defense_session_done, _1, conf));
 
+            csp->establish_tunnel_2(true);
+
 #ifdef IN_SHADOW
             // only in shadow do we use ipc cuz shadow doesn't support
             // launching nodes (i.e., fork() so we can't restart csp

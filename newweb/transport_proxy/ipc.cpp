@@ -145,6 +145,12 @@ IPCServer::_handle_EstablishTunnel(const uint32_t& id,
 {
     vlogself(2) << "tell csp to (re)establish tunnel";
 
+#ifdef IN_SHADOW
+
+    logself(FATAL) << "not allowed for now";
+
+#endif
+
     CHECK_GT(id, 0);
     if (establish_tunnel_call_id_) {
         logself(WARNING) << "overtaking an establish call already in progress";

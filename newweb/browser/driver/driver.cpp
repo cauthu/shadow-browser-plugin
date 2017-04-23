@@ -265,13 +265,28 @@ Driver::_on_think_time_timer_fired(Timer* timer)
 }
 
 void
+Driver::_do_start_thinking_or_loading()
+{
+    if (loadnum_) {
+        // we got here after a page load, so we need to think
+        logself(INFO) << ("we got here after a page load, so we need to think");
+        _start_thinking();
+    } else {
+        logself(INFO) << "start loading immediately since we got here from";
+        // start loading immediately since we got here from
+        // initializing
+        _renderer_load_page();
+    }
+}
+
+void
 Driver::_tproxy_on_ipc_ch_status(GenericIpcChannel*,
                                  GenericIpcChannel::ChannelStatus status)
 {
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
         tproxy_ipc_ch_ready_ = true;
-        _tproxy_maybe_establish_tunnel();
+        // _tproxy_maybe_establish_tunnel();
         break;
     }
 

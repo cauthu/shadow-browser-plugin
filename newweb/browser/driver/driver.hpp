@@ -28,17 +28,14 @@
  * the default/common state transitions are:
  *
  * 1. reset renderer
- * --> when done, skip to 3. if not using tproxy
  *
- * 2. tell tproxy to reestablish tunnel and then set_auto_star_on_next_send
+ * 2. sleep for random "think time" amount if this is not the first load
  *
- * 3. sleep for random "think time" amount if this is not the first load
- *
- * 4. start loading page
+ * 3. (if using proxy then tell it to set_auto_start_on_next_send, and) start loading page
  * --> if timed out, go back to step 1.
  * --> if success go to 5.
  *
- * 5. wait for more requests that might be sent: whenever there are
+ * 4. wait for more requests that might be sent: whenever there are
  * pending requests, we are patient and continue to wait. when a
  * request is finished (closed or success), if there is no more
  * pending requests, and the dom load event has fired, then we start
@@ -47,8 +44,10 @@
  *
  * --> when done go back to 1.
  * 
- *
  */
+
+
+
 
 class Driver : public Object
 {
@@ -77,9 +76,11 @@ private:
     void _tproxy_on_ipc_ch_status(myipc::GenericIpcChannel*,
                                   myipc::GenericIpcChannel::ChannelStatus);
 
+#if 0
     void _tproxy_maybe_establish_tunnel();
     void _tproxy_on_establish_tunnel_resp(myipc::GenericIpcChannel::RespStatus,
                                    uint16_t len, const uint8_t* buf);
+#endif
 
     void _tproxy_stop_defense(const bool& right_now);
     void _tproxy_on_stop_defense_resp(myipc::GenericIpcChannel::RespStatus,
@@ -142,10 +143,12 @@ private:
 
             RESET_RENDERER,
             DONE_RESET_RENDERER,
+#if 0
             ESTABLISH_TPROXY_TUNNEL,
             DONE_ESTABLISH_TPROXY_TUNNEL,
             SET_TPROXY_AUTO_START,
             DONE_SET_TPROXY_AUTO_START,
+#endif
 
             LOADING_PAGE,
 
@@ -195,6 +198,7 @@ private:
     // so that we can do sequential page selection
     uint32_t prev_page_model_idx_ = 0;
 
+    void _do_start_thinking_or_loading();
     void _start_thinking();
     void _report_result();
     void _reset_this_page_load_info();

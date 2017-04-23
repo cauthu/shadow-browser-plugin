@@ -469,6 +469,7 @@ BufloMuxChannelImplSpdy::start_defense_session()
     buflo_timer_->start(&intvl_tv);
 
     defense_info_.state = DefenseState::ACTIVE;
+    defense_info_.done_defending_recv = false;
 
     /* force disable the write event because we will write when timer
      * fires */
@@ -487,6 +488,10 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
 
     // data outbuf and cell_outbuf_must be empty
     CHECK_EQ(evbuffer_get_length(spdy_outbuf_), 0);
+
+    if (evbuffer_get_length(cell_outbuf_) > 0) {
+        logself(FATAL) << evbuffer_get_length(cell_outbuf_);
+    }
     CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
 
     defense_info_.state = DefenseState::PENDING_NEXT_SOCKET_SEND;
@@ -1631,7 +1636,6 @@ BufloMuxChannelImplSpdy::_check_notify_a_defense_session_done(const int called_f
                       << defense_info_.saved_num_write_attempts
                       << " received= "
                       << defense_info_.num_cells_recv;
-        defense_info_.done_defending_recv = false;
         defense_info_.num_cells_recv = 0;
         defense_info_.saved_num_write_attempts = 0;
         ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
@@ -1855,6 +1859,8 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     }
 
     need_to_read_peer_info_ = false;
+
+    established_timestamp_ms_ = common::gettimeofdayMs();
 
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::READY);
@@ -2412,6 +2418,35 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
     }
 
     vlogself(2) << "done, returning: " << retval;
+    return retval;
+}
+
+const uint64_t&
+BufloMuxChannelImplSpdy::established_timestamp_ms() const
+{
+    return established_timestamp_ms_;
+}
+
+bool
+BufloMuxChannelImplSpdy::has_pending_bytes() const
+{
+    const bool all_empty =
+        (evbuffer_get_length(spdy_inbuf_) == 0)
+        && (evbuffer_get_length(spdy_outbuf_) == 0)
+        && (evbuffer_get_length(cell_inbuf_) == 0)
+        && (evbuffer_get_length(cell_outbuf_) == 0)
+        ;
+    vlogself(2) << "has_pending_bytes= " << !all_empty;
+    return !all_empty;
+}
+
+bool
+BufloMuxChannelImplSpdy::is_defense_in_progress() const
+{
+    const bool retval =
+        ((defense_info_.state == DefenseState::ACTIVE) /* send direction */
+         || !defense_info_.done_defending_recv /* recv direction */);
+    vlogself(2) << "retval= " << retval;
     return retval;
 }
 
