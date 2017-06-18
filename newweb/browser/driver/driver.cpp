@@ -100,7 +100,7 @@ Driver::Driver(struct event_base* evbase,
                   boost::bind(&Driver::_on_think_time_timer_fired, this, _1)));
 
     static const int lowerbound_thinktime_ms = 20*1000;
-    static const int upperbound_thinktime_ms = 60*1000;
+    static const int upperbound_thinktime_ms = 40*1000;
     think_time_rand_gen_.reset(
         new boost::variate_generator<boost::mt19937, boost::uniform_real<double> >(
             boost::mt19937(std::time(0)), boost::uniform_real<double>(
@@ -265,13 +265,28 @@ Driver::_on_think_time_timer_fired(Timer* timer)
 }
 
 void
+Driver::_do_start_thinking_or_loading()
+{
+    if (loadnum_) {
+        // we got here after a page load, so we need to think
+        logself(INFO) << ("we got here after a page load, so we need to think");
+        _start_thinking();
+    } else {
+        logself(INFO) << "start loading immediately since we got here from";
+        // start loading immediately since we got here from
+        // initializing
+        _renderer_load_page();
+    }
+}
+
+void
 Driver::_tproxy_on_ipc_ch_status(GenericIpcChannel*,
                                  GenericIpcChannel::ChannelStatus status)
 {
     switch (status) {
     case GenericIpcChannel::ChannelStatus::READY: {
         tproxy_ipc_ch_ready_ = true;
-        _tproxy_maybe_establish_tunnel();
+        // _tproxy_maybe_establish_tunnel();
         break;
     }
 

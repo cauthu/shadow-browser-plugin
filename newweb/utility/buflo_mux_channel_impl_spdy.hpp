@@ -104,6 +104,11 @@ public:
     // virtual int write_dummy(int sid, size_t len) override;
     virtual void close_stream(int sid) override;
 
+    virtual const uint64_t& established_timestamp_ms() const override;
+    virtual bool has_pending_bytes() const override;
+    virtual bool is_defense_in_progress() const override;
+    virtual uint32_t cell_outbuf_length() const override;
+
     std::string peer_ip() const;
 
     const uint64_t& all_recv_byte_count() const { return all_recv_byte_count_; }
@@ -143,7 +148,9 @@ protected:
 
     /* WILL move all data into cell outbuf. the current defense state
      * must be NONE */
-    size_t _maybe_flush_data_to_cell_outbuf();
+    size_t _maybe_flush_data_to_cell_outbuf(bool log_cell_outbuf_length,
+                                            size_t* before_cell_outbuf_length,
+                                            size_t* after_cell_outbuf_length);
 
     /* this will add a dummy cell if there is not already a WHOLE
      * dummy cell at the end of cell outbuf. if there's only a partial
@@ -466,7 +473,7 @@ protected:
          **
          **/
 
-        bool done_defending_recv = false;
+        bool done_defending_recv = true;
 
         /* incremented when receives a cell with DEFENSIVE
          * flag. cleared after notifying the user the defense is done

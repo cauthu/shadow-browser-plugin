@@ -180,6 +180,18 @@ public:
 
     // virtual bool is_closed() const = 0;
 
+    virtual const uint64_t& established_timestamp_ms() const = 0;
+
+    /* return true if there are input bytes still to be processed, or
+     * output bytes to be written */
+    virtual bool has_pending_bytes() const = 0;
+
+    /* whether there is a defense in progress, in either send or
+     * receive direction */
+    virtual bool is_defense_in_progress() const = 0;
+
+    virtual uint32_t cell_outbuf_length() const = 0;
+
 protected:
 
     BufloMuxChannel(int fd,
@@ -187,6 +199,7 @@ protected:
                     ChannelStatusCb ch_status_cb,
                     NewStreamConnectRequestCb st_connect_req_cb)
         : fd_(fd), is_client_side_(is_client_side)
+        , established_timestamp_ms_(0)
         , ch_status_cb_(ch_status_cb)
         , st_connect_req_cb_(st_connect_req_cb)
     {
@@ -206,6 +219,9 @@ protected:
 
     int fd_;
     const bool is_client_side_;
+
+    /* timestamp in ms when the channel is established */
+    uint64_t established_timestamp_ms_;
 
     /* the repeating timer used for buflo */
     Timer::UniquePtr buflo_timer_;

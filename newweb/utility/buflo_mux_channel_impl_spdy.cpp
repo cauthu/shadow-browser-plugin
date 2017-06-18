@@ -108,16 +108,16 @@ using std::bitset;
 
 */
 
-static const uint8_t s_version = 9;
+static const uint8_t s_version = 10;
 
-/* 1 byte for version, 2 for cell size, and 4 for address, 2 for
+/* 1 byte for version, 4 for channel instNum, 2 for cell size, and 4 for address, 2 for
  * requested L, 2 for requested pkt interval.
  *
  * the requested L is only used by CSP to tell SSP what L to use,
  * i.e., override SSP's default L. the SSP never sends this field,
  * i.e., always zero.
  */
-#define PEER_INFO_NUM_BYTES (1 + 2 + 4 + 2 + 2)
+#define PEER_INFO_NUM_BYTES (1 + 4 + 2 + 4 + 2 + 2)
 
 // sizes in bytes
 #define CELL_TYPE_AND_FLAGS_FIELD_SIZE 1
@@ -469,6 +469,7 @@ BufloMuxChannelImplSpdy::start_defense_session()
     buflo_timer_->start(&intvl_tv);
 
     defense_info_.state = DefenseState::ACTIVE;
+    defense_info_.done_defending_recv = false;
 
     /* force disable the write event because we will write when timer
      * fires */
@@ -487,6 +488,11 @@ BufloMuxChannelImplSpdy::set_auto_start_defense_session_on_next_send()
 
     // data outbuf and cell_outbuf_must be empty
     CHECK_EQ(evbuffer_get_length(spdy_outbuf_), 0);
+
+    if (evbuffer_get_length(cell_outbuf_) > 0) {
+        logself(FATAL) << "cell_outbuf_ length: "
+                       << evbuffer_get_length(cell_outbuf_);
+    }
     CHECK_EQ(evbuffer_get_length(cell_outbuf_), 0);
 
     defense_info_.state = DefenseState::PENDING_NEXT_SOCKET_SEND;
@@ -821,8 +827,12 @@ BufloMuxChannelImplSpdy::_pump_spdy_send(const bool log_flushed_cell_count)
 
     if (defense_info_.state == DefenseState::NONE) {
         vlogself(2) << "maybe flush to cell outbuf";
-        num_cells_added = _maybe_flush_data_to_cell_outbuf();
-        if (num_cells_added) {
+        size_t before_cell_outbuf_length = 0;
+        size_t after_cell_outbuf_length = 0;
+        num_cells_added = _maybe_flush_data_to_cell_outbuf(
+            log_flushed_cell_count,
+            &before_cell_outbuf_length, &after_cell_outbuf_length);
+        if (after_cell_outbuf_length) {
             // there is definitely in out buf so just force enable
             _maybe_toggle_write_monitoring(ForceToggleMode::FORCE_ENABLE);
         }
@@ -870,7 +880,10 @@ BufloMuxChannelImplSpdy::_pump_spdy_recv()
  * returns the number of cells that we added to outbuf
  */
 size_t
-BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
+BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf(
+    bool log_cell_outbuf_length,
+    size_t* before_cell_outbuf_length,
+    size_t* after_cell_outbuf_length)
 {
     CHECK(   (defense_info_.state == DefenseState::NONE)
         );
@@ -878,11 +891,25 @@ BufloMuxChannelImplSpdy::_maybe_flush_data_to_cell_outbuf()
     vlogself(2) << "begin, spdy outbuf len: "
                 << evbuffer_get_length(spdy_outbuf_);
 
+    if (before_cell_outbuf_length) {
+        *before_cell_outbuf_length = evbuffer_get_length(cell_outbuf_);
+    }
+
     while (evbuffer_get_length(spdy_outbuf_)) {
         const auto rv = _maybe_add_ONE_data_cell_to_outbuf();
         CHECK(rv);
         ++num_added;
     }
+
+    const auto cell_outbuf_len = evbuffer_get_length(cell_outbuf_);
+    if (log_cell_outbuf_length) {
+        logself(INFO) << "cell_outbuf_ length after flush: "
+                      << cell_outbuf_len;
+    }
+    if (after_cell_outbuf_length) {
+        *after_cell_outbuf_length = cell_outbuf_len;
+    }
+
     vlogself(2) << "done, returning " << num_added;
     return num_added;
 }
@@ -933,7 +960,7 @@ BufloMuxChannelImplSpdy::_maybe_set_cell_flags(uint8_t* type_n_flags,
 
     if (defense_info_.need_auto_stopped_flag_in_next_cell) {
         CHECK(!is_client_side_);
-        vlogself(1) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
+        logself(INFO) << "setting the AUTO_STOPPED flag, in a " << cell_type << " cell";
         SET_CELL_AUTO_STOPPED_FLAG(type_n_flags);
         defense_info_.need_auto_stopped_flag_in_next_cell = false;
         has_important_flags = true;
@@ -1631,7 +1658,6 @@ BufloMuxChannelImplSpdy::_check_notify_a_defense_session_done(const int called_f
                       << defense_info_.saved_num_write_attempts
                       << " received= "
                       << defense_info_.num_cells_recv;
-        defense_info_.done_defending_recv = false;
         defense_info_.num_cells_recv = 0;
         defense_info_.saved_num_write_attempts = 0;
         ch_status_cb_(this, ChannelStatus::A_DEFENSE_SESSION_DONE);
@@ -1765,7 +1791,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     CHECK(need_to_read_peer_info_);
     CHECK_EQ(evbuffer_get_length(peer_info_inbuf_), PEER_INFO_NUM_BYTES);
 
-    static_assert(PEER_INFO_NUM_BYTES == (1 + 2 + 4 + 2 + 2),
+    static_assert(PEER_INFO_NUM_BYTES == (1 + 4 + 2 + 4 + 2 + 2),
                   "unexpected PEER_INFO_NUM_BYTES");
 
     uint8_t peer_version = 0;
@@ -1773,6 +1799,12 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     auto rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_version, 1);
     CHECK_EQ(rv, 1);
     rv = evbuffer_drain(peer_info_inbuf_, 1);
+    CHECK_EQ(rv, 0);
+
+    uint32_t peer_ch_instNum = 0;
+    rv = evbuffer_copyout(peer_info_inbuf_, (uint32_t*)&peer_ch_instNum, 4);
+    CHECK_EQ(rv, 4);
+    rv = evbuffer_drain(peer_info_inbuf_, 4);
     CHECK_EQ(rv, 0);
 
     rv = evbuffer_copyout(peer_info_inbuf_, (uint8_t*)&peer_cell_size_, 2);
@@ -1807,6 +1839,7 @@ BufloMuxChannelImplSpdy::_read_peer_info()
     requested_pkt_intvl = ntohs(requested_pkt_intvl);
 
     logself(INFO) << "peer IP is " << peer_ip()
+                  << " channel instNum " << peer_ch_instNum
                   << " version= " << unsigned(peer_version)
                   << " using cell size= " << peer_cell_size_;
 
@@ -1856,6 +1889,8 @@ BufloMuxChannelImplSpdy::_read_peer_info()
 
     need_to_read_peer_info_ = false;
 
+    established_timestamp_ms_ = common::gettimeofdayMs();
+
     DestructorGuard dg(this);
     ch_status_cb_(this, ChannelStatus::READY);
 }
@@ -1876,6 +1911,9 @@ BufloMuxChannelImplSpdy::_fill_my_peer_info_outbuf()
     CHECK_EQ(evbuffer_get_length(my_peer_info_outbuf_), 0);
 
     auto rv = evbuffer_add(my_peer_info_outbuf_, (uint8_t*)&s_version, 1);
+    CHECK_EQ(rv, 0);
+
+    rv = evbuffer_add(my_peer_info_outbuf_, (uint32_t*)&objId(), 4);
     CHECK_EQ(rv, 0);
 
     const uint16_t cs = htons(cell_size_);
@@ -2413,6 +2451,41 @@ BufloMuxChannelImplSpdy::_on_spdylay_data_read_cb(spdylay_session *session,
 
     vlogself(2) << "done, returning: " << retval;
     return retval;
+}
+
+const uint64_t&
+BufloMuxChannelImplSpdy::established_timestamp_ms() const
+{
+    return established_timestamp_ms_;
+}
+
+bool
+BufloMuxChannelImplSpdy::has_pending_bytes() const
+{
+    const bool all_empty =
+        (evbuffer_get_length(spdy_inbuf_) == 0)
+        && (evbuffer_get_length(spdy_outbuf_) == 0)
+        && (evbuffer_get_length(cell_inbuf_) == 0)
+        && (evbuffer_get_length(cell_outbuf_) == 0)
+        ;
+    vlogself(2) << "has_pending_bytes= " << !all_empty;
+    return !all_empty;
+}
+
+bool
+BufloMuxChannelImplSpdy::is_defense_in_progress() const
+{
+    const bool retval =
+        ((defense_info_.state == DefenseState::ACTIVE) /* send direction */
+         || !defense_info_.done_defending_recv /* recv direction */);
+    vlogself(2) << "retval= " << retval;
+    return retval;
+}
+
+uint32_t
+BufloMuxChannelImplSpdy::cell_outbuf_length() const
+{
+    return evbuffer_get_length(cell_outbuf_);
 }
 
 void

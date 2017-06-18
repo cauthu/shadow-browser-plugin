@@ -60,6 +60,11 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
         new Timer(evbase_, true,
                   boost::bind(&ClientSideProxy::_log_stats_timer_fired,
                               this, _1)))
+    , buflo_ch_max_age_sec_(5*60)
+    , reap_buflo_channel_timer_(
+        new Timer(evbase_, false,
+                  boost::bind(&ClientSideProxy::_reap_buflo_channel_timer_fired,
+                              this, _1)))
 {
     static bool initialized = false;
 
@@ -67,6 +72,9 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
 
     LOG(INFO) << "NOT accepting client connections until we're connected to the SSP";
     CHECK(!stream_server_->is_listening());
+
+    CHECK((buflo_ch_max_age_sec_ >= 300)
+          || (buflo_ch_max_age_sec_ <= 600));
 
     // get my ip address, in host byte order
     char myhostname[80] = {0};
@@ -83,6 +91,14 @@ ClientSideProxy::ClientSideProxy(struct event_base* evbase,
     initialized = true;
 }
 
+void
+ClientSideProxy::establish_tunnel_2(const bool forceReconnect)
+{
+    vlogself(2) << "begin";
+
+    _establish_tunnel_internal(forceReconnect);
+}
+
 ClientSideProxy::EstablishReturnValue
 ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
                                   const bool forceReconnect)
@@ -97,6 +113,14 @@ ClientSideProxy::establish_tunnel(CSPStatusCb status_cb,
 
     // currently we expect the driver to always force reconnect
     CHECK(forceReconnect) << "todo";
+
+    return _establish_tunnel_internal(forceReconnect);
+}
+
+ClientSideProxy::EstablishReturnValue
+ClientSideProxy::_establish_tunnel_internal(const bool forceReconnect)
+{
+    vlogself(2) << "begin";
 
     _update_stats();
 
@@ -415,7 +439,14 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
 
         state_ = State::READY;
 
-        csp_status_cb_(this, true);
+        /* check periodically */
+        reap_buflo_channel_timer_->start(5*1000);
+
+        if (csp_status_cb_) {
+            csp_status_cb_(this, true);
+        } else {
+            start_accepting_clients();
+        }
 
     } else if (status == BufloMuxChannel::ChannelStatus::CLOSED) {
         _update_stats();
@@ -426,7 +457,9 @@ ClientSideProxy::_on_buflo_channel_status(BufloMuxChannel*,
                      << "initial state and then notify user";
         _reset_to_initial();
 
-        csp_status_cb_(this, false);
+        if (csp_status_cb_) {
+            csp_status_cb_(this, false);
+        }
 
 #else
         LOG(FATAL) << "buflo channel is closed, so we're exiting";
@@ -509,6 +542,57 @@ ClientSideProxy::log_stats() const
                   << " useful_bytes= " << useful_send_byte_count_so_far()
                   << " dummy_cells= " << dummy_send_cell_count_so_far()
                   << " dummy_cells_avoided_so_far= " << num_dummy_cells_avoided_so_far();
+}
+
+void
+ClientSideProxy::_reap_buflo_channel_timer_fired(Timer*)
+{
+    vlogself(2) << "begin";
+
+    if (buflo_ch_) {
+        const uint64_t curtimeMs = common::gettimeofdayMs();
+        const uint64_t buflo_ch_establish_timestamp_ms = buflo_ch_->established_timestamp_ms();
+        const double buflo_ch_age_sec =
+            (curtimeMs - buflo_ch_establish_timestamp_ms) / (double)1000;
+
+        vlogself(2) << "curtimeMs: " << curtimeMs
+                    << " buflo_ch_establish_timestamp_ms: " << buflo_ch_establish_timestamp_ms
+                    << " buflo_ch_age_sec: " << buflo_ch_age_sec;
+
+        if (buflo_ch_age_sec >= buflo_ch_max_age_sec_) {
+            logself(INFO) << "channel age (seconds): " << buflo_ch_age_sec;
+        }
+
+        const bool is_defense_in_progress = buflo_ch_->is_defense_in_progress();
+        if (is_defense_in_progress || buflo_ch_->has_pending_bytes()) {
+            vlogself(2) << "defense in progress and/or pending bytes";
+            if (buflo_ch_age_sec >= buflo_ch_max_age_sec_) {
+                logself(INFO) << "channel is old (" << buflo_ch_age_sec
+                              <<" seconds), but we cannot reap it";
+                if (!is_defense_in_progress) {
+                    const uint32_t cell_outbuf_length = buflo_ch_->cell_outbuf_length();
+                    if (cell_outbuf_length) {
+                        logself(INFO) << "no active defense, but cell_outbuf_ length: "
+                                      << cell_outbuf_length;
+                    }
+                }
+                // do nothing
+            }
+        } else {
+            vlogself(2) << "NO defense in progress and no pending bytes";
+
+            if (buflo_ch_age_sec >= buflo_ch_max_age_sec_) {
+                // we reconnect even if there are existing clients
+                logself(INFO) << "it has reached its age; reconnect it";
+
+                reap_buflo_channel_timer_->cancel();
+
+                _establish_tunnel_internal(true);
+            }
+        }
+    }
+
+    vlogself(2) << "done";
 }
 
 ClientSideProxy::~ClientSideProxy()

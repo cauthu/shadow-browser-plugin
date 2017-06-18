@@ -67,6 +67,8 @@ public:
     };
 
     EstablishReturnValue establish_tunnel(CSPStatusCb, const bool force_reconnect=true);
+    void establish_tunnel_2(const bool force_reconnect=true);
+
     void close_all_streams();
 
     void set_a_defense_session_done_cb(ADefenseSessionDoneCb cb) { a_defense_session_done_cb_ = cb; }
@@ -109,6 +111,8 @@ protected:
 
     //////////////
 
+    EstablishReturnValue _establish_tunnel_internal(const bool force_reconnect);
+
     /* clear the tunnel, the client handlers, pause accepting, etc. */
     void _reset_to_initial();
 
@@ -126,6 +130,8 @@ protected:
 
     void _log_stats_timer_fired(Timer*);
     void _schedule_log_timer();
+
+    void _reap_buflo_channel_timer_fired(Timer*);
 
     /////////
 
@@ -188,6 +194,14 @@ protected:
 
     // log stats when current time is a multiple of 30 seconds
     Timer::UniquePtr log_stats_timer_;
+
+    // generally: we don't want to use a channel older than 5
+    // minutes. so every 5 minutes we recreate the channel, unless it
+    // is being used, then we wait until it is no longer used. this is
+    // trying to be similiar to Tor's default 10 minutes interval with
+    // circuits
+    const uint16_t buflo_ch_max_age_sec_;
+    Timer::UniquePtr reap_buflo_channel_timer_;
 };
 
 } // namespace csp
