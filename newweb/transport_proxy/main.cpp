@@ -312,7 +312,9 @@ s_on_buflo_channel_defense_session_done(csp::ClientSideProxy* csp,
     }
 
     if (conf.exit_on_a_defense_session_done) {
-        LOG(INFO) << "defense session done; exiting as instructed";
+        LOG(INFO) << "defense session done... logging stats";
+        csp->log_stats();
+        LOG(INFO) << "exiting as instructed";
         exit(0);
     }
 
