@@ -772,6 +772,17 @@ BufloMuxChannelImplSpdy::_buflo_timer_fired(Timer* timer)
     if (evbuffer_get_length(cell_outbuf_) >= cell_size_) {
         // there is already one or more cell's worth of bytes waiting
         // to be sent, so we just try to send it and return
+
+        if (evbuffer_get_length(spdy_outbuf_) == 0) {
+            // ok, so there is no proxy-logic data available to be
+            // sent. in the "original" non-cs buflo, dummy cell would
+            // need to be used here. but with cs-buflo, since
+            // cell_outbuf_ already contains at least one cell, then
+            // we don't need to add dummy cell, so we can also
+            // increment num_dummy_cells_avoided_ here
+            ++num_dummy_cells_avoided_;
+        }
+
         _send_cell_outbuf();
         goto done;
     }
